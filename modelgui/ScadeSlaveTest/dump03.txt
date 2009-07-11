@@ -1,0 +1,27 @@
+SsmProxy::Start "KCG 6.0" simulation::railway
+
+1009.SCADE co simulation is allready started.
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::GetOutputValue simulation::railway/guiDisplayData
+
+OK.((((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_unknown),(false,simulation::c_unknown)),((false,simulation::c_unkno
+wn),(false,simulation::c_unknown)),((false,simulation::c_unknown),(false,simulation::c_unknown)),((false,simulation::c_unknown),(false,simulation::c_unknown)),((false,simulation::c_unknown),(false,simulation::c_unknown)),((false,simulation::c_unknown),(false,simulation::c_unknown)),((false,simulation::c_unknown),(false,simulation::c_unknown)),((false,simulation::c_unknown),(false,simulation::c_unknown)),((false,simulation::c_unknown),(false,simulation::c_unknown)),((false,simulation::c_unknown),(false,simulation::c_unknown)),((false,simulation::c_unknown),(false,simulation::c_unknown)),((false,simulation::c_unknown),(false,simulation::c_unknown)),((false,simulation::c_unknown),(false,simulation::c_unknown)),((false,simulation::c_unknown),(false,simulation::c_unknown)),((false,simulation::c_backward),(false,simulation::c_backward)),((false,simulation::c_unknown),(false,simulation::c_unknown)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forwa
+rd)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward)),((false,simulation::c_forward),(false,simulation::c_forward))),(0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1
+.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0),(0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0))
+SsmProxy::Activate
+.
+OK

@@ -1,0 +1,31 @@
+/*ED430 version "V410" "RT430" */ 
+node Position(
+   Motor /*! oid "win_2E41/6963/1CBC/45A26670/669" : */ : int) 
+   returns (
+   Position /*! oid "win_2E42/6963/1CBC/45A26678/110D" : */ : int)
+   /*! oid "win_2E3E/6963/1CBC/45A2665D/23B0" : graphical */ ;
+var
+_L1 /*! oid "win_2E45/6963/1CBC/45A2669D/29D8" : */ : int ;
+_L2 /*! oid "win_2E4A/6963/1CBC/45A266A4/669E" : */ : int ;
+
+let equa eq_Position_1[ , ]
+    _L1 = Motor
+   /*! oid "win_2E44/6963/1CBC/45A2669D/C51" : 
+       (135.0 , 205.0) (40.0 , 20.0) : */ ;
+    Position = _L2
+   /*! oid "win_2E46/6963/1CBC/45A2669F/4B70" : 
+       (701.0 , 257.0) (40.0 , 20.0) : 
+       (626.0 , 261.0) : 1 : (653.0 , 268.0) (675.0 , 268.0) (675.0 , 268.0) (701.0 , 268.0)  : */ ;
+    _L2 = 50
+   /*! oid "win_2E49/6963/1CBC/45A266A4/F18" : 
+       (626.0 , 261.0) (27.0 , 13.0) : */ ;
+tel /*! oid "win_2E3F/6963/1CBC/45A2665D/1DC5" : "A4 (210 297)" true : 100*/
+/*SCED  "DefaultPageFormat" : "1" , 
+"PageSize" : "A4 (210 297)" , 
+"Landscape" : "true" , 
+"PageZoom" : "100"
+*/ ;
+
+/*  End of blocks of node :  Position */ 
+
+

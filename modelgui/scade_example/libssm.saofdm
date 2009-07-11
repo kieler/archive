@@ -1,0 +1,12 @@
+MODEL
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libssm/TypeBlockSsm
+
+
+NOTES_TYPES C:/Programme/Esterel\ Technologies/Scade51/examples/ConfAnnot.aty 
+
+DIAG_SEM C:/Programme/Esterel\ Technologies/Scade51/libraries/libssm/libssm.semerrfd 
+
+DIAG_MET C:/Programme/Esterel\ Technologies/Scade51/libraries/libssm/libssm.meterrfd 
+
+-- occBase 10
+

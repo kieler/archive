@@ -1,0 +1,75 @@
+
+[SCADE\Editor\Shortcut]
+
+"groupNb"="0" 
+
+[SCADE\Diff\Tool]
+
+"LastProject1"="" 
+"LastProject2"="" 
+
+[SCADE\Simulator\Breakpoint]
+
+"Count"="0" 
+
+[SCADE\Simulator\StopCondition]
+
+"Count"="0" 
+
+[SCADE\Simulator\Simulation]
+
+"Latency"="200" 
+
+[SCADE\Simulator\Watch]
+
+"Watch1"="Elevator/guiControlData" 
+"Watch2"="Elevator/guDisplayData" 
+"Watch3"="Elevator/DoorIsOpen" 
+"Watch4"="Elevator/AlarmLamp" 
+"Count"="0" 
+"Watch5"="Elevator/Motor" 
+
+[SCADE\Simulator\Graph]
+
+"Count"="0" 
+"Graph1"="KeepDoorOpen/DoorIsOpen" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\Checker]
+
+"U:\\code\\scade\\Elevator\\Elevator.etp"="KCG 4.2" 
+"U:\\shared\\modelgui\\trunk\\scade_example\\Elevator\\Elevator.etp"="KCG 4.2" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\TTA Extension]
+
+"U:\\code\\scade\\Elevator\\Elevator.etp"="KCG 4.2" 
+"U:\\shared\\modelgui\\trunk\\scade_example\\Elevator\\Elevator.etp"="KCG 4.2" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\Code Generator - Simulator]
+
+"U:\\code\\scade\\Elevator\\Elevator.etp"="KCG 4.2" 
+"U:\\shared\\modelgui\\trunk\\scade_example\\Elevator\\Elevator.etp"="Simulation" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\Design Verifier]
+
+"U:\\code\\scade\\Elevator\\Elevator.etp"="KCG 4.2" 
+"U:\\shared\\modelgui\\trunk\\scade_example\\Elevator\\Elevator.etp"="KCG 4.2" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\Reporter]
+
+"U:\\code\\scade\\Elevator\\Elevator.etp"="HTML" 
+"U:\\shared\\modelgui\\trunk\\scade_example\\Elevator\\Elevator.etp"="HTML" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\Implementer]
+
+"U:\\code\\scade\\Elevator\\Elevator.etp"="KCG 4.2" 
+"U:\\shared\\modelgui\\trunk\\scade_example\\Elevator\\Elevator.etp"="KCG 4.2" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\DiffAnalyzer]
+
+"U:\\code\\scade\\Elevator\\Elevator.etp"="KCG 4.2" 
+"U:\\shared\\modelgui\\trunk\\scade_example\\Elevator\\Elevator.etp"="KCG 4.2" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\Instrumenter]
+
+"U:\\code\\scade\\Elevator\\Elevator.etp"="MTC" 
+"U:\\shared\\modelgui\\trunk\\scade_example\\Elevator\\Elevator.etp"="MTC" 

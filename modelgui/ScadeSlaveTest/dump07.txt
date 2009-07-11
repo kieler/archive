@@ -1,0 +1,176 @@
+00000000  53 73 6d 50 72 6f 78 79  3a 3a 53 74 61 72 74 20 SsmProxy ::Start 
+
+00000010  22 53 69 6d 75 6c 61 74  69 6f 6e 22 20 73 69 6d "Simulat ion" sim
+
+00000020  75 6c 61 74 69 6f 6e 3a  3a 72 61 69 6c 77 61 79 ulation: :railway
+
+00000030  0d 0a                                            ..
+
+                                                                              00000000  4f 4b                                            OK
+
+00000032  53 73 6d 50 72 6f 78 79  3a 3a 53 74 65 70 20 31 SsmProxy ::Step 1
+
+00000042  20 31 0d 0a                                       1..
+
+                                                                              00000002  4f 4b                                            OK
+
+00000046  53 73 6d 50 72 6f 78 79  3a 3a 53 74 65 70 20 31 SsmProxy ::Step 1
+
+00000056  20 31 0d 0a                                       1..
+
+                                                                              00000004  4f 4b                                            OK
+
+0000005A  53 73 6d 50 72 6f 78 79  3a 3a 53 74 65 70 20 31 SsmProxy ::Step 1
+
+0000006A  20 31 0d 0a                                       1..
+
+                                                                              00000006  4f 4b                                            OK
+
+0000006E  53 73 6d 50 72 6f 78 79  3a 3a 53 74 65 70 20 31 SsmProxy ::Step 1
+
+0000007E  20 31 0d 0a                                       1..
+
+                                                                              00000008  4f 4b                                            OK
+
+00000082  53 73 6d 50 72 6f 78 79  3a 3a 53 74 65 70 20 31 SsmProxy ::Step 1
+
+00000092  20 31 0d 0a                                       1..
+
+                                                                              0000000A  4f 4b                                            OK
+
+00000096  53 73 6d 50 72 6f 78 79  3a 3a 53 65 74 49 6e 70 SsmProxy ::SetInp
+
+000000A6  75 74 56 61 6c 75 65 20  73 69 6d 75 6c 61 74 69 utValue  simulati
+
+000000B6  6f 6e 3a 3a 72 61 69 6c  77 61 79 2f 70 6f 69 6e on::rail way/poin
+
+000000C6  74 73 20 5b 73 69 6d 75  6c 61 74 69 6f 6e 3a 3a ts [simu lation::
+
+000000D6  70 5f 74 75 72 6e 2c 73  69 6d 75 6c 61 74 69 6f p_turn,s imulatio
+
+000000E6  6e 3a 3a 70 5f 74 75 72  6e 2c 73 69 6d 75 6c 61 n::p_tur n,simula
+
+000000F6  74 69 6f 6e 3a 3a 70 5f  74 75 72 6e 2c 73 69 6d tion::p_ turn,sim
+
+00000106  75 6c 61 74 69 6f 6e 3a  3a 70 5f 74 75 72 6e 2c ulation: :p_turn,
+
+00000116  73 69 6d 75 6c 61 74 69  6f 6e 3a 3a 70 5f 74 75 simulati on::p_tu
+
+00000126  72 6e 2c 73 69 6d 75 6c  61 74 69 6f 6e 3a 3a 70 rn,simul ation::p
+
+00000136  5f 74 75 72 6e 2c 73 69  6d 75 6c 61 74 69 6f 6e _turn,si mulation
+
+00000146  3a 3a 70 5f 74 75 72 6e  2c 73 69 6d 75 6c 61 74 ::p_turn ,simulat
+
+00000156  69 6f 6e 3a 3a 70 5f 74  75 72 6e 2c 73 69 6d 75 ion::p_t urn,simu
+
+00000166  6c 61 74 69 6f 6e 3a 3a  70 5f 74 75 72 6e 2c 73 lation:: p_turn,s
+
+00000176  69 6d 75 6c 61 74 69 6f  6e 3a 3a 70 5f 74 75 72 imulatio n::p_tur
+
+00000186  6e 2c 73 69 6d 75 6c 61  74 69 6f 6e 3a 3a 70 5f n,simula tion::p_
+
+00000196  74 75 72 6e 2c 73 69 6d  75 6c 61 74 69 6f 6e 3a turn,sim ulation:
+
+000001A6  3a 70 5f 74 75 72 6e 2c  73 69 6d 75 6c 61 74 69 :p_turn, simulati
+
+000001B6  6f 6e 3a 3a 70 5f 74 75  72 6e 2c 73 69 6d 75 6c on::p_tu rn,simul
+
+000001C6  61 74 69 6f 6e 3a 3a 70  5f 74 75 72 6e 2c 73 69 ation::p _turn,si
+
+000001D6  6d 75 6c 61 74 69 6f 6e  3a 3a 70 5f 74 75 72 6e mulation ::p_turn
+
+000001E6  2c 73 69 6d 75 6c 61 74  69 6f 6e 3a 3a 70 5f 74 ,simulat ion::p_t
+
+000001F6  75 72 6e 2c 73 69 6d 75  6c 61 74 69 6f 6e 3a 3a urn,simu lation::
+
+00000206  70 5f 74 75 72 6e 2c 73  69 6d 75 6c 61 74 69 6f p_turn,s imulatio
+
+00000216  6e 3a 3a 70 5f 74 75 72  6e 2c 73 69 6d 75 6c 61 n::p_tur n,simula
+
+00000226  74 69 6f 6e 3a 3a 70 5f  74 75 72 6e 2c 73 69 6d tion::p_ turn,sim
+
+00000236  75 6c 61 74 69 6f 6e 3a  3a 70 5f 74 75 72 6e 2c ulation: :p_turn,
+
+00000246  73 69 6d 75 6c 61 74 69  6f 6e 3a 3a 70 5f 74 75 simulati on::p_tu
+
+00000256  72 6e 2c 73 69 6d 75 6c  61 74 69 6f 6e 3a 3a 70 rn,simul ation::p
+
+00000266  5f 74 75 72 6e 2c 73 69  6d 75 6c 61 74 69 6f 6e _turn,si mulation
+
+00000276  3a 3a 70 5f 74 75 72 6e  2c 73 69 6d 75 6c 61 74 ::p_turn ,simulat
+
+00000286  69 6f 6e 3a 3a 70 5f 74  75 72 6e 2c 73 69 6d 75 ion::p_t urn,simu
+
+00000296  6c 61 74 69 6f 6e 3a 3a  70 5f 74 75 72 6e 2c 73 lation:: p_turn,s
+
+000002A6  69 6d 75 6c 61 74 69 6f  6e 3a 3a 70 5f 74 75 72 imulatio n::p_tur
+
+000002B6  6e 2c 73 69 6d 75 6c 61  74 69 6f 6e 3a 3a 70 5f n,simula tion::p_
+
+000002C6  74 75 72 6e 2c 73 69 6d  75 6c 61 74 69 6f 6e 3a turn,sim ulation:
+
+000002D6  3a 70 5f 74 75 72 6e 2c  73 69 6d 75 6c 61 74 69 :p_turn, simulati
+
+000002E6  6f 6e 3a 3a 70 5f 74 75  72 6e 2c 73 69 6d 75 6c on::p_tu rn,simul
+
+000002F6  61 74 69 6f 6e 3a 3a 70  5f 74 75 72 6e 2c 73 69 ation::p _turn,si
+
+00000306  6d 75 6c 61 74 69 6f 6e  3a 3a 70 5f 74 75 72 6e mulation ::p_turn
+
+00000316  2c 73 69 6d 75 6c 61 74  69 6f 6e 3a 3a 70 5f 74 ,simulat ion::p_t
+
+00000326  75 72 6e 2c 73 69 6d 75  6c 61 74 69 6f 6e 3a 3a urn,simu lation::
+
+00000336  70 5f 74 75 72 6e 2c 73  69 6d 75 6c 61 74 69 6f p_turn,s imulatio
+
+00000346  6e 3a 3a 70 5f 74 75 72  6e 2c 73 69 6d 75 6c 61 n::p_tur n,simula
+
+00000356  74 69 6f 6e 3a 3a 70 5f  74 75 72 6e 2c 73 69 6d tion::p_ turn,sim
+
+00000366  75 6c 61 74 69 6f 6e 3a  3a 70 5f 74 75 72 6e 2c ulation: :p_turn,
+
+00000376  73 69 6d 75 6c 61 74 69  6f 6e 3a 3a 70 5f 74 75 simulati on::p_tu
+
+00000386  72 6e 2c 73 69 6d 75 6c  61 74 69 6f 6e 3a 3a 70 rn,simul ation::p
+
+00000396  5f 74 75 72 6e 2c 73 69  6d 75 6c 61 74 69 6f 6e _turn,si mulation
+
+000003A6  3a 3a 70 5f 74 75 72 6e  2c 73 69 6d 75 6c 61 74 ::p_turn ,simulat
+
+000003B6  69 6f 6e 3a 3a 70 5f 74  75 72 6e 2c 73 69 6d 75 ion::p_t urn,simu
+
+000003C6  6c 61 74 69 6f 6e 3a 3a  70 5f 74 75 72 6e 2c 73 lation:: p_turn,s
+
+000003D6  69 6d 75 6c 61 74 69 6f  6e 3a 3a 70 5f 74 75 72 imulatio n::p_tur
+
+000003E6  6e 2c 73 69 6d 75 6c 61  74 69 6f 6e 3a 3a 70 5f n,simula tion::p_
+
+000003F6  74 75 72 6e 2c 73 69 6d  75 6c 61 74 69 6f 6e 3a turn,sim ulation:
+
+00000406  3a 70 5f 74 75 72 6e 2c  73 69 6d 75 6c 61 74 69 :p_turn, simulati
+
+00000416  6f 6e 3a 3a 70 5f 74 75  72 6e 2c 73 69 6d 75 6c on::p_tu rn,simul
+
+00000426  61 74 69 6f 6e 3a 3a 70  5f 74 75 72 6e 2c 73 69 ation::p _turn,si
+
+00000436  6d 75 6c 61 74 69 6f 6e  3a 3a 70 5f 74 75 72 6e mulation ::p_turn
+
+00000446  2c 73 69 6d 75 6c 61 74  69 6f 6e 3a 3a 70 5f 74 ,simulat ion::p_t
+
+00000456  75 72 6e 5d 0d 0a                                urn]..
+
+                                                                              0000000C  43 72 65 61 74 65 73 20  61 20 6e 65 77 20 70 61 Creates  a new pa
+
+                                                                              0000001C  72 61 6d 65 74 65 72 20  62 6c 6f 63 6b 0a 4e 65 rameter  block.Ne
+
+                                                                              0000002C  77 20 50 61 72 61 6d 65  74 65 72 20 62 6c 6f 63 w Parame ter bloc
+
+                                                                              0000003C  6b 0a 26 50 61 72 61 6d  65 74 65 72 20 42 6c 6f k.&Param eter Blo
+
+                                                                              0000004C  63 6b                                            ck
+
+0000045C  53 73 6d 50 72 6f 78 79  3a 3a 53 74 65 70 20 31 SsmProxy ::Step 1
+
+0000046C  20 31 0d 0a                                       1..
+

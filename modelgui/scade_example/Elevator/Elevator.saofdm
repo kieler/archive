@@ -1,0 +1,39 @@
+MODEL
+	SafeStateMachine1
+	Node2
+	Node3
+	Node4
+	Node5
+	TypeBlock1
+	SafeStateMachine1_var
+	SafeStateMachine1_equa
+
+LIBRARY_MODEL libdigital 
+	libdigital.saofdm
+
+LIBRARY_MODEL liblinear 
+	liblinear.saofdm
+
+LIBRARY_MODEL libmath 
+	libmath.saofdm
+
+LIBRARY_MODEL libmathadvanced 
+	libmathadvanced.saofdm
+
+LIBRARY_MODEL libpwlinear 
+	libpwlinear.saofdm
+
+LIBRARY_MODEL libverification 
+	libverification.saofdm
+
+LIBRARY_MODEL libssm 
+	libssm.saofdm
+
+NOTES_TYPES $(SCADE)/examples/ConfAnnot.aty 
+
+DIAG_SEM Elevator.semerrfd 
+
+DIAG_MET Elevator.meterrfd 
+
+-- occBase 10
+

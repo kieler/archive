@@ -1,0 +1,40 @@
+/*ED430 version "V410" "RT430" */ 
+node KeepDoorOpen(
+   Second /*! oid "win_FC8/45E0/1A98/45A5F04E/156F" : */ : bool ; 
+   OpenDoor /*! oid "win_FC9/45E0/1A98/45A5F051/4DA3" : */ : bool ; 
+   hidden Delay /*! oid "win_FCC/45E0/1A98/45A5F06F/71E7" : */ : int) 
+   returns (
+   DoorIsOpen /*! oid "win_FCA/45E0/1A98/45A5F054/85" : */ : bool)
+   /*! oid "win_FC5/45E0/1A98/45A5F03A/1B9A" : graphical */ ;
+var
+_L1 /*! oid "win_FCE/45E0/1A98/45A5F09B/285A" : */ : bool ;
+_L2 /*! oid "win_FD0/45E0/1A98/45A5F09C/360A" : */ : bool ;
+_L17 /*! oid "win_10AB/7059/1A70/45A64111/7B64" : */ : bool ;
+
+let equa eq_KeepDoorOpen_1[ , ]
+    _L1 = Second
+   /*! oid "win_FCD/45E0/1A98/45A5F09B/14E5" : 
+       (147.0 , 285.0) (40.0 , 20.0) : */ ;
+    _L2 = OpenDoor
+   /*! oid "win_FCF/45E0/1A98/45A5F09C/7C4E" : 
+       (147.0 , 320.0) (40.0 , 20.0) : */ ;
+    DoorIsOpen = _L17
+   /*! oid "win_FD1/45E0/1A98/45A5F09F/BD" : 
+       (489.0 , 296.0) (40.0 , 20.0) : 
+       (382.0 , 280.0) : 1 : (429.0 , 301.0) (527.0 , 301.0) (527.0 , 306.0) (489.0 , 306.0)  : */ ;
+    _L17 = _L1 and _L2
+   /*! oid "win_10AA/7059/1A70/45A64111/56A3" : 
+       (382.0 , 280.0) (56.0 , 42.0) : 
+       (147.0 , 285.0) : 1 : (186.0 , 296.0) (234.0 , 296.0) (234.0 , 296.0) (390.0 , 296.0)  : 
+       (147.0 , 320.0) : 1 : (186.0 , 330.0) (244.0 , 330.0) (244.0 , 305.0) (390.0 , 305.0)  : 
+        : 1 */ ;
+tel /*! oid "win_FC6/45E0/1A98/45A5F03A/6C52" : "A4 (210 297)" true : 100*/
+/*SCED  "DefaultPageFormat" : "1" , 
+"PageSize" : "A4 (210 297)" , 
+"Landscape" : "true" , 
+"PageZoom" : "100"
+*/ ;
+
+/*  End of blocks of node :  KeepDoorOpen */ 
+
+

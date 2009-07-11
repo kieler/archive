@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping 
+   xmlns="http://rtsys.informatik.uni-kiel.de/modelgui"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+>
+
+<display port="0" >
+  <move-path id="engine" input="1..200" path="OV_LN_0"/>
+</display>
+
+<display port="1" >
+  <move-path id="engine" input="1..200" path="OV_LN_1"/>
+  <textbox id="text1"/>
+</display>
+
+
+<display port="0">
+  <colorize id="OV_LN_0" input="false,true" color="#666600,#ffff00" color-property="stroke" />
+</display>
+<display port="1">
+  <colorize id="OV_LN_1" input="false,true" color="#666600,#ffff00" color-property="stroke" />
+</display>
+<!--
+<display port="4">
+  <rotate id="needle" input="0..40" angle-range="0..180" />
+</display>
+<display port="5">
+  <rotate id="needle" input="0..40" angle-range="0..180" />
+</display>
+-->
+
+<control port="0">
+<button id="click_me" />
+</control>
+<!--
+<control port="1">
+<textbox id="text1" />
+</control>
+-->
+</mapping>

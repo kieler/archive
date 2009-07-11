@@ -1,0 +1,23 @@
+MODEL
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/liblinear/Gain
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/liblinear/MeanCycle2
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/liblinear/MeanCycle3
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/liblinear/Derivative
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/liblinear/Filter1stOrderLoop
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/liblinear/IntegrTrapez
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/liblinear/IntegrFwd
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/liblinear/Memory
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/liblinear/HitCrossingEither
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/liblinear/HitCrossingFalling
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/liblinear/HitCrossingRising
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/liblinear/MemoryBasic
+
+
+NOTES_TYPES C:/Programme/Esterel\ Technologies/Scade51/examples/ConfAnnot.aty 
+
+DIAG_SEM C:/Programme/Esterel\ Technologies/Scade51/libraries/liblinear/liblinear.semerrfd 
+
+DIAG_MET C:/Programme/Esterel\ Technologies/Scade51/libraries/liblinear/liblinear.meterrfd 
+
+-- occBase 10
+

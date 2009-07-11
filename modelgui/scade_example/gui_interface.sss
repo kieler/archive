@@ -1,0 +1,27 @@
+# modify host and port to the IP address and port of the
+# listening GUI server
+set host 10.6.0.22
+set port 1234
+
+#puts "starting GUI client"
+set chan [socket $host $port]
+#puts [fconfigure $chan -error]
+#puts stderr "created socket"
+
+puts $chan "hallo"
+puts $chan "hihi"
+flush $chan
+
+while 1 { 
+gets $chan fromGui
+puts $chan "Echo: $fromGui"
+flush $chan
+#SSM::set guiControlData (0, 0.0, false, 0)
+SSM::cycle 1
+set data [SSM::get guiDisplayData]
+puts $chan $data
+flush $chan
+}
+
+
+

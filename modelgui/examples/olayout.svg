@@ -1,0 +1,941 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Creator: fig2dev Version 3.2 Patchlevel 4 -->
+<!-- CreationDate: Wed Dec  6 10:48:00 2006 -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   
+   viewBox="0 0 11400 5800"
+   id="svg1734"
+   sodipodi:version="0.32"
+   inkscape:version="0.43"
+   sodipodi:docname="olayout.svg"
+   sodipodi:docbase="/home/sja/workspaces/eclipse/modelgui/trunk/testsvg"
+   version="1.0">
+  <metadata
+     id="metadata2151">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs2149">
+    <defs
+       id="defs1738">
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile1">
+        <path
+           id="path1741"
+           d="M 0 -100 200 16" />
+        <path
+           id="path1743"
+           d="M 0 -60 200 56" />
+        <path
+           id="path1745"
+           d="M 0 -20 200 96" />
+        <path
+           id="path1747"
+           d="M 0 20 200 136" />
+        <path
+           id="path1749"
+           d="M 0 60 200 176" />
+        <path
+           id="path1751"
+           d="M 0 100 200 216" />
+        <path
+           id="path1753"
+           d="M 0 140 200 256" />
+        <path
+           id="path1755"
+           d="M 0 180 200 296" />
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile2">
+        <path
+           id="path1758"
+           d="M 200 -100 0 16" />
+        <path
+           id="path1760"
+           d="M 200 -60 0 56" />
+        <path
+           id="path1762"
+           d="M 200 -20 0 96" />
+        <path
+           id="path1764"
+           d="M 200 20 0 136" />
+        <path
+           id="path1766"
+           d="M 200 60 0 176" />
+        <path
+           id="path1768"
+           d="M 200 100 0 216" />
+        <path
+           id="path1770"
+           d="M 200 140 0 256" />
+        <path
+           id="path1772"
+           d="M 200 180 0 296" />
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile3">
+        <path
+           id="path1775"
+           d="M 0 -100 200 16" />
+        <path
+           id="path1777"
+           d="M 200 -100 0 16" />
+        <path
+           id="path1779"
+           d="M 0 -60 200 56" />
+        <path
+           id="path1781"
+           d="M 200 -60 0 56" />
+        <path
+           id="path1783"
+           d="M 0 -20 200 96" />
+        <path
+           id="path1785"
+           d="M 200 -20 0 96" />
+        <path
+           id="path1787"
+           d="M 0 20 200 136" />
+        <path
+           id="path1789"
+           d="M 200 20 0 136" />
+        <path
+           id="path1791"
+           d="M 0 60 200 176" />
+        <path
+           id="path1793"
+           d="M 200 60 0 176" />
+        <path
+           id="path1795"
+           d="M 0 100 200 216" />
+        <path
+           id="path1797"
+           d="M 200 100 0 216" />
+        <path
+           id="path1799"
+           d="M 0 140 200 256" />
+        <path
+           id="path1801"
+           d="M 200 140 0 256" />
+        <path
+           id="path1803"
+           d="M 0 180 200 296" />
+        <path
+           id="path1805"
+           d="M 200 180 0 296" />
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile4">
+        <path
+           id="path1808"
+           d="M 100 0 200 100" />
+        <path
+           id="path1810"
+           d="M 0 0 200 200" />
+        <path
+           id="path1812"
+           d="M 0 100 100 200" />
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile5">
+        <path
+           id="path1815"
+           d="M 100 0 0 100" />
+        <path
+           id="path1817"
+           d="M 200 0 0 200" />
+        <path
+           id="path1819"
+           d="M 200 100 100 200" />
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile6">
+        <path
+           id="path1822"
+           d="M 100 0 200 100" />
+        <path
+           id="path1824"
+           d="M 0 0 200 200" />
+        <path
+           id="path1826"
+           d="M 0 100 100 200" />
+        <path
+           id="path1828"
+           d="M 100 0 0 100" />
+        <path
+           id="path1830"
+           d="M 200 0 0 200" />
+        <path
+           id="path1832"
+           d="M 200 100 100 200" />
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile7">
+        <path
+           id="path1835"
+           d="M 0 0 0 50" />
+        <path
+           id="path1837"
+           d="M 0 50 200 50" />
+        <path
+           id="path1839"
+           d="M 100 50 100 150" />
+        <path
+           id="path1841"
+           d="M 0 150 200 150" />
+        <path
+           id="path1843"
+           d="M 0 150 0 200" />
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile8">
+        <path
+           id="path1846"
+           d="M 0 0 50 0" />
+        <path
+           id="path1848"
+           d="M 50 0 50 200" />
+        <path
+           id="path1850"
+           d="M 50 100 150 100" />
+        <path
+           id="path1852"
+           d="M 150 0 150 200" />
+        <path
+           id="path1854"
+           d="M 150 0 200 0" />
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile9">
+        <path
+           id="path1857"
+           d="M 0 50 200 50" />
+        <path
+           id="path1859"
+           d="M 0 150 200 150" />
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile10">
+        <path
+           id="path1862"
+           d="M 50 0 50 200" />
+        <path
+           id="path1864"
+           d="M 150 0 150 200" />
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile11">
+        <path
+           id="path1867"
+           d="M 0 50 200 50" />
+        <path
+           id="path1869"
+           d="M 0 150 200 150" />
+        <path
+           id="path1871"
+           d="M 50 0 50 200" />
+        <path
+           id="path1873"
+           d="M 150 0 150 200" />
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile12">
+        <path
+           id="path1876"
+           d="M 0 0 25 50" />
+        <path
+           id="path1878"
+           d="M 0 50 200 50" />
+        <path
+           id="path1880"
+           d="M 100 50 125 150" />
+        <path
+           id="path1882"
+           d="M 0 150 200 150" />
+        <path
+           id="path1884"
+           d="M 0 150 25 200" />
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile13">
+        <path
+           id="path1887"
+           d="M 200 0 175 50" />
+        <path
+           id="path1889"
+           d="M 0 50 200 50" />
+        <path
+           id="path1891"
+           d="M 100 50 75 150" />
+        <path
+           id="path1893"
+           d="M 0 150 200 150" />
+        <path
+           id="path1895"
+           d="M 200 150 175 200" />
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile14">
+        <path
+           id="path1898"
+           d="M 0 0 50 25" />
+        <path
+           id="path1900"
+           d="M 50 0 50 200" />
+        <path
+           id="path1902"
+           d="M 50 100 150 125" />
+        <path
+           id="path1904"
+           d="M 150 0 150 200" />
+        <path
+           id="path1906"
+           d="M 150 0 200 25" />
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile15">
+        <path
+           id="path1909"
+           d="M 0 25 50 0" />
+        <path
+           id="path1911"
+           d="M 50 0 50 200" />
+        <path
+           id="path1913"
+           d="M 50 125 150 100" />
+        <path
+           id="path1915"
+           d="M 150 0 150 200" />
+        <path
+           id="path1917"
+           d="M 150 25 200 0" />
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile16">
+        <path
+           id="path1920"
+           d="M 0 50 A 50 50 0 1 0 100 50" />
+        <path
+           id="path1922"
+           d="M 100 50 A 50 50 0 1 0 200 50" />
+        <path
+           id="path1924"
+           d="M 50 100 A 50 50 0 1 0 150 100" />
+        <path
+           id="path1926"
+           d="M 0 150 A 50 50 0 0 0 50 100" />
+        <path
+           id="path1928"
+           d="M 150 100 A 50 50 0 1 0 200 50" />
+        <path
+           id="path1930"
+           d="M 50 0 A 50 50 0 1 0 150 0" />
+        <path
+           id="path1932"
+           d="M 150 0 A 50 50 0 0 0 200 50" />
+        <path
+           id="path1934"
+           d="M 0 50 A 50 50 0 0 0 50 0" />
+        <path
+           id="path1936"
+           d="M 0 150 A 50 50 0 1 0 100 150" />
+        <path
+           id="path1938"
+           d="M 100 150 A 50 50 0 1 0 200 150" />
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="100"
+         width="100"
+         y="0"
+         x="0"
+         id="tile17">
+        <g
+           id="g1941"
+           transform="scale(0.5)">
+          <path
+             id="path1943"
+             d="M 0 50 A 50 50 0 1 0 100 50" />
+          <path
+             id="path1945"
+             d="M 100 50 A 50 50 0 1 0 200 50" />
+          <path
+             id="path1947"
+             d="M 50 100 A 50 50 0 1 0 150 100" />
+          <path
+             id="path1949"
+             d="M 0 150 A 50 50 0 0 0 50 100" />
+          <path
+             id="path1951"
+             d="M 150 100 A 50 50 0 1 0 200 50" />
+          <path
+             id="path1953"
+             d="M 50 0 A 50 50 0 1 0 150 0" />
+          <path
+             id="path1955"
+             d="M 150 0 A 50 50 0 0 0 200 50" />
+          <path
+             id="path1957"
+             d="M 0 50 A 50 50 0 0 0 50 0" />
+          <path
+             id="path1959"
+             d="M 0 150 A 50 50 0 1 0 100 150" />
+          <path
+             id="path1961"
+             d="M 100 150 A 50 50 0 1 0 200 150" />
+        </g>
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile18">
+        <circle
+           id="circle1964"
+           r="100"
+           cy="100"
+           cx="100" />
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile19">
+        <path
+           id="path1967"
+           d="M 0 50 45 0 105 0 140 50 200 50 " />
+        <path
+           id="path1969"
+           d="M 0 50 45 100 105 100 140 50 200 50" />
+        <path
+           id="path1971"
+           d="M 0 150 45 100 105 100 140 150 200 150" />
+        <path
+           id="path1973"
+           d="M 0 150 45 200 105 200 140 150 200 150" />
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile20">
+        <path
+           id="path1976"
+           d="M 0 70 65 0 140 0 200 70 " />
+        <path
+           id="path1978"
+           d="M 0 70 0 130 65 200 140 200 200 130 200 70" />
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile21">
+        <path
+           id="path1981"
+           d="M 50 0 75 25 100 0 M 150 0 175 25 200 0" />
+        <path
+           id="path1983"
+           d="M 0 50 25 25 75 75 125 25 175 75 200 50" />
+        <path
+           id="path1985"
+           d="M 0 100 25 75 75 125 125 75 175 125 200 100" />
+        <path
+           id="path1987"
+           d="M 0 150 25 125 75 175 125 125 175 175 200 150" />
+        <path
+           id="path1989"
+           d="M 0 200 25 175 75 225 125 175 175 225 200 200" />
+      </pattern>
+      <pattern
+         patternUnits="userSpaceOnUse"
+         height="200"
+         width="200"
+         y="0"
+         x="0"
+         id="tile22">
+        <path
+           id="path1992"
+           d="M 0 50 25 75 0 100 M 0 150 25 175 0 200" />
+        <path
+           id="path1994"
+           d="M 50 0 25 25 75 75 25 125 75 175 50 200" />
+        <path
+           id="path1996"
+           d="M 100 0 75 25 125 75 75 125 125 175 100 200" />
+        <path
+           id="path1998"
+           d="M 150 0 125 25 175 75 125 125 175 175 150 200" />
+        <path
+           id="path2000"
+           d="M 200 0 175 25 225 75 175 125 225 175 200 200" />
+      </pattern>
+    </defs>
+  </defs>
+  <sodipodi:namedview
+     inkscape:window-height="936"
+     inkscape:window-width="1276"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     inkscape:zoom="0.98585407"
+     inkscape:cx="534.28476"
+     inkscape:cy="365.5107"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:current-layer="svg1734" />
+  <text
+     style="font-size:110.32038879px;font-style:normal;font-weight:normal;text-anchor:middle;fill:#000000;stroke:#000000;stroke-width:0.03283345in;font-family:AvantGarde"
+     id="text2002"
+     font-size="84"
+     font-weight="normal"
+     font-style="normal"
+     y="1312.89"
+     x="3854.3757">OV_LN_0</text>
+  <text
+     style="font-size:110.32038879px;font-style:normal;font-weight:normal;text-anchor:middle;fill:#000000;stroke:#000000;stroke-width:0.03283345in;font-family:AvantGarde"
+     id="text2004"
+     font-size="84"
+     font-weight="normal"
+     font-style="normal"
+     y="5066.4102"
+     x="3854.3757">OV_LN_1</text>
+  <path
+     id="path2006"
+     d="M 6242.0243,1415.3304 C 6615.195,1423.6407 6915.9315,1723.7988 6924.9601,2096.9528"
+     style="fill:none;stroke:#000000;stroke-width:91.93366241" />
+  <path
+     id="path2008"
+     d="M 782.47824,2096.9528 C 791.50681,1723.7988 1092.2433,1423.6407 1465.414,1415.3304"
+     style="fill:none;stroke:#000000;stroke-width:91.93366241" />
+  <path
+     id="path2014"
+     style="fill:none;stroke:#000000;stroke-width:91.93366241"
+     d="M 7505.4555,3701.8519 L 8391.9586,3701.8519" />
+  <path
+     id="path2016"
+     style="fill:none;stroke:#000000;stroke-width:91.93366241"
+     d="M 7915.2169,3360.384 L 7505.4555,3360.384" />
+  <path
+     id="path2018"
+     style="fill:none;stroke:#000000;stroke-width:91.93366241"
+     d="M 8391.9586,3360.384 L 7949.3637,3360.384" />
+  <path
+     id="path2020"
+     style="fill:none;stroke:#000000;stroke-width:91.93366241"
+     d="M 7505.4555,3053.0629 L 8391.9586,3053.0629" />
+  <path
+     id="path2022"
+     style="fill:none;stroke:#000000;stroke-width:91.93366241"
+     d="M 6924.9601,2096.9528 L 6924.9601,3804.2922" />
+  <path
+     id="path2024"
+     style="fill:none;stroke:#000000;stroke-width:91.93366241"
+     d="M 6242.0243,1415.3304 L 1465.414,1415.3304" />
+  <path
+     id="path2030"
+     style="fill:none;stroke:#000000;stroke-width:91.93366241"
+     d="M 782.47824,2096.9528 L 782.47824,2745.7418" />
+  <g
+     id="OV_LN_1"
+     inkscape:label="#g2383">
+    <path
+       style="fill:none;stroke:#000000;stroke-width:91.93366241"
+       d="M 1465.414,5168.8504 C 1091.747,5160.5127 790.81592,4859.5816 782.47824,4485.9146"
+       id="path2010" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:91.93366241"
+       d="M 6924.9601,4485.9146 C 6916.6223,4859.5816 6615.6913,5160.5127 6242.0243,5168.8504"
+       id="path2012" />
+    <path
+       d="M 6242.0243,5168.8504 L 1465.414,5168.8504"
+       style="fill:none;stroke:#000000;stroke-width:91.93366241"
+       id="path2026" />
+    <path
+       d="M 782.47824,2779.8886 L 782.47824,4485.9146"
+       style="fill:none;stroke:#000000;stroke-width:91.93366241"
+       id="path2028" />
+    <path
+       d="M 6924.9601,4485.9146 L 6924.9601,3838.439"
+       style="fill:none;stroke:#000000;stroke-width:91.93366241"
+       id="path2032" />
+  </g>
+  <path
+     id="path2042"
+     style="fill:none;stroke:#d7ff00;stroke-width:68.2935791"
+     d="M 7505.4555,3701.8519 L 8391.9586,3701.8519" />
+  <path
+     id="path2044"
+     style="fill:none;stroke:#d7ff00;stroke-width:68.2935791"
+     d="M 7915.2169,3360.384 L 7505.4555,3360.384" />
+  <path
+     id="path2046"
+     style="fill:none;stroke:#d7ff00;stroke-width:68.2935791"
+     d="M 8391.9586,3360.384 L 7949.3637,3360.384" />
+  <path
+     id="path2048"
+     style="fill:none;stroke:#d7ff00;stroke-width:68.2935791"
+     d="M 7505.4555,3053.0629 L 8391.9586,3053.0629" />
+  <g
+     id="OV_LN_0"
+     inkscape:label="#g2376">
+    <path
+       style="fill:none;stroke:#d7ff00;stroke-width:68.2935791"
+       d="M 6242.0243,1415.3304 C 6615.195,1423.6407 6915.9315,1723.7988 6924.9601,2096.9528"
+       id="path2034" />
+    <path
+       style="fill:none;stroke:#d7ff00;stroke-width:68.2935791"
+       d="M 782.47824,2096.9528 C 791.50681,1723.7988 1092.2433,1423.6407 1465.414,1415.3304"
+       id="path2036" />
+    <path
+       d="M 6924.9601,2096.9528 L 6924.9601,3804.2922"
+       style="fill:none;stroke:#d7ff00;stroke-width:68.2935791"
+       id="path2050" />
+    <path
+       d="M 6242.0243,1415.3304 L 1465.414,1415.3304"
+       style="fill:none;stroke:#d7ff00;stroke-width:68.2935791"
+       id="path2052" />
+    <path
+       d="M 782.47824,2096.9528 L 782.47824,2745.7418"
+       style="fill:none;stroke:#d7ff00;stroke-width:68.2935791"
+       id="path2058" />
+  </g>
+  <g
+     id="g2369"
+     style="display:inline"
+     sodipodi:insensitive="true">
+    <path
+       style="fill:none;stroke:#d7ff00;stroke-width:68.2935791"
+       d="M 1465.414,5168.8504 C 1091.747,5160.5127 790.81592,4859.5816 782.47824,4485.9146"
+       id="path2038" />
+    <path
+       style="fill:none;stroke:#d7ff00;stroke-width:68.2935791"
+       d="M 6924.9601,4485.9146 C 6916.6223,4859.5816 6615.6913,5160.5127 6242.0243,5168.8504"
+       id="path2040" />
+    <path
+       inkscape:label="#path2054"
+       d="M 6242.0243,5168.8504 L 1465.414,5168.8504"
+       style="fill:none;stroke:#d7ff00;stroke-width:68.2935791"
+       id="track0" />
+    <path
+       d="M 782.47824,2779.8886 L 782.47824,4485.9146"
+       style="fill:none;stroke:#d7ff00;stroke-width:68.2935791"
+       id="path2056" />
+    <path
+       d="M 6924.9601,4485.9146 L 6924.9601,3838.439"
+       style="fill:none;stroke:#d7ff00;stroke-width:68.2935791"
+       id="path2060" />
+  </g>
+  <path
+     id="path2062"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 7505.4555,3667.7051 L 7505.4555,3735.9986" />
+  <path
+     id="path2064"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 8391.9586,3667.7051 L 8391.9586,3735.9986" />
+  <path
+     id="path2066"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 7505.4555,3326.2372 L 7505.4555,3394.5308" />
+  <path
+     id="path2068"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 7915.2169,3326.2372 L 7915.2169,3394.5308" />
+  <path
+     id="path2070"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 7949.3637,3326.2372 L 7949.3637,3394.5308" />
+  <path
+     id="path2072"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 8391.9586,3326.2372 L 8391.9586,3394.5308" />
+  <path
+     id="path2074"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 7505.4555,3018.9161 L 7505.4555,3087.2097" />
+  <path
+     id="path2076"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 8391.9586,3018.9161 L 8391.9586,3087.2097" />
+  <path
+     id="path2078"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 816.62503,2779.8886 L 748.33145,2779.8886" />
+  <path
+     id="path2080"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 816.62503,2745.7418 L 748.33145,2745.7418" />
+  <path
+     id="path2082"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 6890.8133,3804.2922 L 6959.1069,3804.2922" />
+  <path
+     id="path2084"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 6890.8133,3838.439 L 6959.1069,3838.439" />
+  <path
+     id="path2086"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 884.91861,2028.6592 L 884.91861,2438.4207" />
+  <path
+     id="path2088"
+     style="fill:#000000;stroke:#000000;stroke-width:11.82004166"
+     d="M 867.84521,2358.3071 L 884.91861,2426.6007 L 901.992,2358.3071 L 867.84521,2358.3071 z " />
+  <path
+     id="path2090"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 884.91861,3087.2097 L 884.91861,3496.9711" />
+  <path
+     id="path2092"
+     style="fill:#000000;stroke:#000000;stroke-width:11.82004166"
+     d="M 867.84521,3415.5442 L 884.91861,3483.8378 L 901.992,3415.5442 L 867.84521,3415.5442 z " />
+  <path
+     id="path2094"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 6822.5197,3496.9711 L 6822.5197,3087.2097" />
+  <path
+     id="path2096"
+     style="fill:#000000;stroke:#000000;stroke-width:11.82004166"
+     d="M 6839.5931,3167.3233 L 6822.5197,3099.0297 L 6805.4463,3167.3233 L 6839.5931,3167.3233 z " />
+  <path
+     id="path2098"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 6822.5197,4554.2082 L 6822.5197,4144.4468" />
+  <path
+     id="path2100"
+     style="fill:#000000;stroke:#000000;stroke-width:11.82004166"
+     d="M 6839.5931,4225.8737 L 6822.5197,4157.5801 L 6805.4463,4225.8737 L 6839.5931,4225.8737 z " />
+  <path
+     id="path2102"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 4023.7964,1551.9176 L 3615.3483,1551.9176" />
+  <path
+     id="path2104"
+     style="fill:#000000;stroke:#000000;stroke-width:11.82004166"
+     d="M 3695.4619,1533.5308 L 3627.1683,1551.9176 L 3695.4619,1567.6776 L 3695.4619,1533.5308 z " />
+  <path
+     id="path2106"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 3615.3483,5271.2908 L 4023.7964,5271.2908" />
+  <path
+     id="path2108"
+     style="fill:#000000;stroke:#000000;stroke-width:11.82004166"
+     d="M 3943.6828,5288.3642 L 4011.9764,5271.2908 L 3943.6828,5254.2174 L 3943.6828,5288.3642 z " />
+  <path
+     id="path2110"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 65.395694,425.07355 L 11019.948,425.07355" />
+  <path
+     id="path2112"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 7744.483,4042.0064 L 8154.2444,4042.0064" />
+  <path
+     id="path2114"
+     style="fill:#000000;stroke:#000000;stroke-width:11.82004166"
+     d="M 8072.8175,4059.0798 L 8141.1111,4042.0064 L 8072.8175,4024.933 L 8072.8175,4059.0798 z " />
+  <path
+     id="path2116"
+     style="fill:#87cfff;stroke:#000000;stroke-width:23.64008331"
+     d="M 7949.3637,3770.1454 L 7915.2169,3770.1454 L 7915.2169,3633.5583 L 7949.3637,3633.5583 L 7949.3637,3770.1454" />
+  <path
+     id="path2118"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 7437.1619,2848.1822 L 10746.774,2848.1822" />
+  <path
+     id="path2120"
+     style="fill:none;stroke:#000000;stroke-width:11.82004166"
+     d="M 7437.1619,4246.8871 L 10746.774,4246.8871" />
+  <text
+     style="font-size:273.17431641px;font-style:normal;font-weight:bold;text-anchor:middle;fill:#000000;stroke:#000000;stroke-width:0.03283345in;font-family:Times"
+     id="text2122"
+     font-size="208"
+     font-weight="bold"
+     font-style="normal"
+     y="2233.54"
+     x="9040.748">Symbols</text>
+  <text
+     style="font-size:145.78051758px;font-style:normal;font-weight:normal;text-anchor:start;fill:#000000;stroke:#000000;stroke-width:0.03283345in;font-family:Times"
+     id="text2124"
+     font-size="111"
+     font-weight="normal"
+     font-style="normal"
+     y="3428.6775"
+     x="8665.1328">Block isolation</text>
+  <text
+     style="font-size:145.78051758px;font-style:normal;font-weight:normal;text-anchor:start;fill:#000000;stroke:#000000;stroke-width:0.03283345in;font-family:Times"
+     id="text2126"
+     font-size="111"
+     font-weight="normal"
+     font-style="normal"
+     y="3770.1455"
+     x="8665.1328">Reed contacts</text>
+  <text
+     style="font-size:145.78051758px;font-style:normal;font-weight:bold;text-anchor:start;fill:#000000;stroke:#000000;stroke-width:0.03283345in;font-family:Times"
+     id="text2128"
+     font-size="111"
+     font-weight="bold"
+     font-style="normal"
+     y="2779.8887"
+     x="7437.1621">Track segments</text>
+  <text
+     style="font-size:219.32745361px;font-style:normal;font-weight:normal;text-anchor:middle;fill:#000000;stroke:#000000;stroke-width:0.03283345in;font-family:Times"
+     id="text2130"
+     font-size="167"
+     font-weight="normal"
+     font-style="normal"
+     y="732.39465"
+     x="5253.0806">Realtime and Embedded Systems Group</text>
+  <text
+     style="font-size:145.78051758px;font-style:normal;font-weight:normal;text-anchor:start;fill:#000000;stroke:#000000;stroke-width:0.03283345in;font-family:Times"
+     id="text2132"
+     font-size="111"
+     font-weight="normal"
+     font-style="normal"
+     y="3121.3564"
+     x="8665.1328">Test Circle</text>
+  <text
+     style="font-size:145.78051758px;font-style:normal;font-weight:normal;text-anchor:start;fill:#000000;stroke:#000000;stroke-width:0.03283345in;font-family:Times"
+     id="text2134"
+     font-size="111"
+     font-weight="normal"
+     font-style="normal"
+     y="4110.2998"
+     x="8665.1328">Forward direction</text>
+  <text
+     style="font-size:437.34155273px;font-style:normal;font-weight:normal;text-anchor:middle;fill:#000000;stroke:#000000;stroke-width:0.03283345in;font-family:Times"
+     id="text2136"
+     font-size="333"
+     font-weight="normal"
+     font-style="normal"
+     y="288.48639"
+     x="5253.0806">Test Circle Track Layout</text>
+  <text
+     style="font-size:91.93366241px;font-style:normal;font-weight:normal;text-anchor:end;fill:#000000;stroke:#000000;stroke-width:0.03283345in;font-family:Times"
+     id="text2138"
+     font-size="70"
+     font-weight="normal"
+     font-style="normal"
+     y="5373.731"
+     x="10644.333">(sho), october 2005</text>
+  <path
+     id="path2140"
+     style="fill:#87cfff;stroke:#000000;stroke-width:23.64008331"
+     d="M 850.77182,3053.0629 L 850.77182,3018.9161 L 714.18467,3018.9161 L 714.18467,3053.0629 L 850.77182,3053.0629" />
+  <path
+     id="path2142"
+     style="fill:#87cfff;stroke:#000000;stroke-width:23.64008331"
+     d="M 850.77182,2506.7143 L 850.77182,2472.5675 L 714.18467,2472.5675 L 714.18467,2506.7143 L 850.77182,2506.7143" />
+  <path
+     id="path2144"
+     style="fill:#87cfff;stroke:#000000;stroke-width:23.64008331"
+     d="M 6856.6665,3531.1179 L 6856.6665,3565.2647 L 6993.2536,3565.2647 L 6993.2536,3531.1179 L 6856.6665,3531.1179" />
+  <path
+     id="path2146"
+     style="fill:#87cfff;stroke:#000000;stroke-width:23.64008331"
+     d="M 6856.6665,4076.1532 L 6856.6665,4110.3 L 6993.2536,4110.3 L 6993.2536,4076.1532 L 6856.6665,4076.1532" />
+</svg>

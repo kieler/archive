@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping 
+   xmlns="http://rtsys.informatik.uni-kiel.de/modelgui"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+>
+<display port="0">
+  <move-path id="rectangle" input="0..100"  path="movepath" />
+  <hallo test="hallo" />
+</display>
+
+</mapping>

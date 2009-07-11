@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns="http://rtsys.informatik.uni-kiel.de/modelgui">
+<display inport=0>
+  <move id="water" input="0..140"  x-range="163..163" y-range="269..59"/>
+  <rotate id="tank" input="0..20" pivot="25,80" angle-range="0..359" />
+  <color id="water" input="0,1,2" color="#000000, #0000ff, #00ff00" /> 
+</display>
+<display inport=1>
+  <move id="tank" input="20..30" x-range="130..130" y-range="200..250"/>
+</display>
+
+
+<control outport=0>  
+</control>
+
+</mapping>

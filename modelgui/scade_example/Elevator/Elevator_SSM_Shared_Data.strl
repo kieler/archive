@@ -1,0 +1,27 @@
+/*********************************/
+/*********************************/
+/** Generated File, do not edit **/
+/*********************************/
+/*********************************/
+
+
+data Elevator_SSM_Shared_Data :
+
+/* Extends sub-projects data */
+extends libdigital_SSM_Shared_Data ;
+extends liblinear_SSM_Shared_Data ;
+extends libmath_SSM_Shared_Data ;
+extends libmathadvanced_SSM_Shared_Data ;
+extends libpwlinear_SSM_Shared_Data ;
+extends libverification_SSM_Shared_Data ;
+extends libssm_SSM_Shared_Data ;
+
+
+end data
+
+
+/*********************************/
+/*********************************/
+/** Generated File, do not edit **/
+/*********************************/
+/*********************************/

@@ -1,0 +1,14 @@
+/*ED430 version "V410" "RT430" */ 
+node Controller(
+   /*ED430 pure  */ ButtonUp /*! oid "win_2989/F/1D5C/45A23FDF/499A" : */ : bool ; 
+   /*ED430 pure  */ ButtonDown /*! oid "win_298A/F/1D5C/45A23FE2/4B72" : */ : bool ; 
+   /*ED430 pure  */ ButtonAlarm /*! oid "win_298B/F/1D5C/45A23FE4/6807" : */ : bool ; 
+   /*ED430 pure  */ Second /*! oid "win_298C/F/1D5C/45A23FE6/45DD" : */ : bool ; 
+   /*ED430 pure  */ IsUp /*! oid "win_298D/F/1D5C/45A23FEC/3C6" : */ : bool ; 
+   /*ED430 pure  */ IsDown /*! oid "win_298E/F/1D5C/45A23FEE/2D39" : */ : bool) 
+   returns (
+   /*ED430 valueonly */ Move /*! oid "win_298F/F/1D5C/45A2400B/B08" : */ : int/*SCED  = "0" */  ; 
+   /*ED430 pure  */ AlarmLamp /*! oid "win_1D2B/6A70/1D08/45A50A53/39B" : */ : bool ; 
+   /*ED430 pure  */ OpenDoor /*! oid "win_FC3/45E0/1A98/45A5EF90/2AD2" : */ : bool)
+   /*! oid "win_1BC0/F/1D5C/45A23E25/52BC" : automaton *//*SCED SafeStateMachine */ ;
+

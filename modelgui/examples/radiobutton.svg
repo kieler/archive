@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="550pt"
+   height="550pt"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.43"
+   sodipodi:docbase="/home/sja/workspaces/eclipse/modelgui/trunk"
+   sodipodi:docname="radiobutton.svg"
+   version="1.0">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient8375">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop8377" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop8379" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.65491031"
+     inkscape:cx="426.12281"
+     inkscape:cy="387.90569"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     inkscape:window-width="1276"
+     inkscape:window-height="936"
+     inkscape:window-x="0"
+     inkscape:window-y="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <script type="text/ecmascript"><![CDATA[
+	  var on = false;
+	  var button = document.getElementById("radiobutton");
+	  var cross = document.getElementById("kreuz");
+	  
+	  function handleClick(evt){
+		   if (on == false){
+		      cross.setAttribute("opacity", "0");
+		      on = true;
+		   }
+		   else {
+			cross.setAttribute("opacity", "1");
+			on = false;
+		   }
+	  }
+  
+  ]]>
+  </script>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="radiobutton"
+     onclick="handleClick(evt)"
+     >
+    <g
+       id="g9308">
+      <rect
+         inkscape:label="#rect1307"
+         y="42.316212"
+         x="41.080322"
+         height="570.32245"
+         width="572.05676"
+         id="rect3099"
+         style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:34.91225052;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.58431373" />
+      <rect
+         inkscape:label="#rect1307"
+         y="29.15695"
+         x="26.857538"
+         height="570.32245"
+         width="572.05676"
+         id="background"
+         style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:34.91225052;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <g
+         inkscape:label="#g3974"
+         id="kreuz"
+	 opacity="0">
+        <path
+           style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           id="path3077"
+           d="M 100.26381,86.638328 C 177.8683,150.29803 247.53193,223.10594 316.36587,296.95382 C 376.68829,362.28209 442.55925,421.21224 512.73629,474.35819 C 521.63632,482.5264 531.93348,488.79706 541.95899,495.29602 L 513.58413,514.57655 C 503.67157,507.65357 493.28614,501.40178 484.12735,493.3852 C 418.5121,435.17228 352.81047,376.94036 292.99742,311.99497 C 223.54933,237.76516 153.54148,163.87946 71.078273,105.46037 L 100.26381,86.638328 z " />
+        <path
+           style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           id="cross"
+           d="M 99.205854,545.73011 C 139.59814,471.17071 199.24834,404.54416 251.76119,337.4787 C 326.5007,248.81366 410.89413,142.67153 528.53816,109.31224 C 536.97308,107.48412 545.5188,106.26067 554.03545,104.9068 L 519.85131,130.33336 C 511.59464,131.74761 503.27773,132.85783 495.11285,134.74872 C 470.55559,142.17053 340.14793,233.91082 283.31376,324.01006 C 232.52496,389.126 177.93237,454.06265 137.83281,526.13986 L 99.205854,545.73011 z "
+           inkscape:label="#path3079" />
+      </g>
+    </g>
+  </g>
+</svg>

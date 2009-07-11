@@ -1,0 +1,37 @@
+MODEL
+	U:/shared/modelgui/trunk/scade_example/Elevator/SafeStateMachine1_stateoper
+	U:/shared/modelgui/trunk/scade_example/Elevator/Node2
+	U:/shared/modelgui/trunk/scade_example/Elevator/Node3
+	U:/shared/modelgui/trunk/scade_example/Elevator/Node4
+	U:/shared/modelgui/trunk/scade_example/Elevator/Node5
+	U:/shared/modelgui/trunk/scade_example/Elevator/TypeBlock1
+
+LIBRARY_MODEL libdigital 
+	libdigital.saofdm
+
+LIBRARY_MODEL liblinear 
+	liblinear.saofdm
+
+LIBRARY_MODEL libmath 
+	libmath.saofdm
+
+LIBRARY_MODEL libmathadvanced 
+	libmathadvanced.saofdm
+
+LIBRARY_MODEL libpwlinear 
+	libpwlinear.saofdm
+
+LIBRARY_MODEL libverification 
+	libverification.saofdm
+
+LIBRARY_MODEL libssm 
+	libssm.saofdm
+
+NOTES_TYPES $(SCADE)/examples/ConfAnnot.aty 
+
+DIAG_SEM Elevator.semerrfd 
+
+DIAG_MET Elevator.meterrfd 
+
+-- occBase 10
+

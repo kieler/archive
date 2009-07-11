@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="284" height="290" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <title>Transformationsanimation</title>
+  <defs>
+    <g id="rad">
+      <circle r="20" stroke="black" fill="none" stroke-width="5"/>
+      <line x1="0" y1="-20" x2="0" y2="20" stroke-width="2" stroke="black"/>
+      <line x1="-20" y1="0" x2="20" y2="0" stroke-width="2" stroke="black"/>
+      <line x1="14" y1="14" x2="-14" y2="-14" stroke-width="2" stroke="black"/>
+      <line x1="14" y1="-14" x2="-14" y2="14" stroke-width="2" stroke="black"/>
+      <animateTransform attributeName="transform" attributeType="XML"
+           type="rotate" from="0" to="180" begin="0s" dur="1s"
+           repeatDur="2:00"/>
+    </g>
+  </defs>
+  <desc>---------------- Das Fahrrad:------------------------------</desc>
+  <g>
+    <use xlink:href="#rad" x="400" y="100"/>
+    <use xlink:href="#rad" x="100" y="100"/>
+    <ellipse cx="-9" cy="65" rx="10" ry="5" transform="skewX(10)" />
+    <path fill="none" stroke-width="4" stroke="black" d="M47 74c9,0,17.625,18.625,25.125,18.625s6-23.25,25.375-29.375"/>
+    <animateTransform attributeName="transform" attributeType="XML"
+        type="translate" begin="0s" dur="1s"
+        keyTimes="0;0.3;0.8;1" values="0;2 -2;0 -4;2"
+        repeatDur="2:00"/>
+  </g>
+  <desc>---------------- Der Ballon:--------------------------------</desc>
+  <g transform="translate(220 65)">
+    <g>
+      <ellipse cx="0" cy="0" rx="20" ry="28" />
+      <path fill="black" stroke-width="1" stroke="black"
+            d="M -4 28 l -4 4 l 4 -2 4 2 4 -2 4 2 -4 -4 z"/>
+      <path fill="none" stroke-width="1" stroke="black"
+            d="M 0 28 c 10 20 -20 30 2 50"/>
+      <animateTransform attributeName="transform" attributeType="XML"
+            type="scale" begin="0s" dur="5s"
+            keyTimes="0;.1;.2;.3;.4;.5;.6;.7;.8;.9;1"
+            values ="1;0.8;1.2;1;1.4;1.1;1.6;1.4;1.8;1.6;2"
+            repeatDur="2:00"/>
+    </g>
+  </g>
+  <desc>---------------- Der Zirkel:---------------------------------</desc>
+  <g transform="translate(100 200)" stroke="black" fill="none">
+    <path stroke-width="6" d="M-3 -22 v-10"/>
+    <path stroke-width="4" d="M-4,0v 65"/>
+    <path d="M-4 63v4.5"/>
+    <g>
+      <path stroke-width="4" d="M-4 0 .643,64.504"/>
+      <path d="M2,68v-4.5"/>
+      <animateTransform attributeName="transform" attributeType="XML"
+            type="skewX" begin="0s" dur="2s"
+            keyTimes="0;0.5;1" values="-25;25;-25"
+            repeatDur="2:00"/>
+    </g>
+    <g transform="translate(-4 16)">
+      <g>
+        <circle stroke-width="4" cx="1" cy="-26" r="11"/>
+        <path stroke-width="2" d="M-15 -1h32"/>
+        <animateTransform attributeName="transform" attributeType="XML"
+               type="scale" begin="0s" dur="2s"
+               keyTimes="0;.25;0.5;.75;1" values="1 1;.5 1;1 1;.5 1;1 1"
+                repeatDur="2:00"/>
+      </g>
+    </g>
+  </g>
+  <g stroke="red" stroke-width="2" fill="none">
+    <rect x="5" y="5" width="136" height="130"/>
+    <rect x="5" y="150" width="136" height="130"/>
+    <rect x="170" y="5" width="100" height="275"/>
+  </g>
+  <g font-size="9pt" fill="red" stroke="none">
+    <text x="10" y="20">rotate und translate</text>
+    <text x="10" y="180">skewX</text>
+    <text x="10" y="200">und</text>
+    <text x="10" y="220">scale</text>
+    <text x="200" y="270">scale</text>
+  </g>
+</svg>

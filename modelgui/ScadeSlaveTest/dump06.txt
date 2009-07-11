@@ -1,0 +1,184 @@
+00000000  53 73 6d 50 72 6f 78 79  3a 3a 53 74 61 72 74 20 SsmProxy ::Start 
+
+00000010  22 53 69 6d 75 6c 61 74  69 6f 6e 22 20 73 69 6d "Simulat ion" sim
+
+00000020  75 6c 61 74 69 6f 6e 3a  3a 72 61 69 6c 77 61 79 ulation: :railway
+
+00000030  0d 0a                                            ..
+
+                                                                              00000000  4f 4b                                            OK
+
+00000032  53 73 6d 50 72 6f 78 79  3a 3a 53 74 65 70 20 31 SsmProxy ::Step 1
+
+00000042  20 31 0d 0a                                       1..
+
+                                                                              00000002  4f 4b                                            OK
+
+00000046  53 73 6d 50 72 6f 78 79  3a 3a 53 74 65 70 20 31 SsmProxy ::Step 1
+
+00000056  20 31 0d 0a                                       1..
+
+                                                                              00000004  4f 4b                                            OK
+
+0000005A  53 73 6d 50 72 6f 78 79  3a 3a 53 74 65 70 20 31 SsmProxy ::Step 1
+
+0000006A  20 31 0d 0a                                       1..
+
+                                                                              00000006  4f 4b                                            OK
+
+0000006E  53 73 6d 50 72 6f 78 79  3a 3a 53 74 65 70 20 31 SsmProxy ::Step 1
+
+0000007E  20 31 0d 0a                                       1..
+
+                                                                              00000008  4f 4b                                            OK
+
+00000082  53 73 6d 50 72 6f 78 79  3a 3a 53 74 65 70 20 31 SsmProxy ::Step 1
+
+00000092  20 31 0d 0a                                       1..
+
+                                                                              0000000A  4f 4b                                            OK
+
+00000096  53 73 6d 50 72 6f 78 79  3a 3a 53 65 74 49 6e 70 SsmProxy ::SetInp
+
+000000A6  75 74 56 65 63 74 6f 72  20 7b 5b 73 69 6d 75 6c utVector  {[simul
+
+000000B6  61 74 69 6f 6e 3a 3a 70  5f 74 75 72 6e 2c 20 73 ation::p _turn, s
+
+000000C6  69 6d 75 6c 61 74 69 6f  6e 3a 3a 70 5f 74 75 72 imulatio n::p_tur
+
+000000D6  6e 2c 20 73 69 6d 75 6c  61 74 69 6f 6e 3a 3a 70 n, simul ation::p
+
+000000E6  5f 74 75 72 6e 2c 20 73  69 6d 75 6c 61 74 69 6f _turn, s imulatio
+
+000000F6  6e 3a 3a 70 5f 74 75 72  6e 2c 20 73 69 6d 75 6c n::p_tur n, simul
+
+00000106  61 74 69 6f 6e 3a 3a 70  5f 74 75 72 6e 2c 20 73 ation::p _turn, s
+
+00000116  69 6d 75 6c 61 74 69 6f  6e 3a 3a 70 5f 74 75 72 imulatio n::p_tur
+
+00000126  6e 2c 20 73 69 6d 75 6c  61 74 69 6f 6e 3a 3a 70 n, simul ation::p
+
+00000136  5f 74 75 72 6e 2c 20 73  69 6d 75 6c 61 74 69 6f _turn, s imulatio
+
+00000146  6e 3a 3a 70 5f 74 75 72  6e 2c 20 73 69 6d 75 6c n::p_tur n, simul
+
+00000156  61 74 69 6f 6e 3a 3a 70  5f 74 75 72 6e 2c 20 73 ation::p _turn, s
+
+00000166  69 6d 75 6c 61 74 69 6f  6e 3a 3a 70 5f 74 75 72 imulatio n::p_tur
+
+00000176  6e 2c 20 73 69 6d 75 6c  61 74 69 6f 6e 3a 3a 70 n, simul ation::p
+
+00000186  5f 74 75 72 6e 2c 20 73  69 6d 75 6c 61 74 69 6f _turn, s imulatio
+
+00000196  6e 3a 3a 70 5f 74 75 72  6e 2c 20 73 69 6d 75 6c n::p_tur n, simul
+
+000001A6  61 74 69 6f 6e 3a 3a 70  5f 74 75 72 6e 2c 20 73 ation::p _turn, s
+
+000001B6  69 6d 75 6c 61 74 69 6f  6e 3a 3a 70 5f 74 75 72 imulatio n::p_tur
+
+000001C6  6e 2c 20 73 69 6d 75 6c  61 74 69 6f 6e 3a 3a 70 n, simul ation::p
+
+000001D6  5f 74 75 72 6e 2c 20 73  69 6d 75 6c 61 74 69 6f _turn, s imulatio
+
+000001E6  6e 3a 3a 70 5f 74 75 72  6e 2c 20 73 69 6d 75 6c n::p_tur n, simul
+
+000001F6  61 74 69 6f 6e 3a 3a 70  5f 74 75 72 6e 2c 20 73 ation::p _turn, s
+
+00000206  69 6d 75 6c 61 74 69 6f  6e 3a 3a 70 5f 74 75 72 imulatio n::p_tur
+
+00000216  6e 2c 20 73 69 6d 75 6c  61 74 69 6f 6e 3a 3a 70 n, simul ation::p
+
+00000226  5f 74 75 72 6e 2c 20 73  69 6d 75 6c 61 74 69 6f _turn, s imulatio
+
+00000236  6e 3a 3a 70 5f 74 75 72  6e 2c 20 73 69 6d 75 6c n::p_tur n, simul
+
+00000246  61 74 69 6f 6e 3a 3a 70  5f 74 75 72 6e 2c 20 73 ation::p _turn, s
+
+00000256  69 6d 75 6c 61 74 69 6f  6e 3a 3a 70 5f 74 75 72 imulatio n::p_tur
+
+00000266  6e 2c 20 73 69 6d 75 6c  61 74 69 6f 6e 3a 3a 70 n, simul ation::p
+
+00000276  5f 74 75 72 6e 2c 20 73  69 6d 75 6c 61 74 69 6f _turn, s imulatio
+
+00000286  6e 3a 3a 70 5f 74 75 72  6e 2c 20 73 69 6d 75 6c n::p_tur n, simul
+
+00000296  61 74 69 6f 6e 3a 3a 70  5f 74 75 72 6e 2c 20 73 ation::p _turn, s
+
+000002A6  69 6d 75 6c 61 74 69 6f  6e 3a 3a 70 5f 74 75 72 imulatio n::p_tur
+
+000002B6  6e 2c 20 73 69 6d 75 6c  61 74 69 6f 6e 3a 3a 70 n, simul ation::p
+
+000002C6  5f 74 75 72 6e 2c 20 73  69 6d 75 6c 61 74 69 6f _turn, s imulatio
+
+000002D6  6e 3a 3a 70 5f 74 75 72  6e 2c 20 73 69 6d 75 6c n::p_tur n, simul
+
+000002E6  61 74 69 6f 6e 3a 3a 70  5f 74 75 72 6e 2c 20 73 ation::p _turn, s
+
+000002F6  69 6d 75 6c 61 74 69 6f  6e 3a 3a 70 5f 74 75 72 imulatio n::p_tur
+
+00000306  6e 2c 20 73 69 6d 75 6c  61 74 69 6f 6e 3a 3a 70 n, simul ation::p
+
+00000316  5f 74 75 72 6e 2c 20 73  69 6d 75 6c 61 74 69 6f _turn, s imulatio
+
+00000326  6e 3a 3a 70 5f 74 75 72  6e 2c 20 73 69 6d 75 6c n::p_tur n, simul
+
+00000336  61 74 69 6f 6e 3a 3a 70  5f 74 75 72 6e 2c 20 73 ation::p _turn, s
+
+00000346  69 6d 75 6c 61 74 69 6f  6e 3a 3a 70 5f 74 75 72 imulatio n::p_tur
+
+00000356  6e 2c 20 73 69 6d 75 6c  61 74 69 6f 6e 3a 3a 70 n, simul ation::p
+
+00000366  5f 74 75 72 6e 2c 20 73  69 6d 75 6c 61 74 69 6f _turn, s imulatio
+
+00000376  6e 3a 3a 70 5f 74 75 72  6e 2c 20 73 69 6d 75 6c n::p_tur n, simul
+
+00000386  61 74 69 6f 6e 3a 3a 70  5f 74 75 72 6e 2c 20 73 ation::p _turn, s
+
+00000396  69 6d 75 6c 61 74 69 6f  6e 3a 3a 70 5f 74 75 72 imulatio n::p_tur
+
+000003A6  6e 2c 20 73 69 6d 75 6c  61 74 69 6f 6e 3a 3a 70 n, simul ation::p
+
+000003B6  5f 74 75 72 6e 2c 20 73  69 6d 75 6c 61 74 69 6f _turn, s imulatio
+
+000003C6  6e 3a 3a 70 5f 74 75 72  6e 2c 20 73 69 6d 75 6c n::p_tur n, simul
+
+000003D6  61 74 69 6f 6e 3a 3a 70  5f 74 75 72 6e 2c 20 73 ation::p _turn, s
+
+000003E6  69 6d 75 6c 61 74 69 6f  6e 3a 3a 70 5f 74 75 72 imulatio n::p_tur
+
+000003F6  6e 2c 20 73 69 6d 75 6c  61 74 69 6f 6e 3a 3a 70 n, simul ation::p
+
+00000406  5f 74 75 72 6e 2c 20 73  69 6d 75 6c 61 74 69 6f _turn, s imulatio
+
+00000416  6e 3a 3a 70 5f 74 75 72  6e 2c 20 73 69 6d 75 6c n::p_tur n, simul
+
+00000426  61 74 69 6f 6e 3a 3a 70  5f 74 75 72 6e 2c 20 73 ation::p _turn, s
+
+00000436  69 6d 75 6c 61 74 69 6f  6e 3a 3a 70 5f 74 75 72 imulatio n::p_tur
+
+00000446  6e 2c 20 73 69 6d 75 6c  61 74 69 6f 6e 3a 3a 70 n, simul ation::p
+
+00000456  5f 74 75 72 6e 2c 20 73  69 6d 75 6c 61 74 69 6f _turn, s imulatio
+
+00000466  6e 3a 3a 70 5f 74 75 72  6e 5d 7d 0d 0a          n::p_tur n]}..
+
+                                                                              0000000C  4f 4b                                            OK
+
+00000473  53 73 6d 50 72 6f 78 79  3a 3a 53 74 65 70 20 31 SsmProxy ::Step 1
+
+00000483  20 31 0d 0a                                       1..
+
+                                                                              0000000E  4f 4b                                            OK
+
+00000487  53 73 6d 50 72 6f 78 79  3a 3a 52 65 66 72 65 73 SsmProxy ::Refres
+
+00000497  68 0d 0a 00                                      h...
+
+                                                                              00000010  4f 4b                                            OK
+
+0000049B  53 73 6d 50 72 6f 78 79  3a 3a 43 6c 6f 73 65 0d SsmProxy ::Close.
+
+000004AB  0a                                               .
+
+                                                                              00000012  4f 4b                                            OK
+

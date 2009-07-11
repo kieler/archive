@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jardesc>
+    <jar path="/home/haf/shared/modelgui/trunk/simulink_example/guiclient.jar"/>
+    <options overwrite="false" compress="true" exportErrors="true" exportWarnings="true" saveDescription="true" descriptionLocation="/modelgui/trunk/modelgui/makeclient.jardesc" useSourceFolders="false" buildIfNeeded="true" includeDirectoryEntries="true" storeRefactorings="false"/>
+    <storedRefactorings structuralOnly="false" deprecationInfo="true"/>
+    <selectedProjects/>
+    <manifest manifestVersion="1.0" usesManifest="true" reuseManifest="false" saveManifest="true" generateManifest="false" manifestLocation="/modelgui/trunk/modelgui/MANIFEST.MF">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportOutputFolder="false" exportJavaFiles="false">
+        <javaElement handleIdentifier="=modelgui/trunk\/modelgui\/src"/>
+    </selectedElements>
+</jardesc>

@@ -1,0 +1,77 @@
+#--------------------------- Tool Specifications -------------------------
+#
+# Modify the following macros to reflect the tools you wish to use for
+# compiling and linking your code.
+#
+CC = /home/matlab/matlab-R2006b/bin/mex
+LD = $(CC)
+ 
+MACHINE     = elevator2
+TARGET      = sfun
+CHART_SRCS 	= \
+		c1_elevator2.c
+MACHINE_SRC	= elevator2_sfun.c
+MACHINE_REG = elevator2_sfun_registry.c
+MEX_WRAPPER =
+MAKEFILE    = elevator2_sfun.mku
+MATLAB_ROOT	= /home/matlab/matlab-R2006b/toolbox/stateflow/stateflow/../../..
+BUILDARGS   = 
+#------------------------------ Include/Lib Path ------------------------------
+ 
+USER_INCLUDES = -I/home/haf/shared/modelgui/trunk/simulink_example/sfprj/build/elevator2/sfun/src -I/home/haf/shared/modelgui/trunk/simulink_example 
+MATLAB_INCLUDES = -I$(MATLAB_ROOT)/simulink/include \
+						-I$(MATLAB_ROOT)/extern/include \
+						-I/home/matlab/matlab-R2006b/stateflow/c/mex/include \
+						-I/home/matlab/matlab-R2006b/stateflow/c/debugger/include
+
+DSP_INCLUDES    =
+
+INCLUDE_PATH = -I/home/haf/shared/modelgui/trunk/simulink_example/sfprj/build/elevator2/sfun/src -I/home/haf/shared/modelgui/trunk/simulink_example  $(MATLAB_INCLUDES) $(DSP_INCLUDES) $(COMPILER_INCLUDES)
+ 
+#----------------- Compiler and Linker Options --------------------------------
+ 
+# Optimization Options
+OPT_OPTS = -O
+ 
+# General User Options
+OPTS =
+ 
+CC_OPTS = $(OPT_OPTS) $(OPTS)
+CPP_REQ_DEFINES = -DMATLAB_MEX_FILE
+ 
+# Uncomment this line to move warning level to W4
+# cflags = $(cflags:W3=W4)
+CFLAGS = $(CC_OPTS) $(CPP_REQ_DEFINES) $(INCLUDE_PATH)
+ 
+LDFLAGS = 
+ 
+#----------------------------- Source Files -----------------------------------
+ 
+REQ_SRCS  = $(MACHINE_SRC) $(MACHINE_REG) $(MEX_WRAPPER) $(CHART_SRCS)
+
+USER_ABS_OBJS =
+
+REQ_OBJS = $(REQ_SRCS:.cpp=.o)
+REQ_OBJS2 = $(REQ_OBJS:.c=.o)
+OBJS = $(REQ_OBJS2) $(USER_ABS_OBJS)
+OBJLIST_FILE = elevator2_sfun.mol
+SFCLIB = /home/matlab/matlab-R2006b/stateflow/c/mex/lib/glnx86/sfc_mex.a /home/matlab/matlab-R2006b/stateflow/c/debugger/lib/glnx86/sfc_debug.a
+USER_LIBS =
+LINK_MACHINE_LIBS =
+FIXEDPOINTLIB = -L/home/matlab/matlab-R2006b/bin/glnx86 -lfixedpoint
+UTLIB = -lut
+ 
+#--------------------------------- Rules --------------------------------------
+ 
+MEX_FILE_NAME = $(MACHINE)_$(TARGET).mexglx
+ 
+ $(MEX_FILE_NAME): $(MAKEFILE) $(OBJS) $(SFCLIB) $(USER_LIBS) $(MEXLIB)
+	@echo ### Linking ...
+	$(CC) -silent -output $(MEX_FILE_NAME) $(OBJS) $(USER_LIBS) $(LINK_MACHINE_LIBS) $(SFCLIB) $(FIXEDPOINTLIB) $(UTLIB)
+
+%.o :	%.c
+	$(CC) -c $(CFLAGS) $<
+
+%.o :	%.cpp
+	$(CC) -c $(CFLAGS) $<
+

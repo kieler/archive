@@ -1,0 +1,11 @@
+/*ED430 version "V410" "RT430" */ 
+let type TypeBlock1
+    guiControlData = [button_up : bool , button_down : bool , button_alarm : bool]/*! oid "win_1082/301C/4B4/45A69557/BC9" : */ ; 
+    guiDisplayData = [motor_dir : int , alarm : bool , position : int , doorIsOpen : bool]/*! oid "win_1083/301C/4B4/45A6955F/63A5" : */ ; 
+tel /*! oid "win_1081/301C/4B4/45A69554/1378" : "A4 (210 297)" false : 100*/
+/*SCED  "DefaultPageFormat" : "1" , 
+"PageSize" : "A4 (210 297)" , 
+"Landscape" : "false" , 
+"PageZoom" : "100"
+*/ ;
+

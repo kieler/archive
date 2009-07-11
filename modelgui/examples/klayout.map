@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping 
+   xmlns="http://rtsys.informatik.uni-kiel.de/modelgui">
+<display port="25">
+  <colorize id="KH_ST_1" input="false,true" color="#000000,#ffff00" color-property="stroke" />
+</display>
+<display port="30">
+  <colorize id="KH_ST_6" input="false,true" color="#000000,#ffff00" color-property="stroke" />
+</display>
+<display port="15">
+  <colorize id="KH_LN_0" input="false,true" color="#000000,#ffff00" color-property="stroke" />
+</display>
+<display port="16">
+  <colorize id="KH_LN_1" input="false,true" color="#000000,#ffff00" color-property="stroke" />
+</display>
+<display port="17">
+  <colorize id="KH_LN_2" input="false,true" color="#000000,#ffff00" color-property="stroke" />
+</display>
+<display port="18">
+  <colorize id="KH_LN_3" input="false,true" color="#000000,#ffff00" color-property="stroke" />
+</display>
+<display port="21">
+  <colorize id="KH_LN_5" input="false,true" color="#000000,#ffff00" color-property="stroke" />
+</display>
+<display port="23">
+  <colorize id="KH_LN_7" input="false,true" color="#000000,#ffff00" color-property="stroke" />
+</display>
+<display port="24">
+  <colorize id="KH_LN_8" input="false,true" color="#000000,#ffff00" color-property="stroke" />
+</display>
+<display port="26">
+  <colorize id="KH_ST_0" input="false,true" color="#000000,#ffff00" color-property="stroke" />
+</display>
+
+<control port="0">
+  <button id="bell"/>
+</control>
+
+</mapping>

@@ -1,0 +1,58 @@
+-- EQUATIONS OF Controller --
+
+node Controller;
+
+let equa Controller [ , ]
+
+  -- INPUT AND OUTPUT EQUATIONS
+  
+  _LE0 = ButtonUp;
+  _LE1 = ButtonDown;
+  _LE2 = ButtonAlarm;
+  _LE3 = Second;
+  _LE4 = IsUp;
+  _LE5 = IsDown;
+  Move = _LVF5;
+  AlarmLamp = _LE6;
+  OpenDoor = _LE7;
+  
+  
+  -- CONTROL PATH EQUATIONS
+  
+  _LE8 = false;
+  _LE9 = true -> pre(_LE8);
+  _LE10 = (not _LE9 and _LE15 and _LE3);
+  _LE11 = (_LE10);
+  _LE12 = (_LE10 and _LE29);
+  _LE13 = (not _LE9 and _LE4 and _LE19);
+  _LE14 = (_LE13) or (not _LE9 and _LE15 and not _LE12);
+  _LE15 = false -> pre(_LE14);
+  _LE16 = (_LE9) or (_LE21);
+  _LE17 = (_LE0 and _LE16);
+  _LE18 = (_LE17) or (not _LE9 and not _LE4 and _LE19);
+  _LE19 = false -> pre(_LE18);
+  _LE20 = (not _LE17 and _LE16);
+  _LE21 = false -> pre(_LE20);
+  _LE6 = (_LE12);
+  _LE22 = (_LE9);
+  _LE23 = (_LE17);
+  _LE24 = (_LE13);
+  _LE25 = (_LE24);
+  _LE26 = (_LE13);
+  _LE27 = (_LE26);
+  _LE28 = false;
+  _LE7 = (_LE28);
+  
+  
+  -- DATA PATH EQUATIONS
+  
+  _LVF0 = if _LE11 then ((0->pre(_LVF6)) - 1) else (0->pre(_LVF6));
+  _LE29 = if _LE11 then (_LVF0 <= 0) else false;
+  _LVF2 = if _LE22 then 0 else (0->pre(_LVF5));
+  _LVF3 = if _LE22 then 0 else (0->pre(_LVF3));
+  _LVF4 = if _LE23 then 1 else _LVF2;
+  _LVF5 = if _LE25 then 0 else _LVF4;
+  _LVF6 = if _LE27 then 3 else _LVF0;
+  
+  
+tel;

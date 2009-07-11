@@ -1,0 +1,33 @@
+MODEL
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/SinhR
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/TanhR
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/SqrtR
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/CoshR
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/AtanR
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/AtanhR
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/AsinR
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/AsinhR
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/AcosR
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/AcoshR
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/CosR
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/ExpR
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/LnR
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/LogR
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/PowR
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/SinR
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/TanR
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/TenPowR
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/SquareR
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/InvI
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/InvR
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/Atan2R
+
+
+NOTES_TYPES C:/Programme/Esterel\ Technologies/Scade51/examples/ConfAnnot.aty 
+
+DIAG_SEM C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/ProbaLibMathAdvanced.semerrfd 
+
+DIAG_MET C:/Programme/Esterel\ Technologies/Scade51/libraries/libmathadvanced/ProbaLibMathAdvanced.meterrfd 
+
+-- occBase 10
+

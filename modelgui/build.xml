@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="help" name="ModelGUI">
+    <property environment="env"/>
+    <property name="project" value="ModelGUI"/>
+    <property name="year" value="2007"/>
+    <property name="revisionNumber" value="1.0"/>
+    <property name="debug" value="off"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+	<property name="nowarnings" value="true"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <property name="src" value="modelgui-src/src"/>
+    <property name="bin" value="bin"/>
+
+    <!-- CHANGE THIS PROPERTY TO CUSTOMIZE YOUR BUILD PATH -->
+    <property name="buildpath" value="build"/>
+    <property name="lib" value="modelgui-src/lib"/>
+    <property name="resources" value="modelgui-src/src/resources"/>
+
+    <!-- CHANGE THIS PROPERTY TO A FILENAME YOU PREFER -->
+    <property name="jarfilename" value="modelgui.jar"/>
+    <property name="simulinkfilename" value="guiclient.jar"/>
+    <property name="scadefilename" value="guiserver.jar"/>
+
+
+    <!-- set classpath to binary *.class files and resource files -->
+    <path id="modelgui.classpath">
+        <pathelement location="${buildpath}"/>
+        <pathelement location="${resources}"/>
+    </path>
+
+    <!-- set classpath to libraries used by ModelGUI -->
+    <path id="libs.classpath">
+      <fileset dir="${lib}">
+        <include name="*.jar"/>
+      </fileset>
+    </path>
+
+    <taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpath="${lib}/jarjar.jar"/>
+
+    <!-- Info ............................................................... -->
+    <echo message="------------------- ${project} ${revisionNumber} (${year}) -------------------"/>
+    <echo message="${ant.version}"/>
+    <echo message="VM: ${java.vm.version}, ${java.vm.vendor}"/>
+    <echo message="JAVA_HOME: ${env.JAVA_HOME}"/>
+	<echo message="ANT_HOME: ${ant.home}"/>
+
+    <!-- Prompt help message if ANT was called without any arguments -->
+    <target name="help" description="Displays the usage">
+      <echo message=" ${project} build file"/>
+      <echo message=" ----------------------- "/>
+      <echo message=" Usage: build.sh &lt;target&gt;"/>
+      <echo message="        or"/>
+      <echo message="        ant &lt;target&gt;" />
+      <echo message=""/>
+      <echo message=" Available targets are:"/>
+      <echo message=""/>
+      <echo message="   help     --> show this information"/>
+      <echo message="   compile    --> build the distribution to ${basedir}/${buildpath}"/>
+      <echo message="   jar      --> build the distribution into an executable ${jarfilename}"/>
+      <echo message="   clean    --> clean up all generated files"/>
+      <echo message="   start    --> compile and run the ModelGUI application"/>
+      <echo message="   simulink --> extract ${simulinkfilename} for Matlab/Simulink"/>
+      <echo message="   scade    --> extract ${scadefilename} for SCADE"/>
+    </target>
+
+    <!-- Create ${buildpath} and copy all resource files to it -->
+    <target name="init" description="Copy resources to ${buildpath}">
+        <mkdir dir="${buildpath}"/>
+		<copy includeemptydirs="false" todir="${buildpath}">
+	    	<fileset dir="${src}" excludes="**/*.launch, **/*.java, **/*.class"/>
+		</copy>
+    </target>
+
+    <!-- Clean up -->
+    <target name="clean">
+        <delete dir="${buildpath}"/>
+    </target>
+
+    <!-- You may also use 'cleanall' as an alias for 'clean' -->
+    <target depends="clean" name="cleanall"/>
+
+    <!-- Compile sources and move binaries to ${buildpath} -->
+    <target depends="init" name="compile">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="${debug}" debuglevel="${debuglevel}" destdir="${buildpath}" target="${target}" source="${source}" nowarn="${nowarnings}">
+            <src path="${src}"/>
+            <exclude name="${resources}"/>
+	    	<classpath>
+	      		<path refid="modelgui.classpath"/>
+	      		<path refid="libs.classpath"/>
+	    	</classpath>
+        </javac>
+    </target>
+
+    <target depends="compile" name="build" />
+
+    <!-- Start compiled application -->
+    <target depends="build" name="start">
+        <java classname="modelgui.Splash" failonerror="true" fork="yes">
+        	<classpath>
+	      		<path refid="modelgui.classpath"/>
+	      		<path refid="libs.classpath"/>
+	    	</classpath>
+        </java>
+    </target>
+
+    <!-- Build an executable and independent JAR file -->
+    <target depends="build" name="jar">
+    	<echo message="Including external jar archives. Please wait..." />   	
+	<jarjar jarfile="${jarfilename}" >
+		<manifest>
+			<attribute name="Main-Class" value="modelgui/MainClass"/>
+			<attribute name="Built-By" value="${user.name}"/>
+		</manifest>
+		<fileset dir="${buildpath}" excludes="${resources}, **/.svn, ${jarfilename}"/>
+		<zipfileset src="${lib}/junit.jar" />
+		<zipfileset src="${lib}/batik-all.jar" />
+		<zipfileset src="${lib}/pdf-transcoder.jar" />
+		<zipfileset src="${lib}/xml-apis-ext.jar" />
+		<fileset dir="${resources}"/>
+	</jarjar>
+    </target>
+
+    <target depends="build" name="simulink">
+      <echo message="Building Simulink remote client to ${simulinkfilename}..." />
+      <jarjar jarfile="${simulinkfilename}">
+                <manifest>
+			<attribute name="Main-Class" value="clients/RemoteSimulinkClient"/>
+			<attribute name="Built-By" value="${user.name}" />
+		</manifest>
+		<fileset dir="${buildpath}/modelgui"/>
+		<fileset dir="${buildpath}/clients" />
+      </jarjar>
+    </target>
+
+    <target name="scade">
+      <echo message="Building SCADE remote server to ${scadefilename}..." />
+      <jarjar jarfile="${scadefilename}">
+      </jarjar>
+    </target>
+
+</project>

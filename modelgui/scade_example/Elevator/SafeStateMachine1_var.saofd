@@ -1,0 +1,43 @@
+-- LOCAL VARIABLES OF Controller --
+
+node Controller;
+
+var
+
+  _LE0 : bool;
+  _LE1 : bool;
+  _LE2 : bool;
+  _LE3 : bool;
+  _LE4 : bool;
+  _LE5 : bool;
+  _LE6 : bool;
+  _LE7 : bool;
+  _LE8 : bool;
+  _LE9 : bool;
+  _LE10 : bool;
+  _LE11 : bool;
+  _LE12 : bool;
+  _LE13 : bool;
+  _LE14 : bool;
+  _LE15 : bool;
+  _LE16 : bool;
+  _LE17 : bool;
+  _LE18 : bool;
+  _LE19 : bool;
+  _LE20 : bool;
+  _LE21 : bool;
+  _LE22 : bool;
+  _LE23 : bool;
+  _LE24 : bool;
+  _LE25 : bool;
+  _LE26 : bool;
+  _LE27 : bool;
+  _LE28 : bool;
+  _LVF0 : int;
+  _LE29 : bool;
+  _LVF2 : int;
+  _LVF3 : int;
+  _LVF4 : int;
+  _LVF5 : int;
+  _LVF6 : int;
+  

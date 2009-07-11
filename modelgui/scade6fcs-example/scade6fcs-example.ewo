@@ -1,0 +1,41 @@
+
+[STUDIO\TOOLS\CONFIGURATIONS\Checker]
+
+"U:\\shared\\modelgui\\trunk\\scade6fcs-example\\scade6fcs-example.etp"="KCG 6.0" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\TTA Extension]
+
+"U:\\shared\\modelgui\\trunk\\scade6fcs-example\\scade6fcs-example.etp"="KCG 6.0" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\Code Generator - Simulator]
+
+"U:\\shared\\modelgui\\trunk\\scade6fcs-example\\scade6fcs-example.etp"="Simulation" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\Reporter]
+
+"U:\\shared\\modelgui\\trunk\\scade6fcs-example\\scade6fcs-example.etp"="HTML" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\Instrumenter]
+
+"U:\\shared\\modelgui\\trunk\\scade6fcs-example\\scade6fcs-example.etp"="MTC" 
+
+[SCADE\Editor\Shortcut]
+
+"groupNb"="0" 
+
+[SCADE\Editor\Tool]
+
+"UsePolyline"="false" 
+"TransitionKind"="strong" 
+
+[SCADE\Simulator\ControlBreakpoint]
+
+"Count"="0" 
+
+[SCADE\Simulator\DataBreakpoint]
+
+"Count"="0" 
+
+[SCADE\Simulator\TclBreakpoint]
+
+"Count"="0" 

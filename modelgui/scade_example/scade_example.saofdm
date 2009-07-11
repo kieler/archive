@@ -1,0 +1,33 @@
+MODEL
+	Node2
+	TypeBlock1
+
+LIBRARY_MODEL libdigital 
+	libdigital.saofdm
+
+LIBRARY_MODEL liblinear 
+	liblinear.saofdm
+
+LIBRARY_MODEL libmath 
+	libmath.saofdm
+
+LIBRARY_MODEL libmathadvanced 
+	libmathadvanced.saofdm
+
+LIBRARY_MODEL libpwlinear 
+	libpwlinear.saofdm
+
+LIBRARY_MODEL libverification 
+	libverification.saofdm
+
+LIBRARY_MODEL libssm 
+	libssm.saofdm
+
+NOTES_TYPES $(SCADE)/examples/ConfAnnot.aty 
+
+DIAG_SEM scade_example.semerrfd 
+
+DIAG_MET scade_example.meterrfd 
+
+-- occBase 10
+

@@ -1,0 +1,105 @@
+
+[STUDIO\TOOLS\CONFIGURATIONS\Checker]
+
+"U:\\shared\\modelgui\\scade_example\\scade_example.etp"="KCG 4.2" 
+"U:\\shared\\modelgui\\trunk\\scade_example\\scade_example.etp"="KCG 4.2" 
+"U:\\workspaces\\eclipse\\svn\\modelgui\\scade_example\\scade_example.etp"="KCG 4.2" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\TTA Extension]
+
+"U:\\shared\\modelgui\\scade_example\\scade_example.etp"="KCG 4.2" 
+"U:\\shared\\modelgui\\trunk\\scade_example\\scade_example.etp"="KCG 4.2" 
+"U:\\workspaces\\eclipse\\svn\\modelgui\\scade_example\\scade_example.etp"="KCG 4.2" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\Code Generator - Simulator]
+
+"U:\\shared\\modelgui\\scade_example\\scade_example.etp"="KCG 5.1" 
+"U:\\shared\\modelgui\\trunk\\scade_example\\scade_example.etp"="KCG 5.1" 
+"U:\\workspaces\\eclipse\\svn\\modelgui\\scade_example\\scade_example.etp"="KCG 5.1" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\Design Verifier]
+
+"U:\\shared\\modelgui\\scade_example\\scade_example.etp"="KCG 4.2" 
+"U:\\shared\\modelgui\\trunk\\scade_example\\scade_example.etp"="KCG 4.2" 
+"U:\\workspaces\\eclipse\\svn\\modelgui\\scade_example\\scade_example.etp"="KCG 4.2" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\Reporter]
+
+"U:\\shared\\modelgui\\scade_example\\scade_example.etp"="HTML" 
+"U:\\shared\\modelgui\\trunk\\scade_example\\scade_example.etp"="HTML" 
+"U:\\workspaces\\eclipse\\svn\\modelgui\\scade_example\\scade_example.etp"="HTML" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\Implementer]
+
+"U:\\shared\\modelgui\\scade_example\\scade_example.etp"="KCG 4.2" 
+"U:\\shared\\modelgui\\trunk\\scade_example\\scade_example.etp"="KCG 4.2" 
+"U:\\workspaces\\eclipse\\svn\\modelgui\\scade_example\\scade_example.etp"="KCG 4.2" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\DiffAnalyzer]
+
+"U:\\shared\\modelgui\\scade_example\\scade_example.etp"="KCG 4.2" 
+"U:\\shared\\modelgui\\trunk\\scade_example\\scade_example.etp"="KCG 4.2" 
+"U:\\workspaces\\eclipse\\svn\\modelgui\\scade_example\\scade_example.etp"="KCG 4.2" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\Instrumenter]
+
+"U:\\shared\\modelgui\\scade_example\\scade_example.etp"="MTC" 
+"U:\\shared\\modelgui\\trunk\\scade_example\\scade_example.etp"="MTC" 
+"U:\\workspaces\\eclipse\\svn\\modelgui\\scade_example\\scade_example.etp"="MTC" 
+
+[SCADE\Editor\Shortcut]
+
+"groupNb"="0" 
+
+[SCADE\Diff\Tool]
+
+"LastProject1"="" 
+"LastProject2"="" 
+
+[SCADE\Simulator\Breakpoint]
+
+"Count"="0" 
+
+[SCADE\Simulator\StopCondition]
+
+"Count"="0" 
+
+[SCADE\Simulator\Simulation]
+
+"Latency"="50" 
+
+[SCADE\Simulator\Watch]
+
+"Count"="4" 
+"Watch1"="testnode/guiDisplayData" 
+"Watch2"="testnode/guiControlData" 
+"Watch3"="testnode/Output2" 
+"Watch4"="testnode/guiControlData" 
+"Watch5"="testnode/out_int" 
+"Watch6"="testnode/out_bool" 
+"Watch7"="testnode/out_real" 
+"Watch8"="testnode/out_intarray" 
+"Watch9"="testnode/guiDisplayData" 
+"Watch10"="testnode/guiControlData" 
+
+[SCADE\Simulator\Graph]
+
+"Count"="0" 
+"Graph1"="testnode/out_int" 
+
+[SCADE\Editor\Tool]
+
+"UsePolyline"="false" 
+"TransitionKind"="strong" 
+
+[SCADE\Simulator\ControlBreakpoint]
+
+"Count"="0" 
+
+[SCADE\Simulator\DataBreakpoint]
+
+"Count"="0" 
+
+[SCADE\Simulator\TclBreakpoint]
+
+"Count"="0" 

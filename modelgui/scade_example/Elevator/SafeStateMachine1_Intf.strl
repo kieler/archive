@@ -1,0 +1,11 @@
+/* Generated file, do not edit */
+
+input ButtonUp;
+input ButtonDown;
+input ButtonAlarm;
+input Second;
+input IsUp;
+input IsDown;
+output Move : value integer init 0;
+output AlarmLamp;
+output OpenDoor;

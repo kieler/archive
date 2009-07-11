@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Tue Jan 16 09:07:11 CET 2007
+onejar.license.required=false
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=modelgui.jar
+manifest.mergeall=false
+manifest.mainclass=modelgui.MainClass
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=
+includes=

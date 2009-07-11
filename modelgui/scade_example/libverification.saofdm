@@ -1,0 +1,23 @@
+MODEL
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libverification/AlwaysAfterFirstCond
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libverification/HasNeverBeenTrue
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libverification/Implies
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libverification/After1stTick
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libverification/After2ndTick
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libverification/After3rdTick
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libverification/After4thTick
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libverification/After5thTick
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libverification/AtLeastNTicks
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libverification/ImpliesWithin2Tick
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libverification/ImpliesWithin3Tick
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libverification/ImpliesWithin4Tick
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libverification/ImpliesWithin5Tick
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libverification/ImpliesWithin1Tick
+
+
+DIAG_SEM C:/Programme/Esterel\ Technologies/Scade51/libraries/libverification/libverification.semerrfd 
+
+DIAG_MET C:/Programme/Esterel\ Technologies/Scade51/libraries/libverification/libverification.meterrfd 
+
+-- occBase 10
+

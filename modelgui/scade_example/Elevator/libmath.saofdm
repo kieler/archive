@@ -1,0 +1,31 @@
+MODEL
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/Abs
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/BoolToInt
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/BoolToReal
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/InRangeInIn
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/InRangeInOut
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/InRangeOutIn
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/InRangeOutOut
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/Max
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/Max3
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/Mean3
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/Min
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/Min3
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/Sign
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/Mean
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/Round
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/OctetToInt
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/RoundCeil
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/RoundFloor
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/IntToBool
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/RealToBool
+
+
+NOTES_TYPES C:/Programme/Esterel\ Technologies/Scade51/examples/ConfAnnot.aty 
+
+DIAG_SEM C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/libmath.semerrfd 
+
+DIAG_MET C:/Programme/Esterel\ Technologies/Scade51/libraries/libmath/libmath.meterrfd 
+
+-- occBase 10
+

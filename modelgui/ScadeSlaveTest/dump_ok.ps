@@ -1,0 +1,695 @@
+%!
+%!PS-Adobe-2.0
+%
+% Ethereal - Network traffic analyzer
+% By Gerald Combs <gerald@ethereal.com>
+% Copyright 1998 Gerald Combs
+%
+%%Creator: Ethereal
+%%Title: ethereal.ps
+%%DocumentFonts: Helvetica Courier
+%%EndComments
+%!
+
+%
+% Ghostscript http://ghostscript.com/ can convert postscript to pdf files.
+%
+% To convert this postscript file to pdf, type (for US letter format):
+% ps2pdf filename.ps
+%
+% or (for A4 format):
+% ps2pdf -sPAPERSIZE=a4 filename.ps
+%
+% ... and of course replace filename.ps by your current filename.
+%
+% The pdfmark's below will help converting to a pdf file, and have no
+% effect when printing the postscript directly.
+% 
+
+%   This line is necessary if the file should be printable, and not just used
+%   for distilling into PDF:
+%
+/pdfmark where {pop} {userdict /pdfmark /cleartomark load put} ifelse
+%
+%   This tells PDF viewers to display bookmarks when the document is opened:
+%
+[/PageMode /UseOutlines /DOCVIEW pdfmark
+
+% Get the Imagable Area of the page
+clippath pathbbox
+
+% Set vmax to the vertical size of the page,
+% hmax to the horizontal size of the page.
+/vmax exch def
+/hmax exch def
+pop pop		% junk
+
+% 1-inch margins
+%/lmargin 72 def
+%/tmargin vmax 72 sub def
+%/bmargin 72 def
+%/pagenumtab hmax 72 sub def
+
+% 1/2-inch margins
+/lmargin 36 def					% left margin
+/tmargin vmax 56 sub def		% top margin
+/bmargin 36 def					% bottom margin
+/pagenumtab hmax 36 sub def	% right margin
+
+% Counters
+/vpos vmax 40 sub def
+/thispagenum 1 def
+
+% Strings
+/pagenostr 7 string def
+
+
+/formfeed {
+	printpagedecorations
+	showpage
+	
+	% we need a new current point after showpage is done
+	lmargin		% X
+	vpos 		% Y
+	moveto
+	/vpos tmargin def
+} def
+
+% Prints text with possible indenting
+/putline_single {
+	exch 10 mul lmargin add		% X
+	vpos 						% Y
+	moveto
+	show
+
+	/vpos vpos 10 sub def
+
+	vpos bmargin le 			% is vpos <= bottom margin?
+	{
+		formfeed
+	}
+	if							% then formfeed and start at top
+} def
+
+
+% Prints text with possible indenting and line wrap
+/putline {
+	/text exch def
+	/indent exch def
+	
+	% wrapat = width / sizeof font (remember: monospaced font)
+	/pagewidth pagenumtab bmargin sub def
+	/cwidth (A) stringwidth pop def
+	/wrapat pagewidth cwidth div cvi def
+		
+	text length wrapat le {
+		% print line
+		indent text 0 text length getinterval putline_single
+	}{
+		% print the lines first part
+		indent text 0 wrapat getinterval putline_single
+		% print wrapped rest
+		indent text wrapat text length wrapat sub getinterval putline
+	}
+	ifelse
+} def
+
+
+% Prints the page number at the top right
+/printpagedecorations {
+	gsave
+		% Set the font to 8 point
+		/Helvetica findfont 8 scalefont setfont
+
+		% title
+		lmargin						% X
+		vmax 36 sub					% Y
+		moveto
+		eth_pagetitle show
+
+		% this page number
+		pagenumtab (Page ) stringwidth pop sub thispagenum pagenostr cvs stringwidth pop sub 					% X
+		vmax 36 sub					% Y
+		moveto
+		(Page ) show
+		thispagenum pagenostr cvs show
+
+		% thispagenum++
+		/thispagenum thispagenum 1 add def
+		
+		% line at top of page
+		lmargin						% X
+		vmax 38 sub					% Y
+		moveto
+		
+		pagenumtab					% X
+		vmax 38 sub					% Y
+		lineto
+		stroke
+		
+		% line at bottom of page
+		lmargin						% X
+		bmargin						% Y
+		moveto
+		
+		% title
+		pagenumtab					% X
+		bmargin						% Y
+		lineto
+		stroke
+		
+	grestore
+} def
+	
+% Reset the vertical position
+/vpos tmargin def
+
+%% Set the font to 10 point
+/Courier findfont 10 scalefont setfont
+
+%% the page title
+/eth_pagetitle (C:\\DOKUME~1\\haf\\LOKALE~1\\Temp\\2\\etherXXXXLH5ZNT - Ethereal) def
+
+0 (No.     Time        Source                Destination           Protocol Info) putline
+[/Dest /__frame77995__ /Title (  77995 952.708360  10.6.0.44             10.6.3.5              TCP      1216 > 64064 [SYN] Seq=0 Len=0 MSS=1460)   /OUT pdfmark
+[/View [/XYZ -4 currentpoint matrix currentmatrix matrix defaultmatrix
+matrix invertmatrix matrix concatmatrix transform exch pop 20 add null]
+/Dest /__frame77995__ /DEST pdfmark
+0 (  77995 952.708360  10.6.0.44             10.6.3.5              TCP      1216 > 64064 [SYN] Seq=0 Len=0 MSS=1460) putline
+0 () putline
+0 (Frame 77995 \(62 bytes on wire, 62 bytes captured\)) putline
+1 (Arrival Time: Feb 19, 2007 16:49:03.773974000) putline
+1 (Time delta from previous packet: 952.708360000 seconds) putline
+1 (Time since reference or first frame: 952.708360000 seconds) putline
+1 (Frame Number: 77995) putline
+1 (Packet Length: 62 bytes) putline
+1 (Capture Length: 62 bytes) putline
+1 (Protocols in frame: eth:ip:tcp) putline
+1 (Coloring Rule Name: TCP SYN/FIN) putline
+1 (Coloring Rule String: tcp.flags & 0x02 || tcp.flags.fin == 1) putline
+0 (Ethernet II, Src: TyanComp_63:98:70 \(00:e0:81:63:98:70\), Dst: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\)) putline
+1 (Destination: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\)) putline
+2 (Address: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\)) putline
+2 (.... ...0 .... .... .... .... = Multicast: This is a UNICAST frame) putline
+2 (.... ..0. .... .... .... .... = Locally Administrated Address: This is a FACTORY DEFAULT address) putline
+1 (Source: TyanComp_63:98:70 \(00:e0:81:63:98:70\)) putline
+2 (Address: TyanComp_63:98:70 \(00:e0:81:63:98:70\)) putline
+2 (.... ...0 .... .... .... .... = Multicast: This is a UNICAST frame) putline
+2 (.... ..0. .... .... .... .... = Locally Administrated Address: This is a FACTORY DEFAULT address) putline
+1 (Type: IP \(0x0800\)) putline
+0 (Internet Protocol, Src: 10.6.0.44 \(10.6.0.44\), Dst: 10.6.3.5 \(10.6.3.5\)) putline
+1 (Version: 4) putline
+1 (Header length: 20 bytes) putline
+1 (Differentiated Services Field: 0x00 \(DSCP 0x00: Default; ECN: 0x00\)) putline
+2 (0000 00.. = Differentiated Services Codepoint: Default \(0x00\)) putline
+2 (.... ..0. = ECN-Capable Transport \(ECT\): 0) putline
+2 (.... ...0 = ECN-CE: 0) putline
+1 (Total Length: 48) putline
+1 (Identification: 0x4094 \(16532\)) putline
+1 (Flags: 0x04 \(Don't Fragment\)) putline
+2 (0... = Reserved bit: Not set) putline
+2 (.1.. = Don't fragment: Set) putline
+2 (..0. = More fragments: Not set) putline
+1 (Fragment offset: 0) putline
+1 (Time to live: 127) putline
+1 (Protocol: TCP \(0x06\)) putline
+1 (Header checksum: 0xa3f7 [correct]) putline
+2 (Good: True) putline
+2 (Bad : False) putline
+1 (Source: 10.6.0.44 \(10.6.0.44\)) putline
+1 (Destination: 10.6.3.5 \(10.6.3.5\)) putline
+0 (Transmission Control Protocol, Src Port: 1216 \(1216\), Dst Port: 64064 \(64064\), Seq: 0, Len: 0) putline
+1 (Source port: 1216 \(1216\)) putline
+1 (Destination port: 64064 \(64064\)) putline
+1 (Sequence number: 0    \(relative sequence number\)) putline
+1 (Header length: 28 bytes) putline
+1 (Flags: 0x0002 \(SYN\)) putline
+2 (0... .... = Congestion Window Reduced \(CWR\): Not set) putline
+2 (.0.. .... = ECN-Echo: Not set) putline
+2 (..0. .... = Urgent: Not set) putline
+2 (...0 .... = Acknowledgment: Not set) putline
+2 (.... 0... = Push: Not set) putline
+2 (.... .0.. = Reset: Not set) putline
+2 (.... ..1. = Syn: Set) putline
+2 (.... ...0 = Fin: Not set) putline
+1 (Window size: 65535) putline
+1 (Checksum: 0x0ebe [correct]) putline
+1 (Options: \(8 bytes\)) putline
+2 (Maximum segment size: 1460 bytes) putline
+2 (NOP) putline
+2 (NOP) putline
+2 (SACK permitted) putline
+0 () putline
+0 (0000  00 e0 81 63 98 c1 00 e0 81 63 98 70 08 00 45 00   ...c.....c.p..E.) putline
+0 (0010  00 30 40 94 40 00 7f 06 a3 f7 0a 06 00 2c 0a 06   .0@.@........,..) putline
+0 (0020  03 05 04 c0 fa 40 7e f5 df 2e 00 00 00 00 70 02   .....@~.......p.) putline
+0 (0030  ff ff 0e be 00 00 02 04 05 b4 01 01 04 02         ..............) putline
+formfeed
+0 (No.     Time        Source                Destination           Protocol Info) putline
+[/Dest /__frame77996__ /Title (  77996 952.708383  10.6.3.5              10.6.0.44             TCP      64064 > 1216 [SYN, ACK] Seq=0 Ack=1 Win=16384 Len=0 MSS=1460)   /OUT pdfmark
+[/View [/XYZ -4 currentpoint matrix currentmatrix matrix defaultmatrix
+matrix invertmatrix matrix concatmatrix transform exch pop 20 add null]
+/Dest /__frame77996__ /DEST pdfmark
+0 (  77996 952.708383  10.6.3.5              10.6.0.44             TCP      64064 > 1216 [SYN, ACK] Seq=0 Ack=1 Win=16384 Len=0 MSS=1460) putline
+0 () putline
+0 (Frame 77996 \(62 bytes on wire, 62 bytes captured\)) putline
+1 (Arrival Time: Feb 19, 2007 16:49:03.773997000) putline
+1 (Time delta from previous packet: 0.000023000 seconds) putline
+1 (Time since reference or first frame: 952.708383000 seconds) putline
+1 (Frame Number: 77996) putline
+1 (Packet Length: 62 bytes) putline
+1 (Capture Length: 62 bytes) putline
+1 (Protocols in frame: eth:ip:tcp) putline
+1 (Coloring Rule Name: Checksum Errors) putline
+1 (Coloring Rule String: edp.checksum_bad==1 || ip.checksum_bad==1 || tcp.checksum_bad || udp.checksum_bad) putline
+0 (Ethernet II, Src: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\), Dst: TyanComp_63:98:70 \(00:e0:81:63:98:70\)) putline
+1 (Destination: TyanComp_63:98:70 \(00:e0:81:63:98:70\)) putline
+2 (Address: TyanComp_63:98:70 \(00:e0:81:63:98:70\)) putline
+2 (.... ...0 .... .... .... .... = Multicast: This is a UNICAST frame) putline
+2 (.... ..0. .... .... .... .... = Locally Administrated Address: This is a FACTORY DEFAULT address) putline
+1 (Source: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\)) putline
+2 (Address: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\)) putline
+2 (.... ...0 .... .... .... .... = Multicast: This is a UNICAST frame) putline
+2 (.... ..0. .... .... .... .... = Locally Administrated Address: This is a FACTORY DEFAULT address) putline
+1 (Type: IP \(0x0800\)) putline
+0 (Internet Protocol, Src: 10.6.3.5 \(10.6.3.5\), Dst: 10.6.0.44 \(10.6.0.44\)) putline
+1 (Version: 4) putline
+1 (Header length: 20 bytes) putline
+1 (Differentiated Services Field: 0x00 \(DSCP 0x00: Default; ECN: 0x00\)) putline
+2 (0000 00.. = Differentiated Services Codepoint: Default \(0x00\)) putline
+2 (.... ..0. = ECN-Capable Transport \(ECT\): 0) putline
+2 (.... ...0 = ECN-CE: 0) putline
+1 (Total Length: 48) putline
+1 (Identification: 0x161a \(5658\)) putline
+1 (Flags: 0x00) putline
+2 (0... = Reserved bit: Not set) putline
+2 (.0.. = Don't fragment: Not set) putline
+2 (..0. = More fragments: Not set) putline
+1 (Fragment offset: 0) putline
+1 (Time to live: 128) putline
+1 (Protocol: TCP \(0x06\)) putline
+1 (Header checksum: 0x0000 [incorrect, should be 0x0d72]) putline
+2 (Good: False) putline
+2 (Bad : True) putline
+1 (Source: 10.6.3.5 \(10.6.3.5\)) putline
+1 (Destination: 10.6.0.44 \(10.6.0.44\)) putline
+0 (Transmission Control Protocol, Src Port: 64064 \(64064\), Dst Port: 1216 \(1216\), Seq: 0, Ack: 1, Len: 0) putline
+1 (Source port: 64064 \(64064\)) putline
+1 (Destination port: 1216 \(1216\)) putline
+1 (Sequence number: 0    \(relative sequence number\)) putline
+1 (Acknowledgement number: 1    \(relative ack number\)) putline
+1 (Header length: 28 bytes) putline
+1 (Flags: 0x0012 \(SYN, ACK\)) putline
+2 (0... .... = Congestion Window Reduced \(CWR\): Not set) putline
+2 (.0.. .... = ECN-Echo: Not set) putline
+2 (..0. .... = Urgent: Not set) putline
+2 (...1 .... = Acknowledgment: Set) putline
+2 (.... 0... = Push: Not set) putline
+2 (.... .0.. = Reset: Not set) putline
+2 (.... ..1. = Syn: Set) putline
+2 (.... ...0 = Fin: Not set) putline
+1 (Window size: 16384) putline
+1 (Checksum: 0xdb3a [correct]) putline
+1 (Options: \(8 bytes\)) putline
+2 (Maximum segment size: 1460 bytes) putline
+2 (NOP) putline
+2 (NOP) putline
+2 (SACK permitted) putline
+0 () putline
+0 (0000  00 e0 81 63 98 70 00 e0 81 63 98 c1 08 00 45 00   ...c.p...c....E.) putline
+0 (0010  00 30 16 1a 00 00 80 06 00 00 0a 06 03 05 0a 06   .0..............) putline
+0 (0020  00 2c fa 40 04 c0 54 24 9f 4d 7e f5 df 2f 70 12   .,.@..T$.M~../p.) putline
+0 (0030  40 00 db 3a 00 00 02 04 05 b4 01 01 04 02         @..:..........) putline
+formfeed
+0 (No.     Time        Source                Destination           Protocol Info) putline
+[/Dest /__frame77997__ /Title (  77997 952.709082  10.6.0.44             10.6.3.5              TCP      1216 > 64064 [ACK] Seq=1 Ack=1 Win=65535 Len=0)   /OUT pdfmark
+[/View [/XYZ -4 currentpoint matrix currentmatrix matrix defaultmatrix
+matrix invertmatrix matrix concatmatrix transform exch pop 20 add null]
+/Dest /__frame77997__ /DEST pdfmark
+0 (  77997 952.709082  10.6.0.44             10.6.3.5              TCP      1216 > 64064 [ACK] Seq=1 Ack=1 Win=65535 Len=0) putline
+0 () putline
+0 (Frame 77997 \(60 bytes on wire, 60 bytes captured\)) putline
+1 (Arrival Time: Feb 19, 2007 16:49:03.774696000) putline
+1 (Time delta from previous packet: 0.000699000 seconds) putline
+1 (Time since reference or first frame: 952.709082000 seconds) putline
+1 (Frame Number: 77997) putline
+1 (Packet Length: 60 bytes) putline
+1 (Capture Length: 60 bytes) putline
+1 (Protocols in frame: eth:ip:tcp) putline
+1 (Coloring Rule Name: TCP) putline
+1 (Coloring Rule String: tcp) putline
+0 (Ethernet II, Src: TyanComp_63:98:70 \(00:e0:81:63:98:70\), Dst: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\)) putline
+1 (Destination: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\)) putline
+2 (Address: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\)) putline
+2 (.... ...0 .... .... .... .... = Multicast: This is a UNICAST frame) putline
+2 (.... ..0. .... .... .... .... = Locally Administrated Address: This is a FACTORY DEFAULT address) putline
+1 (Source: TyanComp_63:98:70 \(00:e0:81:63:98:70\)) putline
+2 (Address: TyanComp_63:98:70 \(00:e0:81:63:98:70\)) putline
+2 (.... ...0 .... .... .... .... = Multicast: This is a UNICAST frame) putline
+2 (.... ..0. .... .... .... .... = Locally Administrated Address: This is a FACTORY DEFAULT address) putline
+1 (Type: IP \(0x0800\)) putline
+1 (Trailer: 000000000000) putline
+0 (Internet Protocol, Src: 10.6.0.44 \(10.6.0.44\), Dst: 10.6.3.5 \(10.6.3.5\)) putline
+1 (Version: 4) putline
+1 (Header length: 20 bytes) putline
+1 (Differentiated Services Field: 0x00 \(DSCP 0x00: Default; ECN: 0x00\)) putline
+2 (0000 00.. = Differentiated Services Codepoint: Default \(0x00\)) putline
+2 (.... ..0. = ECN-Capable Transport \(ECT\): 0) putline
+2 (.... ...0 = ECN-CE: 0) putline
+1 (Total Length: 40) putline
+1 (Identification: 0x4095 \(16533\)) putline
+1 (Flags: 0x04 \(Don't Fragment\)) putline
+2 (0... = Reserved bit: Not set) putline
+2 (.1.. = Don't fragment: Set) putline
+2 (..0. = More fragments: Not set) putline
+1 (Fragment offset: 0) putline
+1 (Time to live: 127) putline
+1 (Protocol: TCP \(0x06\)) putline
+1 (Header checksum: 0xa3fe [correct]) putline
+2 (Good: True) putline
+2 (Bad : False) putline
+1 (Source: 10.6.0.44 \(10.6.0.44\)) putline
+1 (Destination: 10.6.3.5 \(10.6.3.5\)) putline
+0 (Transmission Control Protocol, Src Port: 1216 \(1216\), Dst Port: 64064 \(64064\), Seq: 1, Ack: 1, Len: 0) putline
+1 (Source port: 1216 \(1216\)) putline
+1 (Destination port: 64064 \(64064\)) putline
+1 (Sequence number: 1    \(relative sequence number\)) putline
+1 (Acknowledgement number: 1    \(relative ack number\)) putline
+1 (Header length: 20 bytes) putline
+1 (Flags: 0x0010 \(ACK\)) putline
+2 (0... .... = Congestion Window Reduced \(CWR\): Not set) putline
+2 (.0.. .... = ECN-Echo: Not set) putline
+2 (..0. .... = Urgent: Not set) putline
+2 (...1 .... = Acknowledgment: Set) putline
+2 (.... 0... = Push: Not set) putline
+2 (.... .0.. = Reset: Not set) putline
+2 (.... ..0. = Syn: Not set) putline
+2 (.... ...0 = Fin: Not set) putline
+1 (Window size: 65535) putline
+1 (Checksum: 0x47ff [correct]) putline
+0 () putline
+0 (0000  00 e0 81 63 98 c1 00 e0 81 63 98 70 08 00 45 00   ...c.....c.p..E.) putline
+0 (0010  00 28 40 95 40 00 7f 06 a3 fe 0a 06 00 2c 0a 06   .\(@.@........,..) putline
+0 (0020  03 05 04 c0 fa 40 7e f5 df 2f 54 24 9f 4e 50 10   .....@~../T$.NP.) putline
+0 (0030  ff ff 47 ff 00 00 00 00 00 00 00 00               ..G.........) putline
+formfeed
+0 (No.     Time        Source                Destination           Protocol Info) putline
+[/Dest /__frame77998__ /Title (  77998 952.711033  10.6.0.44             10.6.3.5              TCP      [TCP segment of a reassembled PDU])   /OUT pdfmark
+[/View [/XYZ -4 currentpoint matrix currentmatrix matrix defaultmatrix
+matrix invertmatrix matrix concatmatrix transform exch pop 20 add null]
+/Dest /__frame77998__ /DEST pdfmark
+0 (  77998 952.711033  10.6.0.44             10.6.3.5              TCP      [TCP segment of a reassembled PDU]) putline
+0 () putline
+0 (Frame 77998 \(104 bytes on wire, 104 bytes captured\)) putline
+1 (Arrival Time: Feb 19, 2007 16:49:03.776647000) putline
+1 (Time delta from previous packet: 0.001951000 seconds) putline
+1 (Time since reference or first frame: 952.711033000 seconds) putline
+1 (Frame Number: 77998) putline
+1 (Packet Length: 104 bytes) putline
+1 (Capture Length: 104 bytes) putline
+1 (Protocols in frame: eth:ip:tcp) putline
+1 (Coloring Rule Name: TCP) putline
+1 (Coloring Rule String: tcp) putline
+0 (Ethernet II, Src: TyanComp_63:98:70 \(00:e0:81:63:98:70\), Dst: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\)) putline
+1 (Destination: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\)) putline
+2 (Address: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\)) putline
+2 (.... ...0 .... .... .... .... = Multicast: This is a UNICAST frame) putline
+2 (.... ..0. .... .... .... .... = Locally Administrated Address: This is a FACTORY DEFAULT address) putline
+1 (Source: TyanComp_63:98:70 \(00:e0:81:63:98:70\)) putline
+2 (Address: TyanComp_63:98:70 \(00:e0:81:63:98:70\)) putline
+2 (.... ...0 .... .... .... .... = Multicast: This is a UNICAST frame) putline
+2 (.... ..0. .... .... .... .... = Locally Administrated Address: This is a FACTORY DEFAULT address) putline
+1 (Type: IP \(0x0800\)) putline
+0 (Internet Protocol, Src: 10.6.0.44 \(10.6.0.44\), Dst: 10.6.3.5 \(10.6.3.5\)) putline
+1 (Version: 4) putline
+1 (Header length: 20 bytes) putline
+1 (Differentiated Services Field: 0x00 \(DSCP 0x00: Default; ECN: 0x00\)) putline
+2 (0000 00.. = Differentiated Services Codepoint: Default \(0x00\)) putline
+2 (.... ..0. = ECN-Capable Transport \(ECT\): 0) putline
+2 (.... ...0 = ECN-CE: 0) putline
+1 (Total Length: 90) putline
+1 (Identification: 0x4096 \(16534\)) putline
+1 (Flags: 0x04 \(Don't Fragment\)) putline
+2 (0... = Reserved bit: Not set) putline
+2 (.1.. = Don't fragment: Set) putline
+2 (..0. = More fragments: Not set) putline
+1 (Fragment offset: 0) putline
+1 (Time to live: 127) putline
+1 (Protocol: TCP \(0x06\)) putline
+1 (Header checksum: 0xa3cb [correct]) putline
+2 (Good: True) putline
+2 (Bad : False) putline
+1 (Source: 10.6.0.44 \(10.6.0.44\)) putline
+1 (Destination: 10.6.3.5 \(10.6.3.5\)) putline
+0 (Transmission Control Protocol, Src Port: 1216 \(1216\), Dst Port: 64064 \(64064\), Seq: 1, Ack: 1, Len: 50) putline
+1 (Source port: 1216 \(1216\)) putline
+1 (Destination port: 64064 \(64064\)) putline
+1 (Sequence number: 1    \(relative sequence number\)) putline
+1 (Next sequence number: 51    \(relative sequence number\)) putline
+1 (Acknowledgement number: 1    \(relative ack number\)) putline
+1 (Header length: 20 bytes) putline
+1 (Flags: 0x0018 \(PSH, ACK\)) putline
+2 (0... .... = Congestion Window Reduced \(CWR\): Not set) putline
+2 (.0.. .... = ECN-Echo: Not set) putline
+2 (..0. .... = Urgent: Not set) putline
+2 (...1 .... = Acknowledgment: Set) putline
+2 (.... 1... = Push: Set) putline
+2 (.... .0.. = Reset: Not set) putline
+2 (.... ..0. = Syn: Not set) putline
+2 (.... ...0 = Fin: Not set) putline
+1 (Window size: 65535) putline
+1 (Checksum: 0x4f62 [correct]) putline
+1 (TCP segment data \(50 bytes\)) putline
+0 () putline
+0 (0000  00 e0 81 63 98 c1 00 e0 81 63 98 70 08 00 45 00   ...c.....c.p..E.) putline
+0 (0010  00 5a 40 96 40 00 7f 06 a3 cb 0a 06 00 2c 0a 06   .Z@.@........,..) putline
+0 (0020  03 05 04 c0 fa 40 7e f5 df 2f 54 24 9f 4e 50 18   .....@~../T$.NP.) putline
+0 (0030  ff ff 4f 62 00 00 53 73 6d 50 72 6f 78 79 3a 3a   ..Ob..SsmProxy::) putline
+0 (0040  53 74 61 72 74 20 22 53 69 6d 75 6c 61 74 69 6f   Start "Simulatio) putline
+0 (0050  6e 22 20 73 69 6d 75 6c 61 74 69 6f 6e 3a 3a 72   n" simulation::r) putline
+0 (0060  61 69 6c 77 61 79 0d 0a                           ailway..) putline
+formfeed
+0 (No.     Time        Source                Destination           Protocol Info) putline
+[/Dest /__frame78055__ /Title (  78055 952.870604  10.6.3.5              10.6.0.44             TCP      64064 > 1216 [ACK] Seq=1 Ack=51 Win=65485 [TCP CHECKSUM INCORRECT] Len=0)   /OUT pdfmark
+[/View [/XYZ -4 currentpoint matrix currentmatrix matrix defaultmatrix
+matrix invertmatrix matrix concatmatrix transform exch pop 20 add null]
+/Dest /__frame78055__ /DEST pdfmark
+0 (  78055 952.870604  10.6.3.5              10.6.0.44             TCP      64064 > 1216 [ACK] Seq=1 Ack=51 Win=65485 [TCP CHECKSUM INCORRECT] Len=0) putline
+0 () putline
+0 (Frame 78055 \(54 bytes on wire, 54 bytes captured\)) putline
+1 (Arrival Time: Feb 19, 2007 16:49:03.936218000) putline
+1 (Time delta from previous packet: 0.159571000 seconds) putline
+1 (Time since reference or first frame: 952.870604000 seconds) putline
+1 (Frame Number: 78055) putline
+1 (Packet Length: 54 bytes) putline
+1 (Capture Length: 54 bytes) putline
+1 (Protocols in frame: eth:ip:tcp) putline
+1 (Coloring Rule Name: Checksum Errors) putline
+1 (Coloring Rule String: edp.checksum_bad==1 || ip.checksum_bad==1 || tcp.checksum_bad || udp.checksum_bad) putline
+0 (Ethernet II, Src: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\), Dst: TyanComp_63:98:70 \(00:e0:81:63:98:70\)) putline
+1 (Destination: TyanComp_63:98:70 \(00:e0:81:63:98:70\)) putline
+2 (Address: TyanComp_63:98:70 \(00:e0:81:63:98:70\)) putline
+2 (.... ...0 .... .... .... .... = Multicast: This is a UNICAST frame) putline
+2 (.... ..0. .... .... .... .... = Locally Administrated Address: This is a FACTORY DEFAULT address) putline
+1 (Source: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\)) putline
+2 (Address: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\)) putline
+2 (.... ...0 .... .... .... .... = Multicast: This is a UNICAST frame) putline
+2 (.... ..0. .... .... .... .... = Locally Administrated Address: This is a FACTORY DEFAULT address) putline
+1 (Type: IP \(0x0800\)) putline
+0 (Internet Protocol, Src: 10.6.3.5 \(10.6.3.5\), Dst: 10.6.0.44 \(10.6.0.44\)) putline
+1 (Version: 4) putline
+1 (Header length: 20 bytes) putline
+1 (Differentiated Services Field: 0x00 \(DSCP 0x00: Default; ECN: 0x00\)) putline
+2 (0000 00.. = Differentiated Services Codepoint: Default \(0x00\)) putline
+2 (.... ..0. = ECN-Capable Transport \(ECT\): 0) putline
+2 (.... ...0 = ECN-CE: 0) putline
+1 (Total Length: 40) putline
+1 (Identification: 0x1637 \(5687\)) putline
+1 (Flags: 0x04 \(Don't Fragment\)) putline
+2 (0... = Reserved bit: Not set) putline
+2 (.1.. = Don't fragment: Set) putline
+2 (..0. = More fragments: Not set) putline
+1 (Fragment offset: 0) putline
+1 (Time to live: 128) putline
+1 (Protocol: TCP \(0x06\)) putline
+1 (Header checksum: 0x0000 [incorrect, should be 0xcd5c]) putline
+2 (Good: False) putline
+2 (Bad : True) putline
+1 (Source: 10.6.3.5 \(10.6.3.5\)) putline
+1 (Destination: 10.6.0.44 \(10.6.0.44\)) putline
+0 (Transmission Control Protocol, Src Port: 64064 \(64064\), Dst Port: 1216 \(1216\), Seq: 1, Ack: 51, Len: 0) putline
+1 (Source port: 64064 \(64064\)) putline
+1 (Destination port: 1216 \(1216\)) putline
+1 (Sequence number: 1    \(relative sequence number\)) putline
+1 (Acknowledgement number: 51    \(relative ack number\)) putline
+1 (Header length: 20 bytes) putline
+1 (Flags: 0x0010 \(ACK\)) putline
+2 (0... .... = Congestion Window Reduced \(CWR\): Not set) putline
+2 (.0.. .... = ECN-Echo: Not set) putline
+2 (..0. .... = Urgent: Not set) putline
+2 (...1 .... = Acknowledgment: Set) putline
+2 (.... 0... = Push: Not set) putline
+2 (.... .0.. = Reset: Not set) putline
+2 (.... ..0. = Syn: Not set) putline
+2 (.... ...0 = Fin: Not set) putline
+1 (Window size: 65485) putline
+1 (Checksum: 0x1757 [incorrect, should be 0x47ff]) putline
+0 () putline
+0 (0000  00 e0 81 63 98 70 00 e0 81 63 98 c1 08 00 45 00   ...c.p...c....E.) putline
+0 (0010  00 28 16 37 40 00 80 06 00 00 0a 06 03 05 0a 06   .\(.7@...........) putline
+0 (0020  00 2c fa 40 04 c0 54 24 9f 4e 7e f5 df 61 50 10   .,.@..T$.N~..aP.) putline
+0 (0030  ff cd 17 57 00 00                                 ...W..) putline
+formfeed
+0 (No.     Time        Source                Destination           Protocol Info) putline
+[/Dest /__frame80577__ /Title (  80577 987.056849  10.6.3.5              10.6.0.44             TCP      64064 > 1216 [PSH, ACK] Seq=1 Ack=51 Win=65485 [TCP CHECKSUM INCORRECT] Len=2)   /OUT pdfmark
+[/View [/XYZ -4 currentpoint matrix currentmatrix matrix defaultmatrix
+matrix invertmatrix matrix concatmatrix transform exch pop 20 add null]
+/Dest /__frame80577__ /DEST pdfmark
+0 (  80577 987.056849  10.6.3.5              10.6.0.44             TCP      64064 > 1216 [PSH, ACK] Seq=1 Ack=51 Win=65485 [TCP CHECKSUM INCORRECT] Len=2) putline
+0 () putline
+0 (Frame 80577 \(56 bytes on wire, 56 bytes captured\)) putline
+1 (Arrival Time: Feb 19, 2007 16:49:38.122463000) putline
+1 (Time delta from previous packet: 34.186245000 seconds) putline
+1 (Time since reference or first frame: 987.056849000 seconds) putline
+1 (Frame Number: 80577) putline
+1 (Packet Length: 56 bytes) putline
+1 (Capture Length: 56 bytes) putline
+1 (Protocols in frame: eth:ip:tcp:data) putline
+1 (Coloring Rule Name: Checksum Errors) putline
+1 (Coloring Rule String: edp.checksum_bad==1 || ip.checksum_bad==1 || tcp.checksum_bad || udp.checksum_bad) putline
+0 (Ethernet II, Src: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\), Dst: TyanComp_63:98:70 \(00:e0:81:63:98:70\)) putline
+1 (Destination: TyanComp_63:98:70 \(00:e0:81:63:98:70\)) putline
+2 (Address: TyanComp_63:98:70 \(00:e0:81:63:98:70\)) putline
+2 (.... ...0 .... .... .... .... = Multicast: This is a UNICAST frame) putline
+2 (.... ..0. .... .... .... .... = Locally Administrated Address: This is a FACTORY DEFAULT address) putline
+1 (Source: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\)) putline
+2 (Address: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\)) putline
+2 (.... ...0 .... .... .... .... = Multicast: This is a UNICAST frame) putline
+2 (.... ..0. .... .... .... .... = Locally Administrated Address: This is a FACTORY DEFAULT address) putline
+1 (Type: IP \(0x0800\)) putline
+0 (Internet Protocol, Src: 10.6.3.5 \(10.6.3.5\), Dst: 10.6.0.44 \(10.6.0.44\)) putline
+1 (Version: 4) putline
+1 (Header length: 20 bytes) putline
+1 (Differentiated Services Field: 0x00 \(DSCP 0x00: Default; ECN: 0x00\)) putline
+2 (0000 00.. = Differentiated Services Codepoint: Default \(0x00\)) putline
+2 (.... ..0. = ECN-Capable Transport \(ECT\): 0) putline
+2 (.... ...0 = ECN-CE: 0) putline
+1 (Total Length: 42) putline
+1 (Identification: 0x1c73 \(7283\)) putline
+1 (Flags: 0x04 \(Don't Fragment\)) putline
+2 (0... = Reserved bit: Not set) putline
+2 (.1.. = Don't fragment: Set) putline
+2 (..0. = More fragments: Not set) putline
+1 (Fragment offset: 0) putline
+1 (Time to live: 128) putline
+1 (Protocol: TCP \(0x06\)) putline
+1 (Header checksum: 0x0000 [incorrect, should be 0xc71e]) putline
+2 (Good: False) putline
+2 (Bad : True) putline
+1 (Source: 10.6.3.5 \(10.6.3.5\)) putline
+1 (Destination: 10.6.0.44 \(10.6.0.44\)) putline
+0 (Transmission Control Protocol, Src Port: 64064 \(64064\), Dst Port: 1216 \(1216\), Seq: 1, Ack: 51, Len: 2) putline
+1 (Source port: 64064 \(64064\)) putline
+1 (Destination port: 1216 \(1216\)) putline
+1 (Sequence number: 1    \(relative sequence number\)) putline
+1 (Next sequence number: 3    \(relative sequence number\)) putline
+1 (Acknowledgement number: 51    \(relative ack number\)) putline
+1 (Header length: 20 bytes) putline
+1 (Flags: 0x0018 \(PSH, ACK\)) putline
+2 (0... .... = Congestion Window Reduced \(CWR\): Not set) putline
+2 (.0.. .... = ECN-Echo: Not set) putline
+2 (..0. .... = Urgent: Not set) putline
+2 (...1 .... = Acknowledgment: Set) putline
+2 (.... 1... = Push: Set) putline
+2 (.... .0.. = Reset: Not set) putline
+2 (.... ..0. = Syn: Not set) putline
+2 (.... ...0 = Fin: Not set) putline
+1 (Window size: 65485) putline
+1 (Checksum: 0x1759 [incorrect, should be 0xf8a9]) putline
+0 (Data \(2 bytes\)) putline
+0 () putline
+0 (0000  00 e0 81 63 98 70 00 e0 81 63 98 c1 08 00 45 00   ...c.p...c....E.) putline
+0 (0010  00 2a 1c 73 40 00 80 06 00 00 0a 06 03 05 0a 06   .*.s@...........) putline
+0 (0020  00 2c fa 40 04 c0 54 24 9f 4e 7e f5 df 61 50 18   .,.@..T$.N~..aP.) putline
+0 (0030  ff cd 17 59 00 00 4f 4b                           ...Y..OK) putline
+formfeed
+0 (No.     Time        Source                Destination           Protocol Info) putline
+[/Dest /__frame80578__ /Title (  80578 987.077383  10.6.0.44             10.6.3.5              TCP      1216 > 64064 [RST, ACK] Seq=51 Ack=3 Win=0 Len=0)   /OUT pdfmark
+[/View [/XYZ -4 currentpoint matrix currentmatrix matrix defaultmatrix
+matrix invertmatrix matrix concatmatrix transform exch pop 20 add null]
+/Dest /__frame80578__ /DEST pdfmark
+0 (  80578 987.077383  10.6.0.44             10.6.3.5              TCP      1216 > 64064 [RST, ACK] Seq=51 Ack=3 Win=0 Len=0) putline
+0 () putline
+0 (Frame 80578 \(60 bytes on wire, 60 bytes captured\)) putline
+1 (Arrival Time: Feb 19, 2007 16:49:38.142997000) putline
+1 (Time delta from previous packet: 0.020534000 seconds) putline
+1 (Time since reference or first frame: 987.077383000 seconds) putline
+1 (Frame Number: 80578) putline
+1 (Packet Length: 60 bytes) putline
+1 (Capture Length: 60 bytes) putline
+1 (Protocols in frame: eth:ip:tcp) putline
+1 (Coloring Rule Name: TCP RST) putline
+1 (Coloring Rule String: tcp.flags.reset eq 1) putline
+0 (Ethernet II, Src: TyanComp_63:98:70 \(00:e0:81:63:98:70\), Dst: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\)) putline
+1 (Destination: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\)) putline
+2 (Address: TyanComp_63:98:c1 \(00:e0:81:63:98:c1\)) putline
+2 (.... ...0 .... .... .... .... = Multicast: This is a UNICAST frame) putline
+2 (.... ..0. .... .... .... .... = Locally Administrated Address: This is a FACTORY DEFAULT address) putline
+1 (Source: TyanComp_63:98:70 \(00:e0:81:63:98:70\)) putline
+2 (Address: TyanComp_63:98:70 \(00:e0:81:63:98:70\)) putline
+2 (.... ...0 .... .... .... .... = Multicast: This is a UNICAST frame) putline
+2 (.... ..0. .... .... .... .... = Locally Administrated Address: This is a FACTORY DEFAULT address) putline
+1 (Type: IP \(0x0800\)) putline
+1 (Trailer: 000000000000) putline
+0 (Internet Protocol, Src: 10.6.0.44 \(10.6.0.44\), Dst: 10.6.3.5 \(10.6.3.5\)) putline
+1 (Version: 4) putline
+1 (Header length: 20 bytes) putline
+1 (Differentiated Services Field: 0x00 \(DSCP 0x00: Default; ECN: 0x00\)) putline
+2 (0000 00.. = Differentiated Services Codepoint: Default \(0x00\)) putline
+2 (.... ..0. = ECN-Capable Transport \(ECT\): 0) putline
+2 (.... ...0 = ECN-CE: 0) putline
+1 (Total Length: 40) putline
+1 (Identification: 0x1aeb \(6891\)) putline
+1 (Flags: 0x04 \(Don't Fragment\)) putline
+2 (0... = Reserved bit: Not set) putline
+2 (.1.. = Don't fragment: Set) putline
+2 (..0. = More fragments: Not set) putline
+1 (Fragment offset: 0) putline
+1 (Time to live: 127) putline
+1 (Protocol: TCP \(0x06\)) putline
+1 (Header checksum: 0xc9a8 [correct]) putline
+2 (Good: True) putline
+2 (Bad : False) putline
+1 (Source: 10.6.0.44 \(10.6.0.44\)) putline
+1 (Destination: 10.6.3.5 \(10.6.3.5\)) putline
+0 (Transmission Control Protocol, Src Port: 1216 \(1216\), Dst Port: 64064 \(64064\), Seq: 51, Ack: 3, Len: 0) putline
+1 (Source port: 1216 \(1216\)) putline
+1 (Destination port: 64064 \(64064\)) putline
+1 (Sequence number: 51    \(relative sequence number\)) putline
+1 (Acknowledgement number: 3    \(relative ack number\)) putline
+1 (Header length: 20 bytes) putline
+1 (Flags: 0x0014 \(RST, ACK\)) putline
+2 (0... .... = Congestion Window Reduced \(CWR\): Not set) putline
+2 (.0.. .... = ECN-Echo: Not set) putline
+2 (..0. .... = Urgent: Not set) putline
+2 (...1 .... = Acknowledgment: Set) putline
+2 (.... 0... = Push: Not set) putline
+2 (.... .1.. = Reset: Set) putline
+2 (.... ..0. = Syn: Not set) putline
+2 (.... ...0 = Fin: Not set) putline
+1 (Window size: 0) putline
+1 (Checksum: 0x47c7 [correct]) putline
+0 () putline
+0 (0000  00 e0 81 63 98 c1 00 e0 81 63 98 70 08 00 45 00   ...c.....c.p..E.) putline
+0 (0010  00 28 1a eb 40 00 7f 06 c9 a8 0a 06 00 2c 0a 06   .\(..@........,..) putline
+0 (0020  03 05 04 c0 fa 40 7e f5 df 61 54 24 9f 50 50 14   .....@~..aT$.PP.) putline
+0 (0030  00 00 47 c7 00 00 00 00 00 00 00 00               ..G.........) putline
+
+% If this is not the first page, then print the page number
+thispagenum 1 gt				% is thispagenum > 1 ?
+{
+	printpagedecorations
+}
+if
+
+showpage

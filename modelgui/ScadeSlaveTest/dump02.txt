@@ -1,0 +1,318 @@
+SsmProxy::Start "KCG 6.0" simulation::railway
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::Step 1 1
+
+OK
+SsmProxy::GetOutputVector
+
+OK.
+SsmProxy::Activate
+.
+OK
+SsmProxy::Refresh
+.
+OK
+SsmProxy::DbgStep 1
+
+OK
+SsmProxy::Close
+
+OK

@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScadeSlaveTest", "ScadeSlaveTest\ScadeSlaveTest.vcproj", "{8735308A-AA62-46E3-A990-4BE9CB43F59F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+		ste|Win32 = ste|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8735308A-AA62-46E3-A990-4BE9CB43F59F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8735308A-AA62-46E3-A990-4BE9CB43F59F}.Debug|Win32.Build.0 = Debug|Win32
+		{8735308A-AA62-46E3-A990-4BE9CB43F59F}.Release|Win32.ActiveCfg = Release|Win32
+		{8735308A-AA62-46E3-A990-4BE9CB43F59F}.Release|Win32.Build.0 = Release|Win32
+		{8735308A-AA62-46E3-A990-4BE9CB43F59F}.ste|Win32.ActiveCfg = ste|Win32
+		{8735308A-AA62-46E3-A990-4BE9CB43F59F}.ste|Win32.Build.0 = ste|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

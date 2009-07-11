@@ -1,0 +1,42 @@
+
+		            M  O  D  E  L  G  U  I 
+
+
+<<<<<<< .mine
+  Requirements needed
+  -------------------
+=======
+  Requirewhat???
+  ------------
+>>>>>>> .r283
+
+   o  A Java 1.6 or later compatible virtual machine for your operating system.
+
+
+  Installation Instructions and Documentation
+  -------------------------------------------
+
+  Read the ModelGUI RTWiki page at http://rtsys.informatik.uni-kiel.de/wiki
+  for installation and usage instructions.
+
+  
+  Compilation Instructions
+  ------------------------
+
+  To provide an easy-to-use compiling process, ModelGUI comes with the
+  build tool Apache Ant. Actually, Ant is a platform independent and Java
+  based variant of tools like make, gnumake, nmake, jam, and others. See
+  http://ant.apache.org for further informations about Apache Ant.
+   
+  Just run 
+     
+      ./build.sh
+ 
+  on a unix shell to see a list of available targets. For example you can run
+
+      ./build.sh build
+
+  to compile the java sources. Have fun!
+
+
+  

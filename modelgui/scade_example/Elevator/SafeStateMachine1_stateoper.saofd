@@ -1,0 +1,14 @@
+/*ED430 version "V400" "RT430" */ 
+imported state_operator Controller(
+   ButtonUp /*! oid "win_2989/F/1D5C/45A23FDF/499A" : */ : bool ; 
+   ButtonDown /*! oid "win_298A/F/1D5C/45A23FE2/4B72" : */ : bool ; 
+   ButtonAlarm /*! oid "win_298B/F/1D5C/45A23FE4/6807" : */ : bool ; 
+   Second /*! oid "win_298C/F/1D5C/45A23FE6/45DD" : */ : bool ; 
+   IsUp /*! oid "win_298D/F/1D5C/45A23FEC/3C6" : */ : bool ; 
+   IsDown /*! oid "win_298E/F/1D5C/45A23FEE/2D39" : */ : bool) 
+   returns (
+   Move /*! oid "win_298F/F/1D5C/45A2400B/B08" : */ : int/*SCED  = "0" */  ; 
+   AlarmLamp /*! oid "win_1D2B/6A70/1D08/45A50A53/39B" : */ : bool ; 
+   OpenDoor /*! oid "win_FC3/45E0/1A98/45A5EF90/2AD2" : */ : bool)
+   /*! oid "win_F19/518E/1F04/45AB4D0E/A81" : */ ;
+

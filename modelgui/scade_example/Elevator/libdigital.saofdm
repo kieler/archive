@@ -1,0 +1,23 @@
+MODEL
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libdigital/FallingEdge
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libdigital/FallingEdgeNoRetrigger
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libdigital/FallingEdgeRetrigger
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libdigital/FlipFlopJK
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libdigital/FlipFlopReset
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libdigital/FlipFlopSet
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libdigital/RisingEdge
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libdigital/RisingEdgeRetrigger
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libdigital/Toggle
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libdigital/RisingEdgeNoRetrigger
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libdigital/count_down
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libdigital/EitherEdge
+
+
+NOTES_TYPES C:/Programme/Esterel\ Technologies/Scade51/examples/ConfAnnot.aty 
+
+DIAG_SEM C:/Programme/Esterel\ Technologies/Scade51/libraries/libdigital/libdigital.semerrfd 
+
+DIAG_MET C:/Programme/Esterel\ Technologies/Scade51/libraries/libdigital/libdigital.meterrfd 
+
+-- occBase 10
+

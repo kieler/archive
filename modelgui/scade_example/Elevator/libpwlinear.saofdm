@@ -1,0 +1,23 @@
+MODEL
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libpwlinear/DeadBandSymmetrical
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libpwlinear/DeadBandUnSymmetrical
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libpwlinear/LimiterSymmetrical
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libpwlinear/LimiterUnSymmetrical
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libpwlinear/PreLoadSymmetrical
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libpwlinear/PreLoadUnSymmetrical
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libpwlinear/ClockCounter
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libpwlinear/Quantizer
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libpwlinear/RateLimiter
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libpwlinear/Counter
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libpwlinear/FallingHysteresis
+	C:/Programme/Esterel\ Technologies/Scade51/libraries/libpwlinear/RisingHysteresis
+
+
+NOTES_TYPES C:/Programme/Esterel\ Technologies/Scade51/examples/ConfAnnot.aty 
+
+DIAG_SEM C:/Programme/Esterel\ Technologies/Scade51/libraries/libpwlinear/libpwlinear.semerrfd 
+
+DIAG_MET C:/Programme/Esterel\ Technologies/Scade51/libraries/libpwlinear/libpwlinear.meterrfd 
+
+-- occBase 10
+

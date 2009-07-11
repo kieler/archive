@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping 
+   xmlns="http://rtsys.informatik.uni-kiel.de/modelgui"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+>
+
+<display port="0" >
+  <move-path id="engine" input="0..100" path="OV_LN_0"/>
+
+  <!--
+  <move id="traction_unit" input="1..30" x-range="8150" y-range="3573..-85"/>
+  <rotate id="traction_unit" input="1..30" angle-range="90"/>
+  <move id="traction_unit" input="30..80" x-range="8150..1116" y-range="-85"/>
+  <rotate id="traction_unit" input="30..80" angle-range="0"/>
+  <move id="traction_unit" input="80..85" x-range="1116..439" y-range="-85..212"/>
+  <rotate id="traction_unit" input="80..85" angle-range="0..-48"/>
+  <move id="traction_unit" input="85..90" x-range="439..141" y-range="212..761"/>
+  <rotate id="traction_unit" input="85..90" angle-range="-48..-90"/>
+  <move id="traction_unit" input="90..101" x-range="141" y-range="761..1890"/>
+  <rotate id="traction_unit" input="90..101" angle-range="-90"/>
+  -->
+
+</display>
+<!-- <display port="1" >
+  <move-path id="car0" input="0..100" path="OV_LN_0"/>
+</display> -->
+
+<!--
+<display port="1" >
+  <move id="traction_unit" input="1..30" x-range="141" y-range="1890..5605"/>
+  <rotate id="traction_unit" input="1..30" angle-range="-90"/>
+  <move id="traction_unit" input="30..80" x-range="141..8150" y-range="5605"/>
+  <rotate id="traction_unit" input="30..80" angle-range="-180"/>
+  <move id="traction_unit" input="80..101" x-range="8150" y-range="5605..3573"/>
+  <rotate id="traction_unit" input="80..101" angle-range="90"/>
+
+  <rotate id="needle" input="1..101" angle-range="0..180" pivot=""/>
+</display>
+-->
+
+<display port="2">
+  <colorize id="OV_LN_0" input="false,true" color="#666600,#ffff00" color-property="stroke" />
+</display>
+<display port="3">
+  <colorize id="OV_LN_1" input="false,true" color="#666600,#ffff00" color-property="stroke" />
+</display>
+<display port="4">
+  <rotate id="needle" input="0..40" angle-range="0..180" pivot="9790, 1920"/>
+</display>
+<display port="5">
+  <rotate id="needle" input="0..40" angle-range="0..180" pivot="9790, 1920"/>
+</display>
+
+<!--<control port="0">
+  <button id="car0"/>
+</control>-->
+
+
+</mapping>

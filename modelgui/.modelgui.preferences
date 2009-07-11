@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Preferences for ModelGUI</comment>
+<entry key="client-mode">true</entry>
+<entry key="port">61234</entry>
+<entry key="host">10.6.3.5</entry>
+<entry key="xml-validation">false</entry>
+</properties>

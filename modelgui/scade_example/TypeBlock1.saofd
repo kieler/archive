@@ -1,0 +1,13 @@
+/*ED430 version "V410" "RT430" */ 
+let type TypeBlock1
+    intArray10 = int ^10/*! oid "win_DD7/1F17/116C/458951EF/1ACB" : */ ; 
+    guiControlData = [boolean_val : bool]/*! oid "win_DF0/41BC/1324/45A51064/144B" : */ ; 
+    guiDisplayData = [waterlevel : int]/*! oid "win_DF1/41BC/1324/45A5106C/45E" : */ ; 
+    states = (state0[0] , state1[1])/*! oid "win_E1B/41BC/1324/45A512E5/66FB" : */ ; 
+tel /*! oid "win_DD6/1F17/116C/458951EA/BAC" : "A4 (210 297)" false : 100*/
+/*SCED  "DefaultPageFormat" : "1" , 
+"PageSize" : "A4 (210 297)" , 
+"Landscape" : "false" , 
+"PageZoom" : "100"
+*/ ;
+
