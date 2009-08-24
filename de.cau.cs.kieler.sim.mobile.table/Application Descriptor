@@ -1,0 +1,9 @@
+MIDlet-1: Mobile DataTable,,de.cau.cs.kieler.sim.mobile.table.MobileDataTable
+MIDlet-Jar-URL: de.cau.cs.kieler.sim.mobile.table.jar
+MIDlet-Icon: /tableIcon.png
+MicroEdition-Configuration: CLDC-1.1
+MIDlet-Version: 1.0.0
+MIDlet-Name: KIEM Mobile Table
+MIDlet-Description: KIELER Execution Manager Mobile Data Table
+MIDlet-Vendor: Christian-Albrechts-Universität zu Kiel
+MicroEdition-Profile: MIDP-2.1
