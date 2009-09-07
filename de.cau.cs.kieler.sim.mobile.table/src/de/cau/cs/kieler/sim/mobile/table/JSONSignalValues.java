@@ -22,23 +22,22 @@ import org.json.me.JSONObject;
  * for representing signal values in JSON format. This convention is used
  * to explicitly denote the presents/absents of pure and valued signals.
  * <BR><BR>
- * Signals in JSON format should contain not just a value but a 
+ * Signals in JSON format should contain not just a value but a
  * JSONSignalValue. That is they contain a JSONObject as their value, where
  * at least one parameter is called <B>present</B> and this parameter is of type
  * boolean, indicating the presents or absents of a signal.
  * <BR><BR>
  * Examples:<BR>
- * 		Valued signal a, present, with an integer value of 10:<BR>
- * 			a:{present:true, value:10}<BR>
- * 		Valued signal a, absent, with a string value of "hello signal":<BR>
- * 			a:{present:false, value:"hello signal"}<BR>
- * 		Pure signal b, present<BR>
- * 			b:{present:true}<BR>
- * 		Pure signal b, absent<BR>
- * 			b:{present:absent}<BR>
- *
- * @author Christian Motika - cmot AT informatik.uni-kiel.de
+ * Valued signal a, present, with an integer value of 10:<BR>
+ * a:{present:true, value:10}<BR>
+ * Valued signal a, absent, with a string value of "hello signal":<BR>
+ * a:{present:false, value:"hello signal"}<BR>
+ * Pure signal b, present<BR>
+ * b:{present:true}<BR>
+ * Pure signal b, absent<BR>
+ * b:{present:absent}<BR>
  * 
+ * @author Christian Motika - cmot AT informatik.uni-kiel.de
  */
 public class JSONSignalValues {
 
@@ -55,7 +54,7 @@ public class JSONSignalValues {
 	 * or at least a JSONObject where the presentKey can be inserted, then
 	 * an exception is thrown.
 	 * 
-	 * @param signalValue the JSONObject representing the signal value 
+	 * @param signalValue the JSONObject representing the signal value
 	 * @param isPresent a boolean indicating whether the signal is present
 	 * 
 	 * @throws JSONException a JSONException
@@ -88,7 +87,7 @@ public class JSONSignalValues {
 	
 	/**
 	 * Gets the value of a SignalValue. This method returns null if it is a
-	 * SignalValue of a pure signal or it is no SignalValue at all. 
+	 * SignalValue of a pure signal or it is no SignalValue at all.
 	 * 
 	 * @param signalValue the SignalValue (or Object if that is unclear)
 	 * 

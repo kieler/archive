@@ -46,7 +46,7 @@ public class TableData {
 	private boolean modifiedDisplay;
 	
 	/** A flag indicating that the entry is permanent and hence should be
-	 * produced in every consecutive step until this flag is cleared. */
+	 *  produced in every consecutive step until this flag is cleared. */
 	private boolean permanent;
 	
 	//-------------------------------------------------------------------------
@@ -206,7 +206,7 @@ public class TableData {
 	 * @param key the new key
 	 * 
 	 * @throws Exception the exception if the key already exists in the parent
-	 * 			         TableDataList
+	 * TableDataList
 	 */
 	public void setKey(String key) throws Exception {
 		//only set the key if unique

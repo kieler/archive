@@ -13,25 +13,18 @@
  ******************************************************************************/
 package de.cau.cs.kieler.sim.mobile.table;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import javax.microedition.io.Connection;
 import javax.microedition.io.Connector;
 import javax.microedition.io.SocketConnection;
-
 import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Spacer;
-import javax.microedition.lcdui.StringItem;
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.Image;
-import javax.microedition.lcdui.List;
 import javax.microedition.lcdui.ChoiceGroup;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
@@ -40,106 +33,201 @@ import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.ImageItem;
 import javax.microedition.lcdui.Item;
 import javax.microedition.lcdui.ItemCommandListener;
-import javax.microedition.lcdui.ItemStateListener;
 import javax.microedition.lcdui.TextField;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
-import javax.microedition.location.Coordinates;
-import javax.microedition.location.Criteria;
-import javax.microedition.location.Location;
-import javax.microedition.location.LocationException;
-import javax.microedition.location.LocationProvider;
-
 import org.json.me.JSONArray;
 import org.json.me.JSONObject;
 
-
+/**
+ * The class MobileDataTable is the main class an implements the MIDlet
+ * with all its basic functionality. This includes the TCP connection,
+ * the processing of received data and the whole user interface.
+ * 
+ * @author Christian Motika - cmot AT informatik.uni-kiel.de
+ * 
+ */
 public class MobileDataTable extends MIDlet implements CommandListener,
 													   ItemCommandListener {
-
+	/** The image for signals. */
 	public Image signalImage;
+	
+	/** The image for variables. */
 	public Image variableImage;
 	
+	/** The master flag indicating that this application controls the 
+	 * execution. */
 	private boolean master;
 
+	/** The host for the TCP connection. */
 	private String host;
+	
+	/** The port for the TCP connection. */
 	private int port;
 	
+	/** The display. */
 	private Display display;
-	private Command exit;
 	
+	/** The current form. This can take the values {@link #FORM_TABLE},
+	 * {@link #FORM_EDIT} and {@link #FORM_CONNECT}. */
 	private int currentForm;
+	
+	/** The constant FORM_TABLE. */
 	private final static int FORM_TABLE = 1;
+	
+	/** The constant FORM_EDIT. */
 	private final static int FORM_EDIT = 2;
+	
+	/** The constant FORM_CONNECT. */
 	private final static int FORM_CONNECT = 3;
 	
+	/** The ChoiceGroup for the type (signal or variable). */
 	ChoiceGroup typeEdit;
 	
+	/** The key edit TextField. */
 	private TextField keyEdit; 
+	
+	/** The value edit TextField. */
 	private TextField valueEdit;
+	
+	/** The current active and focused TableData. */
 	private TableData currentTableData;
 	
+	/** The exit command. */
+	private Command exit;
+	
+	/** The connect command. */
 	private Command connectCommand;
+	
+	/** The disconnect command. */
 	private Command disconnectCommand;
+	
+	/** The OK command. */
 	private Command okCommand;
+	
+	/** The cancel command. */
 	private Command cancelCommand;
 
+	/** The add command. */
 	private Command addCommand;
+	
+	/** The delete command. */
 	private Command deleteCommand;
+	
+	/** The modify command. */
 	private Command modifyCommand;
+	
+	/** The present command. */
 	private Command presentCommand;
+	
+	/** The absent command. */
 	private Command absentCommand;
 	
+	/** The step command (within a table entry). */
 	private Command stepTableCommand;
+	
+	/** The pause command (within a table entry). */
 	private Command pauseTableCommand;
+	
+	/** The step command. */
 	private Command stepCommand;
+	
+	/** The pause command. */
 	private Command pauseCommand;
+	
+	/** The run command. */
 	private Command runCommand;
+	
+	/** The stop command. */
 	private Command stopCommand;
 	
+	/** The step button. */
 	private ImageItem stepButton;
+	
+	/** The pause button. */
 	private ImageItem pauseButton;
+	
+	/** The run button. */
 	private ImageItem runButton;
+	
+	/** The stop button. */
 	private ImageItem stopButton;
 	
-	private StringItem debug;
+	/** The connect image. */
+	private Image connectImage;
 	
+	/** The disconnect image. */
+	private Image disconnectImage;
+	
+	/** The step image. */
 	private Image stepImage;
+	
+	/** The pause image. */
 	private Image pauseImage;
+	
+	/** The run image. */
 	private Image runImage;
+	
+	/** The stop image. */
 	private Image stopImage;
 	
+	/** The step image disabled. */
 	private Image stepImageDisabled;
+	
+	/** The pause image disabled. */
 	private Image pauseImageDisabled;
+	
+	/** The run image disabled. */
 	private Image runImageDisabled;
+	
+	/** The stop image disabled. */
 	private Image stopImageDisabled;
 	
+	/** The table. */
 	private Form table;
 	
-	private final long MAXREAD = 100;
-	
+	/** The run mode flag is true iff execution is in run mode. */
 	private boolean runMode;
+	
+	/** The executing flag is true iff execution is ongoing. */
 	private boolean executing;
 	
+	/** The connection, null if no connection. */
 	private SocketConnection connection;
+	
+	/** The TCP writer, set iff connected. */
 	private PrintStream writer;
+	
+	/** The TCP reader, set iff connected. */
 	private DataReceiver reader;
 	
-	private Coordinates coordiates;
-	
+	/** The TableDataList holds all TableData entries which can be edited. */
 	private TableDataList tableDataList;
-	private static MobileDataTable instance;
+	
+	/** The last selected Item. This is necessary to set this on focus again
+	 * after e.g., a refresh or rebuild of the TableDataList. */
 	public Item lastSelected;
+
+	/** The single instance of this class. */
+	private static MobileDataTable instance;
 	
 	//-------------------------------------------------------------------------
 
+	/**
+	 * Gets the single instance of MobileDataTable.
+	 * 
+	 * @return single instance of MobileDataTable
+	 */
 	public static MobileDataTable getInstance() {
 		return instance;
 	}
 	
 	//-------------------------------------------------------------------------
 
+	/**
+	 * Display {@link #lastSelected} Item.
+	 */
 	public void displayLastSelected() {
 		synchronized(this) {
 			if (lastSelected != null) {
@@ -161,6 +249,15 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 		}
 	}
 	
+	//-------------------------------------------------------------------------
+	
+	/**
+	 * Sets or resets the {@link #lastSelected} Item. If the reset flag is set 
+	 * to true, then the {@link #lastSelected} variable is cleared.
+	 * 
+	 * @param item the item
+	 * @param reset the reset
+	 */
 	public void setLastSelected(Item item, boolean reset) {
 		synchronized(this) {
 			if (reset) {
@@ -171,13 +268,28 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 				this.lastSelected = item;
 		}
 	}
+
+	//-------------------------------------------------------------------------
 	
+	/**
+	 * Gets the {@link #lastSelected} Item.
+	 * 
+	 * @return the last selected
+	 */
 	public Item getLastSelected() {
 		return this.lastSelected;
 	}
 
 	//-------------------------------------------------------------------------
 
+	/**
+	 * Displays a form for editing a TableData entry. The user here can switch
+	 * the type between a variable and a signal. Also the key and the value
+	 * of the TableData can be modified. The form can be closed by using the 
+	 * OK or the CANCEL command.
+	 * 
+	 * @param tableData the table data
+	 */
 	public void editTableEntry(TableData tableData) {
 		//create a new tableData
 		if (tableData == null) {
@@ -186,13 +298,10 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 			}
 			tableData = tableDataList.get("");
 		}
-		
 		this.currentTableData = tableData;
-		
 		//now edit entry
 		//connection form
 		Form editForm = new Form("Mobile Table - Edit");
-		
 		String[] types = {"Variable","Signal"};
 		typeEdit = new ChoiceGroup("Type", 
 												ChoiceGroup.EXCLUSIVE, 
@@ -206,14 +315,12 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 										   "", 
 										   255, 
 										   TextField.ANY); 
-		
 		editForm.append(typeEdit);
 		editForm.append(keyEdit);
 		editForm.append(valueEdit);
 		editForm.addCommand(okCommand);
 		editForm.addCommand(cancelCommand);
 		editForm.setCommandListener(this);
-		
 		//set data
 		keyEdit.setString(tableData.getKey());
 		valueEdit.setString(tableData.getValue());
@@ -223,13 +330,17 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 		else {
 			typeEdit.setSelectedIndex(0, true);
 		}
-		
+		//make this the active form
 		currentForm = MobileDataTable.FORM_EDIT;
 		this.display.setCurrent(editForm);
 	}
 
 	//-------------------------------------------------------------------------
 	
+	/**
+	 * Send all data entries that are contained in the current TableDataList 
+	 * and that are flagged as modified.
+	 */
 	public void sendAllData() {
 		String returnString = "";
 		for (int c = 0; c < tableDataList.size(); c++) {
@@ -287,18 +398,34 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 
 	//-------------------------------------------------------------------------
 
+	/**
+	 * Checks if this application is flagged to be a master (by the remote
+	 * Execution Manager DataComponent, that must be enabled in this case).
+	 * 
+	 * @return true, if it is a master
+	 */
 	public boolean isMaster() {
 		return this.master;
 	}
 	
 	//-------------------------------------------------------------------------
 
+	/**
+	 * Sets the title of the application.
+	 * 
+	 * @param title the new title
+	 */
 	public void setTitle(String title) {
 		this.table.setTitle(title);
 	}
 	
 	//-------------------------------------------------------------------------
 
+	/**
+	 * Refresh list of TableDataItems. If currently an item is selected this
+	 * method backups the selected key and tries to find the item in a
+	 * fresh rebuild list to reselect it afterwards.
+	 */
 	public void refreshList() {
 		try {
 			//backup key of itemToFocus 
@@ -309,10 +436,9 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 										.getTableData().getKey();
 				found = false; //ok, an item had the focus
 			}
-			
-			Displayable backup = this.display.getCurrent();
+			//fresh table, delete all entries
 			this.table.deleteAll();
-
+			//additional maste buttons
 			if (master) {
 				table.append(stepButton);
 				table.append(runButton);
@@ -320,15 +446,13 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 				table.append(stopButton);
 				table.append(new Spacer(200, 10));
 			}
-			
-			
+			//go thru TableData entries
 			for (int c = 0; c < tableDataList.size(); c ++) {
 				TableData tableData = tableDataList.get(c);
 				
 				TableDataItem item = new TableDataItem(tableData,
 					this.table.getWidth());
 				item.setAlignTop(true);
-
 				//try to find old item to focus
 				if ((!found) && (tableData.getKey().equals(itemToFocusKey))
 				    || ("*"+tableData.getKey()).equals(itemToFocusKey)
@@ -347,7 +471,7 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 					//item above the last selected = cursor LOWER
 					item.setStatus(2); // 2 == LOWER
 				}
-				
+				//add commands to each item
 				item.addCommand(this.modifyCommand);
 				item.addCommand(this.deleteCommand);
 				if (tableData.isSignal()) {
@@ -365,7 +489,7 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 				item.setItemCommandListener(this);
 				table.append(item);
 			}
-			
+			//display last selected item
 			this.displayLastSelected();
 		}catch(Exception e){}
 		new Backlight(10000);
@@ -375,8 +499,8 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 
 	/**
 	 * Reset the modified display tags. This is called whenever data comes in
-	 * or a step has been made. A tableData is only reset to not being 
-	 * displayed as modified, if it has already been sent and hence its 
+	 * or a step has been made. A tableData is only reset to not being
+	 * displayed as modified, if it has already been sent and hence its
 	 * modified tag is already set to false.
 	 */
 	public void resetModifiedDisplayTags() {
@@ -388,13 +512,22 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 						tableData.setModifiedDisplay(false);
 			}
 		}
-		
 	}
 	
 	//-------------------------------------------------------------------------
 
+	/**
+	 * Receive data. This method is triggered by the DataReceiver thread 
+	 * asynchronously. It checks whether the data is a command (starting with
+	 * "E" for enabling the master functionality, "D" for disabling the master
+	 * functionality, or "I" for the initialization data) or a JSON data string
+	 * (starting with "P" for present steps or "H" for history steps).
+	 * 
+	 * @param data the data to process
+	 */
 	public void receiveData(String data) {
 		if (data.startsWith("E")) {
+			//enable this application as a master
 			this.table.addCommand(this.stepCommand);
 			this.table.addCommand(this.runCommand);
 			this.table.addCommand(this.pauseCommand);
@@ -403,6 +536,7 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 			this.refreshList();
 		}
 		else if (data.startsWith("D")) {
+			//disable this application as a master
 			this.table.removeCommand(this.stopCommand);
 			this.table.removeCommand(this.stepCommand);
 			this.table.removeCommand(this.runCommand);
@@ -457,10 +591,12 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 	//-------------------------------------------------------------------------
 
 	/**
-     * Get an array of field names from a JSONObject.
-     *
-     * @return An array of field names, or null if there are no names.
-     */
+	 * Get an array of field names from a JSONObject.
+	 * 
+	 * @param jo the JSONObject to get the field names from
+	 * 
+	 * @return an array of field names, or null if there are no names.
+	 */
     public static String[] getNames(JSONObject jo) {
         int length = jo.length();
         if (length == 0) {
@@ -478,7 +614,19 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 
     //-------------------------------------------------------------------------
 	
-	private void observe(JSONObject allData, boolean historyStep) {
+	/**
+     * This method implements the observer part of this application. It 
+     * traverses thru the list of TableData items and merges all new
+     * JSON data (allData) into it either updating existing or creating new 
+     * entries.<BR>
+     * It will also extract the step information and display it in the
+     * application's title.
+     * 
+     * @param allData the complete (delta) JSON data send by the remote 
+     * DataComponent
+     * @param historyStep the history step flag
+     */
+    private void observe(JSONObject allData, boolean historyStep) {
 		//create a new temporary list
 		Vector tableDataTmp = new Vector();
 
@@ -580,7 +728,7 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 		}
 				
 		//update only if not currently edited
-		if (this.currentForm == this.FORM_TABLE) {
+		if (this.currentForm == MobileDataTable.FORM_TABLE) {
 			this.refreshList();
 			this.display.vibrate(100);
 		}
@@ -588,6 +736,12 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 	
 	//-------------------------------------------------------------------------
 
+	/**
+	 * This method can be used to send a command via the opened TCP connection.
+	 * It send this command as a single line and flushes the stream.
+	 * 
+	 * @param command the command to send
+	 */
 	private void sendCommand(String command) {
 		if (connection == null) return;
 		try {
@@ -605,6 +759,10 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 	
 	//-------------------------------------------------------------------------
 	
+	/**
+	 * Instantiates a new MobileDataTable setting the default host, port and
+	 * images, commands etc. and building the main form.
+	 */
 	public MobileDataTable() {
 		//set instance
 		MobileDataTable.instance = this;
@@ -645,8 +803,6 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 		this.okCommand = new Command("Ok", Command.OK, 0x05);
 		this.cancelCommand = new Command("Cancel", Command.CANCEL, 0x05);
 		
-		this.debug = new StringItem("debug","");
-
 		this.addCommand = new Command("Add", Command.SCREEN, 0x06);
 		this.modifyCommand = new Command("Modify", Command.SCREEN, 0x01);
 		this.deleteCommand = new Command("Delete", Command.SCREEN, 0x07);
@@ -669,7 +825,11 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 			pauseImageDisabled = Image.createImage("/pauseIconDisabled.png");
 			runImageDisabled = Image.createImage("/runIconDisabled.png");
 			stopImageDisabled = Image.createImage("/stopIconDisabled.png");
+			connectImage = Image.createImage("/connectIcon.png");
+			disconnectImage = Image.createImage("/disconnectIcon.png");
 		}catch(Exception e){
+			connectImage = null;
+			disconnectImage = null;
 			stepImage = null;
 			pauseImage = null;
 			runImage = null;
@@ -705,6 +865,13 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 	
 	//-------------------------------------------------------------------------
 	
+	/**
+	 * This method brings the String text to the user's attention for a 
+	 * duration of 2 seconds. It also triggeres a vibrating command if this is
+	 * supported by the mobile phone.
+	 * 
+	 * @param text the text
+	 */
 	public void alert(String text) {
 		Alert alert = new Alert(text);
 		alert.setTimeout(2000);
@@ -717,10 +884,17 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 	
 	//-------------------------------------------------------------------------
 	
+	/**
+	 * This is the connect dialog form in which the predefined (default) host
+	 * and port for the TCP connection can be modified. Whenever the user hits
+	 * the OK command the connection is asynchronously mad by a different 
+	 * thread. When the user uses the cancel command no connection attempt is 
+	 * being made.
+	 */
 	public void connectDialog() {
 		//connection form
 		Form connectionForm = new Form("Mobile Table - Connect");
-		
+		//edit fields for the host and the port
 		TextField hostEdit = new TextField("Host", 
 											this.host, 
 											255, 
@@ -729,21 +903,30 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 										   this.port+"", 
 										   5, 
 										   TextField.NUMERIC); 
-		
 		connectionForm.append(hostEdit);
 		connectionForm.append(portEdit);
 		connectionForm.addCommand(okCommand);
 		connectionForm.addCommand(cancelCommand);
 		connectionForm.setCommandListener(this);
-		
+		//set the new current form
 		currentForm = MobileDataTable.FORM_CONNECT;
 		this.display.setCurrent(connectionForm);
 	}
 	
 	//-------------------------------------------------------------------------
 	
+	/**
+	 * This method is called asynchronously from within the SocketConnector
+	 * thread. It tries to connect to the given/set host and port. It also
+	 * displays a BusyAlert during the connection attempt. 
+	 */
 	public void connect() {
 		try {
+			new Backlight(5000);
+			this.display.setCurrent( new BusyAlert("Mobile Table - Connect", 
+													 "Connecting ...",
+													 this.connectImage, 
+													 Alert.FOREVER));
 			//System.out.println(this.host + ":" + this.port);
 			String url = this.host + ":" + this.port;
 			connection = (SocketConnection)
@@ -764,6 +947,11 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 			//reader thread
 			reader = new DataReceiver(connection.openDataInputStream());
 			new Thread(reader).start();
+			currentForm = MobileDataTable.FORM_TABLE;
+			new Backlight(5000);
+			this.display.setCurrent( new Alert("Mobile Table - Connect", 
+					"Connected", this.connectImage, AlertType.INFO), this.table);
+			return;
 		}
 		catch(Exception e) {
 			try{reader.terminate();}catch(Exception ee){}
@@ -774,16 +962,21 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 			connection = null;
 			alert("Cannot connect. Check host and port.");
 			this.table.addCommand(this.connectCommand);
+			currentForm = MobileDataTable.FORM_TABLE;
+			new Backlight(5000);
+			this.display.setCurrent( new Alert("Mobile Table - Connect", 
+					"Connection failed", this.disconnectImage, AlertType.ERROR), this.table);
+			return;
 		}
-		//set current form back
-		this.table.addCommand(this.connectCommand);
-		currentForm = MobileDataTable.FORM_TABLE;
-		this.display.setCurrent(this.table);
-		new Backlight(10000);
 	}
 
 	//-------------------------------------------------------------------------
 	
+	/**
+	 * Disconnect from the (possibly) connected host. This also sets the 
+	 * application back to the default extended master mode and disables the
+	 * execution buttons and commands. This also resets the TableDataList.
+	 */
 	public void disconnect() {
 		try {
 			if (this.writer != null)
@@ -816,6 +1009,9 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 		reader = null;
 		connection = null;
 		writer = null;
+		new Backlight(5000);
+		this.display.setCurrent( new Alert("Mobile Table - Connect", 
+				"Disconnected", this.disconnectImage, AlertType.INFO), this.table);
 	}
 	
 	//-------------------------------------------------------------------------
@@ -824,6 +1020,7 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 	 * @see javax.microedition.midlet.MIDlet#startApp()
 	 */
 	protected void startApp() throws MIDletStateChangeException {
+		//the default form for application start
 		currentForm = MobileDataTable.FORM_TABLE;
 		this.display.setCurrent(this.table);
 	}
@@ -833,14 +1030,19 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 	/* (non-Javadoc)
 	 * @see javax.microedition.midlet.MIDlet#destroyApp(boolean)
 	 */
-	protected void destroyApp(boolean unconditional) throws MIDletStateChangeException {}
+	protected void destroyApp(boolean unconditional)
+						throws MIDletStateChangeException {
+		//noop
+	}
 
 	//-------------------------------------------------------------------------
 
 	/* (non-Javadoc)
 	 * @see javax.microedition.midlet.MIDlet#pauseApp()
 	 */
-	protected void pauseApp() {}
+	protected void pauseApp() {
+		//noop
+	}
 
 	//-------------------------------------------------------------------------
 
@@ -848,17 +1050,10 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 	 * @see javax.microedition.lcdui.CommandListener#commandAction(javax.microedition.lcdui.Command, javax.microedition.lcdui.Displayable)
 	 */
 	public void commandAction(Command command, Displayable displayable) {
+		//this method handles the action commands
 		if (command == this.exit) {
 			this.notifyDestroyed();
 		}
-//		else if (command == this.tableCommand) {
-//			currentForm = MobileDataTable.FORM_TABLE;
-//			this.display.setCurrent(this.dataList);
-//		}
-//		else if (command == this.controlCommand) {
-//			currentForm = MobileDataTable.FORM_COMMAND;
-//			this.display.setCurrent(this.command);
-//		}
 		else if (command == this.connectCommand) {
 			this.connectDialog();
 		}
@@ -867,23 +1062,23 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 		}
 		else if (command == this.okCommand) {
 			if (currentForm == FORM_CONNECT) {
-				new SocketConnector();
 				this.table.removeCommand(this.connectCommand);
-				this.refreshList();
-				//this.connect();
+				new SocketConnector();
+				return;
 			}
 			else if (currentForm == FORM_EDIT) {
 				//save current modifications
 				if (currentTableData != null) {
-					currentTableData.setSignal(typeEdit.getSelectedIndex() == 1);
-					if (!this.tableDataList.containsOther(this.keyEdit.getString(), currentTableData)) {
+				  currentTableData.setSignal(typeEdit.getSelectedIndex() == 1);
+				  if (!this.tableDataList.containsOther(
+					  this.keyEdit.getString(), currentTableData)) {
 						try {
 							currentTableData.setKey(this.keyEdit.getString());
 						}catch(Exception e) {}
-					}
-					currentTableData.setValue(this.valueEdit.getString());
-					this.currentTableData.setModified(true);
-					this.currentTableData.setModifiedDisplay(true);
+				  }
+				  currentTableData.setValue(this.valueEdit.getString());
+				  this.currentTableData.setModified(true);
+				  this.currentTableData.setModifiedDisplay(true);
 				}
 				currentForm = MobileDataTable.FORM_TABLE;
 				this.refreshList();
@@ -944,6 +1139,11 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 	
 	//-------------------------------------------------------------------------
 	
+	/**
+	 * Sets the executing flag to execution (true) or non-execution (false).
+	 * 
+	 * @param executing the new executing boolean flag
+	 */
 	public void setExecuting(boolean executing) {
 		if ((executing)) {
 			this.stopButton.setImage(stopImage);
@@ -960,6 +1160,12 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 	
 	//-------------------------------------------------------------------------
 
+	/**
+	 * Sets the run mode to running execution (true) or paused execution
+	 * (false).
+	 * 
+	 * @param runMode the new boolean run mode flag
+	 */
 	public void setRunMode(boolean runMode) {
 		if ((runMode)) {
 			this.table.addCommand(pauseTableCommand);
@@ -995,6 +1201,9 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 
 	//-------------------------------------------------------------------------
 
+	/* (non-Javadoc)
+	 * @see javax.microedition.lcdui.ItemCommandListener#commandAction(javax.microedition.lcdui.Command, javax.microedition.lcdui.Item)
+	 */
 	public void commandAction(Command command, Item item) {
 		//lastSelected = item;
 		//forward action of buttons to action of form-command
@@ -1056,70 +1265,3 @@ public class MobileDataTable extends MIDlet implements CommandListener,
 	}
 
 }
-
-
-
-
-//Criteria crit = new Criteria();
-//crit.setHorizontalAccuracy(Criteria.NO_REQUIREMENT); // 2km
-//crit.setVerticalAccuracy(Criteria.NO_REQUIREMENT); // 2km
-//crit.setPreferredResponseTime(Criteria.NO_REQUIREMENT);
-//crit.setPreferredPowerConsumption(Criteria.POWER_USAGE_LOW);
-//crit.setCostAllowed(true);
-//crit.setSpeedAndCourseRequired(false);
-//crit.setAltitudeRequired(false);
-//crit.setAddressInfoRequired(false);		
-//
-//LocationProvider provider;
-//try {
-//	provider = LocationProvider.getInstance(crit);
-//	if (provider != null) {
-//		Location loc = provider.getLocation(60); // timeout von 60 Sek
-//		coordiates = loc.getQualifiedCoordinates();
-//		if (coordiates != null) {
-//			this.form.setTitle(
-//					coordiates.getLongitude() 
-//					+ ":" +coordiates.getLatitude());
-//		}
-//	}
-//} catch (Exception e) {
-//	e.printStackTrace();
-//}
-
-
-/*
-long startTime = System.currentTimeMillis();
-
-String msg="";
-int cnt = -10000;
-try {
-	DataInputStream connector = Connector.openDataInputStream(
-			"http://www.delphino.de/ip.php");
-    char z;
-    do {
-	  z = (char)connector.read();
-	  if ((int)z != 65535) {
-		  msg += z;
-		  cnt = 0;
-	  }
-      cnt++;
-      System.out.print((int)z);
-      System.out.print(" ");
-    } while(cnt < MAXREAD);
-} catch (IOException e) {
-	// TODO Auto-generated catch block
-	e.printStackTrace();
-}
-//this.canvas.message = msg.trim();
-//this.canvas.repaint();
-* 		
-*/
-
-//String cellID = System.getProperty("Cell-ID");
-//if (cellID == null)
-//	cellID = System.getProperty("com.nokia.mid.cellid");
-//
-//String lac = System.getProperty("com.nokia.mid.lac");
-//String ns = System.getProperty("com.nokia.mid.networksignal");
-//
-//this.form.setTitle(ns);

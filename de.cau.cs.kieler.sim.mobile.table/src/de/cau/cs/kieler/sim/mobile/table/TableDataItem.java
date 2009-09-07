@@ -1,51 +1,89 @@
+/******************************************************************************
+ * KIELER - Kiel Integrated Environment for Layout for the Eclipse RCP
+ *
+ * http://www.informatik.uni-kiel.de/rtsys/kieler/
+ * 
+ * Copyright 2009 by
+ * + Christian-Albrechts-University of Kiel
+ *   + Department of Computer Science
+ *     + Real-Time and Embedded Systems Group
+ * 
+ * This code is provided under the terms of the Eclipse Public License (EPL).
+ * See the file epl-v10.html for the license text.
+ ******************************************************************************/
 package de.cau.cs.kieler.sim.mobile.table;
 
-import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
 import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Choice;
 import javax.microedition.lcdui.CustomItem;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
-import javax.microedition.lcdui.ImageItem;
-import javax.microedition.lcdui.Screen;
 
+/**
+ * The class TableDataItem provides a CustomItem that can be listed in
+ * the form of the MobileDataTable to display one entry of a TableData.
+ * This TableData entry is also linked by this CustomItem. 
+ * 
+ * @author Christian Motika - cmot AT informatik.uni-kiel.de
+ */
 public class TableDataItem extends CustomItem {
 
-	//where the cursor in the form is
-    private final static int UPPER = 0;
+	/** The constant UPPER indicating where the cursor in the form is */
+	private final static int UPPER = 0;
+    
+    /** The constant IN indicating where the cursor in the form is */
     private final static int IN = 1;
+    
+    /** The constant LOWER indicating where the cursor in the form is */
     private final static int LOWER = 2;
+    
+    /** The status indicating where the cursor in the form is. */
     private int status = UPPER;
 	
+    /** The align top flag to align the image at the top (multi line). */
     private boolean alignTop;
+	
+	/** The TableData that is linked to this CustomItem. */
 	private TableData tableData;
+	
+	/** The used font. */
 	private Font font;
-	private Font font_focus;
+	
+	/** The width. */
 	private int width;
+	
+	/** The foreground color. */
 	private final int COLOR_FOREGROUND;
+	
+	/** The highlighted foreground color. */
 	private final int COLOR_HIGHLIGHTED_FOREGROUND;
-	private final int COLOR_BACKGROUND;
-	private final int COLOR_HIGHLIGHTED_BACKGROUND;
 	
-	//private Text le_focus;
-	private Text le_normal;
+	/** The text variable calculates & holds the text in a displayable form. */
+	private Text text;
 	
+	/** The left offset LABELOFFSET_LEFT. */
 	private final static int LABELOFFSET_LEFT = 46;
+	
+	/** The right offset LABELOFFSET_RIGHT. */
 	private final static int LABELOFFSET_RIGHT = 5;
+	
+	/** The minimal height of the entry MINHEIGHT. */
 	private final static int MINHEIGHT = 22;
 	
-  protected boolean traverse(int dir, int viewportWidth, int viewportHeight,
-          int[] visRect_inout) {
+	//-------------------------------------------------------------------------
+	
+	/* (non-Javadoc)
+	 * @see javax.microedition.lcdui.CustomItem#traverse(int, int, int, int[])
+	 */
+	protected boolean traverse(int dir, int viewportWidth, int viewportHeight,
+								int[] visRect_inout) {
 	  switch (dir) {
 	  case Canvas.DOWN:
 		  if (status == UPPER) {
-//			  status = IN;
-//			  MobileDataTable.getInstance().setLastSelected(this);
-//			  repaint();
+			  //do nothing when outside the item
 		  } 
 		  else {
 			  if (!lastTableItem()) {
@@ -57,9 +95,7 @@ public class TableDataItem extends CustomItem {
 		  break;
 	  case Canvas.UP:
 		  if (status == LOWER) {
-//			  status = IN;
-//			  MobileDataTable.getInstance().setLastSelected(this);
-//			  repaint();
+			  //do nothing when outside the item
 		  } else {
 			  if (!this.firstTableItem() ||
 				  MobileDataTable.getInstance().isMaster()) {
@@ -74,51 +110,115 @@ public class TableDataItem extends CustomItem {
 	  status = IN;
 	  repaint();
 	  return true;
-  	}
+	}
   
-   public void setStatus(int status) {
+	//-------------------------------------------------------------------------
+
+	/**
+	 * Sets the status.
+	 * 	
+	 * @param status the new status
+	 */
+	public void setStatus(int status) {
 	   this.status = status;
-   }
+	}
   
-  	public boolean lastTableItem() {
-  		int index = this.tableData.getParentTableDataList()
-  												.indexOf(this.tableData);
-  		return (index == this.tableData.getParentTableDataList().size()-1);
-  	}
+	//-------------------------------------------------------------------------
+
+	/**
+	 * Check whether this is the last item in the table.
+	 * 
+	 * @return true, if item is the last one
+	 */
+	public boolean lastTableItem() {
+	   int index = this.tableData.getParentTableDataList()
+											.indexOf(this.tableData);
+	   return (index == this.tableData.getParentTableDataList().size()-1);
+	}
+
+	//-------------------------------------------------------------------------
   	
-  	public boolean firstTableItem() {
+	/**
+	 * Check whether this is the first item in the table.
+	 * 
+	 * @return true, if item is the last one
+	 */
+	 public boolean firstTableItem() {
   		int index = this.tableData.getParentTableDataList()
   												.indexOf(this.tableData);
   		return (index == 0);
-  	}
+	 }
   	
-  	public void setAlignTop(boolean alignTop) {
+	 //-------------------------------------------------------------------------
+	  
+	 /**
+	  * Sets the align top flag.
+	  * 
+	  * @param alignTop the new align top flag
+	  */
+	 public void setAlignTop(boolean alignTop) {
   		this.alignTop = alignTop;
-  	}
+	 }
+
+	 //-------------------------------------------------------------------------
   
-//    public boolean hasFocus() {
-//    	return ((this.status == IN));
-//    }
-    public boolean hasFocus() {
-    	return ((this.status == IN)
-    			|| (MobileDataTable.getInstance().lastSelected == this));
-    }
+	 /**
+	  * Checks whether the item has the focus. This is the case whenever the 
+	  * status indicates IN (traversed) or when the MobileDataTable's 
+	  * lastSelected variable contains exactly this item.
+	  * 
+	  * @return true, if item is focused
+	  */
+	 public boolean hasFocus() {
+	   	return ((this.status == IN)
+	   			|| (MobileDataTable.getInstance().lastSelected == this));
+	 }
   
-	public TableData getTableData() {
+	 //-------------------------------------------------------------------------
+
+	 /**
+	  * Gets the linked TableData entry.
+	  * 
+	  * @return the TableData
+	  */
+	 public TableData getTableData() {
 		return tableData;
-	}
-	
-	private int getHeight() {
-		int height = getLabelHeight(getWidth());
-		if (height < this.MINHEIGHT) return this.MINHEIGHT;
+	 }
+
+	 //-------------------------------------------------------------------------
+	 
+	 /**
+	  * Gets the height of the item. If the actual height is smaller than the
+	  * minimal height than the latter is returned.
+	  * 
+	  * @return the height
+	  */	
+	 private int getHeight() {
+//		int height = getLabelHeight(getWidth());
+		int height = getLabelTextHeight();
+		if (height < TableDataItem.MINHEIGHT) return TableDataItem.MINHEIGHT;
 		return height;
-	}
+	 }
 
-	private int getWidth() {
+	 //-------------------------------------------------------------------------
+	
+	 /**
+	  * Gets the predefined width of the item.
+	  * 
+	  * @return the width
+	  */
+	 private int getWidth() {
 		return this.width;
-	}
+	 }
 
-	public String getLabel() {
+	 //-------------------------------------------------------------------------
+
+	 /* (non-Javadoc)
+	  * @see javax.microedition.lcdui.Item#getLabel()
+	  */
+	 public String getLabel() {
+		//if this entry has a non-empty value this is displayed in brackets
+		//otherwise only the key is displayed
 		String key = tableData.getKey();
 		String value = tableData.getValue();
 		if ((value != null) && (value.length() > 0)) {
@@ -128,9 +228,19 @@ public class TableDataItem extends CustomItem {
 		if (this.tableData.isModifiedDisplay())
 			modifiedTag = "*";
 		return modifiedTag + key + value;
-	}
+	 }
 	
-	public TableDataItem(TableData tableData,
+	 //-------------------------------------------------------------------------
+
+	 /**
+	  * Instantiates a new TableDataItem. The font colors, the alignment are set
+	  * to default values. The linked TableData and the predefined with are
+	  * parametrized.
+	  * 
+	  * @param tableData the table data
+	  * @param width the width
+	  */
+	 public TableDataItem(TableData tableData,
 						int width) {
 		super("");
 		this.alignTop = false;
@@ -138,74 +248,96 @@ public class TableDataItem extends CustomItem {
 		this.font = Font.getFont(Font.FACE_SYSTEM, 
 								 Font.STYLE_PLAIN, 
 								 Font.SIZE_MEDIUM);
-		this.font_focus = Font.getFont(Font.FACE_SYSTEM, 
-				 				 Font.STYLE_BOLD, 
-				 				 Font.SIZE_MEDIUM);
 		COLOR_FOREGROUND = Display.getDisplay(MobileDataTable.getInstance()).
 							getColor(Display.COLOR_FOREGROUND);
-		COLOR_BACKGROUND = Display.getDisplay(MobileDataTable.getInstance()).
-							getColor(Display.COLOR_BACKGROUND);
-		COLOR_HIGHLIGHTED_FOREGROUND = Display.getDisplay(MobileDataTable.getInstance()).
+		COLOR_HIGHLIGHTED_FOREGROUND = Display.getDisplay(
+							MobileDataTable.getInstance()).
 							getColor(Display.COLOR_HIGHLIGHTED_FOREGROUND);
-		COLOR_HIGHLIGHTED_BACKGROUND = Display.getDisplay(MobileDataTable.getInstance()).
-							getColor(Display.COLOR_HIGHLIGHTED_BORDER);
 		this.width = width;
-		//le_focus = new Text(font_focus, getLabel(), getLabelWidth());
-		le_normal = new Text(font, getLabel(), getLabelWidth());
-	}
+		text = new Text(font, getLabel(), getLabelTextWidth());
+	 }
 
-	protected int getMinContentHeight() {
+	 //-------------------------------------------------------------------------
+
+	 /* (non-Javadoc)
+	  * @see javax.microedition.lcdui.CustomItem#getMinContentHeight()
+	  */
+	 protected int getMinContentHeight() {
 		return getHeight();
-	}
+	 }
 
-	protected int getMinContentWidth() {
-		return getWidth();
-	}
-
-	protected int getPrefContentHeight(int width) {
-		return getHeight();
-	}
-
-	protected int getPrefContentWidth(int height) {
-		return getWidth();
-	}
+	 //-------------------------------------------------------------------------
 	
-	private int getLabelWidth() {
+	 /* (non-Javadoc)
+	  * @see javax.microedition.lcdui.CustomItem#getMinContentWidth()
+	  */
+	 protected int getMinContentWidth() {
+		return getWidth();
+	 }
+
+	 //-------------------------------------------------------------------------
+
+	 /* (non-Javadoc)
+	  * @see javax.microedition.lcdui.CustomItem#getPrefContentHeight(int)
+	  */
+	 protected int getPrefContentHeight(int width) {
+		return getHeight();
+	 }
+
+	 //-------------------------------------------------------------------------
+
+	 /* (non-Javadoc)
+	  * @see javax.microedition.lcdui.CustomItem#getPrefContentWidth(int)
+	  */
+	 protected int getPrefContentWidth(int height) {
+		return getWidth();
+	 }
+	
+	 //-------------------------------------------------------------------------
+
+	 /**
+	  * Gets the width of the label. This is the total with minus the offsets
+	  * minus a constant of 3 pixel.
+	  * 
+	  * @return the width of the label
+	  */
+	 public int getLabelTextWidth() {
 		return getWidth()-LABELOFFSET_LEFT-LABELOFFSET_RIGHT-3;
-	}
+	 }
 	
-	int getLabelHeight() {
-		return getLabelHeight(getLabelWidth());
-	}
-	
-    int getLabelHeight(int w) {
+	 //-------------------------------------------------------------------------
+
+	 /**
+	  * Gets the calculated label height or the minimum height.
+	  * 
+	  * @return the label height
+	  */
+	 public int getLabelTextHeight() {
         if (getLabel() == null || getLabel().length() == 0) {
             return 0;
         } 
         int h1 = MINHEIGHT;
         int h2 = MINHEIGHT;
-//        if (this.hasFocus()) {
-//            if (le_focus != null)
-//            	h2 = le_focus.getHeight();
-//        }
-//        else {
-//            if (le_normal != null) 
-             	h1 = le_normal.getHeight();
-//        }
+         	h1 = text.getHeight();
         int returnHeight = (h1 < h2 ? h2 : h1);
         return returnHeight;
-    }
-
+	 }
     
-    //---------------------------------------------------------------------
+	 //---------------------------------------------------------------------
     
-    public void refresh() {
+	 /**
+	  * Refresh this TableDataItem.
+	  */
+	 public void refresh() {
     	this.repaint();
-    }
+	 }
     
-    //---------------------------------------------------------------------
+	 //---------------------------------------------------------------------
 	
-	protected void paint(Graphics g, int w, int h) {
+	 /* (non-Javadoc)
+	  * @see javax.microedition.lcdui.CustomItem#paint(javax.microedition.lcdui.Graphics, int, int)
+	  */
+	 protected void paint(Graphics g, int w, int h) {
 		//draw box if highlighted
 		if (this.hasFocus()) {
 			g.setColor(60, 120,255);
@@ -213,8 +345,8 @@ public class TableDataItem extends CustomItem {
 			g.setColor(this.COLOR_FOREGROUND);
 		}
 		
-		//Font font = Font.getFont(Font.FONT_INPUT_TEXT + Font.SIZE_SMALL);
-
+		//draw a signal and a checked or unchecked image iff this is a signal
+		//draw a variable image iff this is not a signal
 		Image image = MobileDataTable.getInstance().variableImage;
     	Image checked = null;
     	if (tableData.isSignal()) {
@@ -230,51 +362,65 @@ public class TableDataItem extends CustomItem {
     	if (alignTop) {
     		diff = 4;
     	}
+    	//draw the additinal checked image
     	if (checked != null)
     		g.drawImage(checked, 5, diff-1, 0);
     	g.drawImage(image, 25, diff, 0);
     	
-    	//g.setFont(font);
-		//g.drawString(this.getLabel(), 42, h-getHeight()-1, 0);
-
+    	//set the color of the text depending on the focus
 		if (this.hasFocus())
     		g.setColor(this.COLOR_HIGHLIGHTED_FOREGROUND);
     	else
     		g.setColor(COLOR_FOREGROUND);
 		
-//        if (this.hasFocus()) {
-//            le_focus.drawTo(g, LABELOFFSET_LEFT, 0, 
-//            					h+getLabelHeight());
-//            le_focus.reset();
-//        }
-//        else {
-            le_normal.drawTo(g, LABELOFFSET_LEFT, 0, 
-            					h+getLabelHeight());
-            le_normal.reset();
-//        }
-
+		//draw the multi-line text
+        text.drawTo(g, LABELOFFSET_LEFT, 0, h+getLabelTextHeight());
+        text.reset();
 	}
 	
 	//=========================================================================
-	//=========================================================================
 
-	
+	/**
+	 * The Class Text holds the text in a displayable multi-line form. This 
+	 * means an array of lines is being calculated each time the setText-method
+	 * is called.
+	 */
 	public class Text {
-	    private Font font;
-	    private int width;
-	    private int height;
-	    private int position;
-	    private int length;
-	    private int start = 0;
-	    private int size;
-
-	    //---------------------------------------------------------------------
 	    
-	    private String[] textArray;
+    	/** The font used for calculations. */
+    	private Font font;
+	    
+    	/** The maximal width. */
+    	private int width;
+	    
+    	/** The calculated height. */
+    	private int height;
+	    
+    	/** The current position when calculating. */
+    	private int position;
+	    
+    	/** The length or number of characters of the whole text. */
+    	private int length;
+	    
+    	/** The starting position that is increased during the calculation. */
+    	private int start = 0;
+	    
+    	/** The size. This is equal to the number of lines. */
+    	private int size;
+
+	    /** The text array of lines. */
+    	private String[] textArray;
 	    
 	    //---------------------------------------------------------------------
 
-	    public Text(Font font, String text, int width) {
+	    /**
+    	 * Instantiates a new text.
+    	 * 
+    	 * @param font the font to use for calculations
+    	 * @param text the text to display
+    	 * @param width the maximal width to use for calculations
+    	 */
+    	public Text(Font font, String text, int width) {
 	        this.font = font;
 	        this.width = width;
 	        this.length = text.length();
@@ -283,13 +429,24 @@ public class TableDataItem extends CustomItem {
 
 	    //---------------------------------------------------------------------
 	    
-	    public int getSize() {
+	    /**
+    	 * Gets the size.
+    	 * 
+    	 * @return the size
+    	 */
+    	public int getSize() {
 	    	return size;
 	    }
 	    
 	    //---------------------------------------------------------------------
 
-	    public void setText(String text) {
+	    /**
+    	 * Sets the text. This method also starts recalculation of lines, size
+    	 * and the height of the displayable text field.
+    	 * 
+    	 * @param text the new text
+    	 */
+    	public void setText(String text) {
 	    	if ((text == null)||(text.equals(""))) {
 	    		this.height = 0;
 	    		this.textArray = null;
@@ -314,14 +471,30 @@ public class TableDataItem extends CustomItem {
 	    
 	    //---------------------------------------------------------------------
 	    
-	    public boolean hasMoreElements() {
+	    /**
+    	 * Checks for more elements, i.e., if there are additional characters.
+    	 * 
+    	 * @return true, if there are more characters
+    	 */
+    	public boolean hasMoreElements() {
 	        return (position <= (length - 1));
 	    }
 
 
 	    //---------------------------------------------------------------------
 	    
-	    private Object nextElement(String text) throws NoSuchElementException {
+	    /**
+    	 * Returns the next element. This returns the next line containing all
+    	 * characters from start until the end or from start until the line
+    	 * has reached its maximum length.
+    	 * 
+    	 * @param text the text
+    	 * 
+    	 * @return the object
+    	 * 
+    	 * @throws NoSuchElementException the no such element exception
+    	 */
+    	private Object nextElement(String text) throws NoSuchElementException {
 	        try {
 	            int next = next(text);
 	            String s = text.substring(start, next);
@@ -343,7 +516,14 @@ public class TableDataItem extends CustomItem {
 
 	    //---------------------------------------------------------------------
 
-	    private int next(String text) {
+	    /**
+    	 * Next. Helper method for {@link #nextElement(String)}.
+    	 * 
+    	 * @param text the text
+    	 * 
+    	 * @return the end position for the next line (element)
+    	 */
+    	private int next(String text) {
 	        int i = position;
 	        int lastBreak = -1;
 
@@ -378,7 +558,17 @@ public class TableDataItem extends CustomItem {
 
 	    //---------------------------------------------------------------------
 
-	    public void drawTo(Graphics g, int startx, int starty, int maxY) {
+	    /**
+    	 * This method finally draws the text onto the display when a Graphics
+    	 * g is provided together with the coordinates where to place the 
+    	 * multi-line text.
+    	 * 
+    	 * @param g the g
+    	 * @param startx the startx
+    	 * @param starty the starty
+    	 * @param maxY the max y
+    	 */
+    	public void drawTo(Graphics g, int startx, int starty, int maxY) {
 	        int fontHeight = font.getHeight() + 1;
 
 	        for (int c = 0; c < size; c++) {
@@ -391,15 +581,26 @@ public class TableDataItem extends CustomItem {
 	    
 	    //---------------------------------------------------------------------
 
-	    public int getHeight() {
+	    /**
+    	 * Gets the calculated height.
+    	 * 
+    	 * @return the height
+    	 */
+    	public int getHeight() {
 	    	return this.height;
 	    }
 	    
 	    //---------------------------------------------------------------------
 
-	    public void reset() {
+	    /**
+    	 * Reset for recalculation.
+    	 */
+    	public void reset() {
 	        start = 0;
 	        position = 0;
 	    }
+    	
 	}
+	//=========================================================================
+	
 }

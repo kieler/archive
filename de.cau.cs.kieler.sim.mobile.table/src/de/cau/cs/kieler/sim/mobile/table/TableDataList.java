@@ -22,6 +22,7 @@ import java.util.Vector;
  * by the producer and observer DataComponent.
  * 
  * @author Christian Motika - cmot AT informatik.uni-kiel.de
+ * 
  */
 public class TableDataList {
 	
@@ -135,7 +136,7 @@ public class TableDataList {
 	//-------------------------------------------------------------------------
 
 	/**
-	 * Checks whether the list contains a TableData entry with the 
+	 * Checks whether the list contains a TableData entry with the
 	 * specific key.
 	 * 
 	 * @param key the identifier key
