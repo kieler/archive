@@ -1,0 +1,14 @@
+<project default="build" basedir=".">
+	
+	<property name="srcdir" value="${basedir}/src" />
+	<property name="bindir" value="${basedir}/bin" />
+	<property name="jardir" value="${basedir}" />
+	
+	<target name="build">
+		<mkdir dir="${bindir}" />
+		<mkdir dir="${jardir}" />
+		<javac destdir="${bindir}" srcdir="${srcdir}" />
+		<jar destfile="${jardir}/tags.jar" basedir="${bindir}" filesetmanifest="merge"/>
+	</target>
+
+</project>
