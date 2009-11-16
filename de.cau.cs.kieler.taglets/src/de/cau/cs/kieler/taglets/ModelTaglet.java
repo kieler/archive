@@ -20,87 +20,89 @@ import com.sun.javadoc.Tag;
 import com.sun.tools.doclets.Taglet;
 
 /**
+ * Taglet for model code.
  * 
  * @author msp
  */
 public class ModelTaglet implements Taglet {
 
-    /** the name of this taglet */
+    /** the name of this taglet. */
     private static final String NAME = "model";
-    /** printed header for this taglet */
+    /** printed header for this taglet. */
     private static final String HEADER = "Model element";
     
-    /* (non-Javadoc)
-     * @see com.sun.tools.doclets.Taglet#getName()
+    /**
+     * {@inheritDoc}
      */
     public String getName() {
         return NAME;
     }
 
-    /* (non-Javadoc)
-     * @see com.sun.tools.doclets.Taglet#inConstructor()
+    /**
+     * {@inheritDoc}
      */
     public boolean inConstructor() {
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see com.sun.tools.doclets.Taglet#inField()
+    /**
+     * {@inheritDoc}
      */
     public boolean inField() {
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see com.sun.tools.doclets.Taglet#inMethod()
+    /**
+     * {@inheritDoc}
      */
     public boolean inMethod() {
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see com.sun.tools.doclets.Taglet#inOverview()
+    /**
+     * {@inheritDoc}
      */
     public boolean inOverview() {
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see com.sun.tools.doclets.Taglet#inPackage()
+    /**
+     * {@inheritDoc}
      */
     public boolean inPackage() {
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see com.sun.tools.doclets.Taglet#inType()
+    /**
+     * {@inheritDoc}
      */
     public boolean inType() {
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see com.sun.tools.doclets.Taglet#isInlineTag()
+    /**
+     * {@inheritDoc}
      */
     public boolean isInlineTag() {
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see com.sun.tools.doclets.Taglet#toString(com.sun.javadoc.Tag)
+    /**
+     * {@inheritDoc}
      */
-    public String toString(Tag tag) {
+    public String toString(final Tag tag) {
         return toString(new Tag[] {tag});
     }
 
-    /* (non-Javadoc)
-     * @see com.sun.tools.doclets.Taglet#toString(com.sun.javadoc.Tag[])
+    /**
+     * {@inheritDoc}
      */
-    public String toString(Tag[] tagArray) {
+    public String toString(final Tag[] tagArray) {
         boolean printOutput = false;
         StringBuffer output = new StringBuffer("<dt><b>" + HEADER);
-        if (tagArray.length > 0 && tagArray[0].text().length() > 0)
+        if (tagArray.length > 0 && tagArray[0].text().length() > 0) {
             output.append(":");
+        }
         output.append("</b><dd><table>");
         for (Tag tag : tagArray) {
             if (tag.name().equals("@" + NAME)) {
@@ -112,8 +114,9 @@ public class ModelTaglet implements Taglet {
                     if (separatorPos > 0) {
                         String valueString = nextToken.substring(separatorPos + 1);
                         if (valueString.charAt(0) == '\"'
-                            && valueString.charAt(valueString.length()-1) == '\"')
+                            && valueString.charAt(valueString.length() - 1) == '\"') {
                             valueString = valueString.substring(1, valueString.length() - 1);
+                        }
                         output.append("<tr><td>" + nextToken.substring(0, separatorPos)
                                 + "</td><td>=</td><td><i>" + valueString
                                 + "</i></td></tr>");
@@ -122,9 +125,11 @@ public class ModelTaglet implements Taglet {
             }
         }
         output.append("</table></dd>\n");
-        if (printOutput)
+        if (printOutput) {
             return output.toString();
-        else return "";
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -133,7 +138,7 @@ public class ModelTaglet implements Taglet {
      * @param tagletMap the map to register this tag to
      */
     @SuppressWarnings("unchecked")
-    public static void register(Map tagletMap) {
+    public static void register(final Map tagletMap) {
         Taglet newTaglet = new ModelTaglet();
         Taglet oldTaglet = (Taglet)tagletMap.get(NAME);
         if (oldTaglet != null) {

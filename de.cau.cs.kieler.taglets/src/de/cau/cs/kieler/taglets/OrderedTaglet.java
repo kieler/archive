@@ -25,80 +25,82 @@ import com.sun.tools.doclets.Taglet;
  */
 public class OrderedTaglet implements Taglet {
 
-    /** the name of this taglet */
+    /** the name of this taglet. */
     private static final String NAME = "ordered";
-    /** printed header for this taglet */
+    /** printed header for this taglet. */
     private static final String HEADER = "Ordered";
 
-    /* (non-Javadoc)
-     * @see com.sun.tools.doclets.Taglet#getName()
+    /**
+     * {@inheritDoc}
      */
     public String getName() {
         return NAME;
     }
 
-    /* (non-Javadoc)
-     * @see com.sun.tools.doclets.Taglet#inConstructor()
+    /**
+     * {@inheritDoc}
      */
     public boolean inConstructor() {
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see com.sun.tools.doclets.Taglet#inField()
+    /**
+     * {@inheritDoc}
      */
     public boolean inField() {
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see com.sun.tools.doclets.Taglet#inMethod()
+    /**
+     * {@inheritDoc}
      */
     public boolean inMethod() {
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see com.sun.tools.doclets.Taglet#inOverview()
+    /**
+     * {@inheritDoc}
      */
     public boolean inOverview() {
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see com.sun.tools.doclets.Taglet#inPackage()
+    /**
+     * {@inheritDoc}
      */
     public boolean inPackage() {
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see com.sun.tools.doclets.Taglet#inType()
+    /**
+     * {@inheritDoc}
      */
     public boolean inType() {
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see com.sun.tools.doclets.Taglet#isInlineTag()
+    /**
+     * {@inheritDoc}
      */
     public boolean isInlineTag() {
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see com.sun.tools.doclets.Taglet#toString(com.sun.javadoc.Tag)
+    /**
+     * {@inheritDoc}
      */
-    public String toString(Tag tag) {
-        if (tag.name().equals("@" + NAME))
+    public String toString(final Tag tag) {
+        if (tag.name().equals("@" + NAME)) {
             return "<dt><b>" + HEADER + "</b><dd></dd>\n";
-        else return "";
+        } else {
+            return "";
+        }
     }
 
-    /* (non-Javadoc)
-     * @see com.sun.tools.doclets.Taglet#toString(com.sun.javadoc.Tag[])
+    /**
+     * {@inheritDoc}
      */
-    public String toString(Tag[] tagArray) {
+    public String toString(final Tag[] tagArray) {
         boolean printOutput = false;
         for (Tag tag : tagArray) {
             if (tag.name().equals("@" + NAME)) {
@@ -106,9 +108,11 @@ public class OrderedTaglet implements Taglet {
                 break;
             }
         }
-        if (printOutput)
+        if (printOutput) {
             return "<dt><b>" + HEADER + "</b><dd></dd>\n";
-        else return "";
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -117,7 +121,7 @@ public class OrderedTaglet implements Taglet {
      * @param tagletMap the map to register this tag to
      */
     @SuppressWarnings("unchecked")
-    public static void register(Map tagletMap) {
+    public static void register(final Map tagletMap) {
         Taglet newTaglet = new OrderedTaglet();
         Taglet oldTaglet = (Taglet)tagletMap.get(NAME);
         if (oldTaglet != null) {
