@@ -178,7 +178,8 @@ public class RatingTaglet implements Taglet {
         if (proposed && rating != Rating.RED) {
             output.append("prop_");
         }
-        output.append(rating.toString().toLowerCase() + ".png?format=raw\"></b><dd>");
+        output.append(rating.toString().toLowerCase() + ".png?format=raw\" alt=\""
+                + rating.toString() + "\"></b><dd>");
         if (date != null) {
             output.append("(" + date + ") ");
         }
