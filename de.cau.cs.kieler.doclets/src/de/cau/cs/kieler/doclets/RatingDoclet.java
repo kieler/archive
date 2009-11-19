@@ -25,13 +25,33 @@ import com.sun.javadoc.RootDoc;
  */
 public class RatingDoclet extends Doclet {
 
+    /** command line option for destination folder. */
+    private static final String DESTINATION_OPTION = "-d";
+    
     /**
      * Generates documentation for the given root.
      * 
      * @param rootDoc the root doc
      * @return true on success
      */
-    public static boolean start(RootDoc rootDoc) {
+    public static boolean start(final RootDoc rootDoc) {
+        // read command line options
+        String[][] options = rootDoc.options();
+        String destination = null;
+        for (int i = 0; i < options.length; i++) {
+            String[] option = options[i];
+            if (option.length == 2 && DESTINATION_OPTION.equals(option[0])) {
+                destination = option[1];
+            }
+        }
+        if (destination == null) {
+            return false;
+        }
+        
+        // generate the rating overview
+        RatingOverviewGenerator overviewGenerator = new RatingOverviewGenerator();
+        overviewGenerator.setDestinationPath(destination);
+        overviewGenerator.generate();
         return true;
     }
     
@@ -42,8 +62,19 @@ public class RatingDoclet extends Doclet {
      * @param reporter utility to print argument errors
      * @return true if the options are valid
      */
-    public static boolean validOptions(String[][] options,
-            DocErrorReporter reporter) {
+    public static boolean validOptions(final String[][] options,
+            final DocErrorReporter reporter) {
+        boolean foundDestOption = false;
+        for (int i = 0; i < options.length; i++) {
+            if (DESTINATION_OPTION.equals(options[i][0])) {
+                if (foundDestOption) {
+                    reporter.printError("Only one " + DESTINATION_OPTION + " argument allowed.");
+                    return false;
+                } else {
+                    foundDestOption = true;
+                }
+            }
+        }
         return true;
     }
     
@@ -55,8 +86,12 @@ public class RatingDoclet extends Doclet {
      * @return number of arguments on the command line for an option
      *      including the option name itself
      */
-    public static int optionLength(String option) {
-        return 0;
+    public static int optionLength(final String option) {
+        if (DESTINATION_OPTION.equals(option)) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
     
     /**
