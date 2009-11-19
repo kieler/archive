@@ -103,7 +103,7 @@ public class ModelTaglet implements Taglet {
         if (tagArray.length > 0 && tagArray[0].text().length() > 0) {
             output.append(":");
         }
-        output.append("</b><dd><table>");
+        output.append("</b></dt><dd><table>");
         for (Tag tag : tagArray) {
             if (tag.name().equals("@" + NAME)) {
                 printOutput = true;

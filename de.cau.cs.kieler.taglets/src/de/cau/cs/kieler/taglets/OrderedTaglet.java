@@ -91,7 +91,7 @@ public class OrderedTaglet implements Taglet {
      */
     public String toString(final Tag tag) {
         if (tag.name().equals("@" + NAME)) {
-            return "<dt><b>" + HEADER + "</b><dd></dd>\n";
+            return "<dt><b>" + HEADER + "</b></dt><dd></dd>\n";
         } else {
             return "";
         }
@@ -109,7 +109,7 @@ public class OrderedTaglet implements Taglet {
             }
         }
         if (printOutput) {
-            return "<dt><b>" + HEADER + "</b><dd></dd>\n";
+            return "<dt><b>" + HEADER + "</b></dt><dd></dd>\n";
         } else {
             return "";
         }

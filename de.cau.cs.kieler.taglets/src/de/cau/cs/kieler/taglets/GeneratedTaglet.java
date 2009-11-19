@@ -135,9 +135,9 @@ public class GeneratedTaglet implements Taglet {
      */
     private String getOutput(final boolean isGenerated) {
         if (isGenerated) {
-            return "<dt><b>" + POS_HEADER + "</b><dd>" + POS_TEXT + "</dd>\n";
+            return "<dt><b>" + POS_HEADER + "</b></dt><dd>" + POS_TEXT + "</dd>\n";
         } else {
-            return "<dt><b>" + NEG_HEADER + "</b><dd>" + NEG_TEXT + "</dd>\n";
+            return "<dt><b>" + NEG_HEADER + "</b></dt><dd>" + NEG_TEXT + "</dd>\n";
         }
     }
     
