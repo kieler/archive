@@ -163,6 +163,9 @@ public class RatingTaglet implements Taglet {
         }
     }
     
+    /** additional options for image tags. */
+    private static final String IMG_OPTIONS = "align=\"middle\"";
+    
     /**
      * Generates HTML code for the given rating specification.
      * 
@@ -179,7 +182,7 @@ public class RatingTaglet implements Taglet {
             output.append("prop_");
         }
         output.append(rating.toString().toLowerCase() + ".png?format=raw\" alt=\""
-                + rating.toString() + "\"></b><dd>");
+                + rating.toString() + "\" " + IMG_OPTIONS + "></b><dd>");
         if (date != null) {
             output.append("(" + date + ") ");
         }
