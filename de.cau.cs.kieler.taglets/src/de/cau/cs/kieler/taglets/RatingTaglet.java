@@ -20,6 +20,7 @@ import com.sun.javadoc.Tag;
 import com.sun.tools.doclets.Taglet;
 
 /**
+ * Taglet for code ratings.
  *
  * @author msp
  */
