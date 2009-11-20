@@ -13,25 +13,79 @@
  */
 package de.cau.cs.kieler.doclets;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
+import com.sun.javadoc.ClassDoc;
+import com.sun.javadoc.PackageDoc;
+import com.sun.javadoc.RootDoc;
+
 /**
+ * Generator for code rating overviews.
  *
  * @author msp
  */
 public class RatingOverviewGenerator {
 
+    /** prefix for all packages of the project. */
+    private static final String PROJECT_PREFIX = "de.cau.cs.kieler.";
+    
+    /** path to the destination folder. */
     private String destinationPath;
 
-    public void generate() {
+    /**
+     * Generate output documents for the given root doc.
+     * 
+     * @param rootDoc the root doc
+     * @throws IOException if writing output fails
+     */
+    public void generate(final RootDoc rootDoc) throws IOException {
+        // create destination folder
+        File destinationDir = new File(destinationPath);
+        destinationDir.mkdirs();
         
+        // gather all subprojects and their packages
+        Map<String, Set<PackageDoc>> projectMap = new LinkedHashMap<String, Set<PackageDoc>>();
+        for (ClassDoc classDoc : rootDoc.classes()) {
+            PackageDoc packageDoc = classDoc.containingPackage();
+            String packageName = packageDoc.name();
+            if (packageName.startsWith(PROJECT_PREFIX)) {
+                int dotIndex = packageName.indexOf('.', PROJECT_PREFIX.length());
+                String projectName = dotIndex < 0
+                        ? packageName.substring(PROJECT_PREFIX.length())
+                        : packageName.substring(PROJECT_PREFIX.length(), dotIndex);
+                Set<PackageDoc> projectSet = projectMap.get(projectName);
+                if (projectSet == null) {
+                    projectSet = new HashSet<PackageDoc>();
+                    projectMap.put(projectName, projectSet);
+                }
+                projectSet.add(packageDoc);
+            }
+        }
+        
+        // generate output for each subproject
+        ClassRatingGenerator classRatingGenerator = new ClassRatingGenerator();
+        classRatingGenerator.setDestinationPath(destinationPath);
+        for (Entry<String, Set<PackageDoc>> entry : projectMap.entrySet()) {
+            String projectName = entry.getKey();
+            Set<PackageDoc> containedPackages = entry.getValue();
+            rootDoc.printNotice("Generating rating for project '" + projectName + "'...");
+            classRatingGenerator.generate(projectName, containedPackages);
+        }
     }
     
     /**
      * Sets the destination path.
      *
-     * @param destinationPath the destination path to set
+     * @param thedestinationPath the destination path to set
      */
-    public void setDestinationPath(final String destinationPath) {
-        this.destinationPath = destinationPath;
+    public void setDestinationPath(final String thedestinationPath) {
+        this.destinationPath = thedestinationPath;
     }
 
 }

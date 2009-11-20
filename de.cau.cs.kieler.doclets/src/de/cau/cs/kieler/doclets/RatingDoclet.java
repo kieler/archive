@@ -13,6 +13,8 @@
  */
 package de.cau.cs.kieler.doclets;
 
+import java.io.IOException;
+
 import com.sun.javadoc.DocErrorReporter;
 import com.sun.javadoc.Doclet;
 import com.sun.javadoc.LanguageVersion;
@@ -37,21 +39,28 @@ public class RatingDoclet extends Doclet {
     public static boolean start(final RootDoc rootDoc) {
         // read command line options
         String[][] options = rootDoc.options();
-        String destination = null;
+        String destination = ".";
         for (int i = 0; i < options.length; i++) {
             String[] option = options[i];
-            if (option.length == 2 && DESTINATION_OPTION.equals(option[0])) {
+            if (option.length == 2 && DESTINATION_OPTION.equals(option[0])
+                    && option[1].length() > 0) {
                 destination = option[1];
             }
-        }
-        if (destination == null) {
-            return false;
         }
         
         // generate the rating overview
         RatingOverviewGenerator overviewGenerator = new RatingOverviewGenerator();
         overviewGenerator.setDestinationPath(destination);
-        overviewGenerator.generate();
+        try {
+            overviewGenerator.generate(rootDoc);
+        } catch (SecurityException exception) {
+            rootDoc.printError("Could not write to the specified destination: "
+                    + exception.getMessage());
+            return false;
+        } catch (IOException exception) {
+            rootDoc.printError("Could not write to the specified destination: "
+                    + exception.getMessage());
+        }
         return true;
     }
     
