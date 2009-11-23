@@ -118,7 +118,7 @@ public class ClassRatingGenerator {
         } else {
             float[] relRatings = new float[Rating.values().length];
             for (int i = 0; i < ratings.length; i++) {
-                relRatings[i] = ratings[i] / totalRatingCount;
+                relRatings[i] = (float)ratings[i] / totalRatingCount;
             }
             return relRatings;
         }
