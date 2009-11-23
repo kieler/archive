@@ -13,8 +13,8 @@
  */
 package de.cau.cs.kieler.doclets;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.Writer;
 
 /**
  * Writer for HTML code that is reused in different documents.
@@ -38,7 +38,7 @@ public final class HtmlWriter {
      * @param title title to display on the HTML page
      * @throws IOException if writing fails
      */
-    public static void writeHeader(final BufferedWriter writer, final String title)
+    public static void writeHeader(final Writer writer, final String title)
             throws IOException {
         writer.write(HTML_HEADER + "<head><title>" + title + "</title></head>\n<body>\n");
         writer.write("<h1>" + title + "</h1>\n");
@@ -50,7 +50,7 @@ public final class HtmlWriter {
      * @param writer writer to which output is written
      * @throws IOException if writing fails
      */
-    public static void writeFooter(final BufferedWriter writer) throws IOException {
+    public static void writeFooter(final Writer writer) throws IOException {
         writer.write(HTML_FOOTER);
     }
     

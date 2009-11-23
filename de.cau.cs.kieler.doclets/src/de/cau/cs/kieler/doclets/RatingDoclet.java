@@ -97,7 +97,7 @@ public class RatingDoclet extends Doclet {
      */
     public static int optionLength(final String option) {
         if (DESTINATION_OPTION.equals(option)) {
-            return 1;
+            return 2;
         } else {
             return 0;
         }

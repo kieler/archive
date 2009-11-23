@@ -27,6 +27,8 @@ import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.PackageDoc;
 import com.sun.javadoc.RootDoc;
 
+import de.cau.cs.kieler.doclets.ClassRatingGenerator.Rating;
+
 /**
  * Generator for code rating overviews.
  *
@@ -38,6 +40,8 @@ public class RatingOverviewGenerator {
     private static final String PROJECT_PREFIX = "de.cau.cs.kieler.";
     /** title of the rating overview. */
     private static final String TITLE = "KIELER Rating Overview";
+    /** factor for percentage calculation. */
+    private static final float PERC_FACT = 100;
     
     /** path to the destination folder. */
     private String destinationPath;
@@ -72,24 +76,35 @@ public class RatingOverviewGenerator {
             }
         }
         
-        // generate output for each subproject
+        // write file header and table headers
         File outFile = new File(destinationPath, "index.html");
         outFile.createNewFile();
         BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
         HtmlWriter.writeHeader(writer, TITLE);
+        writer.write("<table>\n<tr><th>Project</th>");
+        Rating[] ratings = Rating.values();
+        for (int i = 0; i < ratings.length; i++) {
+            writer.write("<th>%" + ratings[i].toString().toLowerCase() + "</th>");
+        }
+        writer.write("</tr>\n");
+
+        // generate output for each subproject
         ClassRatingGenerator classRatingGenerator = new ClassRatingGenerator();
         classRatingGenerator.setDestinationPath(destinationPath);
-        writer.write("<table>\n");
         for (Entry<String, Set<PackageDoc>> entry : projectMap.entrySet()) {
             String projectName = entry.getKey();
             Set<PackageDoc> containedPackages = entry.getValue();
             rootDoc.printNotice("Generating rating for project '" + projectName + "'...");
-            classRatingGenerator.generate(projectName, containedPackages);
+            float[] relRatings = classRatingGenerator.generate(projectName, containedPackages);
             
             String capitProjectName = Character.toUpperCase(projectName.charAt(0))
                     + projectName.substring(1);
             writer.write("<tr><td><a href=\"" + classRatingGenerator.getFileName(projectName)
-                    + "\">" + capitProjectName + "</a></td></tr>\n");
+                    + "\">" + capitProjectName + "</a></td>");
+            for (int i = 0; i < relRatings.length; i++) {
+                writer.write("<td>" + Math.round(PERC_FACT * relRatings[i]) + "</td>");
+            }
+            writer.write("</tr>\n");
         }
         writer.write("</table>\n");
         

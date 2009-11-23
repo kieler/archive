@@ -17,6 +17,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.StringTokenizer;
@@ -42,8 +43,15 @@ public class ClassRatingGenerator {
     private static final String ICON_PATH = "http://rtsys.informatik.uni-kiel.de/trac/kieler/browser/trunk/standalone/de.cau.cs.kieler.taglets/icons/";
     
     /** enumeration of ratings. */
-    private enum Rating {
-        RED, YELLOW, GREEN, BLUE
+    public enum Rating {
+        /** rating red. */
+        RED,
+        /** rating yellow. */
+        YELLOW,
+        /** rating green. */
+        GREEN,
+        /** rating blue. */
+        BLUE
     }
     
     /** path to the destination folder. */
@@ -54,9 +62,10 @@ public class ClassRatingGenerator {
      * 
      * @param projectName name of the project
      * @param containedPackages packages in the project
+     * @return relative frequency of each rating
      * @throws IOException if writing output fails
      */
-    public void generate(final String projectName, final Collection<PackageDoc> containedPackages)
+    public float[] generate(final String projectName, final Collection<PackageDoc> containedPackages)
             throws IOException {
         // create output file and write header
         File outFile = new File(destinationPath, getFileName(projectName));
@@ -67,26 +76,42 @@ public class ClassRatingGenerator {
         HtmlWriter.writeHeader(writer, TITLE_PREFIX + capitProjectName);
         
         // write code rating for each package and file
+        int[] ratings = new int[Rating.values().length];
+        int totalRatingCount = 0;
         PackageDoc[] packages = containedPackages.toArray(new PackageDoc[containedPackages.size()]);
         Arrays.sort(packages);
         for (PackageDoc packageDoc : packages) {
-            writer.write("<p><b>" + packageDoc.name() + "</b><br>\n<table>\n");
+            writer.write("<h4>" + packageDoc.name() + "</h4>\n<table>\n");
             for (ClassDoc classDoc : packageDoc.allClasses()) {
-                if (classDoc.isInterface()) {
-                    writer.write("<tr><td><i>" + classDoc.typeName() + "</i></td>");
-                } else {
-                    writer.write("<tr><td>" + classDoc.typeName() + "</td>");
+                // don't create rating for nested classes
+                if (classDoc.containingClass() == null) {
+                    if (classDoc.isInterface()) {
+                        writer.write("<tr><td><i>" + classDoc.typeName() + "</i></td>");
+                    } else {
+                        writer.write("<tr><td>" + classDoc.typeName() + "</td>");
+                    }
+                    Rating rating = writeClassRating(writer, classDoc.tags(RATING_TAG));
+                    writer.write("</tr>\n");
+                    ratings[rating.ordinal()]++;
+                    totalRatingCount++;
                 }
-                writeClassRating(writer, classDoc.tags(RATING_TAG));
-                writer.write("</tr>\n");
             }
-            writer.write("</table></p>\n");
+            writer.write("</table>\n");
         }
         
         // write footer and close
         HtmlWriter.writeFooter(writer);
         writer.flush();
         writer.close();
+        if (totalRatingCount == 0) {
+            return null;
+        } else {
+            float[] relRatings = new float[Rating.values().length];
+            for (int i = 0; i < ratings.length; i++) {
+                relRatings[i] = ratings[i] / totalRatingCount;
+            }
+            return relRatings;
+        }
     }
     
     /**
@@ -107,9 +132,11 @@ public class ClassRatingGenerator {
      * 
      * @param writer writer to which output is written
      * @param tagArray array of rating tags
+     * @return the rating for the class
      * @throws IOException if writing output fails
      */
-    private void writeClassRating(final BufferedWriter writer, final Tag[] tagArray) throws IOException {
+    private Rating writeClassRating(final Writer writer, final Tag[] tagArray)
+            throws IOException {
         // find the tag with highest rating
         int maxIndex = -1;
         float maxValue = 0;
@@ -159,8 +186,10 @@ public class ClassRatingGenerator {
                 }
             }
             writeClassRating(writer, proposed, rating, date);
+            return rating;
         } else {
             writeClassRating(writer, false, Rating.RED, null);
+            return Rating.RED;
         }
     }
     
@@ -173,7 +202,7 @@ public class ClassRatingGenerator {
      * @param date date when the rating was decided, or {@code null}
      * @throws IOException if writing output fails
      */
-    private void writeClassRating(final BufferedWriter writer, final boolean proposed,
+    private void writeClassRating(final Writer writer, final boolean proposed,
             final Rating rating, final String date) throws IOException {
         writer.write("<td><img src=\"" + ICON_PATH);
         if (proposed && rating != Rating.RED) {
