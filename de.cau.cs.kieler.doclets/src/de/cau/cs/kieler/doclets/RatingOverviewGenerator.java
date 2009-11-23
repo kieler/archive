@@ -150,7 +150,7 @@ public class RatingOverviewGenerator {
             writer.write("<td>" + Math.round(PERC_FACT * (float)totalRatings[i] / totalRatedClasses)
                     + "</td>");
         }
-        writer.write("<td>" + totalGeneratedClasses + "</td>\n</table>\n");
+        writer.write("<td>" + totalGeneratedClasses + "</td></tr>\n</table>\n");
         
         // write footer and close
         HtmlWriter.writeFooter(writer);

@@ -179,11 +179,15 @@ public class RatingTaglet implements Taglet {
     private static String generateMarkup(final String date, final boolean proposed,
             final Rating rating, final String comment) {
         StringBuffer output = new StringBuffer("<dt><b>" + HEADER + " <img src=\"" + ICON_PATH);
+        String ratingName = rating.toString().toLowerCase();
         if (proposed && rating != Rating.RED) {
             output.append("prop_");
         }
-        output.append(rating.toString().toLowerCase() + ".png?format=raw\" alt=\""
-                + rating.toString() + "\" " + IMG_OPTIONS + "></b></dt><dd>");
+        output.append(ratingName + ".png?format=raw\" alt=\"");
+        if (proposed && rating != Rating.RED) {
+            output.append("proposed ");
+        }
+        output.append(ratingName + "\" " + IMG_OPTIONS + "></b></dt><dd>");
         if (date != null) {
             output.append("(" + date + ") ");
         }

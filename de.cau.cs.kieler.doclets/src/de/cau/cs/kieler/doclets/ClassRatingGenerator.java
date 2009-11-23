@@ -211,12 +211,16 @@ public class ClassRatingGenerator {
      */
     private void writeClassRating(final Writer writer, final boolean proposed,
             final Rating rating, final String date) throws IOException {
+        String ratingName = rating.toString().toLowerCase();
         writer.write("<td><img src=\"" + RATING_ICON_PATH);
         if (proposed && rating != Rating.RED) {
             writer.write("prop_");
         }
-        writer.write(rating.toString().toLowerCase() + ".png?format=raw\" alt=\""
-                + rating.toString() + "\"></b></dt><dd>");
+        writer.write(ratingName + ".png?format=raw\" alt=\"");
+        if (proposed && rating != Rating.RED) {
+            writer.write("proposed ");
+        }
+        writer.write(ratingName + "\"></td>");
         if (date != null) {
             writer.write("<td>" + date + "</td>");
         } else {
