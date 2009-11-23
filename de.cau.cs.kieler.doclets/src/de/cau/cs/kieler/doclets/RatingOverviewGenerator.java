@@ -118,6 +118,8 @@ public class RatingOverviewGenerator {
                 return str1.compareTo(str2);
             }
         });
+        int totalRatedClasses = 0, totalGeneratedClasses = 0;
+        int[] totalRatings = new int[ratingTypes.length];
         for (Entry<String, Set<PackageDoc>> entry : entries) {
             String projectName = entry.getKey();
             Set<PackageDoc> containedPackages = entry.getValue();
@@ -127,10 +129,12 @@ public class RatingOverviewGenerator {
             String capitProjectName = Character.toUpperCase(projectName.charAt(0))
                     + projectName.substring(1);
             int ratedClasses = ratingGenerator.getRatedClasses();
+            totalRatedClasses += ratedClasses;
             writer.write("<tr><td><a href=\"" + ratingGenerator.getFileName(projectName)
                     + "\">" + capitProjectName + "</a></td><td>" + ratedClasses + "</td>");
             int[] ratings = ratingGenerator.getRatingCounts();
             for (int i = 0; i < ratings.length; i++) {
+                totalRatings[i] += ratings[i];
                 writer.write("<td>" + Math.round(PERC_FACT * (float)ratings[i] / ratedClasses)
                         + "</td>");
             }
@@ -138,9 +142,15 @@ public class RatingOverviewGenerator {
             if (generatedCount == null) {
                 generatedCount = Integer.valueOf(0);
             }
+            totalGeneratedClasses += generatedCount;
             writer.write("<td>" + generatedCount + "</td></tr>\n");
         }
-        writer.write("</table>\n");
+        writer.write("<tr><td><b>Total</b></td><td>" + totalRatedClasses + "</td>");
+        for (int i = 0; i < totalRatings.length; i++) {
+            writer.write("<td>" + Math.round(PERC_FACT * (float)totalRatings[i] / totalRatedClasses)
+                    + "</td>");
+        }
+        writer.write("<td>" + totalGeneratedClasses + "</td>\n</table>\n");
         
         // write footer and close
         HtmlWriter.writeFooter(writer);
