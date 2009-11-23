@@ -84,8 +84,10 @@ public class ClassRatingGenerator {
         PackageDoc[] packages = containedPackages.toArray(new PackageDoc[containedPackages.size()]);
         Arrays.sort(packages);
         for (PackageDoc packageDoc : packages) {
-            writer.write("<tr><td colspan=3><b>" + packageDoc.name() + "</b></td></tr>\n");
-            for (ClassDoc classDoc : packageDoc.allClasses()) {
+            writer.write("<tr><td colspan=4><b>" + packageDoc.name() + "</b></td></tr>\n");
+            ClassDoc[] classes = packageDoc.allClasses();
+            Arrays.sort(classes);
+            for (ClassDoc classDoc : classes) {
                 // don't create rating for nested classes
                 if (classDoc.containingClass() == null) {
                     writer.write("<tr>");

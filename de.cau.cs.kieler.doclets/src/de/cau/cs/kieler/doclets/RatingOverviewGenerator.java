@@ -79,6 +79,9 @@ public class RatingOverviewGenerator {
             }
         }
         
+        // write style sheet file
+        HtmlWriter.createStyleSheet(destinationPath);
+        
         // write file header and table headers
         File outFile = new File(destinationPath, "index.html");
         outFile.createNewFile();
