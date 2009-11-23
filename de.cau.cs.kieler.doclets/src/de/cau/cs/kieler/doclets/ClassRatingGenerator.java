@@ -88,6 +88,7 @@ public class ClassRatingGenerator {
         writer.write("<table>\n");
         ratingCounts = new int[Rating.values().length];
         ratedClasses = 0;
+        generatedClasses = 0;
         PackageDoc[] packages = containedPackages.toArray(new PackageDoc[containedPackages.size()]);
         Arrays.sort(packages);
         for (PackageDoc packageDoc : packages) {
