@@ -39,8 +39,10 @@ public class ClassRatingGenerator {
     private static final String TITLE_PREFIX = "Class Rating for ";
     /** tag for class ratings. */
     private static final String RATING_TAG = "@kieler.rating";
-    /** the path to icon files. */
-    private static final String ICON_PATH = "http://rtsys.informatik.uni-kiel.de/trac/kieler/browser/trunk/standalone/de.cau.cs.kieler.taglets/icons/";
+    /** the path to rating icon files. */
+    private static final String RATING_ICON_PATH = "http://rtsys.informatik.uni-kiel.de/trac/kieler/browser/trunk/standalone/de.cau.cs.kieler.taglets/icons/";
+    /** the path to class icon files. */
+    private static final String CLASS_ICON_PATH = "http://rtsys.informatik.uni-kiel.de/trac/kieler/browser/trunk/standalone/de.cau.cs.kieler.doclets/icons/";
     
     /** enumeration of ratings. */
     public enum Rating {
@@ -76,19 +78,25 @@ public class ClassRatingGenerator {
         HtmlWriter.writeHeader(writer, TITLE_PREFIX + capitProjectName);
         
         // write code rating for each package and file
+        writer.write("<table>\n");
         int[] ratings = new int[Rating.values().length];
         int totalRatingCount = 0;
         PackageDoc[] packages = containedPackages.toArray(new PackageDoc[containedPackages.size()]);
         Arrays.sort(packages);
         for (PackageDoc packageDoc : packages) {
-            writer.write("<h4>" + packageDoc.name() + "</h4>\n<table>\n");
+            writer.write("<tr><td colspan=3><b>" + packageDoc.name() + "</b></td></tr>\n");
             for (ClassDoc classDoc : packageDoc.allClasses()) {
                 // don't create rating for nested classes
                 if (classDoc.containingClass() == null) {
+                    writer.write("<tr>");
                     if (classDoc.isInterface()) {
-                        writer.write("<tr><td><i>" + classDoc.typeName() + "</i></td>");
+                        writer.write("<td><img src=\"" + CLASS_ICON_PATH
+                                + "interface.png?format=raw\"></td><td><i>"
+                                + classDoc.typeName() + "</i></td>");
                     } else {
-                        writer.write("<tr><td>" + classDoc.typeName() + "</td>");
+                        writer.write("<td><img src=\"" + CLASS_ICON_PATH
+                                + "class.png?format=raw\"></td><td>"
+                                + classDoc.typeName() + "</td>");
                     }
                     Rating rating = writeClassRating(writer, classDoc.tags(RATING_TAG));
                     writer.write("</tr>\n");
@@ -96,8 +104,8 @@ public class ClassRatingGenerator {
                     totalRatingCount++;
                 }
             }
-            writer.write("</table>\n");
         }
+        writer.write("</table>\n");
         
         // write footer and close
         HtmlWriter.writeFooter(writer);
@@ -204,7 +212,7 @@ public class ClassRatingGenerator {
      */
     private void writeClassRating(final Writer writer, final boolean proposed,
             final Rating rating, final String date) throws IOException {
-        writer.write("<td><img src=\"" + ICON_PATH);
+        writer.write("<td><img src=\"" + RATING_ICON_PATH);
         if (proposed && rating != Rating.RED) {
             writer.write("prop_");
         }

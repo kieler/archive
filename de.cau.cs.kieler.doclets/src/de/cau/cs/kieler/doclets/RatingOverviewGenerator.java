@@ -17,6 +17,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -91,7 +94,16 @@ public class RatingOverviewGenerator {
         // generate output for each subproject
         ClassRatingGenerator classRatingGenerator = new ClassRatingGenerator();
         classRatingGenerator.setDestinationPath(destinationPath);
-        for (Entry<String, Set<PackageDoc>> entry : projectMap.entrySet()) {
+        ArrayList<Entry<String, Set<PackageDoc>>> entries
+                = new ArrayList<Entry<String, Set<PackageDoc>>>(projectMap.entrySet());
+        Collections.sort(entries, new Comparator<Entry<String, Set<PackageDoc>>>() {
+            public int compare(final Entry<String, Set<PackageDoc>> e1,
+                    final Entry<String, Set<PackageDoc>> e2) {
+                String str1 = e1.getKey(), str2 = e2.getKey();
+                return str1.compareTo(str2);
+            }
+        });
+        for (Entry<String, Set<PackageDoc>> entry : entries) {
             String projectName = entry.getKey();
             Set<PackageDoc> containedPackages = entry.getValue();
             rootDoc.printNotice("Generating rating for project '" + projectName + "'...");
