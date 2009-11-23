@@ -39,6 +39,8 @@ public class ClassRatingGenerator {
     private static final String TITLE_PREFIX = "Class Rating for ";
     /** tag for class ratings. */
     private static final String RATING_TAG = "@kieler.rating";
+    /** tag for generated code. */
+    private static final String GENERATED_TAG = "@generated";
     /** the path to rating icon files. */
     private static final String RATING_ICON_PATH = "http://rtsys.informatik.uni-kiel.de/trac/kieler/browser/trunk/standalone/de.cau.cs.kieler.taglets/icons/";
     /** the path to class icon files. */
@@ -58,16 +60,21 @@ public class ClassRatingGenerator {
     
     /** path to the destination folder. */
     private String destinationPath;
+    /** number of rated classes for each rating. */
+    private int[] ratingCounts;
+    /** total number of rated classes. */
+    private int ratedClasses;
+    /** number of generated classes. */
+    private int generatedClasses;
     
     /**
      * Generate output document for the given project and its contained packages.
      * 
      * @param projectName name of the project
      * @param containedPackages packages in the project
-     * @return relative frequency of each rating
      * @throws IOException if writing output fails
      */
-    public float[] generate(final String projectName, final Collection<PackageDoc> containedPackages)
+    public void generate(final String projectName, final Collection<PackageDoc> containedPackages)
             throws IOException {
         // create output file and write header
         File outFile = new File(destinationPath, getFileName(projectName));
@@ -79,8 +86,8 @@ public class ClassRatingGenerator {
         
         // write code rating for each package and file
         writer.write("<table>\n");
-        int[] ratings = new int[Rating.values().length];
-        int totalRatingCount = 0;
+        ratingCounts = new int[Rating.values().length];
+        ratedClasses = 0;
         PackageDoc[] packages = containedPackages.toArray(new PackageDoc[containedPackages.size()]);
         Arrays.sort(packages);
         for (PackageDoc packageDoc : packages) {
@@ -88,8 +95,12 @@ public class ClassRatingGenerator {
             ClassDoc[] classes = packageDoc.allClasses();
             Arrays.sort(classes);
             for (ClassDoc classDoc : classes) {
-                // don't create rating for nested classes
+                // don't create rating for nested classes and generated classes
                 if (classDoc.containingClass() == null) {
+                    if (classDoc.tags(GENERATED_TAG).length > 0) {
+                        generatedClasses++;
+                        continue;
+                    }
                     writer.write("<tr>");
                     if (classDoc.isInterface()) {
                         writer.write("<td><img src=\"" + CLASS_ICON_PATH
@@ -102,8 +113,8 @@ public class ClassRatingGenerator {
                     }
                     Rating rating = writeClassRating(writer, classDoc.tags(RATING_TAG));
                     writer.write("</tr>\n");
-                    ratings[rating.ordinal()]++;
-                    totalRatingCount++;
+                    ratingCounts[rating.ordinal()]++;
+                    ratedClasses++;
                 }
             }
         }
@@ -113,15 +124,6 @@ public class ClassRatingGenerator {
         HtmlWriter.writeFooter(writer);
         writer.flush();
         writer.close();
-        if (totalRatingCount == 0) {
-            return null;
-        } else {
-            float[] relRatings = new float[Rating.values().length];
-            for (int i = 0; i < ratings.length; i++) {
-                relRatings[i] = (float)ratings[i] / totalRatingCount;
-            }
-            return relRatings;
-        }
     }
     
     /**
@@ -234,6 +236,33 @@ public class ClassRatingGenerator {
      */
     public void setDestinationPath(final String thedestinationPath) {
         this.destinationPath = thedestinationPath;
+    }
+
+    /**
+     * Returns the number of classes for each type of rating.
+     *
+     * @return the rating counts
+     */
+    public int[] getRatingCounts() {
+        return ratingCounts;
+    }
+
+    /**
+     * Returns the total number of rated classes.
+     *
+     * @return the rated classes
+     */
+    public int getRatedClasses() {
+        return ratedClasses;
+    }
+
+    /**
+     * Returns the total number of generated classes.
+     *
+     * @return the generated classes
+     */
+    public int getGeneratedClasses() {
+        return generatedClasses;
     }
 
 }

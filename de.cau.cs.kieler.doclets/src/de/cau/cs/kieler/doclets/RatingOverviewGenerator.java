@@ -87,16 +87,16 @@ public class RatingOverviewGenerator {
         outFile.createNewFile();
         BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
         HtmlWriter.writeHeader(writer, TITLE);
-        writer.write("<table>\n<tr><th>Project</th>");
-        Rating[] ratings = Rating.values();
-        for (int i = 0; i < ratings.length; i++) {
-            writer.write("<th>%" + ratings[i].toString().toLowerCase() + "</th>");
+        writer.write("<table>\n<tr><th>Project</th><th>Classes</th>");
+        Rating[] ratingTypes = Rating.values();
+        for (int i = 0; i < ratingTypes.length; i++) {
+            writer.write("<th>%" + ratingTypes[i].toString().toLowerCase() + "</th>");
         }
-        writer.write("</tr>\n");
+        writer.write("<th>Generated</th></tr>\n");
 
         // generate output for each subproject
-        ClassRatingGenerator classRatingGenerator = new ClassRatingGenerator();
-        classRatingGenerator.setDestinationPath(destinationPath);
+        ClassRatingGenerator ratingGenerator = new ClassRatingGenerator();
+        ratingGenerator.setDestinationPath(destinationPath);
         ArrayList<Entry<String, Set<PackageDoc>>> entries
                 = new ArrayList<Entry<String, Set<PackageDoc>>>(projectMap.entrySet());
         Collections.sort(entries, new Comparator<Entry<String, Set<PackageDoc>>>() {
@@ -110,16 +110,19 @@ public class RatingOverviewGenerator {
             String projectName = entry.getKey();
             Set<PackageDoc> containedPackages = entry.getValue();
             System.out.println("Generating rating for project '" + projectName + "'...");
-            float[] relRatings = classRatingGenerator.generate(projectName, containedPackages);
+            ratingGenerator.generate(projectName, containedPackages);
             
             String capitProjectName = Character.toUpperCase(projectName.charAt(0))
                     + projectName.substring(1);
-            writer.write("<tr><td><a href=\"" + classRatingGenerator.getFileName(projectName)
-                    + "\">" + capitProjectName + "</a></td>");
-            for (int i = 0; i < relRatings.length; i++) {
-                writer.write("<td>" + Math.round(PERC_FACT * relRatings[i]) + "</td>");
+            int ratedClasses = ratingGenerator.getRatedClasses();
+            writer.write("<tr><td><a href=\"" + ratingGenerator.getFileName(projectName)
+                    + "\">" + capitProjectName + "</a></td><td>" + ratedClasses + "</td>");
+            int[] ratings = ratingGenerator.getRatingCounts();
+            for (int i = 0; i < ratings.length; i++) {
+                writer.write("<td>" + Math.round(PERC_FACT * (float)ratings[i] / ratedClasses)
+                        + "</td>");
             }
-            writer.write("</tr>\n");
+            writer.write("<td>" + ratingGenerator.getGeneratedClasses() + "</td></tr>\n");
         }
         writer.write("</table>\n");
         
