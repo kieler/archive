@@ -109,7 +109,7 @@ public class RatingOverviewGenerator {
         for (Entry<String, Set<PackageDoc>> entry : entries) {
             String projectName = entry.getKey();
             Set<PackageDoc> containedPackages = entry.getValue();
-            rootDoc.printNotice("Generating rating for project '" + projectName + "'...");
+            System.out.println("Generating rating for project '" + projectName + "'...");
             float[] relRatings = classRatingGenerator.generate(projectName, containedPackages);
             
             String capitProjectName = Character.toUpperCase(projectName.charAt(0))
