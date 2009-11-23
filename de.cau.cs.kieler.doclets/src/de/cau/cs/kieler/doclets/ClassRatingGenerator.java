@@ -32,15 +32,16 @@ import com.sun.javadoc.Tag;
  * @author msp
  */
 public class ClassRatingGenerator {
-    
+
+    /** tag for class ratings. */
+    public static final String RATING_TAG = "@kieler.rating";
+    /** tag for generated code. */
+    public static final String GENERATED_TAG = "@generated";
+
     /** prefix for output file names. */
     private static final String FILE_PREFIX = "rating_";
     /** prefix for page title. */
     private static final String TITLE_PREFIX = "Class Rating for ";
-    /** tag for class ratings. */
-    private static final String RATING_TAG = "@kieler.rating";
-    /** tag for generated code. */
-    private static final String GENERATED_TAG = "@generated";
     /** the path to rating icon files. */
     private static final String RATING_ICON_PATH = "http://rtsys.informatik.uni-kiel.de/trac/kieler/browser/trunk/standalone/de.cau.cs.kieler.taglets/icons/";
     /** the path to class icon files. */
@@ -64,8 +65,6 @@ public class ClassRatingGenerator {
     private int[] ratingCounts;
     /** total number of rated classes. */
     private int ratedClasses;
-    /** number of generated classes. */
-    private int generatedClasses;
     
     /**
      * Generate output document for the given project and its contained packages.
@@ -88,7 +87,6 @@ public class ClassRatingGenerator {
         writer.write("<table>\n");
         ratingCounts = new int[Rating.values().length];
         ratedClasses = 0;
-        generatedClasses = 0;
         PackageDoc[] packages = containedPackages.toArray(new PackageDoc[containedPackages.size()]);
         Arrays.sort(packages);
         for (PackageDoc packageDoc : packages) {
@@ -97,11 +95,7 @@ public class ClassRatingGenerator {
             Arrays.sort(classes);
             for (ClassDoc classDoc : classes) {
                 // don't create rating for nested classes and generated classes
-                if (classDoc.containingClass() == null) {
-                    if (classDoc.tags(GENERATED_TAG).length > 0) {
-                        generatedClasses++;
-                        continue;
-                    }
+                if (classDoc.containingClass() == null && classDoc.tags(GENERATED_TAG).length == 0) {
                     writer.write("<tr>");
                     if (classDoc.isInterface()) {
                         writer.write("<td><img src=\"" + CLASS_ICON_PATH
@@ -255,15 +249,6 @@ public class ClassRatingGenerator {
      */
     public int getRatedClasses() {
         return ratedClasses;
-    }
-
-    /**
-     * Returns the total number of generated classes.
-     *
-     * @return the generated classes
-     */
-    public int getGeneratedClasses() {
-        return generatedClasses;
     }
 
 }

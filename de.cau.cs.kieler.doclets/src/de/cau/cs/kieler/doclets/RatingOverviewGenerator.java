@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -62,20 +63,31 @@ public class RatingOverviewGenerator {
         
         // gather all subprojects and their packages
         Map<String, Set<PackageDoc>> projectMap = new LinkedHashMap<String, Set<PackageDoc>>();
+        Map<String, Integer> generatedCountMap = new HashMap<String, Integer>();
         for (ClassDoc classDoc : rootDoc.classes()) {
-            PackageDoc packageDoc = classDoc.containingPackage();
-            String packageName = packageDoc.name();
-            if (packageName.startsWith(PROJECT_PREFIX)) {
-                int dotIndex = packageName.indexOf('.', PROJECT_PREFIX.length());
-                String projectName = dotIndex < 0
-                        ? packageName.substring(PROJECT_PREFIX.length())
-                        : packageName.substring(PROJECT_PREFIX.length(), dotIndex);
-                Set<PackageDoc> projectSet = projectMap.get(projectName);
-                if (projectSet == null) {
-                    projectSet = new HashSet<PackageDoc>();
-                    projectMap.put(projectName, projectSet);
+            if (classDoc.containingClass() == null) {
+                PackageDoc packageDoc = classDoc.containingPackage();
+                String packageName = packageDoc.name();
+                if (packageName.startsWith(PROJECT_PREFIX)) {
+                    int dotIndex = packageName.indexOf('.', PROJECT_PREFIX.length());
+                    String projectName = dotIndex < 0
+                            ? packageName.substring(PROJECT_PREFIX.length())
+                            : packageName.substring(PROJECT_PREFIX.length(), dotIndex);
+                    if (classDoc.tags(ClassRatingGenerator.GENERATED_TAG).length > 0) {
+                        Integer generatedCount = generatedCountMap.get(projectName);
+                        if (generatedCount == null) {
+                            generatedCount = Integer.valueOf(0);
+                        }
+                        generatedCountMap.put(projectName, generatedCount + 1);
+                    } else {
+                        Set<PackageDoc> projectSet = projectMap.get(projectName);
+                        if (projectSet == null) {
+                            projectSet = new HashSet<PackageDoc>();
+                            projectMap.put(projectName, projectSet);
+                        }
+                        projectSet.add(packageDoc);
+                    }
                 }
-                projectSet.add(packageDoc);
             }
         }
         
@@ -122,7 +134,11 @@ public class RatingOverviewGenerator {
                 writer.write("<td>" + Math.round(PERC_FACT * (float)ratings[i] / ratedClasses)
                         + "</td>");
             }
-            writer.write("<td>" + ratingGenerator.getGeneratedClasses() + "</td></tr>\n");
+            Integer generatedCount = generatedCountMap.get(projectName);
+            if (generatedCount == null) {
+                generatedCount = Integer.valueOf(0);
+            }
+            writer.write("<td>" + generatedCount + "</td></tr>\n");
         }
         writer.write("</table>\n");
         
