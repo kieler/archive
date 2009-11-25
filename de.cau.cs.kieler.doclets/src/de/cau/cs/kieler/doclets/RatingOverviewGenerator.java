@@ -46,6 +46,8 @@ public class RatingOverviewGenerator {
     private static final String TITLE = "KIELER Rating Overview";
     /** factor for percentage calculation. */
     private static final float PERC_FACT = 100;
+    /** source folder for generated classes. */
+    private static final String GEN_FOLDER = "src-gen";
     
     /** path to the destination folder. */
     private String destinationPath;
@@ -73,7 +75,7 @@ public class RatingOverviewGenerator {
                     String projectName = dotIndex < 0
                             ? packageName.substring(PROJECT_PREFIX.length())
                             : packageName.substring(PROJECT_PREFIX.length(), dotIndex);
-                    if (classDoc.tags(ClassRatingGenerator.GENERATED_TAG).length > 0) {
+                    if (isGenerated(classDoc)) {
                         Integer generatedCount = generatedCountMap.get(projectName);
                         if (generatedCount == null) {
                             generatedCount = Integer.valueOf(0);
@@ -156,6 +158,18 @@ public class RatingOverviewGenerator {
         HtmlWriter.writeFooter(writer);
         writer.flush();
         writer.close();
+    }
+    
+    /**
+     * Checks whether the given class is generated.
+     * 
+     * @param classDoc a class doc
+     * @return true if the corresponding class is automatically generated
+     */
+    private boolean isGenerated(final ClassDoc classDoc) {
+        String path = classDoc.position().file().getPath();
+        return classDoc.tags(ClassRatingGenerator.GENERATED_TAG).length > 0
+            || path.indexOf(GEN_FOLDER) >= 0;
     }
     
     /**
