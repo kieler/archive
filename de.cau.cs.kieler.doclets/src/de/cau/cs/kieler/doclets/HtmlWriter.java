@@ -38,8 +38,14 @@ public final class HtmlWriter {
             + CSS_FILE + "\">";
     /** style definitions, one definition per item. */
     public static final String[] STYLE_DEFS = {
-        "td { background-color:#F0F0F0; padding:3px; border:1px solid #FAFAFA; }",
-        "th { padding: 5px; border:1px solid #FAFAFA; }"
+        "td { background-color:#f0f0f0; padding:3px; border:1px solid #f8f8f8; }",
+        "th { padding: 5px; border:1px solid #f8f8f8; }",
+        "a { text-decoration:underline; font-weight:normal; }",
+        "a:link { color:#bb003e; }",
+        "a:visited { color:#bb003e; }",
+        "a:hover { color:#55558f; background-color:#eaeaea; }",
+        "a:active { color:#55558f; background-color:#eaeaea; }",
+        "a:focus { color:#bb003e; background-color:#eaeaea; }"
     };
     /** footer for HTML files. */
     public static final String HTML_FOOTER = "</body>\n</html>\n";
