@@ -46,6 +46,8 @@ public class ClassRatingGenerator {
     private static final String RATING_ICON_PATH = "http://rtsys.informatik.uni-kiel.de/trac/kieler/browser/trunk/standalone/de.cau.cs.kieler.taglets/icons/";
     /** the path to class icon files. */
     private static final String CLASS_ICON_PATH = "http://rtsys.informatik.uni-kiel.de/trac/kieler/browser/trunk/standalone/de.cau.cs.kieler.doclets/icons/";
+    /** path, relative or absolute, to the API files. */
+    private static final String API_PATH = "..";
     
     /** enumeration of ratings. */
     public enum Rating {
@@ -90,7 +92,9 @@ public class ClassRatingGenerator {
         PackageDoc[] packages = containedPackages.toArray(new PackageDoc[containedPackages.size()]);
         Arrays.sort(packages);
         for (PackageDoc packageDoc : packages) {
-            writer.write("<tr><td colspan=4><b>" + packageDoc.name() + "</b></td></tr>\n");
+            writer.write("<tr><td colspan=4><b><a href=\"" + API_PATH
+                    + "/" + packageDoc.name().replace('.', '/') + "/package-summary.html\">"
+                    + packageDoc.name() + "</a></b></td></tr>\n");
             ClassDoc[] classes = packageDoc.allClasses();
             Arrays.sort(classes);
             for (ClassDoc classDoc : classes) {
@@ -100,6 +104,10 @@ public class ClassRatingGenerator {
                     if (classDoc.isInterface()) {
                         writer.write("<td><img src=\"" + CLASS_ICON_PATH
                                 + "interface.png?format=raw\"></td><td><i>"
+                                + classDoc.typeName() + "</i></td>");
+                    } else if (classDoc.isAbstract()) {
+                        writer.write("<td><img src=\"" + CLASS_ICON_PATH
+                                + "class.png?format=raw\"></td><td><i>"
                                 + classDoc.typeName() + "</i></td>");
                     } else {
                         writer.write("<td><img src=\"" + CLASS_ICON_PATH
