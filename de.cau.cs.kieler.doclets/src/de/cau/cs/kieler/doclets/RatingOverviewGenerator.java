@@ -122,7 +122,7 @@ public class RatingOverviewGenerator {
                 return str1.compareTo(str2);
             }
         });
-        int totalRatedClasses = 0, totalGeneratedClasses = 0;
+        int totalRatedClasses = 0, totalGeneratedClasses = 0, totalProposedClasses = 0;
         int[] totalRatings = new int[ratingTypes.length];
         for (Entry<String, Set<PackageDoc>> entry : entries) {
             String projectName = entry.getKey();
@@ -138,14 +138,18 @@ public class RatingOverviewGenerator {
             writer.write("<tr><td><a href=\"" + ratingGenerator.getFileName(projectName)
                     + "\">" + capitProjectName + "</a></td><td>" + ratedClasses + "</td>");
             int[] ratings = ratingGenerator.getRatingCounts();
+            int proposedCount = 0;
             for (int i = 0; i < ratings.length; i += 2) {
                 int ratingCount = ratings[i];
                 if (i < ratings.length - 1) {
                     ratingCount += ratings[i + 1];
+                    proposedCount += ratings[i + 1];
                 }
                 totalRatings[i] += ratingCount;
                 writer.write("<td>" + ratingCount + "</td>");
             }
+            totalProposedClasses += proposedCount;
+            writer.write("<td>" + proposedCount + "</td>");
 
             // write link to relative ratings image
             imageGenerator.generate(projectName, ratings, ratedClasses);
@@ -163,6 +167,9 @@ public class RatingOverviewGenerator {
         for (int i = 0; i < totalRatings.length; i += 2) {
             writer.write("<td>" + totalRatings[i] + "</td>");
         }
+        writer.write("<td>" + totalProposedClasses + "</td>");
+        imageGenerator.generate("total", totalRatings, totalRatedClasses);
+        writer.write("<td><img src=\"" + imageGenerator.getFileName("total") + "\"></td>");
         writer.write("<td>" + totalGeneratedClasses + "</td></tr>\n</table>\n");
         
         // write footer and close
