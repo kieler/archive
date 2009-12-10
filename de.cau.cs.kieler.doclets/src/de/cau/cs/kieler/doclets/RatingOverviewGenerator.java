@@ -44,8 +44,6 @@ public class RatingOverviewGenerator {
     private static final String PROJECT_PREFIX = "de.cau.cs.kieler.";
     /** title of the rating overview. */
     private static final String TITLE = "KIELER Rating Overview";
-    /** factor for percentage calculation. */
-    private static final float PERC_FACT = 100;
     /** source folder for generated classes. */
     private static final String GEN_FOLDER = "src-gen";
     
@@ -103,14 +101,18 @@ public class RatingOverviewGenerator {
         HtmlWriter.writeHeader(writer, TITLE);
         writer.write("<table>\n<tr><th>Project</th><th>Classes</th>");
         Rating[] ratingTypes = Rating.values();
-        for (int i = 0; i < ratingTypes.length; i++) {
-            writer.write("<th>%" + ratingTypes[i].toString().toLowerCase() + "</th>");
+        for (int i = 0; i < ratingTypes.length; i += 2) {
+            String ratingName = ratingTypes[i].toString().toLowerCase();
+            writer.write("<th><img src=\"" + ClassRatingGenerator.RATING_ICON_PATH
+                    + ratingName + ".png?format=raw\" alt=\"" + ratingName + "\"></th>");
         }
-        writer.write("<th>Generated</th></tr>\n");
+        writer.write("<th>Proposed</th><th>Relative</th><th>Generated</th></tr>\n");
 
         // generate output for each subproject
         ClassRatingGenerator ratingGenerator = new ClassRatingGenerator();
         ratingGenerator.setDestinationPath(destinationPath);
+        RatingImageGenerator imageGenerator = new RatingImageGenerator();
+        imageGenerator.setDestinationPath(destinationPath);
         ArrayList<Entry<String, Set<PackageDoc>>> entries
                 = new ArrayList<Entry<String, Set<PackageDoc>>>(projectMap.entrySet());
         Collections.sort(entries, new Comparator<Entry<String, Set<PackageDoc>>>() {
@@ -128,6 +130,7 @@ public class RatingOverviewGenerator {
             System.out.println("Generating rating for project '" + projectName + "'...");
             ratingGenerator.generate(projectName, containedPackages);
             
+            // write project rating counts
             String capitProjectName = Character.toUpperCase(projectName.charAt(0))
                     + projectName.substring(1);
             int ratedClasses = ratingGenerator.getRatedClasses();
@@ -135,11 +138,20 @@ public class RatingOverviewGenerator {
             writer.write("<tr><td><a href=\"" + ratingGenerator.getFileName(projectName)
                     + "\">" + capitProjectName + "</a></td><td>" + ratedClasses + "</td>");
             int[] ratings = ratingGenerator.getRatingCounts();
-            for (int i = 0; i < ratings.length; i++) {
-                totalRatings[i] += ratings[i];
-                writer.write("<td>" + Math.round(PERC_FACT * (float)ratings[i] / ratedClasses)
-                        + "</td>");
+            for (int i = 0; i < ratings.length; i += 2) {
+                int ratingCount = ratings[i];
+                if (i < ratings.length - 1) {
+                    ratingCount += ratings[i + 1];
+                }
+                totalRatings[i] += ratingCount;
+                writer.write("<td>" + ratingCount + "</td>");
             }
+
+            // write link to relative ratings image
+            imageGenerator.generate(projectName, ratings, ratedClasses);
+            writer.write("<td><img src=\"" + imageGenerator.getFileName(projectName)
+                    + "\"></td>");
+            
             Integer generatedCount = generatedCountMap.get(projectName);
             if (generatedCount == null) {
                 generatedCount = Integer.valueOf(0);
@@ -148,9 +160,8 @@ public class RatingOverviewGenerator {
             writer.write("<td>" + generatedCount + "</td></tr>\n");
         }
         writer.write("<tr><td><b>Total</b></td><td>" + totalRatedClasses + "</td>");
-        for (int i = 0; i < totalRatings.length; i++) {
-            writer.write("<td>" + Math.round(PERC_FACT * (float)totalRatings[i] / totalRatedClasses)
-                    + "</td>");
+        for (int i = 0; i < totalRatings.length; i += 2) {
+            writer.write("<td>" + totalRatings[i] + "</td>");
         }
         writer.write("<td>" + totalGeneratedClasses + "</td></tr>\n</table>\n");
         

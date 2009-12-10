@@ -37,15 +37,15 @@ public class ClassRatingGenerator {
     public static final String RATING_TAG = "@kieler.rating";
     /** tag for generated code. */
     public static final String GENERATED_TAG = "@generated";
+    /** the path to rating icon files. */
+    public static final String RATING_ICON_PATH = "http://rtsys.informatik.uni-kiel.de/trac/kieler/browser/trunk/standalone/de.cau.cs.kieler.taglets/icons/";
+    /** the path to class icon files. */
+    public static final String CLASS_ICON_PATH = "http://rtsys.informatik.uni-kiel.de/trac/kieler/browser/trunk/standalone/de.cau.cs.kieler.doclets/icons/";
 
     /** prefix for output file names. */
     private static final String FILE_PREFIX = "rating_";
     /** prefix for page title. */
     private static final String TITLE_PREFIX = "Class Rating for ";
-    /** the path to rating icon files. */
-    private static final String RATING_ICON_PATH = "http://rtsys.informatik.uni-kiel.de/trac/kieler/browser/trunk/standalone/de.cau.cs.kieler.taglets/icons/";
-    /** the path to class icon files. */
-    private static final String CLASS_ICON_PATH = "http://rtsys.informatik.uni-kiel.de/trac/kieler/browser/trunk/standalone/de.cau.cs.kieler.doclets/icons/";
     /** path, relative or absolute, to the API files. */
     private static final String API_PATH = "..";
     
@@ -53,17 +53,46 @@ public class ClassRatingGenerator {
     public enum Rating {
         /** rating red. */
         RED,
+        /** rating proposed yellow. */
+        PROP_YELLOW,
         /** rating yellow. */
         YELLOW,
+        /** rating proposed green. */
+        PROP_GREEN,
         /** rating green. */
         GREEN,
+        /** rating proposed blue. */
+        PROP_BLUE,
         /** rating blue. */
-        BLUE
+        BLUE;
+        
+        /**
+         * Returns whether this rating is a proposed rating.
+         * 
+         * @return true if this rating is proposed
+         */
+        public boolean isProposed() {
+            return ordinal() % 2 == 1;
+        }
+        
+        /**
+         * Returns a modified rating that is one level lower than this rating.
+         * 
+         * @return a lower rating
+         */
+        public Rating getDegraded() {
+            int ordinal = ordinal();
+            if (ordinal > 0) {
+                return values()[ordinal - 1];
+            } else {
+                return this;
+            }
+        }
     }
     
     /** path to the destination folder. */
     private String destinationPath;
-    /** number of rated classes for each rating. */
+    /** number of rated classes for each rating, including proposed. */
     private int[] ratingCounts;
     /** total number of rated classes. */
     private int ratedClasses;
@@ -200,8 +229,15 @@ public class ClassRatingGenerator {
                     }
                 }
             }
+            if (proposed && rating == Rating.RED) {
+                proposed = false;
+            }
             writeClassRating(writer, proposed, rating, date);
-            return rating;
+            if (proposed) {
+                return rating.getDegraded();
+            } else {
+                return rating;
+            }
         } else {
             writeClassRating(writer, false, Rating.RED, null);
             return Rating.RED;
@@ -221,11 +257,11 @@ public class ClassRatingGenerator {
             final Rating rating, final String date) throws IOException {
         String ratingName = rating.toString().toLowerCase();
         writer.write("<td><img src=\"" + RATING_ICON_PATH);
-        if (proposed && rating != Rating.RED) {
+        if (proposed) {
             writer.write("prop_");
         }
         writer.write(ratingName + ".png?format=raw\" alt=\"");
-        if (proposed && rating != Rating.RED) {
+        if (proposed) {
             writer.write("proposed ");
         }
         writer.write(ratingName + "\"></td>");
@@ -246,7 +282,8 @@ public class ClassRatingGenerator {
     }
 
     /**
-     * Returns the number of classes for each type of rating.
+     * Returns the number of classes for each type of rating. The last
+     * entry is the total number of proposed ratings.
      *
      * @return the rating counts
      */
