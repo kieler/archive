@@ -8,7 +8,7 @@
 		<mkdir dir="${bindir}" />
 		<mkdir dir="${jardir}" />
 		<javac destdir="${bindir}" srcdir="${srcdir}" />
-		<jar destfile="${jardir}/tags.jar" basedir="${bindir}" filesetmanifest="merge"/>
+		<jar destfile="${jardir}/doclets.jar" basedir="${bindir}" filesetmanifest="merge"/>
 	</target>
 
 </project>
