@@ -139,14 +139,16 @@ public class RatingOverviewGenerator {
                     + "\">" + capitProjectName + "</a></td><td>" + ratedClasses + "</td>");
             int[] ratings = ratingGenerator.getRatingCounts();
             int proposedCount = 0;
-            for (int i = 0; i < ratings.length; i += 2) {
-                int ratingCount = ratings[i];
-                if (i < ratings.length - 1) {
-                    ratingCount += ratings[i + 1];
-                    proposedCount += ratings[i + 1];
+            for (int i = 0; i < ratings.length; i++) {
+                totalRatings[i] += ratings[i];
+                if (i % 2 == 0) {
+                    int ratingCount = ratings[i];
+                    if (i < ratings.length - 1) {
+                        ratingCount += ratings[i + 1];
+                        proposedCount += ratings[i + 1];
+                    }
+                    writer.write("<td>" + ratingCount + "</td>");
                 }
-                totalRatings[i] += ratingCount;
-                writer.write("<td>" + ratingCount + "</td>");
             }
             totalProposedClasses += proposedCount;
             writer.write("<td>" + proposedCount + "</td>");
@@ -165,7 +167,11 @@ public class RatingOverviewGenerator {
         }
         writer.write("<tr><td><b>Total</b></td><td>" + totalRatedClasses + "</td>");
         for (int i = 0; i < totalRatings.length; i += 2) {
-            writer.write("<td>" + totalRatings[i] + "</td>");
+            int ratingCount = totalRatings[i];
+            if (i < totalRatings.length - 1) {
+                ratingCount += totalRatings[i + 1];
+            }
+            writer.write("<td>" + ratingCount + "</td>");
         }
         writer.write("<td>" + totalProposedClasses + "</td>");
         imageGenerator.generate("total", totalRatings, totalRatedClasses);
