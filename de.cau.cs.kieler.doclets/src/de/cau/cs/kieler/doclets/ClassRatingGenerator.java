@@ -37,10 +37,12 @@ public class ClassRatingGenerator {
     public static final String RATING_TAG = "@kieler.rating";
     /** tag for generated code. */
     public static final String GENERATED_TAG = "@generated";
+    // CHECKSTYLEOFF LineLength
     /** the path to rating icon files. */
     public static final String RATING_ICON_PATH = "http://rtsys.informatik.uni-kiel.de/trac/kieler/browser/trunk/standalone/de.cau.cs.kieler.taglets/icons/";
     /** the path to class icon files. */
     public static final String CLASS_ICON_PATH = "http://rtsys.informatik.uni-kiel.de/trac/kieler/browser/trunk/standalone/de.cau.cs.kieler.doclets/icons/";
+    // CHECKSTYLEON LineLength
 
     /** prefix for output file names. */
     private static final String FILE_PREFIX = "rating_";
@@ -48,6 +50,8 @@ public class ClassRatingGenerator {
     private static final String TITLE_PREFIX = "Class Rating for ";
     /** path, relative or absolute, to the API files. */
     private static final String API_PATH = "..";
+    /** source folder for generated classes. */
+    private static final String GEN_FOLDER = "src-gen";
     
     /** enumeration of ratings. */
     public enum Rating {
@@ -128,7 +132,7 @@ public class ClassRatingGenerator {
             Arrays.sort(classes);
             for (ClassDoc classDoc : classes) {
                 // don't create rating for nested classes and generated classes
-                if (classDoc.containingClass() == null && classDoc.tags(GENERATED_TAG).length == 0) {
+                if (classDoc.containingClass() == null && !isGenerated(classDoc)) {
                     writer.write("<tr>");
                     if (classDoc.isInterface()) {
                         writer.write("<td><img src=\"" + CLASS_ICON_PATH
@@ -298,6 +302,18 @@ public class ClassRatingGenerator {
      */
     public int getRatedClasses() {
         return ratedClasses;
+    }
+    
+    /**
+     * Checks whether the given class is generated.
+     * 
+     * @param classDoc a class doc
+     * @return true if the corresponding class is automatically generated
+     */
+    public static boolean isGenerated(final ClassDoc classDoc) {
+        String path = classDoc.position().file().getPath();
+        return classDoc.tags(ClassRatingGenerator.GENERATED_TAG).length > 0
+            || path.indexOf(GEN_FOLDER) >= 0;
     }
 
 }
