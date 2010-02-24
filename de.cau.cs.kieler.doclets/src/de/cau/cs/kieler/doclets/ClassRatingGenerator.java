@@ -134,7 +134,11 @@ public class ClassRatingGenerator {
                 // don't create rating for nested classes and generated classes
                 if (classDoc.containingClass() == null && !isGenerated(classDoc)) {
                     writer.write("<tr>");
-                    if (classDoc.isInterface()) {
+                    if (classDoc.isEnum()) {
+                        writer.write("<td><img src=\"" + CLASS_ICON_PATH
+                                + "enum.png?format=raw\"></td><td>"
+                                + classDoc.typeName() + "</td>");
+                    } else if (classDoc.isInterface()) {
                         writer.write("<td><img src=\"" + CLASS_ICON_PATH
                                 + "interface.png?format=raw\"></td><td><i>"
                                 + classDoc.typeName() + "</i></td>");
