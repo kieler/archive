@@ -1,13 +1,8 @@
 package de.cau.cs.kieler.kit2kixs;
 
-
-
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Vector;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -72,10 +67,14 @@ public class kit2kixs {
 
                 // Get the URI of the model file.
                 URI fileURI = URI.createFileURI(new File(fileName + ".kixs").getAbsolutePath());
-
+               
                 // Create a resource for this file.
                 Resource resource = resourceSet.createResource(fileURI);
 
+                root.setId(fileURI.trimFileExtension().lastSegment());
+                root.setLabel(root.getId());
+                
+                
                 SyncchartsFactory sf = SyncchartsFactory.eINSTANCE;
 
                 Region rootRegion = sf.createRegion();
@@ -84,6 +83,7 @@ public class kit2kixs {
 
                 resource.getContents().add(rootRegion);
 
+ 
                 // Save the contents of the resource to the file system.
                 try {
                     resource.save(Collections.EMPTY_MAP); // the map can pass special saving

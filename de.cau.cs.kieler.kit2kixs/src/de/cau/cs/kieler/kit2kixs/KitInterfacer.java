@@ -3,7 +3,6 @@ package de.cau.cs.kieler.kit2kixs;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Stack;
-import java.util.Vector;
 
 import kiel.util.kit.analysis.DepthFirstAdapter;
 import kiel.util.kit.node.ABooleanVarEventType;
@@ -100,21 +99,10 @@ import de.cau.cs.kieler.synccharts.SyncchartsFactory;
 import de.cau.cs.kieler.synccharts.Transition;
 import de.cau.cs.kieler.synccharts.TransitionType;
 
-/*import smakc.compiler.interfaces.ssm.Arc;
-import smakc.compiler.interfaces.ssm.CombinationOperator;
-import smakc.compiler.interfaces.ssm.ConditionalExpression;
-import smakc.compiler.interfaces.ssm.InstantaneousAction;
-import smakc.statemachineproviders.kit.wrappers.KitAction;
-import smakc.statemachineproviders.kit.wrappers.KitBinaryExpression;
-import smakc.statemachineproviders.kit.wrappers.KitExpression;
-import smakc.statemachineproviders.kit.wrappers.KitInitialTransition;
-import smakc.statemachineproviders.kit.wrappers.KitTransition;*/
-
 public class KitInterfacer extends DepthFirstAdapter {
 
     private SyncchartsFactory sf = SyncchartsFactory.eINSTANCE;
     private HashMap<String, State> statecache = new HashMap<String, State>();
-    // private Stack<State> stack = new Stack<State>();
     public State root;
     private Stack<Region> currentregion = new Stack<Region>();
     private Stack<State> currentstate = new Stack<State>();
@@ -133,25 +121,49 @@ public class KitInterfacer extends DepthFirstAdapter {
         return id - 1;
     }
 
+    private final boolean debug = false;
+
+    private void printRegion() {
+        if (debug) {
+            System.out.print("regions: {");
+            Iterator<Region> i = currentregion.iterator();
+            while (i.hasNext()) {
+                Region r = i.next();
+                if (r.getParentState() != null) {
+                    System.out.print(r.getParentState().getId() + ".");
+                }
+                System.out.print(r.getId() + ", ");
+            }
+            System.out.println(")");
+
+        }
+    }
+
     private void printStates() {
-        /*
-         * System.out.print("states: {"); Iterator<State> i = currentstate.iterator(); while
-         * (i.hasNext()) { System.out.print(i.next().getId() + ", "); } System.out.println(")");
-         */
+        if (debug) {
+            System.out.print("states: {");
+            Iterator<State> i = currentstate.iterator();
+            while (i.hasNext()) {
+                System.out.print(i.next().getId() + ", ");
+            }
+            System.out.println(")");
+
+        }
     }
 
     private State getOrCreateNew(String name, boolean composite) {
         name = name.replace("#", "");
         name = name.replace(" ", "");
         if (!statecache.containsKey(name)) {
-            // System.out.println("create " + name);
+            if (debug) {
+                System.out.println("create " + name);
+            }
             State state = sf.createState();
             state.setId(name);
             state.setLabel(name);
             if (!currentregion.isEmpty()) {
                 currentregion.peek().getInnerStates().add(state);
             }
-            currentstate.push(state);
             printStates();
             statecache.put(name, state);
         }
@@ -162,6 +174,7 @@ public class KitInterfacer extends DepthFirstAdapter {
             region.setParentState(res);
             res.getRegions().add(region);
             currentregion.push(region);
+            printRegion();
         }
         return res;
     }
@@ -182,27 +195,19 @@ public class KitInterfacer extends DepthFirstAdapter {
         root.setId(node.getIdentifier().getText());
         root.setLabel(root.getId());
         Region region = sf.createRegion();
+        region.setId("main");
         currentregion.push(region);
+        printRegion();
         region.setParentState(root);
         root.getRegions().add(region);
         currentstate.push(root);
+        printStates();
         super.caseAChart(node);
     }
 
     @Override
-    public void caseACollapsedSview(ACollapsedSview node) {
-        super.caseACollapsedSview(node);
-    }
-
-    @Override
     public void caseACompositeState(ACompositeState node) {
-        // getOrCreateNew(node.getIdentifier().getText(), true);
         super.caseACompositeState(node);
-    }
-
-    @Override
-    public void caseAConditionalTranstype(AConditionalTranstype node) {
-        super.caseAConditionalTranstype(node);
     }
 
     @Override
@@ -394,6 +399,14 @@ public class KitInterfacer extends DepthFirstAdapter {
         String label = node.getString().getText().replace('\"', ' ');
         label = label.replace('[', '(');
         label = label.replace("]", ")");
+
+        label = label.replace("tick", "");
+
+        // TODO: replace by true as soon as simulator can handle this
+
+        if (currenttrans.isIsImmediate() && !label.contains("#")) {
+            label = "#" + label;
+        }
 
         currenttrans.setTriggersAndEffects(label);
 
@@ -692,10 +705,7 @@ public class KitInterfacer extends DepthFirstAdapter {
 
     @Override
     public void inAChart(AChart node) {
-        /*
-         * State sta = getOrCreateNew(node.getIdentifier().getText(), true);
-         * containerstack.push(sta); currentstate.push(sta); super.inAChart(node);
-         */
+      super.inAChart(node);
     }
 
     @Override
@@ -706,9 +716,7 @@ public class KitInterfacer extends DepthFirstAdapter {
     @Override
     public void inACompositeState(ACompositeState node) {
         State sta = getOrCreateNew(node.getIdentifier().getText(), true);
-        // containerstack.push(sta);
-        // currentstate.push(sta);
-        // currentregion.push(sta.getRegions().get(0));
+        currentstate.push(sta);
         super.inACompositeState(node);
     }
 
@@ -769,163 +777,41 @@ public class KitInterfacer extends DepthFirstAdapter {
     }
 
     @Override
-    public void inAFirstrarguments(AFirstrarguments node) {
-        super.inAFirstrarguments(node);
-    }
-
-    @Override
-    public void inAFirstsarguments(AFirstsarguments node) {
-        super.inAFirstsarguments(node);
-    }
-
-    @Override
-    public void inAFirsttransarguments(AFirsttransarguments node) {
-        super.inAFirsttransarguments(node);
-    }
-
-    @Override
-    public void inAFloatVarEventType(AFloatVarEventType node) {
-        super.inAFloatVarEventType(node);
-    }
-
-    @Override
-    public void inAHeightSview(AHeightSview node) {
-        super.inAHeightSview(node);
-    }
-
-    @Override
     public void inAInitialTransition(AInitialTransition node) {
 
         State initial = this.getOrCreateNew("init" + nextId(), false);
+        
         initial.setLabel("I");
         initial.setIsInitial(true);
-        currentregion.peek().getInnerStates().add(initial);
+        // currentregion.peek().getInnerStates().add(initial);
         Transition transition = sf.createTransition();
+        currenttrans = transition;
         transition.setIsImmediate(true);
+        transition.setTriggersAndEffects("# /");
+        // transition.setTrigger(sf.createExpression());
         transition.setSourceState(initial);
 
         State state = getOrCreateNew(node.getTargetState().getText(), false);
         transition.setTargetState(state);
+
         initial.getOutgoingTransitions().add(transition);
+        state.getParentRegion().getInnerStates().add(initial);
+
 
         super.inAInitialTransition(node);
-    }
-
-    @Override
-    public void inAInitialvalue(AInitialvalue node) {
-        super.inAInitialvalue(node);
-    }
-
-    @Override
-    public void inAInputDeclTyp(AInputDeclTyp node) {
-        super.inAInputDeclTyp(node);
-    }
-
-    @Override
-    public void inAIntegerAddVarEventType(AIntegerAddVarEventType node) {
-        super.inAIntegerAddVarEventType(node);
-    }
-
-    @Override
-    public void inAIntegerMultVarEventType(AIntegerMultVarEventType node) {
-        super.inAIntegerMultVarEventType(node);
-    }
-
-    @Override
-    public void inAIntegerVarEventType(AIntegerVarEventType node) {
-        super.inAIntegerVarEventType(node);
-    }
-
-    @Override
-    public void inAInternalTransitionTranstype(AInternalTransitionTranstype node) {
-        super.inAInternalTransitionTranstype(node);
-    }
-
-    @Override
-    public void inAIodeclaration(AIodeclaration node) {
-        super.inAIodeclaration(node);
-    }
-
-    @Override
-    public void inALabelposTview(ALabelposTview node) {
-        super.inALabelposTview(node);
-    }
-
-    @Override
-    public void inALabelRegionargument(ALabelRegionargument node) {
-        super.inALabelRegionargument(node);
-    }
-
-    @Override
-    public void inALabelStateargument(ALabelStateargument node) {
-        super.inALabelStateargument(node);
-    }
-
-    @Override
-    public void inALabelTransargument(ALabelTransargument node) {
-        super.inALabelTransargument(node);
-    }
-
-    @Override
-    public void inALastcargument(ALastcargument node) {
-        super.inALastcargument(node);
-    }
-
-    @Override
-    public void inALastrargument(ALastrargument node) {
-        super.inALastrargument(node);
-    }
-
-    @Override
-    public void inALastsargument(ALastsargument node) {
-        super.inALastsargument(node);
-    }
-
-    @Override
-    public void inALasttransargument(ALasttransargument node) {
-        super.inALasttransargument(node);
-    }
-
-    @Override
-    public void inAModelChartargument(AModelChartargument node) {
-        super.inAModelChartargument(node);
-    }
-
-    @Override
-    public void inANewEventRegionargument(ANewEventRegionargument node) {
-        super.inANewEventRegionargument(node);
-    }
-
-    @Override
-    public void inANewEventStateargument(ANewEventStateargument node) {
-        super.inANewEventStateargument(node);
     }
 
     @Override
     public void inANewRegionElement(ANewRegionElement node) {
 
         Region region = sf.createRegion();
-        State s = currentstate.peek();
+        State s = currentregion.peek().getParentState();
         region.setId("R" + s.getRegions().size());
         region.setParentState(s);
         s.getRegions().add(region);
         currentregion.push(region);
+        printRegion();
         super.inANewRegionElement(node);
-    }
-
-    @Override
-    public void inANewVariableRegionargument(ANewVariableRegionargument node) {
-        super.inANewVariableRegionargument(node);
-    }
-
-    @Override
-    public void inANewVariableStateargument(ANewVariableStateargument node) {
-        super.inANewVariableStateargument(node);
-    }
-
-    @Override
-    public void inANormalTranstype(ANormalTranstype node) {
-        super.inANormalTranstype(node);
     }
 
     @Override
@@ -942,201 +828,10 @@ public class KitInterfacer extends DepthFirstAdapter {
     }
 
     @Override
-    public void inAOutputDeclTyp(AOutputDeclTyp node) {
-        super.inAOutputDeclTyp(node);
-    }
-
-    @Override
-    public void inAPathTview(APathTview node) {
-        super.inAPathTview(node);
-    }
-
-    @Override
-    public void inAPchoicePseudo(APchoicePseudo node) {
-        super.inAPchoicePseudo(node);
-    }
-
-    @Override
-    public void inAPdeephistoryPseudo(APdeephistoryPseudo node) {
-        super.inAPdeephistoryPseudo(node);
-    }
-
-    @Override
-    public void inAPdynamicPseudo(APdynamicPseudo node) {
-        super.inAPdynamicPseudo(node);
-    }
-
-    @Override
-    public void inAPforkPseudo(APforkPseudo node) {
-        super.inAPforkPseudo(node);
-    }
-
-    @Override
-    public void inAPhistoryPseudo(APhistoryPseudo node) {
-        super.inAPhistoryPseudo(node);
-    }
-
-    @Override
-    public void inAPinitialPseudo(APinitialPseudo node) {
-        super.inAPinitialPseudo(node);
-    }
-
-    @Override
-    public void inAPjoinPseudo(APjoinPseudo node) {
-        super.inAPjoinPseudo(node);
-    }
-
-    @Override
-    public void inAPjunctionPseudo(APjunctionPseudo node) {
-        super.inAPjunctionPseudo(node);
-    }
-
-    @Override
-    public void inAPosSview(APosSview node) {
-        super.inAPosSview(node);
-    }
-
-    @Override
-    public void inAPrioposTview(APrioposTview node) {
-        super.inAPrioposTview(node);
-    }
-
-    @Override
-    public void inAPriorityTransargument(APriorityTransargument node) {
-        super.inAPriorityTransargument(node);
-    }
-
-    @Override
-    public void inAPsuspendPseudo(APsuspendPseudo node) {
-        super.inAPsuspendPseudo(node);
-    }
-
-    @Override
-    public void inAPsyncPseudo(APsyncPseudo node) {
-        super.inAPsyncPseudo(node);
-    }
-
-    @Override
-    public void inARargument(ARargument node) {
-        super.inARargument(node);
-    }
-
-    @Override
-    public void inARegion(ARegion node) {
-
-        super.inARegion(node);
-    }
-
-    @Override
-    public void inASargument(ASargument node) {
-        super.inASargument(node);
-    }
-
-    @Override
     public void inASimpleState(ASimpleState node) {
         State sta = getOrCreateNew(node.getIdentifier().getText(), false);
-        // currentstate.push(sta);
+        currentstate.push(sta);
         super.inASimpleState(node);
-    }
-
-    @Override
-    public void inAStateElement(AStateElement node) {
-        super.inAStateElement(node);
-    }
-
-    @Override
-    public void inAStrongTranstype(AStrongTranstype node) {
-        super.inAStrongTranstype(node);
-    }
-
-    @Override
-    public void inASuspensionTranstype(ASuspensionTranstype node) {
-        super.inASuspensionTranstype(node);
-    }
-
-    @Override
-    public void inATargument(ATargument node) {
-        super.inATargument(node);
-    }
-
-    @Override
-    public void inATransitionElement(ATransitionElement node) {
-        super.inATransitionElement(node);
-    }
-
-    @Override
-    public void inATrueTBoolean(ATrueTBoolean node) {
-        super.inATrueTBoolean(node);
-    }
-
-    @Override
-    public void inATypeStateargument(ATypeStateargument node) {
-        super.inATypeStateargument(node);
-    }
-
-    @Override
-    public void inATypeTransargument(ATypeTransargument node) {
-        super.inATypeTransargument(node);
-    }
-
-    @Override
-    public void inAVarDeclTyp(AVarDeclTyp node) {
-        super.inAVarDeclTyp(node);
-    }
-
-    @Override
-    public void inAVariable(AVariable node) {
-        super.inAVariable(node);
-    }
-
-    @Override
-    public void inAVersionChartargument(AVersionChartargument node) {
-        super.inAVersionChartargument(node);
-    }
-
-    @Override
-    public void inAViewRegionargument(AViewRegionargument node) {
-        super.inAViewRegionargument(node);
-    }
-
-    @Override
-    public void inAViewStateargument(AViewStateargument node) {
-        super.inAViewStateargument(node);
-    }
-
-    @Override
-    public void inAViewTransargument(AViewTransargument node) {
-        super.inAViewTransargument(node);
-    }
-
-    @Override
-    public void inAVtype(AVtype node) {
-        super.inAVtype(node);
-    }
-
-    @Override
-    public void inAWeakTranstype(AWeakTranstype node) {
-        super.inAWeakTranstype(node);
-    }
-
-    @Override
-    public void inAWidthSview(AWidthSview node) {
-        super.inAWidthSview(node);
-    }
-
-    @Override
-    public void inStart(Start node) {
-        super.inStart(node);
-    }
-
-    @Override
-    public void outABooleanVarEventType(ABooleanVarEventType node) {
-        super.outABooleanVarEventType(node);
-    }
-
-    @Override
-    public void outACargument(ACargument node) {
-        super.outACargument(node);
     }
 
     @Override
@@ -1161,297 +856,15 @@ public class KitInterfacer extends DepthFirstAdapter {
         for (int i = 0; i < s.getRegions().size(); i++) {
             currentregion.pop();
         }
+        printRegion();
         super.outACompositeState(node);
     }
 
     @Override
-    public void outAConditionalTranstype(AConditionalTranstype node) {
-        super.outAConditionalTranstype(node);
-    }
-
-    @Override
-    public void outACstate(ACstate node) {
-        super.outACstate(node);
-    }
-
-    @Override
-    public void outADeclaration(ADeclaration node) {
-        super.outADeclaration(node);
-    }
-
-    @Override
-    public void outADoActionStateargument(ADoActionStateargument node) {
-        super.outADoActionStateargument(node);
-    }
-
-    @Override
-    public void outADoubleVarEventType(ADoubleVarEventType node) {
-        super.outADoubleVarEventType(node);
-    }
-
-    @Override
-    public void outAEntryActionStateargument(AEntryActionStateargument node) {
-        super.outAEntryActionStateargument(node);
-    }
-
-    @Override
-    public void outAEvent(AEvent node) {
-        super.outAEvent(node);
-    }
-
-    @Override
-    public void outAExitActionStateargument(AExitActionStateargument node) {
-        super.outAExitActionStateargument(node);
-    }
-
-    @Override
-    public void outAFalseTBoolean(AFalseTBoolean node) {
-        super.outAFalseTBoolean(node);
-    }
-
-    @Override
-    public void outAFinalPseudo(AFinalPseudo node) {
-        super.outAFinalPseudo(node);
-    }
-
-    @Override
-    public void outAFirstcarguments(AFirstcarguments node) {
-        super.outAFirstcarguments(node);
-    }
-
-    @Override
-    public void outAFirstrarguments(AFirstrarguments node) {
-        super.outAFirstrarguments(node);
-    }
-
-    @Override
-    public void outAFirstsarguments(AFirstsarguments node) {
-        super.outAFirstsarguments(node);
-    }
-
-    @Override
-    public void outAFirsttransarguments(AFirsttransarguments node) {
-        super.outAFirsttransarguments(node);
-    }
-
-    @Override
-    public void outAFloatVarEventType(AFloatVarEventType node) {
-        super.outAFloatVarEventType(node);
-    }
-
-    @Override
-    public void outAHeightSview(AHeightSview node) {
-        super.outAHeightSview(node);
-    }
-
-    @Override
-    public void outAInitialTransition(AInitialTransition node) {
-        super.outAInitialTransition(node);
-    }
-
-    @Override
-    public void outAInitialvalue(AInitialvalue node) {
-        super.outAInitialvalue(node);
-    }
-
-    @Override
-    public void outAInputDeclTyp(AInputDeclTyp node) {
-        super.outAInputDeclTyp(node);
-    }
-
-    @Override
-    public void outAIntegerAddVarEventType(AIntegerAddVarEventType node) {
-        super.outAIntegerAddVarEventType(node);
-    }
-
-    @Override
-    public void outAIntegerMultVarEventType(AIntegerMultVarEventType node) {
-        super.outAIntegerMultVarEventType(node);
-    }
-
-    @Override
-    public void outAIntegerVarEventType(AIntegerVarEventType node) {
-        super.outAIntegerVarEventType(node);
-    }
-
-    @Override
-    public void outAInternalTransitionTranstype(AInternalTransitionTranstype node) {
-        super.outAInternalTransitionTranstype(node);
-    }
-
-    @Override
-    public void outAIodeclaration(AIodeclaration node) {
-        super.outAIodeclaration(node);
-    }
-
-    @Override
-    public void outALabelposTview(ALabelposTview node) {
-        super.outALabelposTview(node);
-    }
-
-    @Override
-    public void outALabelRegionargument(ALabelRegionargument node) {
-        super.outALabelRegionargument(node);
-    }
-
-    @Override
-    public void outALabelStateargument(ALabelStateargument node) {
-        super.outALabelStateargument(node);
-    }
-
-    @Override
-    public void outALabelTransargument(ALabelTransargument node) {
-        super.outALabelTransargument(node);
-    }
-
-    @Override
-    public void outALastcargument(ALastcargument node) {
-        super.outALastcargument(node);
-    }
-
-    @Override
-    public void outALastrargument(ALastrargument node) {
-        super.outALastrargument(node);
-    }
-
-    @Override
-    public void outALastsargument(ALastsargument node) {
-        super.outALastsargument(node);
-    }
-
-    @Override
-    public void outALasttransargument(ALasttransargument node) {
-        super.outALasttransargument(node);
-    }
-
-    @Override
-    public void outAModelChartargument(AModelChartargument node) {
-        super.outAModelChartargument(node);
-    }
-
-    @Override
-    public void outANewEventRegionargument(ANewEventRegionargument node) {
-        super.outANewEventRegionargument(node);
-    }
-
-    @Override
-    public void outANewEventStateargument(ANewEventStateargument node) {
-        super.outANewEventStateargument(node);
-    }
-
-    @Override
     public void outANewRegionElement(ANewRegionElement node) {
+        // currentregion.pop();
+        // printRegion();
         super.outANewRegionElement(node);
-    }
-
-    @Override
-    public void outANewVariableRegionargument(ANewVariableRegionargument node) {
-        super.outANewVariableRegionargument(node);
-    }
-
-    @Override
-    public void outANewVariableStateargument(ANewVariableStateargument node) {
-        super.outANewVariableStateargument(node);
-    }
-
-    @Override
-    public void outANormalTranstype(ANormalTranstype node) {
-        super.outANormalTranstype(node);
-    }
-
-    @Override
-    public void outAOtherTransition(AOtherTransition node) {
-        super.outAOtherTransition(node);
-    }
-
-    @Override
-    public void outAOutputDeclTyp(AOutputDeclTyp node) {
-        super.outAOutputDeclTyp(node);
-    }
-
-    @Override
-    public void outAPathTview(APathTview node) {
-        super.outAPathTview(node);
-    }
-
-    @Override
-    public void outAPchoicePseudo(APchoicePseudo node) {
-        super.outAPchoicePseudo(node);
-    }
-
-    @Override
-    public void outAPdeephistoryPseudo(APdeephistoryPseudo node) {
-        super.outAPdeephistoryPseudo(node);
-    }
-
-    @Override
-    public void outAPdynamicPseudo(APdynamicPseudo node) {
-        super.outAPdynamicPseudo(node);
-    }
-
-    @Override
-    public void outAPforkPseudo(APforkPseudo node) {
-        super.outAPforkPseudo(node);
-    }
-
-    @Override
-    public void outAPhistoryPseudo(APhistoryPseudo node) {
-        super.outAPhistoryPseudo(node);
-    }
-
-    @Override
-    public void outAPinitialPseudo(APinitialPseudo node) {
-        super.outAPinitialPseudo(node);
-    }
-
-    @Override
-    public void outAPjoinPseudo(APjoinPseudo node) {
-        super.outAPjoinPseudo(node);
-    }
-
-    @Override
-    public void outAPjunctionPseudo(APjunctionPseudo node) {
-        super.outAPjunctionPseudo(node);
-    }
-
-    @Override
-    public void outAPosSview(APosSview node) {
-        super.outAPosSview(node);
-    }
-
-    @Override
-    public void outAPrioposTview(APrioposTview node) {
-        super.outAPrioposTview(node);
-    }
-
-    @Override
-    public void outAPriorityTransargument(APriorityTransargument node) {
-        super.outAPriorityTransargument(node);
-    }
-
-    @Override
-    public void outAPsuspendPseudo(APsuspendPseudo node) {
-        super.outAPsuspendPseudo(node);
-    }
-
-    @Override
-    public void outAPsyncPseudo(APsyncPseudo node) {
-        super.outAPsyncPseudo(node);
-    }
-
-    @Override
-    public void outARargument(ARargument node) {
-        super.outARargument(node);
-    }
-
-    @Override
-    public void outARegion(ARegion node) {
-        super.outARegion(node);
-    }
-
-    @Override
-    public void outASargument(ASargument node) {
-        super.outASargument(node);
     }
 
     @Override
@@ -1461,95 +874,4 @@ public class KitInterfacer extends DepthFirstAdapter {
         printStates();
         super.outASimpleState(node);
     }
-
-    @Override
-    public void outAStateElement(AStateElement node) {
-        super.outAStateElement(node);
-    }
-
-    @Override
-    public void outAStrongTranstype(AStrongTranstype node) {
-        super.outAStrongTranstype(node);
-    }
-
-    @Override
-    public void outASuspensionTranstype(ASuspensionTranstype node) {
-        super.outASuspensionTranstype(node);
-    }
-
-    @Override
-    public void outATargument(ATargument node) {
-        super.outATargument(node);
-    }
-
-    @Override
-    public void outATransitionElement(ATransitionElement node) {
-        super.outATransitionElement(node);
-    }
-
-    @Override
-    public void outATrueTBoolean(ATrueTBoolean node) {
-        super.outATrueTBoolean(node);
-    }
-
-    @Override
-    public void outATypeStateargument(ATypeStateargument node) {
-        super.outATypeStateargument(node);
-    }
-
-    @Override
-    public void outATypeTransargument(ATypeTransargument node) {
-        super.outATypeTransargument(node);
-    }
-
-    @Override
-    public void outAVarDeclTyp(AVarDeclTyp node) {
-        super.outAVarDeclTyp(node);
-    }
-
-    @Override
-    public void outAVariable(AVariable node) {
-        super.outAVariable(node);
-    }
-
-    @Override
-    public void outAVersionChartargument(AVersionChartargument node) {
-        super.outAVersionChartargument(node);
-    }
-
-    @Override
-    public void outAViewRegionargument(AViewRegionargument node) {
-        super.outAViewRegionargument(node);
-    }
-
-    @Override
-    public void outAViewStateargument(AViewStateargument node) {
-        super.outAViewStateargument(node);
-    }
-
-    @Override
-    public void outAViewTransargument(AViewTransargument node) {
-        super.outAViewTransargument(node);
-    }
-
-    @Override
-    public void outAVtype(AVtype node) {
-        super.outAVtype(node);
-    }
-
-    @Override
-    public void outAWeakTranstype(AWeakTranstype node) {
-        super.outAWeakTranstype(node);
-    }
-
-    @Override
-    public void outAWidthSview(AWidthSview node) {
-        super.outAWidthSview(node);
-    }
-
-    @Override
-    public void outStart(Start node) {
-        super.outStart(node);
-    }
-
 }

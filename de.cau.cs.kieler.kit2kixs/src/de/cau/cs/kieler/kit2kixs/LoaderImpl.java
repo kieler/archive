@@ -18,7 +18,7 @@ public class LoaderImpl {
 	public static State load(String source) {
 		try {
 			Lexer lexer = new Lexer(new PushbackReader(new FileReader(source)));
-			Parser parser = new Parser(lexer);
+            Parser parser = new Parser(lexer);
 			Start ast = parser.parse();
 			KitInterfacer ki = new KitInterfacer();
 			ast.apply(ki);
