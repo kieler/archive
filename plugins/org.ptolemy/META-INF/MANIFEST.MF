@@ -4,3 +4,4 @@ Bundle-Name: PtolemyII
 Bundle-SymbolicName: org.ptolemy
 Bundle-Version: 8.0.0.qualifier
 Bundle-Vendor: CHESS, UC Berkeley
+Bundle-ClassPath: ptolemy.jar
