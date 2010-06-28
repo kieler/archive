@@ -24,31 +24,34 @@ import de.cau.cs.kieler.core.kgraph.KNode;
 import de.cau.cs.kieler.kiml.layout.AbstractLayoutProvider;
 
 /**
+ * Metric class for measurement of execution times.
  * 
  * @author msp
  */
 public class ExecutionTimeMetric {
+   
+    // CHECKSTYLEOFF MagicNumber
     
-    /** the layout provider */
+    /** the layout provider. */
     private AbstractLayoutProvider layoutProvider;
-    /** the output stream writer */
+    /** the output stream writer. */
     private OutputStreamWriter outputWriter;
-    /** number of execution time measurements per decade */
+    /** number of execution time measurements per decade. */
     private int measurementsPerDecade = 5;
-    /** number of layout runs for each graph */
+    /** number of layout runs for each graph. */
     private int runsPerGraph = 5;
-    /** number of generated graphs for each size value */
+    /** number of generated graphs for each size value. */
     private int graphsPerSize = 5;
     
     /**
      * Creates an execution time metric instance.
      * 
-     * @param layoutProvider the layout provider to examine
+     * @param thelayoutProvider the layout provider to examine
      * @param outputStream the output stream to which measurements are written
      */
-    public ExecutionTimeMetric(AbstractLayoutProvider layoutProvider,
-            OutputStream outputStream) {
-        this.layoutProvider = layoutProvider;
+    public ExecutionTimeMetric(final AbstractLayoutProvider thelayoutProvider,
+            final OutputStream outputStream) {
+        this.layoutProvider = thelayoutProvider;
         this.outputWriter = new OutputStreamWriter(outputStream);
     }
     
@@ -61,28 +64,30 @@ public class ExecutionTimeMetric {
      * @throws IOException if writing to the output stream fails
      * @throws KielerException if the layout provider fails
      */
-    public void measure(int startDecade, int endDecade, int maxEdges)
+    public void measure(final int startDecade, final int endDecade, final int maxEdges)
             throws IOException, KielerException {
-        if (startDecade > endDecade || startDecade < 0)
-            throw new IllegalArgumentException("Start decade must be non-negative and less or equal than end decade.");
+        if (startDecade > endDecade || startDecade < 0) {
+            throw new IllegalArgumentException("Start decade must be non-negative"
+                    + " and less or equal than end decade.");
+        }
         warmup();
         
         try {
             int currentDecade = startDecade;
             double currentSize = 1;
-            for (int d = 0; d < startDecade; d++)
+            for (int d = 0; d < startDecade; d++) {
                 currentSize *= 10;
+            }
             double incFactor = Math.pow(10, 1.0 / measurementsPerDecade);
             while (currentDecade < endDecade) {
                 for (int i = 0; i < measurementsPerDecade; i++) {
-                    measure((int)Math.round(currentSize), maxEdges);
+                    measure((int) Math.round(currentSize), maxEdges);
                     currentSize *= incFactor;
                 }
                 currentDecade++;
             }
-            measure((int)Math.round(currentSize), maxEdges);
-        }
-        finally {
+            measure((int) Math.round(currentSize), maxEdges);
+        } finally {
             outputWriter.flush();
         }
     }
@@ -108,7 +113,8 @@ public class ExecutionTimeMetric {
      * @throws IOException if writing to the output stream fails
      * @throws KielerException if the layout provider fails
      */
-    private void measure(int nodeCount, int maxEdges) throws KielerException, IOException {
+    private void measure(final int nodeCount, final int maxEdges)
+            throws KielerException, IOException {
         outputWriter.write(Integer.toString(nodeCount));
         for (int edgeCount = 1; edgeCount <= maxEdges; edgeCount++) {
             System.out.print("n = " + nodeCount + ", m = " + edgeCount + "n: ");
@@ -136,34 +142,37 @@ public class ExecutionTimeMetric {
     /**
      * Sets the number of layout runs for each generated graph.
      * 
-     * @param runsPerGraph the number of runs per graph to set
+     * @param therunsPerGraph the number of runs per graph to set
      */
-    public void setRunsPerGraph(int runsPerGraph) {
-        if (runsPerGraph < 1)
+    public void setRunsPerGraph(final int therunsPerGraph) {
+        if (therunsPerGraph < 1) {
             throw new IllegalArgumentException("Number of runs per graph must be positive.");
-        this.runsPerGraph = runsPerGraph;
+        }
+        this.runsPerGraph = therunsPerGraph;
     }
 
     /**
      * Sets the number of randomly generated graphs for each size value.
      * 
-     * @param graphsPerSize the number of graphs per size to set
+     * @param thegraphsPerSize the number of graphs per size to set
      */
-    public void setGraphsPerSize(int graphsPerSize) {
-        if (runsPerGraph < 1)
+    public void setGraphsPerSize(final int thegraphsPerSize) {
+        if (runsPerGraph < 1) {
             throw new IllegalArgumentException("Number of graphs per size must be positive.");
-        this.graphsPerSize = graphsPerSize;
+        }
+        this.graphsPerSize = thegraphsPerSize;
     }
     
     /**
      * Sets the number of execution time measurements for each decade.
      * 
-     * @param measurementsPerDecade the number of measurements per decade
+     * @param themeasurementsPerDecade the number of measurements per decade
      */
-    public void setMeasurementsPerDecade(int measurementsPerDecade) {
-        if (measurementsPerDecade < 1)
+    public void setMeasurementsPerDecade(final int themeasurementsPerDecade) {
+        if (themeasurementsPerDecade < 1) {
             throw new IllegalArgumentException("Number of measurements per decade must be positive.");
-        this.measurementsPerDecade = measurementsPerDecade;
+        }
+        this.measurementsPerDecade = themeasurementsPerDecade;
     }
         
 }

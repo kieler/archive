@@ -24,31 +24,41 @@ import de.cau.cs.kieler.klodd.hierarchical.HierarchicalDataflowLayoutProvider;
  * 
  * @author msp
  */
-public class MetricsProgram {
+public final class MetricsProgram {
 
+    /** mask for getting a file name from a system time value. */
+    private static final long TIME_MASK = 0xfff;
+    
+    /**
+     * Hidden default constructor.
+     */
+    private MetricsProgram() {
+    }
+    
     /**
      * Main method of the metrics program.
      * 
-     * @param args
+     * @param args command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         // TODO generalize metrics selection, e.g. by reading command-line arguments
         OutputStream fileStream = null;
         try {
-            String fileName = "measurement" + (System.currentTimeMillis() & 0xfff)+".csv";
+            String fileName = "measurement" + (System.currentTimeMillis() & TIME_MASK) + ".csv";
             fileStream = new FileOutputStream(fileName);
             ExecutionTimeMetric executionTimeMetric = new ExecutionTimeMetric(
                     new HierarchicalDataflowLayoutProvider(), fileStream);
             executionTimeMetric.measure(2, 2, 1);
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             exception.printStackTrace();
-        }
-        finally {
+        } finally {
             try {
-                if (fileStream != null)
+                if (fileStream != null) {
                     fileStream.close();
-            } catch (IOException exception) {}
+                }
+            } catch (IOException exception) {
+                // ignore exception
+            }
         }
     }
 

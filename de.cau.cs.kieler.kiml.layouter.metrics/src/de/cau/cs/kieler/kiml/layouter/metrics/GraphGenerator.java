@@ -28,12 +28,20 @@ import de.cau.cs.kieler.kiml.layout.util.KimlLayoutUtil;
  * 
  * @author msp
  */
-public class GraphGenerator {
+public final class GraphGenerator {
     
-    /** width of generated nodes */
+    // CHECKSTYLEOFF MagicNumber
+    
+    /** width of generated nodes. */
     private static final float NODE_WIDTH = 20.0f;
-    /** height of generated nodes */
+    /** height of generated nodes. */
     private static final float NODE_HEIGHT = 20.0f;
+    
+    /**
+     * Hidden default constructor.
+     */
+    private GraphGenerator() {   
+    }     
 
     /**
      * Generates a random graph of given size.
@@ -43,30 +51,28 @@ public class GraphGenerator {
      * @param withPorts if true, ports a generated and connected to the edges
      * @return a randomly generated graph
      */
-    public static KNode generateGraph(int nodeCount, int edgesPerNode,
-            boolean withPorts) {
-        if (nodeCount < 1 || edgesPerNode < 0)
+    public static KNode generateGraph(final int nodeCount, final int edgesPerNode,
+            final boolean withPorts) {
+        if (nodeCount < 1 || edgesPerNode < 0) {
             throw new IllegalArgumentException("Number of nodes and edges per node must be positive.");
+        }
         
         // create parent node
         KNode layoutGraph = KimlLayoutUtil.createInitializedNode();
-        {
-            KShapeLayout nodeLayout = KimlLayoutUtil.getShapeLayout(layoutGraph);
-            LayoutOptions.setLayoutDirection(nodeLayout, LayoutDirection.HORIZONTAL);
-        }
+        KShapeLayout nodeLayout = KimlLayoutUtil.getShapeLayout(layoutGraph);
+        LayoutOptions.setEnum(nodeLayout, LayoutDirection.RIGHT);
         
         // create nodes
         KNode[] nodes = new KNode[nodeCount];
         for (int i = 0; i < nodeCount; i++) {
             nodes[i] = KimlLayoutUtil.createInitializedNode();
             nodes[i].getLabel().setText("N" + i);
-            KShapeLayout nodeLayout = KimlLayoutUtil.getShapeLayout(nodes[i]);
+            nodeLayout = KimlLayoutUtil.getShapeLayout(nodes[i]);
             nodeLayout.setWidth(NODE_WIDTH);
             nodeLayout.setHeight(NODE_HEIGHT);
-            LayoutOptions.setFixedSize(nodeLayout, true);
+            LayoutOptions.setBoolean(nodeLayout, LayoutOptions.FIXED_SIZE, true);
             if (withPorts) {
-                LayoutOptions.setPortConstraints(nodeLayout,
-                        PortConstraints.FIXED_POS);
+                LayoutOptions.setEnum(nodeLayout, PortConstraints.FIXED_POS);
             }
             nodes[i].setParent(layoutGraph);
         }
@@ -76,7 +82,7 @@ public class GraphGenerator {
             for (int j = 0; j < edgesPerNode; j++) {
                 KEdge edge = KimlLayoutUtil.createInitializedEdge();
                 edge.setSource(nodes[i]);
-                int targetIndex = (int)(Math.random() * nodeCount);
+                int targetIndex = (int) (Math.random() * nodeCount);
                 edge.setTarget(nodes[targetIndex]);
                 if (withPorts) {
                     edge.setSourcePort(createPort(nodes[i], edge));
@@ -96,29 +102,29 @@ public class GraphGenerator {
      * @param edge edge to connect to the new port
      * @return a new port
      */
-    private static KPort createPort(KNode node, KEdge edge) {
+    private static KPort createPort(final KNode node, final KEdge edge) {
         KPort port = KimlLayoutUtil.createInitializedPort();
         KShapeLayout portLayout = KimlLayoutUtil.getShapeLayout(port);
-        switch ((int)(Math.random() * 4)) {
+        switch ((int) (Math.random() * 4)) {
         case 0:
-            portLayout.setXpos((float)(Math.random() * NODE_WIDTH));
+            portLayout.setXpos((float) (Math.random() * NODE_WIDTH));
             portLayout.setYpos(0.0f);
-            LayoutOptions.setPortSide(portLayout, PortSide.NORTH);
+            LayoutOptions.setEnum(portLayout, PortSide.NORTH);
             break;
         case 1:
             portLayout.setXpos(NODE_WIDTH);
-            portLayout.setYpos((float)(Math.random() * NODE_HEIGHT));
-            LayoutOptions.setPortSide(portLayout, PortSide.EAST);
+            portLayout.setYpos((float) (Math.random() * NODE_HEIGHT));
+            LayoutOptions.setEnum(portLayout, PortSide.EAST);
             break;
         case 2:
-            portLayout.setXpos((float)(Math.random() * NODE_WIDTH));
+            portLayout.setXpos((float) (Math.random() * NODE_WIDTH));
             portLayout.setYpos(NODE_HEIGHT);
-            LayoutOptions.setPortSide(portLayout, PortSide.SOUTH);
+            LayoutOptions.setEnum(portLayout, PortSide.SOUTH);
             break;
         case 3:
             portLayout.setXpos(0.0f);
-            portLayout.setYpos((float)(Math.random() * NODE_HEIGHT));
-            LayoutOptions.setPortSide(portLayout, PortSide.WEST);
+            portLayout.setYpos((float) (Math.random() * NODE_HEIGHT));
+            LayoutOptions.setEnum(portLayout, PortSide.WEST);
             break;
         }
         port.setNode(node);
