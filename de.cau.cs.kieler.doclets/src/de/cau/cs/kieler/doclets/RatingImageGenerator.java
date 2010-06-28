@@ -67,7 +67,7 @@ public class RatingImageGenerator {
         for (int i = 0; i < ratings.length; i++) {
             Rating rating = Rating.values()[i];
             offset += fillRatingArea(raster, offset, rating,
-                    (float)ratings[i] / ratedClasses);
+                    (float) ratings[i] / ratedClasses);
         }
         
         // write image to file 
@@ -122,7 +122,7 @@ public class RatingImageGenerator {
      */
     private static int[] darken(final int[] color, final int x, final int y) {
         int[] result = new int[color.length];
-        float factor = BOTTOM_DARKEN + (IMG_HEIGHT - (float)y) / IMG_HEIGHT * (1 - BOTTOM_DARKEN);
+        float factor = BOTTOM_DARKEN + (IMG_HEIGHT - (float) y) / IMG_HEIGHT * (1 - BOTTOM_DARKEN);
         if (x == 0 || y == 0 || x == IMG_WIDTH - 1 || y == IMG_HEIGHT - 1) {
             factor *= BORDER_DARKEN;
         }
