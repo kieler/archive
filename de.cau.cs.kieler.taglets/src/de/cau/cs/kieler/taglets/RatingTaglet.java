@@ -31,7 +31,8 @@ public class RatingTaglet implements Taglet {
     /** the header that is displayed in generated markup. */
     private static final String HEADER = "Rating";
     /** the path to icon files. */
-    private static final String ICON_PATH = "http://rtsys.informatik.uni-kiel.de/trac/kieler/browser/trunk/standalone/de.cau.cs.kieler.taglets/icons/";
+    private static final String ICON_PATH = "http://rtsys.informatik.uni-kiel.de/"
+            + "trac/kieler/browser/trunk/standalone/de.cau.cs.kieler.taglets/icons/";
     
     /** enumeration of ratings. */
     private enum Rating {
@@ -203,10 +204,10 @@ public class RatingTaglet implements Taglet {
      * 
      * @param tagletMap the map to register this tag to
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes" })
     public static void register(final Map tagletMap) {
         Taglet newTaglet = new RatingTaglet();
-        Taglet oldTaglet = (Taglet)tagletMap.get(NAME);
+        Taglet oldTaglet = (Taglet) tagletMap.get(NAME);
         if (oldTaglet != null) {
             tagletMap.remove(NAME);
         }

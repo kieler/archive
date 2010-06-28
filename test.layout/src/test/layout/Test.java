@@ -32,14 +32,22 @@ import de.cau.cs.kieler.klodd.hierarchical.HierarchicalDataflowLayoutProvider;
  * 
  * @author msp
  */
-public class Test {
+public final class Test {
+    
+    // CHECKSTYLEOFF MagicNumber
+    
+    /**
+     * Hidden default constructor.
+     */
+    private Test() {
+    }
 
     /**
      * The main method.
      * 
      * @param args command-line arguments
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         // create a KGraph for layout
         KNode parentNode = createGraph();
         
@@ -76,7 +84,8 @@ public class Test {
         
         // create child nodes
         KNode childNode1 = KimlLayoutUtil.createInitializedNode();
-        childNode1.setParent(parentNode); // This automatically adds the child to the list of its parent's children.
+        // This automatically adds the child to the list of its parent's children.
+        childNode1.setParent(parentNode);
         childNode1.getLabel().setText("node1");
         KNode childNode2 = KimlLayoutUtil.createInitializedNode();
         childNode2.setParent(parentNode);
@@ -90,11 +99,15 @@ public class Test {
         
         // create edges
         KEdge edge1 = KimlLayoutUtil.createInitializedEdge();
-        edge1.setSource(childNode1); // This automatically adds the edge to the node's list of outgoing edges.
-        edge1.setTarget(childNode2); // This automatically adds the edge to the node's list of incoming edges.
+        // This automatically adds the edge to the node's list of outgoing edges.
+        edge1.setSource(childNode1);
+        // This automatically adds the edge to the node's list of incoming edges.
+        edge1.setTarget(childNode2);
+        // As our ports do not distinguish between incoming and outgoing edges,
+        // the edges must be added manually to their list of edges.
         edge1.setSourcePort(port1);
-        port1.getEdges().add(edge1); // As our ports do not distinguish between incoming and outgoing edges,
-        edge1.setTargetPort(port2);  // the edges must be added manually to their list of edges.
+        port1.getEdges().add(edge1);
+        edge1.setTargetPort(port2);
         port2.getEdges().add(edge1);
         
         return parentNode;
@@ -105,12 +118,11 @@ public class Test {
      * 
      * @param parentNode parent node representing a graph
      */
-    private static void addLayoutOptions(KNode parentNode) {
+    private static void addLayoutOptions(final KNode parentNode) {
         // add options for the parent node
         KShapeLayout parentLayout = KimlLayoutUtil.getShapeLayout(parentNode);
         // set layout direction to horizontal
-        LayoutOptions.setLayoutDirection(parentLayout,
-                LayoutDirection.HORIZONTAL);
+        LayoutOptions.setEnum(parentLayout, LayoutDirection.RIGHT);
         
         // add options for the child nodes
         for (KNode childNode : parentNode.getChildren()) {
@@ -119,10 +131,9 @@ public class Test {
             childLayout.setWidth(30.0f);
             childLayout.setHeight(30.0f);
             // set fixed size for the child
-            LayoutOptions.setFixedSize(childLayout, true);
+            LayoutOptions.setBoolean(childLayout, LayoutOptions.FIXED_SIZE, true);
             // set port constraints to fixed port positions
-            LayoutOptions.setPortConstraints(childLayout,
-                    PortConstraints.FIXED_POS);
+            LayoutOptions.setEnum(childLayout, PortConstraints.FIXED_POS);
             
             // add options for the ports
             int i = 0;
@@ -133,11 +144,10 @@ public class Test {
                 portLayout.setYpos(i * 30.0f / (childNode.getPorts().size() + 1));
                 if (childNode.getLabel().getText().equals("node1")) {
                     portLayout.setXpos(30.0f);
-                    LayoutOptions.setPortSide(portLayout, PortSide.EAST);
-                }
-                else {
+                    LayoutOptions.setEnum(portLayout, PortSide.EAST);
+                } else {
                     portLayout.setXpos(0.0f);
-                    LayoutOptions.setPortSide(portLayout, PortSide.WEST);
+                    LayoutOptions.setEnum(portLayout, PortSide.WEST);
                 }
             }
         }
@@ -149,8 +159,8 @@ public class Test {
      * @param parentNode parent node representing a graph
      * @param progressMonitor progress monitor for the layout run
      */
-    private static void printLayoutInfo(KNode parentNode,
-            IKielerProgressMonitor progressMonitor) {
+    private static void printLayoutInfo(final KNode parentNode,
+            final IKielerProgressMonitor progressMonitor) {
         // print execution time of the algorithm run
         System.out.println("Execution time: "
                 + progressMonitor.getExecutionTime() * 1000 + " ms");

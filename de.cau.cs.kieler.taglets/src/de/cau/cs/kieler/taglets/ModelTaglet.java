@@ -137,10 +137,10 @@ public class ModelTaglet implements Taglet {
      * 
      * @param tagletMap the map to register this tag to
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes" })
     public static void register(final Map tagletMap) {
         Taglet newTaglet = new ModelTaglet();
-        Taglet oldTaglet = (Taglet)tagletMap.get(NAME);
+        Taglet oldTaglet = (Taglet) tagletMap.get(NAME);
         if (oldTaglet != null) {
             tagletMap.remove(NAME);
         }
