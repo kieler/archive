@@ -16,3 +16,4 @@ Export-Package: org.ptolemy.moml,
  org.ptolemy.moml.impl,
  org.ptolemy.moml.util
 Bundle-ActivationPolicy: lazy
+Import-Package: ptolemy.actor.kiel
