@@ -5,7 +5,7 @@
     modelPluginID="org.ptolemy.moml" modelName="Moml" importerID="org.eclipse.emf.importer.ecore"
     complianceLevel="5.0" copyrightFields="false">
   <foreignModel>moml.ecore</foreignModel>
-  <genPackages prefix="Moml" basePackage="org.ptolemy.moml" resource="XML" disposableProviderFactory="true"
+  <genPackages prefix="Moml" basePackage="org.ptolemy" resource="XML" disposableProviderFactory="true"
       ecorePackage="moml.ecore#/">
     <genClasses ecoreClass="moml.ecore#//Any">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute moml.ecore#//Any/mixed"/>

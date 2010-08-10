@@ -7,14 +7,8 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.ptolemy.moml,
- org.ptolemy.moml.Moml,
- org.ptolemy.moml.Moml.impl,
- org.ptolemy.moml.Moml.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.emf.ecore.xmi;visibility:=reexport,
  org.eclipse.ui;bundle-version="3.6.0",
  org.eclipse.emf;bundle-version="2.6.0"
-Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.ptolemy.moml.MomlPlugin
