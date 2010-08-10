@@ -92,4 +92,3 @@ Export-Package: com.microstar.xml,
  ptolemy.vergil.modal,
  ptolemy.vergil.modal.modal,
  util.testsuite
-Import-Package: ptolemy.actor.kiel
