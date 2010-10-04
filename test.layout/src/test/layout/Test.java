@@ -2,12 +2,12 @@
  * KIELER - Kiel Integrated Environment for Layout Eclipse RichClient
  *
  * http://www.informatik.uni-kiel.de/rtsys/kieler/
- * 
+ *
  * Copyright 2009 by
  * + Christian-Albrechts-University of Kiel
  *   + Department of Computer Science
  *     + Real-Time and Embedded Systems Group
- * 
+ *
  * This code is provided under the terms of the Eclipse Public License (EPL).
  * See the file epl-v10.html for the license text.
  */
@@ -19,13 +19,14 @@ import de.cau.cs.kieler.core.alg.BasicProgressMonitor;
 import de.cau.cs.kieler.core.kgraph.KEdge;
 import de.cau.cs.kieler.core.kgraph.KNode;
 import de.cau.cs.kieler.core.kgraph.KPort;
+import de.cau.cs.kieler.kiml.AbstractLayoutProvider;
 import de.cau.cs.kieler.kiml.klayoutdata.KShapeLayout;
 import de.cau.cs.kieler.kiml.options.LayoutDirection;
 import de.cau.cs.kieler.kiml.options.LayoutOptions;
 import de.cau.cs.kieler.kiml.options.PortConstraints;
 import de.cau.cs.kieler.kiml.options.PortSide;
-import de.cau.cs.kieler.kiml.util.KimlLayoutUtil;
-import de.cau.cs.kieler.klodd.hierarchical.HierarchicalDataflowLayoutProvider;
+import de.cau.cs.kieler.kiml.util.KimlUtil;
+import de.cau.cs.kieler.klay.layered.LayeredLayoutProvider;
 
 /**
  * Test class for the layout algorithm release.
@@ -33,9 +34,9 @@ import de.cau.cs.kieler.klodd.hierarchical.HierarchicalDataflowLayoutProvider;
  * @author msp
  */
 public final class Test {
-    
+
     // CHECKSTYLEOFF MagicNumber
-    
+
     /**
      * Hidden default constructor.
      */
@@ -45,60 +46,61 @@ public final class Test {
     /**
      * The main method.
      * 
-     * @param args command-line arguments
+     * @param args
+     *            command-line arguments
      */
     public static void main(final String[] args) {
         // create a KGraph for layout
         KNode parentNode = createGraph();
-        
+
         // add layout options to the elements of the graph
         addLayoutOptions(parentNode);
-        
+
         // create a progress monitor
         IKielerProgressMonitor progressMonitor = new BasicProgressMonitor();
-        
+
         // create the layout provider
-        HierarchicalDataflowLayoutProvider dataflowLayoutProvider =
-            new HierarchicalDataflowLayoutProvider();
-        
+        AbstractLayoutProvider layoutProvider = new LayeredLayoutProvider();
+
         // perform layout on the created graph
         try {
-            dataflowLayoutProvider.doLayout(parentNode, progressMonitor);
+            layoutProvider.doLayout(parentNode, progressMonitor);
         } catch (KielerException exception) {
             exception.printStackTrace();
         }
-        
+
         // output layout information
         printLayoutInfo(parentNode, progressMonitor);
     }
-    
+
     /**
-     * Creates a KGraph, represented by a parent node that contains
-     * the actual nodes and edges of the graph.
+     * Creates a KGraph, represented by a parent node that contains the actual
+     * nodes and edges of the graph.
      * 
      * @return a parent node that contains graph elements
      */
     private static KNode createGraph() {
         // create parent node
-        KNode parentNode = KimlLayoutUtil.createInitializedNode();
-        
+        KNode parentNode = KimlUtil.createInitializedNode();
+
         // create child nodes
-        KNode childNode1 = KimlLayoutUtil.createInitializedNode();
+        KNode childNode1 = KimlUtil.createInitializedNode();
         // This automatically adds the child to the list of its parent's children.
         childNode1.setParent(parentNode);
         childNode1.getLabel().setText("node1");
-        KNode childNode2 = KimlLayoutUtil.createInitializedNode();
+        KNode childNode2 = KimlUtil.createInitializedNode();
         childNode2.setParent(parentNode);
         childNode2.getLabel().setText("node2");
-        
-        // create ports
-        KPort port1 = KimlLayoutUtil.createInitializedPort();
-        port1.setNode(childNode1); // This automatically adds the port to the node's list of ports.
-        KPort port2 = KimlLayoutUtil.createInitializedPort();
+
+        // create ports (optional)
+        KPort port1 = KimlUtil.createInitializedPort();
+        // This automatically adds the port to the node's list of ports.
+        port1.setNode(childNode1);
+        KPort port2 = KimlUtil.createInitializedPort();
         port2.setNode(childNode2);
-        
+
         // create edges
-        KEdge edge1 = KimlLayoutUtil.createInitializedEdge();
+        KEdge edge1 = KimlUtil.createInitializedEdge();
         // This automatically adds the edge to the node's list of outgoing edges.
         edge1.setSource(childNode1);
         // This automatically adds the edge to the node's list of incoming edges.
@@ -109,55 +111,58 @@ public final class Test {
         port1.getEdges().add(edge1);
         edge1.setTargetPort(port2);
         port2.getEdges().add(edge1);
-        
+
         return parentNode;
     }
-    
+
     /**
      * Adds layout options to the elements of the given parent node.
      * 
-     * @param parentNode parent node representing a graph
+     * @param parentNode
+     *            parent node representing a graph
      */
     private static void addLayoutOptions(final KNode parentNode) {
         // add options for the parent node
-        KShapeLayout parentLayout = KimlLayoutUtil.getShapeLayout(parentNode);
+        KShapeLayout parentLayout = parentNode.getData(KShapeLayout.class);
         // set layout direction to horizontal
-        LayoutOptions.setEnum(parentLayout, LayoutDirection.RIGHT);
+        parentLayout.setProperty(LayoutOptions.LAYOUT_DIRECTION, LayoutDirection.RIGHT);
         
         // add options for the child nodes
         for (KNode childNode : parentNode.getChildren()) {
-            KShapeLayout childLayout = KimlLayoutUtil.getShapeLayout(childNode);
+            KShapeLayout childLayout = childNode.getData(KShapeLayout.class);
             // set some width and height for the child
             childLayout.setWidth(30.0f);
             childLayout.setHeight(30.0f);
             // set fixed size for the child
-            LayoutOptions.setBoolean(childLayout, LayoutOptions.FIXED_SIZE, true);
+            childLayout.setProperty(LayoutOptions.FIXED_SIZE, Boolean.TRUE);
             // set port constraints to fixed port positions
-            LayoutOptions.setEnum(childLayout, PortConstraints.FIXED_POS);
+            childLayout.setProperty(LayoutOptions.PORT_CONSTRAINTS, PortConstraints.FIXED_POS);
             
             // add options for the ports
             int i = 0;
             for (KPort port : childNode.getPorts()) {
                 i++;
-                KShapeLayout portLayout = KimlLayoutUtil.getShapeLayout(port);
+                KShapeLayout portLayout = port.getData(KShapeLayout.class);
                 // set position and side
                 portLayout.setYpos(i * 30.0f / (childNode.getPorts().size() + 1));
                 if (childNode.getLabel().getText().equals("node1")) {
                     portLayout.setXpos(30.0f);
-                    LayoutOptions.setEnum(portLayout, PortSide.EAST);
+                    portLayout.setProperty(LayoutOptions.PORT_SIDE, PortSide.EAST);
                 } else {
                     portLayout.setXpos(0.0f);
-                    LayoutOptions.setEnum(portLayout, PortSide.WEST);
+                    portLayout.setProperty(LayoutOptions.PORT_SIDE, PortSide.WEST);
                 }
             }
         }
     }
-    
+
     /**
      * Outputs layout information on the console.
      * 
-     * @param parentNode parent node representing a graph
-     * @param progressMonitor progress monitor for the layout run
+     * @param parentNode
+     *            parent node representing a graph
+     * @param progressMonitor
+     *            progress monitor for the layout run
      */
     private static void printLayoutInfo(final KNode parentNode,
             final IKielerProgressMonitor progressMonitor) {
@@ -167,10 +172,9 @@ public final class Test {
         
         // print position of each node
         for (KNode childNode : parentNode.getChildren()) {
-            KShapeLayout childLayout = KimlLayoutUtil.getShapeLayout(childNode);
+            KShapeLayout childLayout = childNode.getData(KShapeLayout.class);
             System.out.println(childNode.getLabel().getText() + ": x = "
                     + childLayout.getXpos() + ", y = " + childLayout.getYpos());
         }
     }
-
 }
