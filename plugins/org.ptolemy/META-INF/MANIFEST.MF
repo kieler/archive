@@ -1624,3 +1624,4 @@ Export-Package: bin,
  util.lisp,
  util.testsuite,
  util.testsuite.test
+Import-Package: ptolemy.actor.kiel
