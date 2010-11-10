@@ -1323,7 +1323,6 @@ Export-Package: bin,
  ptolemy.domains.ptides.demo.PtidesBasicPowerPlant,
  ptolemy.domains.ptides.demo.PtidesBasicTwoPlatformsNetworkSensorEvents,
  ptolemy.domains.ptides.demo.PtidesPreemptEDFOnePlatformThreePathsRealDelay,
- ptolemy.domains.ptides.demo.PtidesSimulator,
  ptolemy.domains.ptides.kernel,
  ptolemy.domains.ptides.kernel.test,
  ptolemy.domains.ptides.lib,
@@ -1582,7 +1581,6 @@ Export-Package: bin,
  ptolemy.vergil.kernel.attributes.demo.ModelID,
  ptolemy.vergil.kernel.attributes.demo.Viewgraph,
  ptolemy.vergil.kernel.attributes.test,
- ptolemy.vergil.lib,
  ptolemy.vergil.modal,
  ptolemy.vergil.modal.fmv,
  ptolemy.vergil.modal.fmv.img,
@@ -1624,4 +1622,7 @@ Export-Package: bin,
  util.lisp,
  util.testsuite,
  util.testsuite.test
-Import-Package: ptolemy.actor.kiel
+Bundle-Activator: org.ptolemy.PtolemyPlugin
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
+ org.eclipse.ui;bundle-version="3.6.1"
+Bundle-ActivationPolicy: lazy
