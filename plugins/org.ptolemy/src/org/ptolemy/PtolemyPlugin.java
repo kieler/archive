@@ -21,8 +21,6 @@ import org.osgi.framework.Bundle;
 public class PtolemyPlugin extends AbstractUIPlugin {
 
     public PtolemyPlugin() {
-        System.out.println("=========================================================================");
-        
     }
 
 }
