@@ -270,10 +270,10 @@
   </children>
   <styles xmi:type="notation:DiagramStyle" xmi:id="_QFdR8SfmEd-yVtTc-UDl8A"/>
   <styles xmi:type="layoutoptions:LayoutOptionStyle" xmi:id="_NxE_ECfnEd-yVtTc-UDl8A">
-    <options xmi:type="klayoutdata:KFloatOption" xmi:id="_NxFmICfnEd-yVtTc-UDl8A" key="de.cau.cs.kieler.layout.options.minSpacing" value="35.0"/>
-    <options xmi:type="klayoutdata:KFloatOption" xmi:id="_SE0FICfnEd-yVtTc-UDl8A" key="de.cau.cs.kieler.kiml.ogdf.option.labelMarginDistance" value="25.0"/>
+    <options xmi:type="klayoutdata:KFloatOption" xmi:id="_NxFmICfnEd-yVtTc-UDl8A" key="de.cau.cs.kieler.spacing" value="35.0"/>
+    <options xmi:type="klayoutdata:KFloatOption" xmi:id="_SE0FICfnEd-yVtTc-UDl8A" key="de.cau.cs.kieler.ogdf.labelDistance" value="25.0"/>
     <options xmi:type="klayoutdata:KFloatOption" xmi:id="_qFeo0CfnEd-yVtTc-UDl8A" key="de.cau.cs.kieler.kiml.ogdf.option.pageRatio" value="1.3"/>
-    <options xmi:type="klayoutdata:KFloatOption" xmi:id="_yh73wCfnEd-yVtTc-UDl8A" key="de.cau.cs.kieler.layout.options.borderSpacing" value="30.0"/>
+    <options xmi:type="klayoutdata:KFloatOption" xmi:id="_yh73wCfnEd-yVtTc-UDl8A" key="de.cau.cs.kieler.borderSpacing" value="30.0"/>
   </styles>
   <element xmi:type="ecore:EPackage" href="moml-simplified.ecore#/"/>
   <edges xmi:type="notation:Edge" xmi:id="_QHJUACfmEd-yVtTc-UDl8A" type="3002" source="_QGho8CfmEd-yVtTc-UDl8A" target="_QGho8CfmEd-yVtTc-UDl8A">
