@@ -13,7 +13,6 @@
  */
 package test.layout;
 
-import de.cau.cs.kieler.core.KielerException;
 import de.cau.cs.kieler.core.alg.IKielerProgressMonitor;
 import de.cau.cs.kieler.core.alg.BasicProgressMonitor;
 import de.cau.cs.kieler.core.kgraph.KEdge;
@@ -21,7 +20,7 @@ import de.cau.cs.kieler.core.kgraph.KNode;
 import de.cau.cs.kieler.core.kgraph.KPort;
 import de.cau.cs.kieler.kiml.AbstractLayoutProvider;
 import de.cau.cs.kieler.kiml.klayoutdata.KShapeLayout;
-import de.cau.cs.kieler.kiml.options.LayoutDirection;
+import de.cau.cs.kieler.kiml.options.Direction;
 import de.cau.cs.kieler.kiml.options.LayoutOptions;
 import de.cau.cs.kieler.kiml.options.PortConstraints;
 import de.cau.cs.kieler.kiml.options.PortSide;
@@ -29,7 +28,7 @@ import de.cau.cs.kieler.kiml.util.KimlUtil;
 import de.cau.cs.kieler.klay.layered.LayeredLayoutProvider;
 
 /**
- * Test class for the layout algorithm release.
+ * Test class for the layout algorithm releases.
  * 
  * @author msp
  */
@@ -63,11 +62,7 @@ public final class Test {
         AbstractLayoutProvider layoutProvider = new LayeredLayoutProvider();
 
         // perform layout on the created graph
-        try {
-            layoutProvider.doLayout(parentNode, progressMonitor);
-        } catch (KielerException exception) {
-            exception.printStackTrace();
-        }
+        layoutProvider.doLayout(parentNode, progressMonitor);
 
         // output layout information
         printLayoutInfo(parentNode, progressMonitor);
@@ -125,7 +120,7 @@ public final class Test {
         // add options for the parent node
         KShapeLayout parentLayout = parentNode.getData(KShapeLayout.class);
         // set layout direction to horizontal
-        parentLayout.setProperty(LayoutOptions.LAYOUT_DIRECTION, LayoutDirection.RIGHT);
+        parentLayout.setProperty(LayoutOptions.DIRECTION, Direction.RIGHT);
         
         // add options for the child nodes
         for (KNode childNode : parentNode.getChildren()) {
