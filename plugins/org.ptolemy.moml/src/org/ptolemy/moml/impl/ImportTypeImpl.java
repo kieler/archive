@@ -32,190 +32,190 @@ import org.ptolemy.moml.MomlPackage;
  */
 public class ImportTypeImpl extends EObjectImpl implements ImportType {
     /**
-     * The default value of the '{@link #getBase() <em>Base</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getBase() <em>Base</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getBase()
-     * @generated
-     * @ordered
-     */
+	 * @see #getBase()
+	 * @generated
+	 * @ordered
+	 */
     protected static final String BASE_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getBase() <em>Base</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getBase() <em>Base</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getBase()
-     * @generated
-     * @ordered
-     */
+	 * @see #getBase()
+	 * @generated
+	 * @ordered
+	 */
     protected String base = BASE_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getSource() <em>Source</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getSource() <em>Source</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getSource()
-     * @generated
-     * @ordered
-     */
+	 * @see #getSource()
+	 * @generated
+	 * @ordered
+	 */
     protected static final String SOURCE_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getSource() <em>Source</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getSource() <em>Source</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getSource()
-     * @generated
-     * @ordered
-     */
+	 * @see #getSource()
+	 * @generated
+	 * @ordered
+	 */
     protected String source = SOURCE_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ImportTypeImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return MomlPackage.Literals.IMPORT_TYPE;
-    }
+		return MomlPackage.Literals.IMPORT_TYPE;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public String getBase() {
-        return base;
-    }
+		return base;
+	}
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public void setBase(String newBase) {
-        String oldBase = base;
-        base = newBase;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, MomlPackage.IMPORT_TYPE__BASE, oldBase, base));
-    }
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setBase(String newBase) {
+		String oldBase = base;
+		base = newBase;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MomlPackage.IMPORT_TYPE__BASE, oldBase, base));
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+				/**
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public String getSource() {
-        return source;
-    }
+		return source;
+	}
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public void setSource(String newSource) {
-        String oldSource = source;
-        source = newSource;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, MomlPackage.IMPORT_TYPE__SOURCE, oldSource, source));
-    }
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setSource(String newSource) {
+		String oldSource = source;
+		source = newSource;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MomlPackage.IMPORT_TYPE__SOURCE, oldSource, source));
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+				/**
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case MomlPackage.IMPORT_TYPE__BASE:
-                return getBase();
-            case MomlPackage.IMPORT_TYPE__SOURCE:
-                return getSource();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case MomlPackage.IMPORT_TYPE__BASE:
+				return getBase();
+			case MomlPackage.IMPORT_TYPE__SOURCE:
+				return getSource();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case MomlPackage.IMPORT_TYPE__BASE:
-                setBase((String)newValue);
-                return;
-            case MomlPackage.IMPORT_TYPE__SOURCE:
-                setSource((String)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case MomlPackage.IMPORT_TYPE__BASE:
+				setBase((String)newValue);
+				return;
+			case MomlPackage.IMPORT_TYPE__SOURCE:
+				setSource((String)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case MomlPackage.IMPORT_TYPE__BASE:
-                setBase(BASE_EDEFAULT);
-                return;
-            case MomlPackage.IMPORT_TYPE__SOURCE:
-                setSource(SOURCE_EDEFAULT);
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case MomlPackage.IMPORT_TYPE__BASE:
+				setBase(BASE_EDEFAULT);
+				return;
+			case MomlPackage.IMPORT_TYPE__SOURCE:
+				setSource(SOURCE_EDEFAULT);
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case MomlPackage.IMPORT_TYPE__BASE:
-                return BASE_EDEFAULT == null ? base != null : !BASE_EDEFAULT.equals(base);
-            case MomlPackage.IMPORT_TYPE__SOURCE:
-                return SOURCE_EDEFAULT == null ? source != null : !SOURCE_EDEFAULT.equals(source);
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case MomlPackage.IMPORT_TYPE__BASE:
+				return BASE_EDEFAULT == null ? base != null : !BASE_EDEFAULT.equals(base);
+			case MomlPackage.IMPORT_TYPE__SOURCE:
+				return SOURCE_EDEFAULT == null ? source != null : !SOURCE_EDEFAULT.equals(source);
+		}
+		return super.eIsSet(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (base: ");
-        result.append(base);
-        result.append(", source: ");
-        result.append(source);
-        result.append(')');
-        return result.toString();
-    }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (base: ");
+		result.append(base);
+		result.append(", source: ");
+		result.append(source);
+		result.append(')');
+		return result.toString();
+	}
 
 } //ImportTypeImpl

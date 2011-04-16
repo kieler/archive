@@ -48,253 +48,253 @@ import org.ptolemy.moml.RenditionType;
  */
 public class RenditionTypeImpl extends EObjectImpl implements RenditionType {
     /**
-     * The cached value of the '{@link #getGroup() <em>Group</em>}' attribute list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getGroup() <em>Group</em>}' attribute list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getGroup()
-     * @generated
-     * @ordered
-     */
+	 * @see #getGroup()
+	 * @generated
+	 * @ordered
+	 */
     protected FeatureMap group;
 
     /**
-     * The default value of the '{@link #getClass_() <em>Class</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getClass_() <em>Class</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getClass_()
-     * @generated
-     * @ordered
-     */
+	 * @see #getClass_()
+	 * @generated
+	 * @ordered
+	 */
     protected static final String CLASS_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getClass_() <em>Class</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getClass_() <em>Class</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getClass_()
-     * @generated
-     * @ordered
-     */
+	 * @see #getClass_()
+	 * @generated
+	 * @ordered
+	 */
     protected String class_ = CLASS_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected RenditionTypeImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return MomlPackage.Literals.RENDITION_TYPE;
-    }
+		return MomlPackage.Literals.RENDITION_TYPE;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public FeatureMap getGroup() {
-        if (group == null) {
-            group = new BasicFeatureMap(this, MomlPackage.RENDITION_TYPE__GROUP);
-        }
-        return group;
-    }
+		if (group == null) {
+			group = new BasicFeatureMap(this, MomlPackage.RENDITION_TYPE__GROUP);
+		}
+		return group;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EList<ConfigureType> getConfigure() {
-        return getGroup().list(MomlPackage.Literals.RENDITION_TYPE__CONFIGURE);
-    }
+		return getGroup().list(MomlPackage.Literals.RENDITION_TYPE__CONFIGURE);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EList<LocationType> getLocation() {
-        return getGroup().list(MomlPackage.Literals.RENDITION_TYPE__LOCATION);
-    }
+		return getGroup().list(MomlPackage.Literals.RENDITION_TYPE__LOCATION);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EList<PropertyType> getProperty() {
-        return getGroup().list(MomlPackage.Literals.RENDITION_TYPE__PROPERTY);
-    }
+		return getGroup().list(MomlPackage.Literals.RENDITION_TYPE__PROPERTY);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public String getClass_() {
-        return class_;
-    }
+		return class_;
+	}
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public void setClass(String newClass) {
-        String oldClass = class_;
-        class_ = newClass;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, MomlPackage.RENDITION_TYPE__CLASS, oldClass, class_));
-    }
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setClass(String newClass) {
+		String oldClass = class_;
+		class_ = newClass;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MomlPackage.RENDITION_TYPE__CLASS, oldClass, class_));
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+				/**
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-        switch (featureID) {
-            case MomlPackage.RENDITION_TYPE__GROUP:
-                return ((InternalEList<?>)getGroup()).basicRemove(otherEnd, msgs);
-            case MomlPackage.RENDITION_TYPE__CONFIGURE:
-                return ((InternalEList<?>)getConfigure()).basicRemove(otherEnd, msgs);
-            case MomlPackage.RENDITION_TYPE__LOCATION:
-                return ((InternalEList<?>)getLocation()).basicRemove(otherEnd, msgs);
-            case MomlPackage.RENDITION_TYPE__PROPERTY:
-                return ((InternalEList<?>)getProperty()).basicRemove(otherEnd, msgs);
-        }
-        return super.eInverseRemove(otherEnd, featureID, msgs);
-    }
+		switch (featureID) {
+			case MomlPackage.RENDITION_TYPE__GROUP:
+				return ((InternalEList<?>)getGroup()).basicRemove(otherEnd, msgs);
+			case MomlPackage.RENDITION_TYPE__CONFIGURE:
+				return ((InternalEList<?>)getConfigure()).basicRemove(otherEnd, msgs);
+			case MomlPackage.RENDITION_TYPE__LOCATION:
+				return ((InternalEList<?>)getLocation()).basicRemove(otherEnd, msgs);
+			case MomlPackage.RENDITION_TYPE__PROPERTY:
+				return ((InternalEList<?>)getProperty()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case MomlPackage.RENDITION_TYPE__GROUP:
-                if (coreType) return getGroup();
-                return ((FeatureMap.Internal)getGroup()).getWrapper();
-            case MomlPackage.RENDITION_TYPE__CONFIGURE:
-                return getConfigure();
-            case MomlPackage.RENDITION_TYPE__LOCATION:
-                return getLocation();
-            case MomlPackage.RENDITION_TYPE__PROPERTY:
-                return getProperty();
-            case MomlPackage.RENDITION_TYPE__CLASS:
-                return getClass_();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case MomlPackage.RENDITION_TYPE__GROUP:
+				if (coreType) return getGroup();
+				return ((FeatureMap.Internal)getGroup()).getWrapper();
+			case MomlPackage.RENDITION_TYPE__CONFIGURE:
+				return getConfigure();
+			case MomlPackage.RENDITION_TYPE__LOCATION:
+				return getLocation();
+			case MomlPackage.RENDITION_TYPE__PROPERTY:
+				return getProperty();
+			case MomlPackage.RENDITION_TYPE__CLASS:
+				return getClass_();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case MomlPackage.RENDITION_TYPE__GROUP:
-                ((FeatureMap.Internal)getGroup()).set(newValue);
-                return;
-            case MomlPackage.RENDITION_TYPE__CONFIGURE:
-                getConfigure().clear();
-                getConfigure().addAll((Collection<? extends ConfigureType>)newValue);
-                return;
-            case MomlPackage.RENDITION_TYPE__LOCATION:
-                getLocation().clear();
-                getLocation().addAll((Collection<? extends LocationType>)newValue);
-                return;
-            case MomlPackage.RENDITION_TYPE__PROPERTY:
-                getProperty().clear();
-                getProperty().addAll((Collection<? extends PropertyType>)newValue);
-                return;
-            case MomlPackage.RENDITION_TYPE__CLASS:
-                setClass((String)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case MomlPackage.RENDITION_TYPE__GROUP:
+				((FeatureMap.Internal)getGroup()).set(newValue);
+				return;
+			case MomlPackage.RENDITION_TYPE__CONFIGURE:
+				getConfigure().clear();
+				getConfigure().addAll((Collection<? extends ConfigureType>)newValue);
+				return;
+			case MomlPackage.RENDITION_TYPE__LOCATION:
+				getLocation().clear();
+				getLocation().addAll((Collection<? extends LocationType>)newValue);
+				return;
+			case MomlPackage.RENDITION_TYPE__PROPERTY:
+				getProperty().clear();
+				getProperty().addAll((Collection<? extends PropertyType>)newValue);
+				return;
+			case MomlPackage.RENDITION_TYPE__CLASS:
+				setClass((String)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case MomlPackage.RENDITION_TYPE__GROUP:
-                getGroup().clear();
-                return;
-            case MomlPackage.RENDITION_TYPE__CONFIGURE:
-                getConfigure().clear();
-                return;
-            case MomlPackage.RENDITION_TYPE__LOCATION:
-                getLocation().clear();
-                return;
-            case MomlPackage.RENDITION_TYPE__PROPERTY:
-                getProperty().clear();
-                return;
-            case MomlPackage.RENDITION_TYPE__CLASS:
-                setClass(CLASS_EDEFAULT);
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case MomlPackage.RENDITION_TYPE__GROUP:
+				getGroup().clear();
+				return;
+			case MomlPackage.RENDITION_TYPE__CONFIGURE:
+				getConfigure().clear();
+				return;
+			case MomlPackage.RENDITION_TYPE__LOCATION:
+				getLocation().clear();
+				return;
+			case MomlPackage.RENDITION_TYPE__PROPERTY:
+				getProperty().clear();
+				return;
+			case MomlPackage.RENDITION_TYPE__CLASS:
+				setClass(CLASS_EDEFAULT);
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case MomlPackage.RENDITION_TYPE__GROUP:
-                return group != null && !group.isEmpty();
-            case MomlPackage.RENDITION_TYPE__CONFIGURE:
-                return !getConfigure().isEmpty();
-            case MomlPackage.RENDITION_TYPE__LOCATION:
-                return !getLocation().isEmpty();
-            case MomlPackage.RENDITION_TYPE__PROPERTY:
-                return !getProperty().isEmpty();
-            case MomlPackage.RENDITION_TYPE__CLASS:
-                return CLASS_EDEFAULT == null ? class_ != null : !CLASS_EDEFAULT.equals(class_);
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case MomlPackage.RENDITION_TYPE__GROUP:
+				return group != null && !group.isEmpty();
+			case MomlPackage.RENDITION_TYPE__CONFIGURE:
+				return !getConfigure().isEmpty();
+			case MomlPackage.RENDITION_TYPE__LOCATION:
+				return !getLocation().isEmpty();
+			case MomlPackage.RENDITION_TYPE__PROPERTY:
+				return !getProperty().isEmpty();
+			case MomlPackage.RENDITION_TYPE__CLASS:
+				return CLASS_EDEFAULT == null ? class_ != null : !CLASS_EDEFAULT.equals(class_);
+		}
+		return super.eIsSet(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (group: ");
-        result.append(group);
-        result.append(", class: ");
-        result.append(class_);
-        result.append(')');
-        return result.toString();
-    }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (group: ");
+		result.append(group);
+		result.append(", class: ");
+		result.append(class_);
+		result.append(')');
+		return result.toString();
+	}
 
 } //RenditionTypeImpl

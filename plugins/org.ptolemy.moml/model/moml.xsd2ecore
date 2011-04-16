@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xsd2ecore:XSD2EcoreMappingRoot xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsd2ecore="http://www.eclipse.org/emf/2002/XSD2Ecore" inputs="../../org.ptolemy.moml/model/moml.xsd#/"
+    outputs="Moml.ecore#/" topToBottom="true">
+  <nested inputs="bundleentry://651.fwk16197143/cache/www.w3.org/2001/MagicXMLSchema.xsd#//anySimpleType;XSDSimpleTypeDefinition=1"
+      outputs="http://www.eclipse.org/emf/2003/XMLType#//AnySimpleType"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//configure;XSDElementDeclaration=2/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//ConfigureType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//configure;XSDElementDeclaration=2/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//ConfigureType/source"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//deleteEntity;XSDElementDeclaration=3/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//DeleteEntityType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//deleteEntity;XSDElementDeclaration=3/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//DeleteEntityType/name"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//deletePort;XSDElementDeclaration=4/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//DeletePortType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//deletePort;XSDElementDeclaration=4/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//DeletePortType/name"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//deleteRelation;XSDElementDeclaration=6/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//DeleteRelationType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//deleteRelation;XSDElementDeclaration=6/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//DeleteRelationType/name"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//doc;XSDElementDeclaration=9/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//DocType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//doc;XSDElementDeclaration=9/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//DocType/name"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//rename;XSDElementDeclaration=19/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//RenameType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//rename;XSDElementDeclaration=19/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//RenameType/name"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//property;XSDElementDeclaration=17/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//PropertyType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//property;XSDElementDeclaration=17/XSDComplexTypeDefinition/XSDParticle"
+        outputs="Moml.ecore#//PropertyType/group"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//property;XSDElementDeclaration=17/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="Moml.ecore#//PropertyType/configure"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//property;XSDElementDeclaration=17/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="Moml.ecore#//PropertyType/doc"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//property;XSDElementDeclaration=17/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=2"
+        outputs="Moml.ecore#//PropertyType/property"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//property;XSDElementDeclaration=17/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=3"
+        outputs="Moml.ecore#//PropertyType/rename"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//property;XSDElementDeclaration=17/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//PropertyType/class"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//property;XSDElementDeclaration=17/XSDComplexTypeDefinition/XSDAttributeUse=1"
+        outputs="Moml.ecore#//PropertyType/name"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//property;XSDElementDeclaration=17/XSDComplexTypeDefinition/XSDAttributeUse=2"
+        outputs="Moml.ecore#//PropertyType/value"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//director;XSDElementDeclaration=8/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//DirectorType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//director;XSDElementDeclaration=8/XSDComplexTypeDefinition/XSDParticle"
+        outputs="Moml.ecore#//DirectorType/group"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//director;XSDElementDeclaration=8/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="Moml.ecore#//DirectorType/configure"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//director;XSDElementDeclaration=8/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="Moml.ecore#//DirectorType/doc"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//director;XSDElementDeclaration=8/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=2"
+        outputs="Moml.ecore#//DirectorType/property"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//director;XSDElementDeclaration=8/XSDComplexTypeDefinition/XSDAttributeUse=1"
+        outputs="Moml.ecore#//DirectorType/class"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//director;XSDElementDeclaration=8/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//DirectorType/name"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//display;XSDElementDeclaration=7/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//DisplayType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//display;XSDElementDeclaration=7/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//DisplayType/name"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//any;XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//Any">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//any;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="Moml.ecore#//Any/any"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//group;XSDElementDeclaration=11/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//GroupType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//group;XSDElementDeclaration=11/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//GroupType/name"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//import;XSDElementDeclaration=12/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//ImportType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//import;XSDElementDeclaration=12/XSDComplexTypeDefinition/XSDAttributeUse=1"
+        outputs="Moml.ecore#//ImportType/base"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//import;XSDElementDeclaration=12/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//ImportType/source"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//input;XSDElementDeclaration=13/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//InputType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//input;XSDElementDeclaration=13/XSDComplexTypeDefinition/XSDAttributeUse=1"
+        outputs="Moml.ecore#//InputType/base"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//input;XSDElementDeclaration=13/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//InputType/source"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//link;XSDElementDeclaration=14/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//LinkType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//link;XSDElementDeclaration=14/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//LinkType/insertAt"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//link;XSDElementDeclaration=14/XSDComplexTypeDefinition/XSDAttributeUse=1"
+        outputs="Moml.ecore#//LinkType/insertInsideAt"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//link;XSDElementDeclaration=14/XSDComplexTypeDefinition/XSDAttributeUse=2"
+        outputs="Moml.ecore#//LinkType/port"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//link;XSDElementDeclaration=14/XSDComplexTypeDefinition/XSDAttributeUse=3"
+        outputs="Moml.ecore#//LinkType/relation"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//link;XSDElementDeclaration=14/XSDComplexTypeDefinition/XSDAttributeUse=4"
+        outputs="Moml.ecore#//LinkType/relation1"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//link;XSDElementDeclaration=14/XSDComplexTypeDefinition/XSDAttributeUse=5"
+        outputs="Moml.ecore#//LinkType/relation2"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//link;XSDElementDeclaration=14/XSDComplexTypeDefinition/XSDAttributeUse=6"
+        outputs="Moml.ecore#//LinkType/vertex"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//port;XSDElementDeclaration=16/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//PortType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//port;XSDElementDeclaration=16/XSDComplexTypeDefinition/XSDParticle"
+        outputs="Moml.ecore#//PortType/group"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//port;XSDElementDeclaration=16/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="Moml.ecore#//PortType/configure"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//port;XSDElementDeclaration=16/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="Moml.ecore#//PortType/doc"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//port;XSDElementDeclaration=16/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=2"
+        outputs="Moml.ecore#//PortType/property"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//port;XSDElementDeclaration=16/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=3"
+        outputs="Moml.ecore#//PortType/rename"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//port;XSDElementDeclaration=16/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//PortType/class"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//port;XSDElementDeclaration=16/XSDComplexTypeDefinition/XSDAttributeUse=1"
+        outputs="Moml.ecore#//PortType/name"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//location;XSDElementDeclaration=15/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//LocationType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//location;XSDElementDeclaration=15/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//LocationType/value"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//vertex;XSDElementDeclaration=22/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//VertexType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//vertex;XSDElementDeclaration=22/XSDComplexTypeDefinition/XSDParticle"
+        outputs="Moml.ecore#//VertexType/group"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//vertex;XSDElementDeclaration=22/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="Moml.ecore#//VertexType/configure"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//vertex;XSDElementDeclaration=22/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="Moml.ecore#//VertexType/doc"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//vertex;XSDElementDeclaration=22/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=2"
+        outputs="Moml.ecore#//VertexType/location"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//vertex;XSDElementDeclaration=22/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=3"
+        outputs="Moml.ecore#//VertexType/property"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//vertex;XSDElementDeclaration=22/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=4"
+        outputs="Moml.ecore#//VertexType/rename"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//vertex;XSDElementDeclaration=22/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//VertexType/name"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//vertex;XSDElementDeclaration=22/XSDComplexTypeDefinition/XSDAttributeUse=1"
+        outputs="Moml.ecore#//VertexType/pathTo"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//vertex;XSDElementDeclaration=22/XSDComplexTypeDefinition/XSDAttributeUse=2"
+        outputs="Moml.ecore#//VertexType/value"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//relation;XSDElementDeclaration=18/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//RelationType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//relation;XSDElementDeclaration=18/XSDComplexTypeDefinition/XSDParticle"
+        outputs="Moml.ecore#//RelationType/group"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//relation;XSDElementDeclaration=18/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="Moml.ecore#//RelationType/configure"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//relation;XSDElementDeclaration=18/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="Moml.ecore#//RelationType/doc"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//relation;XSDElementDeclaration=18/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=2"
+        outputs="Moml.ecore#//RelationType/property"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//relation;XSDElementDeclaration=18/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=3"
+        outputs="Moml.ecore#//RelationType/rename"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//relation;XSDElementDeclaration=18/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=4"
+        outputs="Moml.ecore#//RelationType/vertex"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//relation;XSDElementDeclaration=18/XSDComplexTypeDefinition/XSDAttributeUse=1"
+        outputs="Moml.ecore#//RelationType/class"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//relation;XSDElementDeclaration=18/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//RelationType/name"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//rendition;XSDElementDeclaration=20/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//RenditionType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//rendition;XSDElementDeclaration=20/XSDComplexTypeDefinition/XSDParticle"
+        outputs="Moml.ecore#//RenditionType/group"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//rendition;XSDElementDeclaration=20/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="Moml.ecore#//RenditionType/configure"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//rendition;XSDElementDeclaration=20/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="Moml.ecore#//RenditionType/location"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//rendition;XSDElementDeclaration=20/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=2"
+        outputs="Moml.ecore#//RenditionType/property"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//rendition;XSDElementDeclaration=20/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//RenditionType/class"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//unlink;XSDElementDeclaration=21/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//UnlinkType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//unlink;XSDElementDeclaration=21/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//UnlinkType/index"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//unlink;XSDElementDeclaration=21/XSDComplexTypeDefinition/XSDAttributeUse=1"
+        outputs="Moml.ecore#//UnlinkType/insideIndex"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//unlink;XSDElementDeclaration=21/XSDComplexTypeDefinition/XSDAttributeUse=2"
+        outputs="Moml.ecore#//UnlinkType/port"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//unlink;XSDElementDeclaration=21/XSDComplexTypeDefinition/XSDAttributeUse=5"
+        outputs="Moml.ecore#//UnlinkType/relation"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//unlink;XSDElementDeclaration=21/XSDComplexTypeDefinition/XSDAttributeUse=3"
+        outputs="Moml.ecore#//UnlinkType/relation1"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//unlink;XSDElementDeclaration=21/XSDComplexTypeDefinition/XSDAttributeUse=4"
+        outputs="Moml.ecore#//UnlinkType/relation2"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//EntityType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDParticle"
+        outputs="Moml.ecore#//EntityType/group"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="Moml.ecore#//EntityType/class"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="Moml.ecore#//EntityType/configure"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=2"
+        outputs="Moml.ecore#//EntityType/deleteEntity"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=3"
+        outputs="Moml.ecore#//EntityType/deletePort"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=4"
+        outputs="Moml.ecore#//EntityType/deleteRelation"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=5"
+        outputs="Moml.ecore#//EntityType/director"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=6"
+        outputs="Moml.ecore#//EntityType/doc"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=7"
+        outputs="Moml.ecore#//EntityType/display"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=8"
+        outputs="Moml.ecore#//EntityType/entity"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=9"
+        outputs="Moml.ecore#//EntityType/group1"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=10"
+        outputs="Moml.ecore#//EntityType/import"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=11"
+        outputs="Moml.ecore#//EntityType/input"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=12"
+        outputs="Moml.ecore#//EntityType/link"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=13"
+        outputs="Moml.ecore#//EntityType/port"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=14"
+        outputs="Moml.ecore#//EntityType/property"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=15"
+        outputs="Moml.ecore#//EntityType/relation"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=16"
+        outputs="Moml.ecore#//EntityType/rename"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=17"
+        outputs="Moml.ecore#//EntityType/rendition"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=18"
+        outputs="Moml.ecore#//EntityType/unlink"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDAttributeUse=1"
+        outputs="Moml.ecore#//EntityType/class1"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//EntityType/name"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10/XSDComplexTypeDefinition/XSDAttributeUse=2"
+        outputs="Moml.ecore#//EntityType/source"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//ClassType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDParticle"
+        outputs="Moml.ecore#//ClassType/group"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="Moml.ecore#//ClassType/class"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="Moml.ecore#//ClassType/configure"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=2"
+        outputs="Moml.ecore#//ClassType/deleteEntity"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=3"
+        outputs="Moml.ecore#//ClassType/deletePort"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=4"
+        outputs="Moml.ecore#//ClassType/deleteRelation"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=5"
+        outputs="Moml.ecore#//ClassType/director"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=6"
+        outputs="Moml.ecore#//ClassType/display"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=7"
+        outputs="Moml.ecore#//ClassType/doc"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=8"
+        outputs="Moml.ecore#//ClassType/entity"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=9"
+        outputs="Moml.ecore#//ClassType/group1"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=10"
+        outputs="Moml.ecore#//ClassType/import"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=11"
+        outputs="Moml.ecore#//ClassType/input"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=12"
+        outputs="Moml.ecore#//ClassType/link"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=13"
+        outputs="Moml.ecore#//ClassType/port"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=14"
+        outputs="Moml.ecore#//ClassType/property"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=15"
+        outputs="Moml.ecore#//ClassType/relation"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=16"
+        outputs="Moml.ecore#//ClassType/rename"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=17"
+        outputs="Moml.ecore#//ClassType/rendition"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=18"
+        outputs="Moml.ecore#//ClassType/unlink"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDAttributeUse=1"
+        outputs="Moml.ecore#//ClassType/extends"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//ClassType/name"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1/XSDComplexTypeDefinition/XSDAttributeUse=2"
+        outputs="Moml.ecore#//ClassType/source"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//class;XSDElementDeclaration=1"
+      outputs="Moml.ecore#//DocumentRoot/class"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//configure;XSDElementDeclaration=2"
+      outputs="Moml.ecore#//DocumentRoot/configure"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//deleteEntity;XSDElementDeclaration=3"
+      outputs="Moml.ecore#//DocumentRoot/deleteEntity"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//deletePort;XSDElementDeclaration=4"
+      outputs="Moml.ecore#//DocumentRoot/deletePort"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//deleteProperty;XSDElementDeclaration=5/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//DeletePropertyType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//deleteProperty;XSDElementDeclaration=5/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//DeletePropertyType/name"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//deleteProperty;XSDElementDeclaration=5"
+      outputs="Moml.ecore#//DocumentRoot/deleteProperty"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//deleteRelation;XSDElementDeclaration=6"
+      outputs="Moml.ecore#//DocumentRoot/deleteRelation"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//director;XSDElementDeclaration=8"
+      outputs="Moml.ecore#//DocumentRoot/director"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//display;XSDElementDeclaration=7"
+      outputs="Moml.ecore#//DocumentRoot/display"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//doc;XSDElementDeclaration=9"
+      outputs="Moml.ecore#//DocumentRoot/doc"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//entity;XSDElementDeclaration=10"
+      outputs="Moml.ecore#//DocumentRoot/entity"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//group;XSDElementDeclaration=11"
+      outputs="Moml.ecore#//DocumentRoot/group"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//import;XSDElementDeclaration=12"
+      outputs="Moml.ecore#//DocumentRoot/import"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//input;XSDElementDeclaration=13"
+      outputs="Moml.ecore#//DocumentRoot/input"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//link;XSDElementDeclaration=14"
+      outputs="Moml.ecore#//DocumentRoot/link"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//location;XSDElementDeclaration=15"
+      outputs="Moml.ecore#//DocumentRoot/location"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition"
+      outputs="Moml.ecore#//ModelType">
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle"
+        outputs="Moml.ecore#//ModelType/group"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="Moml.ecore#//ModelType/class"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="Moml.ecore#//ModelType/configure"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=2"
+        outputs="Moml.ecore#//ModelType/deleteEntity"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=3"
+        outputs="Moml.ecore#//ModelType/deletePort"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=4"
+        outputs="Moml.ecore#//ModelType/deleteRelation"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=5"
+        outputs="Moml.ecore#//ModelType/director"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=6"
+        outputs="Moml.ecore#//ModelType/doc"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=7"
+        outputs="Moml.ecore#//ModelType/entity"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=8"
+        outputs="Moml.ecore#//ModelType/group1"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=9"
+        outputs="Moml.ecore#//ModelType/import"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=10"
+        outputs="Moml.ecore#//ModelType/input"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=11"
+        outputs="Moml.ecore#//ModelType/link"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=12"
+        outputs="Moml.ecore#//ModelType/property"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=13"
+        outputs="Moml.ecore#//ModelType/relation"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=14"
+        outputs="Moml.ecore#//ModelType/rename"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=15"
+        outputs="Moml.ecore#//ModelType/rendition"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=16"
+        outputs="Moml.ecore#//ModelType/unlink"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition/XSDAttributeUse=1"
+        outputs="Moml.ecore#//ModelType/class1"/>
+    <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration/XSDComplexTypeDefinition/XSDAttributeUse"
+        outputs="Moml.ecore#//ModelType/name"/>
+  </nested>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//model;XSDElementDeclaration"
+      outputs="Moml.ecore#//DocumentRoot/model"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//port;XSDElementDeclaration=16"
+      outputs="Moml.ecore#//DocumentRoot/port"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//property;XSDElementDeclaration=17"
+      outputs="Moml.ecore#//DocumentRoot/property"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//relation;XSDElementDeclaration=18"
+      outputs="Moml.ecore#//DocumentRoot/relation"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//rename;XSDElementDeclaration=19"
+      outputs="Moml.ecore#//DocumentRoot/rename"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//rendition;XSDElementDeclaration=20"
+      outputs="Moml.ecore#//DocumentRoot/rendition"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//unlink;XSDElementDeclaration=21"
+      outputs="Moml.ecore#//DocumentRoot/unlink"/>
+  <nested inputs="../../org.ptolemy.moml/model/moml.xsd#//vertex;XSDElementDeclaration=22"
+      outputs="Moml.ecore#//DocumentRoot/vertex"/>
+</xsd2ecore:XSD2EcoreMappingRoot>

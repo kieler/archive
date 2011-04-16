@@ -36,155 +36,155 @@ import org.ptolemy.moml.MomlPackage;
  */
 public class AnyImpl extends EObjectImpl implements Any {
     /**
-     * The cached value of the '{@link #getMixed() <em>Mixed</em>}' attribute list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getMixed() <em>Mixed</em>}' attribute list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getMixed()
-     * @generated
-     * @ordered
-     */
+	 * @see #getMixed()
+	 * @generated
+	 * @ordered
+	 */
     protected FeatureMap mixed;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected AnyImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return MomlPackage.Literals.ANY;
-    }
+		return MomlPackage.Literals.ANY;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public FeatureMap getMixed() {
-        if (mixed == null) {
-            mixed = new BasicFeatureMap(this, MomlPackage.ANY__MIXED);
-        }
-        return mixed;
-    }
+		if (mixed == null) {
+			mixed = new BasicFeatureMap(this, MomlPackage.ANY__MIXED);
+		}
+		return mixed;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public FeatureMap getAny() {
-        return (FeatureMap)getMixed().<FeatureMap.Entry>list(MomlPackage.Literals.ANY__ANY);
-    }
+		return (FeatureMap)getMixed().<FeatureMap.Entry>list(MomlPackage.Literals.ANY__ANY);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-        switch (featureID) {
-            case MomlPackage.ANY__MIXED:
-                return ((InternalEList<?>)getMixed()).basicRemove(otherEnd, msgs);
-            case MomlPackage.ANY__ANY:
-                return ((InternalEList<?>)getAny()).basicRemove(otherEnd, msgs);
-        }
-        return super.eInverseRemove(otherEnd, featureID, msgs);
-    }
+		switch (featureID) {
+			case MomlPackage.ANY__MIXED:
+				return ((InternalEList<?>)getMixed()).basicRemove(otherEnd, msgs);
+			case MomlPackage.ANY__ANY:
+				return ((InternalEList<?>)getAny()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case MomlPackage.ANY__MIXED:
-                if (coreType) return getMixed();
-                return ((FeatureMap.Internal)getMixed()).getWrapper();
-            case MomlPackage.ANY__ANY:
-                if (coreType) return getAny();
-                return ((FeatureMap.Internal)getAny()).getWrapper();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case MomlPackage.ANY__MIXED:
+				if (coreType) return getMixed();
+				return ((FeatureMap.Internal)getMixed()).getWrapper();
+			case MomlPackage.ANY__ANY:
+				if (coreType) return getAny();
+				return ((FeatureMap.Internal)getAny()).getWrapper();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case MomlPackage.ANY__MIXED:
-                ((FeatureMap.Internal)getMixed()).set(newValue);
-                return;
-            case MomlPackage.ANY__ANY:
-                ((FeatureMap.Internal)getAny()).set(newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case MomlPackage.ANY__MIXED:
+				((FeatureMap.Internal)getMixed()).set(newValue);
+				return;
+			case MomlPackage.ANY__ANY:
+				((FeatureMap.Internal)getAny()).set(newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case MomlPackage.ANY__MIXED:
-                getMixed().clear();
-                return;
-            case MomlPackage.ANY__ANY:
-                getAny().clear();
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case MomlPackage.ANY__MIXED:
+				getMixed().clear();
+				return;
+			case MomlPackage.ANY__ANY:
+				getAny().clear();
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case MomlPackage.ANY__MIXED:
-                return mixed != null && !mixed.isEmpty();
-            case MomlPackage.ANY__ANY:
-                return !getAny().isEmpty();
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case MomlPackage.ANY__MIXED:
+				return mixed != null && !mixed.isEmpty();
+			case MomlPackage.ANY__ANY:
+				return !getAny().isEmpty();
+		}
+		return super.eIsSet(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (mixed: ");
-        result.append(mixed);
-        result.append(')');
-        return result.toString();
-    }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (mixed: ");
+		result.append(mixed);
+		result.append(')');
+		return result.toString();
+	}
 
 } //AnyImpl

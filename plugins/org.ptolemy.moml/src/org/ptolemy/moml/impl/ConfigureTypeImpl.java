@@ -38,186 +38,186 @@ import org.ptolemy.moml.MomlPackage;
  */
 public class ConfigureTypeImpl extends EObjectImpl implements ConfigureType {
     /**
-     * The cached value of the '{@link #getMixed() <em>Mixed</em>}' attribute list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getMixed() <em>Mixed</em>}' attribute list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getMixed()
-     * @generated
-     * @ordered
-     */
+	 * @see #getMixed()
+	 * @generated
+	 * @ordered
+	 */
     protected FeatureMap mixed;
 
     /**
-     * The default value of the '{@link #getSource() <em>Source</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getSource() <em>Source</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getSource()
-     * @generated
-     * @ordered
-     */
+	 * @see #getSource()
+	 * @generated
+	 * @ordered
+	 */
     protected static final String SOURCE_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getSource() <em>Source</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getSource() <em>Source</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getSource()
-     * @generated
-     * @ordered
-     */
+	 * @see #getSource()
+	 * @generated
+	 * @ordered
+	 */
     protected String source = SOURCE_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ConfigureTypeImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return MomlPackage.Literals.CONFIGURE_TYPE;
-    }
+		return MomlPackage.Literals.CONFIGURE_TYPE;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public FeatureMap getMixed() {
-        if (mixed == null) {
-            mixed = new BasicFeatureMap(this, MomlPackage.CONFIGURE_TYPE__MIXED);
-        }
-        return mixed;
-    }
+		if (mixed == null) {
+			mixed = new BasicFeatureMap(this, MomlPackage.CONFIGURE_TYPE__MIXED);
+		}
+		return mixed;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public String getSource() {
-        return source;
-    }
+		return source;
+	}
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public void setSource(String newSource) {
-        String oldSource = source;
-        source = newSource;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, MomlPackage.CONFIGURE_TYPE__SOURCE, oldSource, source));
-    }
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setSource(String newSource) {
+		String oldSource = source;
+		source = newSource;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MomlPackage.CONFIGURE_TYPE__SOURCE, oldSource, source));
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+				/**
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-        switch (featureID) {
-            case MomlPackage.CONFIGURE_TYPE__MIXED:
-                return ((InternalEList<?>)getMixed()).basicRemove(otherEnd, msgs);
-        }
-        return super.eInverseRemove(otherEnd, featureID, msgs);
-    }
+		switch (featureID) {
+			case MomlPackage.CONFIGURE_TYPE__MIXED:
+				return ((InternalEList<?>)getMixed()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case MomlPackage.CONFIGURE_TYPE__MIXED:
-                if (coreType) return getMixed();
-                return ((FeatureMap.Internal)getMixed()).getWrapper();
-            case MomlPackage.CONFIGURE_TYPE__SOURCE:
-                return getSource();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case MomlPackage.CONFIGURE_TYPE__MIXED:
+				if (coreType) return getMixed();
+				return ((FeatureMap.Internal)getMixed()).getWrapper();
+			case MomlPackage.CONFIGURE_TYPE__SOURCE:
+				return getSource();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case MomlPackage.CONFIGURE_TYPE__MIXED:
-                ((FeatureMap.Internal)getMixed()).set(newValue);
-                return;
-            case MomlPackage.CONFIGURE_TYPE__SOURCE:
-                setSource((String)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case MomlPackage.CONFIGURE_TYPE__MIXED:
+				((FeatureMap.Internal)getMixed()).set(newValue);
+				return;
+			case MomlPackage.CONFIGURE_TYPE__SOURCE:
+				setSource((String)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case MomlPackage.CONFIGURE_TYPE__MIXED:
-                getMixed().clear();
-                return;
-            case MomlPackage.CONFIGURE_TYPE__SOURCE:
-                setSource(SOURCE_EDEFAULT);
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case MomlPackage.CONFIGURE_TYPE__MIXED:
+				getMixed().clear();
+				return;
+			case MomlPackage.CONFIGURE_TYPE__SOURCE:
+				setSource(SOURCE_EDEFAULT);
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case MomlPackage.CONFIGURE_TYPE__MIXED:
-                return mixed != null && !mixed.isEmpty();
-            case MomlPackage.CONFIGURE_TYPE__SOURCE:
-                return SOURCE_EDEFAULT == null ? source != null : !SOURCE_EDEFAULT.equals(source);
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case MomlPackage.CONFIGURE_TYPE__MIXED:
+				return mixed != null && !mixed.isEmpty();
+			case MomlPackage.CONFIGURE_TYPE__SOURCE:
+				return SOURCE_EDEFAULT == null ? source != null : !SOURCE_EDEFAULT.equals(source);
+		}
+		return super.eIsSet(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (mixed: ");
-        result.append(mixed);
-        result.append(", source: ");
-        result.append(source);
-        result.append(')');
-        return result.toString();
-    }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (mixed: ");
+		result.append(mixed);
+		result.append(", source: ");
+		result.append(source);
+		result.append(')');
+		return result.toString();
+	}
 
 } //ConfigureTypeImpl

@@ -49,6 +49,7 @@
         <xs:element ref="deletePort"/>
         <xs:element ref="deleteRelation"/>
         <xs:element ref="director"/>
+        <xs:element ref='display'/>
         <xs:element ref="doc"/>
         <xs:element ref="entity"/>
         <xs:element ref="group"/>
@@ -92,6 +93,11 @@
       <xs:attribute name="name" use="required"/>
     </xs:complexType>
   </xs:element>
+ <xs:element name='display'>
+  <xs:complexType>
+  <xs:attribute name='name' use='required'/>
+  </xs:complexType>
+ </xs:element>
   <!-- NOTE: deprecated.  Use property instead. -->
   <xs:element name="director">
     <xs:complexType>
@@ -119,6 +125,7 @@
         <xs:element ref="deleteRelation"/>
         <xs:element ref="director"/>
         <xs:element ref="doc"/>
+        <xs:element ref='display'/>
         <xs:element ref="entity"/>
         <xs:element ref="group"/>
         <xs:element ref="import"/>

@@ -27,30 +27,30 @@ import org.ptolemy.moml.MomlPackage;
 public class MomlXMLProcessor extends XMLProcessor {
 
     /**
-     * Public constructor to instantiate the helper.
-     * <!-- begin-user-doc -->
+	 * Public constructor to instantiate the helper.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public MomlXMLProcessor() {
-        super(new EPackageRegistryImpl(EPackage.Registry.INSTANCE));
-        extendedMetaData.putPackage(null, MomlPackage.eINSTANCE);
-    }
+		super(new EPackageRegistryImpl(EPackage.Registry.INSTANCE));
+		extendedMetaData.putPackage(null, MomlPackage.eINSTANCE);
+	}
     
     /**
-     * Register for "*" and "xml" file extensions the MomlResourceFactoryImpl factory.
-     * <!-- begin-user-doc -->
+	 * Register for "*" and "xml" file extensions the MomlResourceFactoryImpl factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected Map<String, Resource.Factory> getRegistrations() {
-        if (registrations == null) {
-            super.getRegistrations();
-            registrations.put(XML_EXTENSION, new MomlResourceFactoryImpl());
-            registrations.put(STAR_EXTENSION, new MomlResourceFactoryImpl());
-        }
-        return registrations;
-    }
+		if (registrations == null) {
+			super.getRegistrations();
+			registrations.put(XML_EXTENSION, new MomlResourceFactoryImpl());
+			registrations.put(STAR_EXTENSION, new MomlResourceFactoryImpl());
+		}
+		return registrations;
+	}
 
 } //MomlXMLProcessor
