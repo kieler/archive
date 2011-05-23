@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Date;
 
 /**
  * Writer for HTML code that is reused in different documents.
@@ -71,6 +72,7 @@ public final class HtmlWriter {
      * @throws IOException if writing fails
      */
     public static void writeFooter(final Writer writer) throws IOException {
+        writer.write("<p>Updated " + new Date().toString() + "</p>\n");
         writer.write(HTML_FOOTER);
     }
     
