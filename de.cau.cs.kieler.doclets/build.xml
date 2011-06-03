@@ -1,5 +1,7 @@
 <project default="build" basedir=".">
 	
+	<property environment="system"/>
+	<property name="baseLocation" location="${system.baseLocation}" />
 	<property name="srcdir" value="${basedir}/src" />
 	<property name="bindir" value="${basedir}/bin" />
 	<property name="jardir" value="${basedir}" />
