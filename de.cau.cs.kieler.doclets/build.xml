@@ -7,7 +7,16 @@
 	<target name="build">
 		<mkdir dir="${bindir}" />
 		<mkdir dir="${jardir}" />
-		<javac destdir="${bindir}" srcdir="${srcdir}" />
+		<javac destdir="${bindir}" srcdir="${srcdir}">
+		  <classpath>
+		    <fileset dir="${baseLocation}/plugins">
+		      <include name="**/org.eclipse.emf.common_*.jar" />
+		      <include name="**/org.eclipse.emf.ecore_*.jar" />
+		      <include name="**/org.eclipse.emf.ecore.xmi_*.jar" />
+		      <include name="**/org.eclipse.uml2.uml_*.jar" />
+		    </fileset>
+		  </classpath>
+		</javac>
 		<jar destfile="${jardir}/doclets.jar" basedir="${bindir}" filesetmanifest="merge"/>
 	</target>
 
