@@ -217,9 +217,7 @@ public class ClassDiagGenerator {
                     || typeName.endsWith("Set");
             if (isList) {
                 // handle type arguments of generic types
-                System.out.println(fieldDoc.containingClass().qualifiedName() + "." + fieldDoc.name() + "()");
                 ParameterizedType paramType = fieldDoc.type().asParameterizedType();
-                System.out.println("  " + fieldDoc.type().toString() + paramType != null ? paramType.typeArguments().toString() : "");
                 if (paramType != null && paramType.typeArguments().length > 0) {
                     ClassDoc typeArg = paramType.typeArguments()[0].asClassDoc();
                     typeClazz = classMap.get(typeArg.qualifiedName());
