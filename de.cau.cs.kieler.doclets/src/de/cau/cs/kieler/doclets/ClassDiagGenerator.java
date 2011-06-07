@@ -76,37 +76,8 @@ public class ClassDiagGenerator {
         Map<String, Package> packageMap = new HashMap<String, Package>();
         Map<String, Classifier> classMap = new HashMap<String, Classifier>();
         for (ClassDoc classDoc : rootDoc.classes()) {
-            if (classDoc.isPublic()) {
-                // create package
-                PackageDoc packageDoc = classDoc.containingPackage();
-                Package pakkage = packageMap.get(packageDoc.name());
-                if (pakkage == null) {
-                    pakkage = umlFactory.createPackage();
-                    model.getPackagedElements().add(pakkage);
-                    packageMap.put(packageDoc.name(), pakkage);
-                }
-                
-                // create class
-                Classifier clazz;
-                if (classDoc.isInterface()) {
-                    clazz = umlFactory.createInterface();
-                } else if (classDoc.isEnum()) {
-                    // create enumeration literals
-                    Enumeration enumeration = umlFactory.createEnumeration();
-                    for (FieldDoc enumConst : classDoc.enumConstants()) {
-                        EnumerationLiteral literal = umlFactory.createEnumerationLiteral();
-                        literal.setName(enumConst.name());
-                        enumeration.getOwnedLiterals().add(literal);
-                    }
-                    clazz = enumeration;
-                } else {
-                    clazz = umlFactory.createClass();
-                }
-                clazz.setPackage(pakkage);
-                clazz.setName(classDoc.name());
-                clazz.setIsAbstract(classDoc.isAbstract());
-                clazz.setVisibility(getVisibility(classDoc));
-                pakkage.getPackagedElements().add(clazz);
+            Classifier clazz = createClass(umlFactory, classDoc, model, packageMap);
+            if (clazz != null) {
                 classMap.put(classDoc.qualifiedName(), clazz);
             }
         }
@@ -137,50 +108,9 @@ public class ClassDiagGenerator {
                 // create associations and properties
                 for (FieldDoc fieldDoc : classDoc.fields()) {
                     if (fieldDoc.constantValue() == null) {
-                        boolean isList = false;
-                        ClassDoc type = fieldDoc.type().asClassDoc();
-                        Classifier typeClazz = classMap.get(type == null ? null : type.qualifiedName());
-                        if (typeClazz == null) {
-                            // handle type arguments of generic types
-                            ParameterizedType paramType = fieldDoc.type().asParameterizedType();
-                            if (paramType != null && paramType.typeArguments().length > 0) {
-                                type = paramType.typeArguments()[0].asClassDoc();
-                                typeClazz = classMap.get(type == null ? null : type.qualifiedName());
-                            }
-                            if (typeClazz != null) {
-                                String typeName = fieldDoc.type().typeName();
-                                isList = typeName.endsWith("List") || typeName.endsWith("Collection");
-                            }
-                        }
-                        Property property = null;
-                        if (typeClazz != null) {
-                            // create an association and property for the field
-                            Association association = umlFactory.createAssociation();
-                            clazz.getPackage().getPackagedElements().add(association);
-                            property = umlFactory.createProperty();
-                            property.setType(typeClazz);
-                            property.setAssociation(association);
-                            // set lower value for property
-                            LiteralInteger lowerValue = umlFactory.createLiteralInteger();
-                            lowerValue.setValue(0);
-                            property.setLowerValue(lowerValue);
-                            // set upper value for property
-                            LiteralUnlimitedNatural upperValue = umlFactory
-                                    .createLiteralUnlimitedNatural();
-                            upperValue.setValue(isList ? -1 : 1);
-                            property.setUpperValue(upperValue);
-                        } else if (fieldDoc.isPublic()) {
-                            // handle primitive types as class members
-                            PrimitiveType primitiveType = primitiveTypeMap.get(
-                                    fieldDoc.type().simpleTypeName());
-                            if (primitiveType != null) {
-                                property = umlFactory.createProperty();
-                                property.setType(primitiveType);
-                            }
-                        }
+                        Property property = createProperty(umlFactory, fieldDoc, clazz,
+                                classMap, primitiveTypeMap);
                         if (property != null) {
-                            property.setName(fieldDoc.name());
-                            property.setVisibility(getVisibility(fieldDoc));
                             if (clazz instanceof Class) {
                                 ((Class) clazz).getOwnedAttributes().add(property);
                             } else if (clazz instanceof Interface) {
@@ -195,35 +125,16 @@ public class ClassDiagGenerator {
                 // create operations
                 for (MethodDoc methodDoc : classDoc.methods()) {
                     if (methodDoc.isPublic()) {
-                        Operation operation = umlFactory.createOperation();
-                        operation.setName(methodDoc.name());
-                        // set return type of the method
-                        org.eclipse.uml2.uml.Type returnType = classMap.get(
-                                methodDoc.returnType().qualifiedTypeName());
-                        if (returnType == null) {
-                            returnType = primitiveTypeMap.get(
-                                    methodDoc.returnType().simpleTypeName());
-                        }
-                        operation.setType(returnType);
-                        // set method parameters
-                        for (com.sun.javadoc.Parameter docParam : methodDoc.parameters()) {
-                            org.eclipse.uml2.uml.Parameter umlParam = umlFactory.createParameter();
-                            umlParam.setName(docParam.name());
-                            org.eclipse.uml2.uml.Type paramType = classMap.get(
-                                    docParam.type().qualifiedTypeName());
-                            if (paramType == null) {
-                                paramType = primitiveTypeMap.get(docParam.type().simpleTypeName());
+                        Operation operation = createOperation(umlFactory, methodDoc,
+                                classMap, primitiveTypeMap);
+                        if (operation != null) {
+                            if (clazz instanceof Class) {
+                                ((Class) clazz).getOwnedOperations().add(operation);
+                            } else if (clazz instanceof Interface) {
+                                ((Interface) clazz).getOwnedOperations().add(operation);
+                            } else if (clazz instanceof Enumeration) {
+                                ((Enumeration) clazz).getOwnedOperations().add(operation);
                             }
-                            umlParam.setType(paramType);
-                            operation.getOwnedParameters().add(umlParam);
-                        }
-                        operation.setVisibility(getVisibility(methodDoc));
-                        if (clazz instanceof Class) {
-                            ((Class) clazz).getOwnedOperations().add(operation);
-                        } else if (clazz instanceof Interface) {
-                            ((Interface) clazz).getOwnedOperations().add(operation);
-                        } else if (clazz instanceof Enumeration) {
-                            ((Enumeration) clazz).getOwnedOperations().add(operation);
                         }
                     }
                 }
@@ -231,6 +142,162 @@ public class ClassDiagGenerator {
         }
         
         writeModel(model);
+    }
+    
+    /**
+     * Create a UML class.
+     * 
+     * @param umlFactory factory for object creation
+     * @param classDoc class documentation by Javadoc
+     * @param model the UML model where packages are put
+     * @param packageMap map of package names to UML packages
+     * @return a classifier for the Java class, or {@code null} if none could be created
+     */
+    private Classifier createClass(final UMLFactory umlFactory, final ClassDoc classDoc,
+            final Model model, final Map<String, Package> packageMap) {
+        if (classDoc.isPublic() && classDoc.name() != null && classDoc.name().length() > 0) {
+            // create package
+            PackageDoc packageDoc = classDoc.containingPackage();
+            Package pakkage = packageMap.get(packageDoc.name());
+            if (pakkage == null) {
+                pakkage = umlFactory.createPackage();
+                pakkage.setName(packageDoc.name());
+                model.getPackagedElements().add(pakkage);
+                packageMap.put(packageDoc.name(), pakkage);
+            }
+            
+            // create class
+            Classifier clazz;
+            if (classDoc.isInterface()) {
+                clazz = umlFactory.createInterface();
+            } else if (classDoc.isEnum()) {
+                // create enumeration literals
+                Enumeration enumeration = umlFactory.createEnumeration();
+                for (FieldDoc enumConst : classDoc.enumConstants()) {
+                    EnumerationLiteral literal = umlFactory.createEnumerationLiteral();
+                    literal.setName(enumConst.name());
+                    enumeration.getOwnedLiterals().add(literal);
+                }
+                clazz = enumeration;
+            } else {
+                clazz = umlFactory.createClass();
+            }
+            clazz.setPackage(pakkage);
+            clazz.setName(classDoc.name());
+            clazz.setIsAbstract(classDoc.isAbstract());
+            clazz.setVisibility(getVisibility(classDoc));
+            pakkage.getPackagedElements().add(clazz);
+            return clazz;
+        }
+        return null;
+    }
+    
+    /**
+     * Create a UML property.
+     * 
+     * @param umlFactory factory for object creation
+     * @param fieldDoc field documentation by Javadoc
+     * @param clazz the UML class that holds the property
+     * @param classMap map of type names to UML classes
+     * @param primitiveTypeMap map of type names to UML primitive types
+     * @return a property for the Java field, or {@code null} if none could be created
+     */
+    private Property createProperty(final UMLFactory umlFactory, final FieldDoc fieldDoc,
+            final Classifier clazz, final Map<String, Classifier> classMap,
+            final Map<String, PrimitiveType> primitiveTypeMap) {
+        boolean isList = false;
+        ClassDoc type = fieldDoc.type().asClassDoc();
+        Classifier typeClazz = classMap.get(type == null ? null : type.qualifiedName());
+        if (typeClazz == null) {
+            // handle type arguments of generic types
+            ParameterizedType paramType = fieldDoc.type().asParameterizedType();
+            if (paramType != null && paramType.typeArguments().length > 0) {
+                type = paramType.typeArguments()[0].asClassDoc();
+                typeClazz = classMap.get(type == null ? null : type.qualifiedName());
+            }
+            if (typeClazz != null) {
+                String typeName = fieldDoc.type().typeName();
+                isList = typeName.endsWith("List") || typeName.endsWith("Collection");
+            }
+        }
+        Property property = null;
+        if (typeClazz != null) {
+            // create an association and property for the field
+            Association association = umlFactory.createAssociation();
+            clazz.getPackage().getPackagedElements().add(association);
+            property = umlFactory.createProperty();
+            property.setType(typeClazz);
+            property.setAssociation(association);
+            // set lower value for property
+            LiteralInteger lowerValue = umlFactory.createLiteralInteger();
+            lowerValue.setValue(0);
+            property.setLowerValue(lowerValue);
+            // set upper value for property
+            LiteralUnlimitedNatural upperValue = umlFactory
+                    .createLiteralUnlimitedNatural();
+            upperValue.setValue(isList ? -1 : 1);
+            property.setUpperValue(upperValue);
+        } else if (fieldDoc.isPublic()) {
+            // handle primitive types as class members
+            PrimitiveType primitiveType = primitiveTypeMap.get(
+                    fieldDoc.type().simpleTypeName());
+            if (primitiveType != null) {
+                property = umlFactory.createProperty();
+                property.setType(primitiveType);
+            }
+        }
+        if (property != null && fieldDoc.name() != null && fieldDoc.name().length() > 0) {
+            property.setName(fieldDoc.name());
+            property.setVisibility(getVisibility(fieldDoc));
+            return property;
+        }
+        return null;
+    }
+    
+    /**
+     * Create a UML operation.
+     * 
+     * @param umlFactory factory for object creation
+     * @param methodDoc method documentation by Javadoc
+     * @param classMap map of type names to UML classes
+     * @param primitiveTypeMap map of type names to UML primitive types
+     * @return an operation for the Java method, or {@code null} if none could be created
+     */
+    private Operation createOperation(final UMLFactory umlFactory, final MethodDoc methodDoc,
+            final Map<String, Classifier> classMap,
+            final Map<String, PrimitiveType> primitiveTypeMap) {
+        if (methodDoc.name() != null && methodDoc.name().length() > 0) {
+            Operation operation = umlFactory.createOperation();
+            operation.setName(methodDoc.name());
+            // set return type of the method
+            org.eclipse.uml2.uml.Type returnType = classMap.get(methodDoc.returnType()
+                    .qualifiedTypeName());
+            if (returnType == null) {
+                returnType = primitiveTypeMap.get(methodDoc.returnType().simpleTypeName());
+            }
+            if (returnType != null) {
+                operation.setType(returnType);
+            }
+            // set method parameters
+            for (com.sun.javadoc.Parameter docParam : methodDoc.parameters()) {
+                if (docParam.name() != null && docParam.name().length() > 0) {
+                    org.eclipse.uml2.uml.Parameter umlParam = umlFactory.createParameter();
+                    umlParam.setName(docParam.name());
+                    org.eclipse.uml2.uml.Type paramType = classMap.get(
+                            docParam.type().qualifiedTypeName());
+                    if (paramType == null) {
+                        paramType = primitiveTypeMap.get(docParam.type().simpleTypeName());
+                    }
+                    if (paramType != null) {
+                        umlParam.setType(paramType);
+                    }
+                    operation.getOwnedParameters().add(umlParam);
+                }
+            }
+            operation.setVisibility(getVisibility(methodDoc));
+            return operation;
+        }
+        return null;
     }
     
     /** the primitive type names. */
