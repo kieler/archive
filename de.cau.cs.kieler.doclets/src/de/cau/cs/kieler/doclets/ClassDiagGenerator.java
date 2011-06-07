@@ -68,6 +68,7 @@ public class ClassDiagGenerator {
     public void generate(final RootDoc rootDoc) throws IOException {
         UMLFactory umlFactory = UMLFactory.eINSTANCE;
         Model model = umlFactory.createModel();
+        model.setName("KIELER");
 
         // create primitive types
         Map<String, PrimitiveType> primitiveTypeMap = createPrimitiveTypes(model);        
@@ -93,7 +94,7 @@ public class ClassDiagGenerator {
                     Classifier superClazz = classMap.get(classDoc.superclassType()
                             .qualifiedTypeName());
                     if (superClazz != null
-                            && !superClazz.getQualifiedName().equals("java.lang.Object")) {
+                            && !superClazz.getName().equals("Object")) {
                         Generalization generalization = umlFactory.createGeneralization();
                         generalization.setGeneral(superClazz);
                         generalization.setSpecific(clazz);
@@ -216,7 +217,9 @@ public class ClassDiagGenerator {
                     || typeName.endsWith("Set");
             if (isList) {
                 // handle type arguments of generic types
+                System.out.println(fieldDoc.containingClass().qualifiedName() + "." + fieldDoc.name() + "()");
                 ParameterizedType paramType = fieldDoc.type().asParameterizedType();
+                System.out.println("  " + fieldDoc.type().toString() + paramType != null ? paramType.typeArguments().toString() : "");
                 if (paramType != null && paramType.typeArguments().length > 0) {
                     ClassDoc typeArg = paramType.typeArguments()[0].asClassDoc();
                     typeClazz = classMap.get(typeArg.qualifiedName());
