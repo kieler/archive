@@ -76,9 +76,11 @@ public class ClassDiagGenerator {
         Map<String, Package> packageMap = new HashMap<String, Package>();
         Map<String, Classifier> classMap = new HashMap<String, Classifier>();
         for (ClassDoc classDoc : rootDoc.classes()) {
-            Classifier clazz = createClass(umlFactory, classDoc, model, packageMap);
-            if (clazz != null) {
-                classMap.put(classDoc.qualifiedName(), clazz);
+            if (!primitiveTypeMap.containsKey(classDoc.simpleTypeName())) {
+                Classifier clazz = createClass(umlFactory, classDoc, model, packageMap);
+                if (clazz != null) {
+                    classMap.put(classDoc.qualifiedName(), clazz);
+                }
             }
         }
         
@@ -90,7 +92,8 @@ public class ClassDiagGenerator {
                 if (classDoc.superclassType() != null) {
                     Classifier superClazz = classMap.get(classDoc.superclassType()
                             .qualifiedTypeName());
-                    if (superClazz != null) {
+                    if (superClazz != null
+                            && !superClazz.getQualifiedName().equals("java.lang.Object")) {
                         Generalization generalization = umlFactory.createGeneralization();
                         generalization.setGeneral(superClazz);
                         generalization.setSpecific(clazz);
@@ -205,51 +208,55 @@ public class ClassDiagGenerator {
     private Property createProperty(final UMLFactory umlFactory, final FieldDoc fieldDoc,
             final Classifier clazz, final Map<String, Classifier> classMap,
             final Map<String, PrimitiveType> primitiveTypeMap) {
-        boolean isList = false;
         ClassDoc type = fieldDoc.type().asClassDoc();
-        Classifier typeClazz = classMap.get(type == null ? null : type.qualifiedName());
-        if (typeClazz == null) {
-            // handle type arguments of generic types
-            ParameterizedType paramType = fieldDoc.type().asParameterizedType();
-            if (paramType != null && paramType.typeArguments().length > 0) {
-                type = paramType.typeArguments()[0].asClassDoc();
-                typeClazz = classMap.get(type == null ? null : type.qualifiedName());
+        if (type != null && fieldDoc.name() != null && fieldDoc.name().length() > 0) {
+            Classifier typeClazz = null;
+            String typeName = type.typeName();
+            boolean isList = typeName.endsWith("List") || typeName.endsWith("Collection")
+                    || typeName.endsWith("Set");
+            if (isList) {
+                // handle type arguments of generic types
+                ParameterizedType paramType = fieldDoc.type().asParameterizedType();
+                if (paramType != null && paramType.typeArguments().length > 0) {
+                    ClassDoc typeArg = paramType.typeArguments()[0].asClassDoc();
+                    typeClazz = classMap.get(typeArg.qualifiedName());
+                }
             }
+            if (typeClazz == null) {
+                typeClazz = classMap.get(type.qualifiedName());
+                isList = false;
+            }
+            Property property = null;
             if (typeClazz != null) {
-                String typeName = fieldDoc.type().typeName();
-                isList = typeName.endsWith("List") || typeName.endsWith("Collection");
-            }
-        }
-        Property property = null;
-        if (typeClazz != null) {
-            // create an association and property for the field
-            Association association = umlFactory.createAssociation();
-            clazz.getPackage().getPackagedElements().add(association);
-            property = umlFactory.createProperty();
-            property.setType(typeClazz);
-            property.setAssociation(association);
-            // set lower value for property
-            LiteralInteger lowerValue = umlFactory.createLiteralInteger();
-            lowerValue.setValue(0);
-            property.setLowerValue(lowerValue);
-            // set upper value for property
-            LiteralUnlimitedNatural upperValue = umlFactory
-                    .createLiteralUnlimitedNatural();
-            upperValue.setValue(isList ? -1 : 1);
-            property.setUpperValue(upperValue);
-        } else if (fieldDoc.isPublic()) {
-            // handle primitive types as class members
-            PrimitiveType primitiveType = primitiveTypeMap.get(
-                    fieldDoc.type().simpleTypeName());
-            if (primitiveType != null) {
+                // create an association and property for the field
+                Association association = umlFactory.createAssociation();
+                clazz.getPackage().getPackagedElements().add(association);
                 property = umlFactory.createProperty();
-                property.setType(primitiveType);
+                property.setType(typeClazz);
+                property.setAssociation(association);
+                // set lower value for property
+                LiteralInteger lowerValue = umlFactory.createLiteralInteger();
+                lowerValue.setValue(0);
+                property.setLowerValue(lowerValue);
+                // set upper value for property
+                LiteralUnlimitedNatural upperValue = umlFactory
+                        .createLiteralUnlimitedNatural();
+                upperValue.setValue(isList ? -1 : 1);
+                property.setUpperValue(upperValue);
+            } else if (fieldDoc.isPublic()) {
+                // handle primitive types as class members
+                PrimitiveType primitiveType = primitiveTypeMap.get(
+                        fieldDoc.type().simpleTypeName());
+                if (primitiveType != null) {
+                    property = umlFactory.createProperty();
+                    property.setType(primitiveType);
+                }
             }
-        }
-        if (property != null && fieldDoc.name() != null && fieldDoc.name().length() > 0) {
-            property.setName(fieldDoc.name());
-            property.setVisibility(getVisibility(fieldDoc));
-            return property;
+            if (property != null) {
+                property.setName(fieldDoc.name());
+                property.setVisibility(getVisibility(fieldDoc));
+                return property;
+            }
         }
         return null;
     }
