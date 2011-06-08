@@ -111,7 +111,7 @@ public class ClassDiagGenerator {
                 
                 // create associations and properties
                 for (FieldDoc fieldDoc : classDoc.fields()) {
-                    if (fieldDoc.constantValue() == null) {
+                    if (!fieldDoc.isSynthetic() && fieldDoc.constantValue() == null) {
                         Property property = createProperty(umlFactory, fieldDoc, clazz,
                                 classMap, primitiveTypeMap);
                         if (property != null) {
@@ -128,7 +128,9 @@ public class ClassDiagGenerator {
                 
                 // create operations
                 for (MethodDoc methodDoc : classDoc.methods()) {
-                    if (methodDoc.isPublic()) {
+                    // process only non-synthetic public methods that are not declared by superclass
+                    if (!methodDoc.isSynthetic() && methodDoc.isPublic()
+                            && methodDoc.overriddenMethod() == null) {
                         Operation operation = createOperation(umlFactory, methodDoc,
                                 classMap, primitiveTypeMap);
                         if (operation != null) {
@@ -303,6 +305,7 @@ public class ClassDiagGenerator {
                 }
             }
             operation.setVisibility(getVisibility(methodDoc));
+            operation.setIsAbstract(methodDoc.isAbstract());
             return operation;
         }
         return null;
