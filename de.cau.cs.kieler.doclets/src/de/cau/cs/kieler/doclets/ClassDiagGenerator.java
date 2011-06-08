@@ -89,7 +89,7 @@ public class ClassDiagGenerator {
         for (ClassDoc classDoc : rootDoc.classes()) {
             Classifier clazz = classMap.get(classDoc.qualifiedName());
             if (clazz != null) {
-                // create generalizations to superclass or superinterfaces
+                // create generalizations to superclass
                 if (classDoc.superclassType() != null) {
                     Classifier superClazz = classMap.get(classDoc.superclassType()
                             .qualifiedTypeName());
@@ -100,6 +100,7 @@ public class ClassDiagGenerator {
                         generalization.setSpecific(clazz);
                     }
                 }
+                // create generalizations to superinterfaces
                 for (com.sun.javadoc.Type superType : classDoc.interfaceTypes()) {
                     Classifier superClazz = classMap.get(superType.qualifiedTypeName());
                     if (superClazz != null) {
@@ -130,7 +131,8 @@ public class ClassDiagGenerator {
                 for (MethodDoc methodDoc : classDoc.methods()) {
                     // process only non-synthetic public methods that are not declared by superclass
                     if (!methodDoc.isSynthetic() && methodDoc.isPublic()
-                            && methodDoc.overriddenMethod() == null) {
+                            && methodDoc.overriddenMethod() == null
+                            && !isInterfaceMethod(methodDoc)) {
                         Operation operation = createOperation(umlFactory, methodDoc,
                                 classMap, primitiveTypeMap);
                         if (operation != null) {
@@ -309,6 +311,25 @@ public class ClassDiagGenerator {
             return operation;
         }
         return null;
+    }
+    
+    /**
+     * Determine whether the given method is specified by an interface.
+     * 
+     * @param methodDoc a method documentation
+     * @return true if the method is specified by an interface
+     */
+    private boolean isInterfaceMethod(final MethodDoc methodDoc) {
+        ClassDoc classDoc = methodDoc.containingClass();
+        for (com.sun.javadoc.Type superType : classDoc.interfaceTypes()) {
+            for (MethodDoc interfMethod : superType.asClassDoc().methods()) {
+                if (methodDoc.name().equals(interfMethod.name())
+                        && methodDoc.signature().equals(interfMethod.signature())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     
     /** the primitive type names. */
