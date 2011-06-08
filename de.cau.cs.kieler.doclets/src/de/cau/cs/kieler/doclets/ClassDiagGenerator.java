@@ -229,7 +229,7 @@ public class ClassDiagGenerator {
             }
             if (typeClazz == null) {
                 typeClazz = classMap.get(type.qualifiedName());
-                isList = false;
+                isList = type.dimension() != null && type.dimension().length() > 0;
             }
             Property property = null;
             if (typeClazz != null) {
@@ -248,6 +248,12 @@ public class ClassDiagGenerator {
                         .createLiteralUnlimitedNatural();
                 upperValue.setValue(isList ? -1 : 1);
                 property.setUpperValue(upperValue);
+                // this owned property needs to be created so Papyrus can display the association
+                // FIXME the association is not bidirectional, so this workaround should be eliminated
+                Property ownedProp = umlFactory.createProperty();
+                ownedProp.setAssociation(association);
+                ownedProp.setOwningAssociation(association);
+                ownedProp.setType(clazz);
             } else if (fieldDoc.isPublic()) {
                 // handle primitive types as class members
                 PrimitiveType primitiveType = primitiveTypeMap.get(
@@ -260,6 +266,8 @@ public class ClassDiagGenerator {
             if (property != null) {
                 property.setName(fieldDoc.name());
                 property.setVisibility(getVisibility(fieldDoc));
+                property.setIsStatic(fieldDoc.isStatic());
+                property.setIsReadOnly(fieldDoc.isFinal());
                 return property;
             }
         }
@@ -308,6 +316,7 @@ public class ClassDiagGenerator {
             }
             operation.setVisibility(getVisibility(methodDoc));
             operation.setIsAbstract(methodDoc.isAbstract());
+            operation.setIsStatic(methodDoc.isStatic());
             return operation;
         }
         return null;
