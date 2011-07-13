@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import de.cau.cs.kieler.core.KielerException;
 import de.cau.cs.kieler.core.alg.IKielerProgressMonitor;
 import de.cau.cs.kieler.core.alg.BasicProgressMonitor;
 import de.cau.cs.kieler.core.kgraph.KNode;
@@ -62,10 +61,9 @@ public class ExecutionTimeMetric {
      * @param endDecade ending decade
      * @param maxEdges maximal number of edges per node count
      * @throws IOException if writing to the output stream fails
-     * @throws KielerException if the layout provider fails
      */
     public void measure(final int startDecade, final int endDecade, final int maxEdges)
-            throws IOException, KielerException {
+            throws IOException {
         if (startDecade > endDecade || startDecade < 0) {
             throw new IllegalArgumentException("Start decade must be non-negative"
                     + " and less or equal than end decade.");
@@ -97,8 +95,8 @@ public class ExecutionTimeMetric {
      * 
      * @throws KielerException if the layout provider fails
      */
-    private void warmup() throws KielerException {
-        KNode layoutGraph = GraphGenerator.generateGraph(100, 2, true);
+    private void warmup() {
+        KNode layoutGraph = GraphGenerator.generateGraph(10000, 2, true);
         IKielerProgressMonitor progressMonitor = new BasicProgressMonitor();
         for (int i = 0; i < 3; i++) {
             layoutProvider.doLayout(layoutGraph, progressMonitor);
@@ -113,8 +111,7 @@ public class ExecutionTimeMetric {
      * @throws IOException if writing to the output stream fails
      * @throws KielerException if the layout provider fails
      */
-    private void measure(final int nodeCount, final int maxEdges)
-            throws KielerException, IOException {
+    private void measure(final int nodeCount, final int maxEdges) throws IOException {
         outputWriter.write(Integer.toString(nodeCount));
         for (int edgeCount = 1; edgeCount <= maxEdges; edgeCount++) {
             System.out.print("n = " + nodeCount + ", m = " + edgeCount + "n: ");

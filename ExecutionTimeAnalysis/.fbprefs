@@ -1,5 +1,5 @@
 #FindBugs User Preferences
-#Mon Mar 16 13:32:13 CET 2009
+#Wed Jul 13 13:30:40 CEST 2011
 detectorAppendingToAnObjectOutputStream=AppendingToAnObjectOutputStream|true
 detectorBadAppletConstructor=BadAppletConstructor|false
 detectorBadResultSetAccess=BadResultSetAccess|true
@@ -17,6 +17,7 @@ detectorConfusionBetweenInheritedAndOuterMethod=ConfusionBetweenInheritedAndOute
 detectorCrossSiteScripting=CrossSiteScripting|true
 detectorDoInsideDoPrivileged=DoInsideDoPrivileged|true
 detectorDontCatchIllegalMonitorStateException=DontCatchIllegalMonitorStateException|true
+detectorDontIgnoreResultOfPutIfAbsent=DontIgnoreResultOfPutIfAbsent|true
 detectorDontUseEnum=DontUseEnum|true
 detectorDroppedException=DroppedException|true
 detectorDumbMethodInvocations=DumbMethodInvocations|true
@@ -82,6 +83,7 @@ detectorInvalidJUnitTest=InvalidJUnitTest|true
 detectorIteratorIdioms=IteratorIdioms|true
 detectorLazyInit=LazyInit|true
 detectorLoadOfKnownNullValue=LoadOfKnownNullValue|true
+detectorLostLoggerDueToWeakReference=LostLoggerDueToWeakReference|true
 detectorMethodReturnCheck=MethodReturnCheck|true
 detectorMultithreadedInstanceAccess=MultithreadedInstanceAccess|true
 detectorMutableLock=MutableLock|true
@@ -92,6 +94,7 @@ detectorOverridingEqualsNotSymmetrical=OverridingEqualsNotSymmetrical|true
 detectorPreferZeroLengthArrays=PreferZeroLengthArrays|true
 detectorPublicSemaphores=PublicSemaphores|false
 detectorQuestionableBooleanAssignment=QuestionableBooleanAssignment|true
+detectorReadOfInstanceFieldInMethodInvokedByConstructorInSuperclass=ReadOfInstanceFieldInMethodInvokedByConstructorInSuperclass|true
 detectorReadReturnShouldBeChecked=ReadReturnShouldBeChecked|true
 detectorRedundantInterfaces=RedundantInterfaces|true
 detectorRepeatedConditionals=RepeatedConditionals|true
@@ -120,5 +123,5 @@ detectorXMLFactoryBypass=XMLFactoryBypass|true
 detector_threshold=2
 effort=default
 filter_settings=Medium|BAD_PRACTICE,CORRECTNESS,EXPERIMENTAL,I18N,MALICIOUS_CODE,MT_CORRECTNESS,PERFORMANCE,SECURITY,STYLE|false
-filter_settings_neg=|
+filter_settings_neg=NOISE|
 run_at_full_build=true

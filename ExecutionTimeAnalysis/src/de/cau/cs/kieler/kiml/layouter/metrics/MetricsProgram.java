@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import de.cau.cs.kieler.klay.layered.LayeredLayoutProvider;
 import de.cau.cs.kieler.klodd.hierarchical.HierarchicalDataflowLayoutProvider;
 
 /**
@@ -41,14 +42,20 @@ public final class MetricsProgram {
      * @param args command line arguments
      */
     public static void main(final String[] args) {
-        // TODO generalize metrics selection, e.g. by reading command-line arguments
         OutputStream fileStream = null;
         try {
             String fileName = "measurement" + (System.currentTimeMillis() & TIME_MASK) + ".csv";
             fileStream = new FileOutputStream(fileName);
+            
+            // measure the KLoDD Hierarchical layouter
             ExecutionTimeMetric executionTimeMetric = new ExecutionTimeMetric(
                     new HierarchicalDataflowLayoutProvider(), fileStream);
             executionTimeMetric.measure(2, 2, 1);
+            
+            // measure the KLay Layered layouter
+            executionTimeMetric = new ExecutionTimeMetric(new LayeredLayoutProvider(), fileStream);
+            executionTimeMetric.measure(2, 2, 1);
+            
         } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
