@@ -26,65 +26,113 @@ import de.cau.cs.kieler.kiml.AbstractLayoutProvider;
  * Metric class for measurement of execution times.
  * 
  * @author msp
+ * @author cds
  */
 public class ExecutionTimeMetric {
    
     // CHECKSTYLEOFF MagicNumber
     
-    /** the layout provider. */
+    ///////////////////////////////////////////////////////////////////////////////
+    // Local Interfaces
+    
+    /**
+     * Interface for classes setting properties on the generated graphs.
+     * 
+     * @author cds
+     */
+    public interface PropertySetter {
+        /**
+         * Sets properties on the given graph.
+         * 
+         * @param graph the graph to set properties on.
+         */
+        void setProperties(final KNode graph);
+    }
+    
+    
+    ///////////////////////////////////////////////////////////////////////////////
+    // Variables
+    
+    /**
+     * The layout provider.
+     */
     private AbstractLayoutProvider layoutProvider;
-    /** the output stream writer. */
+    
+    /**
+     * The output stream writer.
+     */
     private OutputStreamWriter outputWriter;
-    /** number of execution time measurements per decade. */
-    private int measurementsPerDecade = 5;
-    /** number of layout runs for each graph. */
-    private int runsPerGraph = 5;
-    /** number of generated graphs for each size value. */
-    private int graphsPerSize = 5;
+    
+    /**
+     * The parameters.
+     */
+    private Parameters parameters = null;
+    
+    /**
+     * An optional class that can set additional properties on generated random graphs.
+     */
+    private PropertySetter propertySetter = null;
+    
+    
+    ///////////////////////////////////////////////////////////////////////////////
+    // Constructor
     
     /**
      * Creates an execution time metric instance.
      * 
-     * @param thelayoutProvider the layout provider to examine
+     * @param layoutProvider the layout provider to examine
      * @param outputStream the output stream to which measurements are written
+     * @param parameters user-supplied parameters controlling the graph generation and
+     *                   measurement process.
+     * @param propertySetter an optional class that sets properties on generated random
+     *                       graphs. Can be used to set layout properties that would
+     *                       otherwise be left to default values.
+     * @throws IllegalArgumentException if the parameters are not valid.
      */
-    public ExecutionTimeMetric(final AbstractLayoutProvider thelayoutProvider,
-            final OutputStream outputStream) {
-        this.layoutProvider = thelayoutProvider;
+    public ExecutionTimeMetric(final AbstractLayoutProvider layoutProvider,
+            final OutputStream outputStream, final Parameters parameters,
+            final PropertySetter propertySetter) {
+        
+        this.layoutProvider = layoutProvider;
         this.outputWriter = new OutputStreamWriter(outputStream);
+        this.parameters = parameters;
+        this.propertySetter = propertySetter;
+        
+        validateParameters();
     }
     
+    
+    ///////////////////////////////////////////////////////////////////////////////
+    // Measurement
+    
     /**
-     * Performs an execution time measurement for the given range of graph sizes.
+     * Performs an execution time measurement parameterized according to the parameters
+     * given when this class was instantiated.
      * 
-     * @param startDecade starting decade
-     * @param endDecade ending decade
-     * @param maxEdges maximal number of edges per node count
      * @throws IOException if writing to the output stream fails
      */
-    public void measure(final int startDecade, final int endDecade, final int maxEdges)
-            throws IOException {
-        if (startDecade > endDecade || startDecade < 0) {
-            throw new IllegalArgumentException("Start decade must be non-negative"
-                    + " and less or equal than end decade.");
-        }
+    public void measure() throws IOException {
+        // Warmup. Warmup! ROAAAAAAAR!!!
         warmup();
         
         try {
-            int currentDecade = startDecade;
+            int currentDecade = parameters.startDecade;
             double currentSize = 1;
-            for (int d = 0; d < startDecade; d++) {
+            for (int d = 0; d < parameters.startDecade; d++) {
                 currentSize *= 10;
             }
-            double incFactor = Math.pow(10, 1.0 / measurementsPerDecade);
-            while (currentDecade < endDecade) {
-                for (int i = 0; i < measurementsPerDecade; i++) {
-                    measure((int) Math.round(currentSize), maxEdges);
+            
+            double incFactor = Math.pow(10, 1.0 / parameters.graphSizesPerDecade);
+            
+            while (currentDecade < parameters.endDecade) {
+                for (int i = 0; i < parameters.graphSizesPerDecade; i++) {
+                    doGraphSizeMeasurement((int) Math.round(currentSize));
                     currentSize *= incFactor;
                 }
                 currentDecade++;
             }
-            measure((int) Math.round(currentSize), maxEdges);
+            
+            doGraphSizeMeasurement((int) Math.round(currentSize));
         } finally {
             outputWriter.flush();
         }
@@ -96,8 +144,9 @@ public class ExecutionTimeMetric {
      * @throws KielerException if the layout provider fails
      */
     private void warmup() {
-        KNode layoutGraph = GraphGenerator.generateGraph(10000, 2, true);
+        KNode layoutGraph = GraphGenerator.generateGraph(10000, 2, true, parameters);
         IKielerProgressMonitor progressMonitor = new BasicProgressMonitor();
+        
         for (int i = 0; i < 3; i++) {
             layoutProvider.doLayout(layoutGraph, progressMonitor);
         }
@@ -111,65 +160,92 @@ public class ExecutionTimeMetric {
      * @throws IOException if writing to the output stream fails
      * @throws KielerException if the layout provider fails
      */
-    private void measure(final int nodeCount, final int maxEdges) throws IOException {
+    private void doGraphSizeMeasurement(final int nodeCount) throws IOException {
         outputWriter.write(Integer.toString(nodeCount));
-        for (int edgeCount = 1; edgeCount <= maxEdges; edgeCount++) {
+        
+        for (int edgeCount = parameters.minOutEdgesPerNode; edgeCount <= parameters.maxOutEdgesPerNode;
+                edgeCount++) {
+            
             System.out.print("n = " + nodeCount + ", m = " + edgeCount + "n: ");
+            
             double totalTime = 0.0;
-            for (int i = 0; i < graphsPerSize; i++) {
+            for (int i = 0; i < parameters.graphsPerSize; i++) {
                 System.out.print(i);
-                KNode layoutGraph = GraphGenerator.generateGraph(nodeCount, edgeCount, true);
+                
+                // Generate a graph with the given node and edge count
+                KNode layoutGraph = GraphGenerator.generateGraph(nodeCount, edgeCount, true, parameters);
+                if (propertySetter != null) {
+                    propertySetter.setProperties(layoutGraph);
+                }
+                
+                // Do a bunch of layout runs and take the one that took the least amount of time
                 double minTime = Double.MAX_VALUE;
-                for (int j = 0; j < runsPerGraph; j++) {
+                for (int j = 0; j < parameters.runsPerGraph; j++) {
                     System.gc();
+                    
                     IKielerProgressMonitor progressMonitor = new BasicProgressMonitor();
                     layoutProvider.doLayout(layoutGraph, progressMonitor);
+                    
                     minTime = Math.min(minTime, progressMonitor.getExecutionTime());
+                    
                     System.out.print(".");
                 }
+                
                 totalTime += minTime;
             }
-            double meanTime = totalTime / graphsPerSize;
-            outputWriter.write("," + meanTime);
-            System.out.println(" -> " + meanTime);
+            
+            // Calculate the average time taken for the graphs
+            double avgTime = totalTime / parameters.graphsPerSize;
+            outputWriter.write("," + avgTime);
+            System.out.println(" -> " + avgTime);
         }
+        
         outputWriter.write("\n");
     }
     
-    /**
-     * Sets the number of layout runs for each generated graph.
-     * 
-     * @param therunsPerGraph the number of runs per graph to set
-     */
-    public void setRunsPerGraph(final int therunsPerGraph) {
-        if (therunsPerGraph < 1) {
-            throw new IllegalArgumentException("Number of runs per graph must be positive.");
-        }
-        this.runsPerGraph = therunsPerGraph;
-    }
-
-    /**
-     * Sets the number of randomly generated graphs for each size value.
-     * 
-     * @param thegraphsPerSize the number of graphs per size to set
-     */
-    public void setGraphsPerSize(final int thegraphsPerSize) {
-        if (runsPerGraph < 1) {
-            throw new IllegalArgumentException("Number of graphs per size must be positive.");
-        }
-        this.graphsPerSize = thegraphsPerSize;
-    }
+    
+    ///////////////////////////////////////////////////////////////////////////////
+    // Utility Methods
     
     /**
-     * Sets the number of execution time measurements for each decade.
+     * Validates the parameters and throws an exception if something's not right.
      * 
-     * @param themeasurementsPerDecade the number of measurements per decade
+     * @throws IllegalArgumentException if the parameters are not valid.
      */
-    public void setMeasurementsPerDecade(final int themeasurementsPerDecade) {
-        if (themeasurementsPerDecade < 1) {
-            throw new IllegalArgumentException("Number of measurements per decade must be positive.");
+    private void validateParameters() {
+        // Start and end decade
+        if (parameters.startDecade > parameters.endDecade || parameters.startDecade < 0) {
+            throw new IllegalArgumentException("Start decade must be non-negative"
+                    + " and less or equal than end decade.");
         }
-        this.measurementsPerDecade = themeasurementsPerDecade;
-    }
         
+        // Graph sizes and runs
+        if (parameters.graphSizesPerDecade < 1) {
+            throw new IllegalArgumentException("There must be at least one graph size per decade.");
+        }
+
+        if (parameters.graphsPerSize < 1) {
+            throw new IllegalArgumentException("There must be at least one graph per size.");
+        }
+
+        if (parameters.runsPerGraph < 1) {
+            throw new IllegalArgumentException("There must be at least one run per graph.");
+        }
+        
+        // Outgoing edges
+        if (parameters.minOutEdgesPerNode > parameters.maxOutEdgesPerNode
+                || parameters.minOutEdgesPerNode < 0) {
+
+            throw new IllegalArgumentException("Minimum number of outgoing edges per node must be"
+                    + " non-negative and less or equal than maximum number of outgoing edges per node.");
+        }
+        
+        // Probabilities
+        if (parameters.invertedPortProb < 0.0f || parameters.northSouthPortProb < 0.0f
+                || parameters.invertedPortProb + parameters.northSouthPortProb > 1.0f) {
+
+            throw new IllegalArgumentException("Port side probabilities must be greater than or equal"
+                    + " to 0.0 and must add up to at most 1.0.");
+        }
+    }
 }

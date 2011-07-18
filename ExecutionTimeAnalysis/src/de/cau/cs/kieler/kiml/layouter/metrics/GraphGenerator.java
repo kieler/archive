@@ -27,46 +27,66 @@ import de.cau.cs.kieler.kiml.util.KimlUtil;
  * Generator for random graphs.
  * 
  * @author msp
+ * @author cds
  */
 public final class GraphGenerator {
     
     // CHECKSTYLEOFF MagicNumber
     
-    /** width of generated nodes. */
+    ///////////////////////////////////////////////////////////////////////////////
+    // Constants
+    
+    /**
+     * Width of generated nodes.
+     */
     private static final float NODE_WIDTH = 20.0f;
-    /** height of generated nodes. */
+    
+    /**
+     * Height of generated nodes.
+     */
     private static final float NODE_HEIGHT = 20.0f;
+    
+    
+    ///////////////////////////////////////////////////////////////////////////////
+    // Constructor
     
     /**
      * Hidden default constructor.
      */
-    private GraphGenerator() {   
-    }     
+    private GraphGenerator() {
+        // This space intentionally left mostly blank.
+    }
+    
+    
+    ///////////////////////////////////////////////////////////////////////////////
+    // Graph Generation
 
     /**
      * Generates a random graph of given size.
      * 
-     * @param nodeCount number of nodes in the graph
-     * @param edgesPerNode number of outgoing edges for each node
-     * @param withPorts if true, ports are generated and connected to the edges
-     * @return a randomly generated graph
+     * @param nodeCount number of nodes in the graph.
+     * @param edgesPerNode number of outgoing edges for each node.
+     * @param withPorts if true, ports are generated and connected to the edges.
+     * @param parameters user-supplied paramaters affecting the graph generation.
+     * @return a randomly generated graph.
      */
     public static KNode generateGraph(final int nodeCount, final int edgesPerNode,
-            final boolean withPorts) {
-        if (nodeCount < 1 || edgesPerNode < 0) {
-            throw new IllegalArgumentException("Number of nodes and edges per node must be positive.");
-        }
+            final boolean withPorts, final Parameters parameters) {
         
-        // create parent node
+        // Create parent node
         KNode layoutGraph = KimlUtil.createInitializedNode();
         KShapeLayout nodeLayout = layoutGraph.getData(KShapeLayout.class);
         nodeLayout.setProperty(LayoutOptions.DIRECTION, Direction.RIGHT);
         
-        // create nodes
+        // Create nodes
         KNode[] nodes = new KNode[nodeCount];
         for (int i = 0; i < nodeCount; i++) {
+            // Create a node
             nodes[i] = KimlUtil.createInitializedNode();
             nodes[i].getLabel().setText("N" + i);
+            nodes[i].setParent(layoutGraph);
+            
+            // Set node properties
             nodeLayout = nodes[i].getData(KShapeLayout.class);
             nodeLayout.setWidth(NODE_WIDTH);
             nodeLayout.setHeight(NODE_HEIGHT);
@@ -74,10 +94,9 @@ public final class GraphGenerator {
             if (withPorts) {
                 nodeLayout.setProperty(LayoutOptions.PORT_CONSTRAINTS, PortConstraints.FIXED_POS);
             }
-            nodes[i].setParent(layoutGraph);
         }
         
-        // create edges
+        // Create edges
         for (int i = 0; i < nodeCount; i++) {
             for (int j = 0; j < edgesPerNode; j++) {
                 KEdge edge = KimlUtil.createInitializedEdge();
@@ -85,8 +104,8 @@ public final class GraphGenerator {
                 int targetIndex = (int) (Math.random() * nodeCount);
                 edge.setTarget(nodes[targetIndex]);
                 if (withPorts) {
-                    edge.setSourcePort(createPort(nodes[i], edge));
-                    edge.setTargetPort(createPort(nodes[targetIndex], edge));
+                    edge.setSourcePort(createPort(nodes[i], edge, true, parameters));
+                    edge.setTargetPort(createPort(nodes[targetIndex], edge, false, parameters));
                 }
             }
         }
@@ -98,11 +117,17 @@ public final class GraphGenerator {
      * Creates a port, adds it to the given node at a random side, and adds the
      * given edge to the new port.
      * 
-     * @param node node for the new port
-     * @param edge edge to connect to the new port
-     * @return a new port
+     * @param node node for the new port.
+     * @param edge edge to connect to the new port.
+     * @param source {@code true} if the port to be created will be the source port
+     *               of the edge, {@code false} if it will be its target port.
+     * @param parameters user-supplied parameters affecting port generation.
+     * @return a new port.
      */
-    private static KPort createPort(final KNode node, final KEdge edge) {
+    private static KPort createPort(final KNode node, final KEdge edge, final boolean source,
+            final Parameters parameters) {
+        
+        // TODO: Include port side probability parameters.
         KPort port = KimlUtil.createInitializedPort();
         KShapeLayout portLayout = port.getData(KShapeLayout.class);
         switch ((int) (Math.random() * 4)) {
@@ -127,8 +152,10 @@ public final class GraphGenerator {
             portLayout.setProperty(LayoutOptions.PORT_SIDE, PortSide.WEST);
             break;
         }
+        
         port.setNode(node);
         port.getEdges().add(edge);
+        
         return port;
     }
     
