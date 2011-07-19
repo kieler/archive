@@ -13,6 +13,8 @@
  */
 package de.cau.cs.kieler.kiml.layouter.metrics;
 
+import java.util.Random;
+
 import de.cau.cs.kieler.core.kgraph.KEdge;
 import de.cau.cs.kieler.core.kgraph.KNode;
 import de.cau.cs.kieler.core.kgraph.KPort;
@@ -48,13 +50,22 @@ public final class GraphGenerator {
     
     
     ///////////////////////////////////////////////////////////////////////////////
+    // Variables
+    
+    /**
+     * Randomizer to determine port placements.
+     */
+    private Random randomizer = null;
+    
+    
+    ///////////////////////////////////////////////////////////////////////////////
     // Constructor
     
     /**
-     * Hidden default constructor.
+     * Creates a new instance.
      */
-    private GraphGenerator() {
-        // This space intentionally left mostly blank.
+    public GraphGenerator() {
+        randomizer = new Random();
     }
     
     
@@ -70,7 +81,7 @@ public final class GraphGenerator {
      * @param parameters user-supplied paramaters affecting the graph generation.
      * @return a randomly generated graph.
      */
-    public static KNode generateGraph(final int nodeCount, final int edgesPerNode,
+    public KNode generateGraph(final int nodeCount, final int edgesPerNode,
             final boolean withPorts, final Parameters parameters) {
         
         // Create parent node
@@ -124,32 +135,35 @@ public final class GraphGenerator {
      * @param parameters user-supplied parameters affecting port generation.
      * @return a new port.
      */
-    private static KPort createPort(final KNode node, final KEdge edge, final boolean source,
+    private KPort createPort(final KNode node, final KEdge edge, final boolean source,
             final Parameters parameters) {
         
-        // TODO: Include port side probability parameters.
         KPort port = KimlUtil.createInitializedPort();
         KShapeLayout portLayout = port.getData(KShapeLayout.class);
-        switch ((int) (Math.random() * 4)) {
-        case 0:
+        PortSide portSide = determinePortPlacement(parameters.invertedPortProb,
+                parameters.northSouthPortProb,
+                source);
+        portLayout.setProperty(LayoutOptions.PORT_SIDE, portSide);
+        
+        switch (portSide) {
+        case NORTH:
             portLayout.setXpos((float) (Math.random() * NODE_WIDTH));
             portLayout.setYpos(0.0f);
-            portLayout.setProperty(LayoutOptions.PORT_SIDE, PortSide.NORTH);
             break;
-        case 1:
+            
+        case EAST:
             portLayout.setXpos(NODE_WIDTH);
             portLayout.setYpos((float) (Math.random() * NODE_HEIGHT));
-            portLayout.setProperty(LayoutOptions.PORT_SIDE, PortSide.EAST);
             break;
-        case 2:
+            
+        case SOUTH:
             portLayout.setXpos((float) (Math.random() * NODE_WIDTH));
             portLayout.setYpos(NODE_HEIGHT);
-            portLayout.setProperty(LayoutOptions.PORT_SIDE, PortSide.SOUTH);
             break;
-        case 3:
+            
+        case WEST:
             portLayout.setXpos(0.0f);
             portLayout.setYpos((float) (Math.random() * NODE_HEIGHT));
-            portLayout.setProperty(LayoutOptions.PORT_SIDE, PortSide.WEST);
             break;
         }
         
@@ -159,4 +173,38 @@ public final class GraphGenerator {
         return port;
     }
     
+    /**
+     * Calculates a port placement.
+     * 
+     * @param invertedSideProb the probability for ports to be placed on an odd side.
+     * @param northSouthSideProb the probability for ports to be placed on the northern or
+     *                           southern side.
+     * @param source {@code true} if the port is the source of an edge, {@code false}
+     *               otherwise.
+     * @return a port placement.
+     */
+    private PortSide determinePortPlacement(final float invertedSideProb, final float northSouthSideProb,
+            final boolean source) {
+        
+        float random = randomizer.nextFloat();
+        float border = invertedSideProb;
+        
+        if (random < border) {
+            return source ? PortSide.WEST : PortSide.EAST;
+        }
+        
+        border += 0.5 * northSouthSideProb;
+        
+        if (random < border) {
+            return PortSide.NORTH;
+        }
+        
+        border += 0.5 * northSouthSideProb;
+        
+        if (random < border) {
+            return PortSide.SOUTH;
+        }
+        
+        return source ? PortSide.EAST : PortSide.WEST;
+    }
 }

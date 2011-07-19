@@ -73,6 +73,11 @@ public class ExecutionTimeMetric {
      */
     private PropertySetter propertySetter = null;
     
+    /**
+     * Generator used to generate random graphs.
+     */
+    private GraphGenerator graphGenerator = null;
+    
     
     ///////////////////////////////////////////////////////////////////////////////
     // Constructor
@@ -97,6 +102,7 @@ public class ExecutionTimeMetric {
         this.outputWriter = new OutputStreamWriter(outputStream);
         this.parameters = parameters;
         this.propertySetter = propertySetter;
+        this.graphGenerator = new GraphGenerator();
         
         validateParameters();
     }
@@ -144,7 +150,7 @@ public class ExecutionTimeMetric {
      * @throws KielerException if the layout provider fails
      */
     private void warmup() {
-        KNode layoutGraph = GraphGenerator.generateGraph(10000, 2, true, parameters);
+        KNode layoutGraph = graphGenerator.generateGraph(10000, 2, true, parameters);
         IKielerProgressMonitor progressMonitor = new BasicProgressMonitor();
         
         for (int i = 0; i < 3; i++) {
@@ -173,7 +179,7 @@ public class ExecutionTimeMetric {
                 System.out.print(i);
                 
                 // Generate a graph with the given node and edge count
-                KNode layoutGraph = GraphGenerator.generateGraph(nodeCount, edgeCount, true, parameters);
+                KNode layoutGraph = graphGenerator.generateGraph(nodeCount, edgeCount, true, parameters);
                 if (propertySetter != null) {
                     propertySetter.setProperties(layoutGraph);
                 }

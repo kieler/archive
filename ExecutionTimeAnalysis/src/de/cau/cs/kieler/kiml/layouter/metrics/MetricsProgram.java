@@ -137,7 +137,7 @@ public final class MetricsProgram {
         System.out.println(" -gr <int>  the number of runs per graph. (default: 5)");
         System.out.println(" -em <int>  minimum number of edges to leave each node. (default: 1)");
         System.out.println(" -ex <int>  maximum number of edges to leave each node. (default: 2)");
-        System.out.println(" -pr <float> <float> (default: both 0.0)");
+        System.out.println(" -pr <float> <float> (default: 0.05 0.1)");
         System.out.println("            the probability for ports to be placed on the different sides:");
         System.out.println("             1. inverted port side.");
         System.out.println("             2. northern or southern port side.");

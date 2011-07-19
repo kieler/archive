@@ -156,13 +156,13 @@ public class Parameters {
     /**
      * The probability for a port to become an inverted port.
      */
-    public float invertedPortProb = 0.0f;
+    public float invertedPortProb = 0.05f;
     
     /**
      * The probability for a port to be placed on the northern or southern side, with both
      * sides sharing an equal probability.
      */
-    public float northSouthPortProb = 0.0f;
+    public float northSouthPortProb = 0.1f;
     
     
     ///////////////////////////////////////////////////////////////////////////////
