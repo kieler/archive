@@ -150,9 +150,16 @@ public class ExecutionTimeMetric {
      * @throws KielerException if the layout provider fails
      */
     private void warmup() {
-        KNode layoutGraph = graphGenerator.generateGraph(1000, 2, true, parameters);
+        // Create a set of warmup parameters
+        Parameters warmupParameters = new Parameters();
+        warmupParameters.minOutEdgesPerNode = 2;
+        warmupParameters.maxOutEdgesPerNode = 2;
+        
+        // Generate a graph
+        KNode layoutGraph = graphGenerator.generateGraph(1000, true, warmupParameters);
         IKielerProgressMonitor progressMonitor = new BasicProgressMonitor();
         
+        // Do three runs over it
         for (int i = 0; i < 3; i++) {
             layoutProvider.doLayout(layoutGraph, progressMonitor);
         }
@@ -169,42 +176,38 @@ public class ExecutionTimeMetric {
     private void doGraphSizeMeasurement(final int nodeCount) throws IOException {
         outputWriter.write(Integer.toString(nodeCount));
         
-        for (int edgeCount = parameters.minOutEdgesPerNode; edgeCount <= parameters.maxOutEdgesPerNode;
-                edgeCount++) {
+        System.out.print("n = " + nodeCount + ": ");
+        
+        double totalTime = 0.0;
+        for (int i = 0; i < parameters.graphsPerSize; i++) {
+            System.out.print(i);
             
-            System.out.print("n = " + nodeCount + ", m = " + edgeCount + "n: ");
-            
-            double totalTime = 0.0;
-            for (int i = 0; i < parameters.graphsPerSize; i++) {
-                System.out.print(i);
-                
-                // Generate a graph with the given node and edge count
-                KNode layoutGraph = graphGenerator.generateGraph(nodeCount, edgeCount, true, parameters);
-                if (propertySetter != null) {
-                    propertySetter.setProperties(layoutGraph);
-                }
-                
-                // Do a bunch of layout runs and take the one that took the least amount of time
-                double minTime = Double.MAX_VALUE;
-                for (int j = 0; j < parameters.runsPerGraph; j++) {
-                    System.gc();
-                    
-                    IKielerProgressMonitor progressMonitor = new BasicProgressMonitor();
-                    layoutProvider.doLayout(layoutGraph, progressMonitor);
-                    
-                    minTime = Math.min(minTime, progressMonitor.getExecutionTime());
-                    
-                    System.out.print(".");
-                }
-                
-                totalTime += minTime;
+            // Generate a graph with the given node and edge count
+            KNode layoutGraph = graphGenerator.generateGraph(nodeCount, true, parameters);
+            if (propertySetter != null) {
+                propertySetter.setProperties(layoutGraph);
             }
             
-            // Calculate the average time taken for the graphs
-            double avgTime = totalTime / parameters.graphsPerSize;
-            outputWriter.write("," + avgTime);
-            System.out.println(" -> " + avgTime);
+            // Do a bunch of layout runs and take the one that took the least amount of time
+            double minTime = Double.MAX_VALUE;
+            for (int j = 0; j < parameters.runsPerGraph; j++) {
+                System.gc();
+                
+                IKielerProgressMonitor progressMonitor = new BasicProgressMonitor();
+                layoutProvider.doLayout(layoutGraph, progressMonitor);
+                
+                minTime = Math.min(minTime, progressMonitor.getExecutionTime());
+                
+                System.out.print(".");
+            }
+            
+            totalTime += minTime;
         }
+        
+        // Calculate the average time taken for the graphs
+        double avgTime = totalTime / parameters.graphsPerSize;
+        outputWriter.write("," + avgTime);
+        System.out.println(" -> " + avgTime);
         
         outputWriter.write("\n");
     }

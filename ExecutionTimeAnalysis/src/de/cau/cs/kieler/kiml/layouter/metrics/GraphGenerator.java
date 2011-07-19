@@ -76,13 +76,12 @@ public final class GraphGenerator {
      * Generates a random graph of given size.
      * 
      * @param nodeCount number of nodes in the graph.
-     * @param edgesPerNode number of outgoing edges for each node.
      * @param withPorts if true, ports are generated and connected to the edges.
      * @param parameters user-supplied paramaters affecting the graph generation.
      * @return a randomly generated graph.
      */
-    public KNode generateGraph(final int nodeCount, final int edgesPerNode,
-            final boolean withPorts, final Parameters parameters) {
+    public KNode generateGraph(final int nodeCount, final boolean withPorts,
+            final Parameters parameters) {
         
         // Create parent node
         KNode layoutGraph = KimlUtil.createInitializedNode();

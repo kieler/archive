@@ -195,8 +195,7 @@ public class Parameters {
             // See which argument this is
             if (arg.equals("-h")) {
                 help = true;
-            }
-            else if (arg.equals("-sd")) {
+            } else if (arg.equals("-sd")) {
                 try {
                     startDecade = iterator.nextInt();
                 } catch (Exception e) {
