@@ -150,7 +150,7 @@ public class ExecutionTimeMetric {
      * @throws KielerException if the layout provider fails
      */
     private void warmup() {
-        KNode layoutGraph = graphGenerator.generateGraph(10000, 2, true, parameters);
+        KNode layoutGraph = graphGenerator.generateGraph(1000, 2, true, parameters);
         IKielerProgressMonitor progressMonitor = new BasicProgressMonitor();
         
         for (int i = 0; i < 3; i++) {

@@ -119,6 +119,11 @@ public class Parameters {
     // Variables
     
     /**
+     * Whether a help text should be printed.
+     */
+    public boolean help = false;
+    
+    /**
      * The start decade.
      */
     public int startDecade = 1;
@@ -188,7 +193,10 @@ public class Parameters {
             String arg = iterator.nextString();
             
             // See which argument this is
-            if (arg.equals("-sd")) {
+            if (arg.equals("-h")) {
+                help = true;
+            }
+            else if (arg.equals("-sd")) {
                 try {
                     startDecade = iterator.nextInt();
                 } catch (Exception e) {

@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="/de.cau.cs.kieler.updatesite/plugins/de.cau.cs.kieler.kiml_0.9.0.201107141221.jar"/>
 	<classpathentry kind="lib" path="/de.cau.cs.kieler.updatesite/plugins/de.cau.cs.kieler.klay.layered_0.1.0.201107141221.jar"/>
 	<classpathentry kind="lib" path="/de.cau.cs.kieler.updatesite/plugins/de.cau.cs.kieler.klodd.hierarchical_0.7.1.201107141221.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/com.google.guava_8.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

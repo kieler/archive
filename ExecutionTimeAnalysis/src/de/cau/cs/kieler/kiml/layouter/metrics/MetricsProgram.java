@@ -57,6 +57,12 @@ public final class MetricsProgram {
             printHelp(e.getMessage());
         }
         
+        // Check if only the help text is to be printed
+        if (parameters.help) {
+            printHelp(null);
+            System.exit(0);
+        }
+        
         // Define a property setter that makes KLay Layered use the Longest Path Layerer
         ExecutionTimeMetric.PropertySetter layeredPropertySetter =
             new ExecutionTimeMetric.PropertySetter() {
@@ -142,6 +148,7 @@ public final class MetricsProgram {
         System.out.println("             1. inverted port side.");
         System.out.println("             2. northern or southern port side.");
         System.out.println("            The summed probability must not exceed 1.0.");
+        System.out.println(" -h         prints this help text and ends the program.");
         System.out.println();
         System.out.println("Metrics is brought to you by:");
         System.out.println(" - msp and cds,");

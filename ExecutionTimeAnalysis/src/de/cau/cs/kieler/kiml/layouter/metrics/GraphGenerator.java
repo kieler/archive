@@ -107,9 +107,16 @@ public final class GraphGenerator {
             }
         }
         
+        // Precalculate the difference between minimal and maximal number of outgoing edges per node
+        int edgeCountDiff = parameters.maxOutEdgesPerNode - parameters.minOutEdgesPerNode;
+        
         // Create edges
         for (int i = 0; i < nodeCount; i++) {
-            for (int j = 0; j < edgesPerNode; j++) {
+            // Randomize the number of edgs to generate for this node
+            int edgeCount = parameters.minOutEdgesPerNode
+                    + (int) (randomizer.nextFloat() * edgeCountDiff);
+            
+            for (int j = 0; j < edgeCount; j++) {
                 KEdge edge = KimlUtil.createInitializedEdge();
                 edge.setSource(nodes[i]);
                 int targetIndex = (int) (Math.random() * nodeCount);
