@@ -55,6 +55,7 @@ public final class MetricsProgram {
             parameters = new Parameters(args);
         } catch (IllegalArgumentException e) {
             printHelp(e.getMessage());
+            System.exit(1);
         }
         
         // Check if only the help text is to be printed
