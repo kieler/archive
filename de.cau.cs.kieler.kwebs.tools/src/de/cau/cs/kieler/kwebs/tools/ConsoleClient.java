@@ -56,24 +56,28 @@ public final class ConsoleClient {
         = new Hashtable<String, String>();
 
     /** The KGraph model in XMI serialization. */
-    public static final String FORMAT_KGRAPH_XMI
+    private static final String FORMAT_KGRAPH_XMI
         = "de.cau.cs.kieler.format.kgraph.xmi";
     /** The KGraph model in compressed XMI serialization. */
-    public static final String FORMAT_KGRAPH_XMI_COMPRESSED
+    private static final String FORMAT_KGRAPH_XMI_COMPRESSED
         = "de.cau.cs.kieler.format.kgraph.xmi.compressed";
     /** The OGML format. */
-    public static final String FORMAT_OGML
+    private static final String FORMAT_OGML
         = "net.ogdf.ogml";
     /** The GraphML format. */
-    public static final String FORMAT_GRAPHML
+    private static final String FORMAT_GRAPHML
         = "org.graphdrawing.graphml";
     /** The Graphviz Dot format. */
-    public static final String FORMAT_DOT
+    private static final String FORMAT_DOT
         = "org.graphviz.dot";
     /** The Matrix Market format. */
-    public static final String FORMAT_MATRIX
+    private static final String FORMAT_MATRIX
         = "gov.nist.math.matrix";
 
+    /** */
+    private static final String DEFAULT_SERVER
+        = "http://rtsys.informatik.uni-kiel.de:9442/layout";
+    
     /** Initialization of the extension to format specifier mapping. */
     static {
         formatsByExtension.put("kgraph", FORMAT_KGRAPH_XMI);
@@ -98,9 +102,12 @@ public final class ConsoleClient {
            System.exit(0);
        }
        // The address of the layout service to connect to
-       String server = arguments.get("server");
+       String server = DEFAULT_SERVER;
+       if (arguments.containsKey("server")) {
+           server = arguments.get("server");
+       }
        if (server == null || server.length() == 0) {
-           throw new IllegalStateException("server not configured");
+           throw new IllegalStateException("Server not configured or invalid");
        }
        // The format specifier 
        String format = null;
@@ -158,17 +165,11 @@ public final class ConsoleClient {
        // Layout options are defined by double '-' prefix; the first '-' was removed
        // when parsing the command line arguments into the argument map with parseArgs()
        for (String argument : arguments.keySet()) {
+           System.out.println(argument);
            if (argument.startsWith("-") && arguments.get(argument) != null) {
                options.add(new GraphLayoutOption(argument.substring(1), arguments.get(argument)));
            }
        }
-       // Was a specific algorithm defined by command line?
-       if (arguments.containsKey("algorithm")) {
-           options.add(new GraphLayoutOption(
-               "de.cau.cs.kieler.algorithm", 
-               arguments.get("algorithm")
-           ));
-       }       
        try { 
            connect(server);
            String input = new String(readStream(inStream));
@@ -200,17 +201,22 @@ public final class ConsoleClient {
             "This application calls a KWebS layout service and does a single layout",
             "request. It is intended to be used on script basis for doing batch tests",
             "on the service. By default the graph to be layouted is read from stdin",
-            "and the result is written to stdout. You can override this behaviour by",
-            "optionally specifying the -infile ord the -outfile option to read from",
-            "or write to a file.",
+            "and the result is written to stdout. ",
             "",
-            "Options are:",
+            "Command line arguments to the application are specified in the form",
+            "     '-'<NAME>=<VALUE>",
+            "",
+            "You can override the default input/output behaviour by",
+            "specifying the -infile or the -outfile option to read from",
+            "or write to a file. Layout options can be specified by using a double '-'",
+            " followed by the layout option identifer and the assigned value.",
+            "",
+            "List of command line options:",
             "",
             "-server=<ADDRESS OF LAYOUT SERVER>",
             "-infile=<FILE TO READ GRAPH FROM>",
             "-outfile=<FILE TO WRITE RESULT GRAPH TO>",
             "-format=<FORMAT ID>",
-            "-algorithm=<ALGORITHM ID>",
             "--<LAYOUT OPTION ID>=<LAYOUT OPTION VALUE>"
         };
 
