@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KIELER Layout Web Service Tools
+Bundle-SymbolicName: de.cau.cs.kieler.kwebs.tools;singleton:=true
+Bundle-Version: 0.1.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: Christian-Albrechts-Universität zu Kiel
+Export-Package: de.cau.cs.kieler.kwebs.tools
+
