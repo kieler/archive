@@ -27,7 +27,9 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
+import de.cau.cs.kieler.core.kgraph.KGraphPackage;
 import de.cau.cs.kieler.core.kgraph.KNode;
+import de.cau.cs.kieler.kiml.klayoutdata.KLayoutDataPackage;
 
 /**
  * Command-line tool for rendering layout graphs.
@@ -74,11 +76,12 @@ public final class LayoutGraphTool {
      */
     private static void process(final String inputFileName) throws IOException {
         ResourceSet resourceSet = new ResourceSetImpl();
-        resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(
-                Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
+        resourceSet.getPackageRegistry().put(KGraphPackage.eNS_URI, KGraphPackage.eINSTANCE);
+        resourceSet.getPackageRegistry().put(KLayoutDataPackage.eNS_URI, KLayoutDataPackage.eINSTANCE);
         File inputFile = new File(inputFileName);
         URI fileURI = URI.createFileURI(inputFile.getAbsolutePath());
-        Resource resource = resourceSet.getResource(fileURI, true);
+        Resource resource = new XMIResourceFactoryImpl().createResource(fileURI);
+        resourceSet.getResources().add(resource);
         resource.load(Collections.EMPTY_MAP);
         if (resource.getContents().size() != 1) {
             throw new RuntimeException("The input file must contain exactly one KGraph model.");
