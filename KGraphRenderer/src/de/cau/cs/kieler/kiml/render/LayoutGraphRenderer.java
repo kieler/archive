@@ -18,6 +18,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import de.cau.cs.kieler.kiml.util.KimlUtil;
@@ -48,13 +49,13 @@ public class LayoutGraphRenderer {
     /** background color. */
     private static final Color BACKGROUND_COLOR = new Color(255, 255, 255);
     /** border color for nodes. */
-    private static final Color NODE_BORDER_COLOR = new Color(10, 57, 14, 100);
+    private static final Color NODE_BORDER_COLOR = new Color(10, 57, 14, 150);
     /** fill color for nodes. */
-    private static final Color NODE_FILL_COLOR = new Color(87, 197, 133, 100);
+    private static final Color NODE_FILL_COLOR = new Color(87, 197, 133, 80);
     /** font used for node labels. */
     private static final Font NODE_FONT = new Font("SansSerif", Font.BOLD, 10);
     /** background color for labels. */
-    private static final Color LABEL_BACK_COLOR = new Color(243, 255, 199);
+    private static final Color LABEL_BACK_COLOR = new Color(243, 255, 199, 180);
     /** color used for ports. */
     private static final Color PORT_COLOR = new Color(4, 17, 69, 230);
     /** font used for port labels. */
@@ -75,6 +76,10 @@ public class LayoutGraphRenderer {
         BufferedImage image = new BufferedImage(rect.x + rect.width + 2, rect.y + rect.height + 2,
                 BufferedImage.TYPE_4BYTE_ABGR);
         Graphics2D graphics = image.createGraphics();
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         graphics.setBackground(BACKGROUND_COLOR);
         graphics.clearRect(rect.x, rect.y, rect.width, rect.height);
         
