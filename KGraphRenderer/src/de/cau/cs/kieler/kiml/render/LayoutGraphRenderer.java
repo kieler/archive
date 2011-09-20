@@ -103,6 +103,20 @@ public class LayoutGraphRenderer {
     }
 
     /**
+     * Draw the given text centered in given rectangle bounds.
+     * 
+     * @param text a text string
+     * @param graphics graphics object to draw on
+     * @param bounds the bounds for placement of the string
+     */
+    private void drawString(final String text, final Graphics2D graphics, final Rectangle bounds) {
+        int width = graphics.getFontMetrics().stringWidth(text);
+        int height = graphics.getFontMetrics().getHeight();
+        graphics.drawString(text, bounds.x + (bounds.width - width) / 2,
+                bounds.y + (bounds.height + height) / 2);
+    }
+
+    /**
      * Paints a layout node.
      * 
      * @param layoutNode layout node to paint
@@ -123,7 +137,7 @@ public class LayoutGraphRenderer {
                 graphics.setColor(LABEL_BACK_COLOR);
                 graphics.fill(rect);
                 graphics.setColor(PORT_COLOR);
-                graphics.drawString(port.getLabel().getText(), rect.x, rect.y);
+                drawString(port.getLabel().getText(), graphics, rect);
             }
         }
 
@@ -149,7 +163,7 @@ public class LayoutGraphRenderer {
                 graphics.setColor(LABEL_BACK_COLOR);
                 graphics.fill(rect);
                 graphics.setColor(NODE_BORDER_COLOR);
-                graphics.drawString(child.getLabel().getText(), rect.x, rect.y);
+                drawString(child.getLabel().getText(), graphics, rect);
             }
 
             // paint edges, deactivate label painting for incoming edges
@@ -204,7 +218,7 @@ public class LayoutGraphRenderer {
                 graphics.setColor(LABEL_BACK_COLOR);
                 graphics.fill(rect);
                 graphics.setColor(EDGE_COLOR);
-                graphics.drawString(edgeLabel.getText(), rect.x, rect.y);
+                drawString(edgeLabel.getText(), graphics, rect);
             }
         }
     }
