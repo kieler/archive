@@ -16,7 +16,6 @@ package de.cau.cs.kieler.kwebs.tools;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +23,6 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -39,238 +37,148 @@ import de.cau.cs.kieler.kwebs.jaxws.LayoutServicePort;
  * Utility application for calling the layout service from the console. The graph to be layouted is
  * read from stdin and the result is written to stdout for script based usage.
  *
- * @kieler.rating 2011-09-07 red
- *
  * @author swe
  */
 public final class ConsoleClient {
-
-    /** The service object. */
-    private static LayoutService layoutService;
-
-    /** The web service interface used. */
-    private static LayoutServicePort layoutPort;
-
-    /** Mapping of file extensions to format specifiers. */
-    private static Hashtable<String, String> formatsByExtension
-        = new Hashtable<String, String>();
-
-    /** The KGraph model in XMI serialization. */
-    private static final String FORMAT_KGRAPH_XMI
-        = "de.cau.cs.kieler.format.kgraph.xmi";
-    /** The KGraph model in compressed XMI serialization. */
-    private static final String FORMAT_KGRAPH_XMI_COMPRESSED
-        = "de.cau.cs.kieler.format.kgraph.xmi.compressed";
-    /** The OGML format. */
-    private static final String FORMAT_OGML
-        = "net.ogdf.ogml";
-    /** The GraphML format. */
-    private static final String FORMAT_GRAPHML
-        = "org.graphdrawing.graphml";
-    /** The Graphviz Dot format. */
-    private static final String FORMAT_DOT
-        = "org.graphviz.dot";
-    /** The Matrix Market format. */
-    private static final String FORMAT_MATRIX
-        = "gov.nist.math.matrix";
-
-    /** */
-    private static final String DEFAULT_SERVER
-        = "http://rtsys.informatik.uni-kiel.de:9442/layout";
     
-    /** Initialization of the extension to format specifier mapping. */
-    static {
-        formatsByExtension.put("kgraph", FORMAT_KGRAPH_XMI);
-        formatsByExtension.put("kgraphc", FORMAT_KGRAPH_XMI_COMPRESSED);
-        formatsByExtension.put("dot", FORMAT_DOT);
-        formatsByExtension.put("gml", FORMAT_GRAPHML);
-        formatsByExtension.put("ogml", FORMAT_OGML);
-        formatsByExtension.put("mtx", FORMAT_MATRIX);
+    /**
+     * Hidden constructor to prevent instantiation.
+     */
+    private ConsoleClient() {        
     }
 
+    /** The KGraph format identifier in XMI serialization. */
+    static final String FORMAT_KGRAPH_XMI = "de.cau.cs.kieler.format.kgraph.xmi";
+    /** The KGraph format identifier in compressed XMI serialization. */
+    static final String FORMAT_KGRAPH_XMI_COMPRESSED = "de.cau.cs.kieler.format.kgraph.xmi.compressed";
+    /** The OGML format identifier. */
+    static final String FORMAT_OGML = "net.ogdf.ogml";
+    /** The GraphML format identifier. */
+    static final String FORMAT_GRAPHML = "org.graphdrawing.graphml";
+    /** The Graphviz Dot format identifier. */
+    static final String FORMAT_DOT = "org.graphviz.dot";
+    /** The Matrix Market format identifier. */
+    static final String FORMAT_MATRIX = "gov.nist.math.matrix";
+
+    /** The default server address: Rtsys group server at CAU Kiel. */
+    static final String DEFAULT_SERVER = "http://rtsys.informatik.uni-kiel.de:9442/layout";
+    /** The namespace of the web service. */
+    private static final String QNAME_NS = "http://rtsys.informatik.uni-kiel.de/layout";
+    /** The service name of the web service. */
+    private static final String QNAME_SERVICE = "LayoutService";
+    /** Postfix to be added to the service address when connecting to a layout service. */
+    private static final String WSDL_POSTFIX = "?wsdl";
+    
     /**
      * The main application.
      * 
-     * @param args
-     *            the command line arguments
+     * @param args the command line arguments
+     * @throws Exception if the application ends with an error
      */
-    public static void main(final String[] args) {
-       Map<String, String> arguments = parseArgs(args);
-       // No command line arguments means displaying help and exit
-       if (arguments.size() == 0) {
-           displayHelp();
-           System.exit(0);
-       }
-       // The address of the layout service to connect to
-       String server = DEFAULT_SERVER;
-       if (arguments.containsKey("server")) {
-           server = arguments.get("server");
-       }
-       if (server == null || server.length() == 0) {
-           throw new IllegalStateException("Server not configured or invalid");
-       }
-       // The format specifier 
-       String format = null;
-       // The optional file to read graph from
-       String infile = arguments.get("infile");
-       // The optional file to write graph to
-       String outfile = arguments.get("outfile");
-       // The stream to read graph from
-       InputStream inStream = System.in;
-       // The stream to write layouted graph to; by default stdout
-       OutputStream outStream = System.out;
-       // Try to acquire the format specifier from file extension
-       if (infile != null) {
-           if (infile.indexOf(".") > -1 && infile.indexOf(".") < infile.length() - 1) {
-               // Gets the format specifier by the file extension; may be null
-               format = formatsByExtension.get(
-                   infile.substring(infile.lastIndexOf(".") + 1).toLowerCase()
-               );
-           }
-       }
-       // Possible override of format specification
-       if (arguments.containsKey("format")) {
-           format = arguments.get("format");
-       }
-       if (format == null || format.length() == 0) {
-           throw new IllegalStateException(
-               "Format not configured or not deriveable from file extension"
-           );
-       }
-       try {
-           // Shall we read the graph from a file?
-           if (infile != null) {
-               inStream = new FileInputStream(infile);
-           }
-           // Shall we write the result to a file?
-           if (outfile != null) { 
-               outStream = new FileOutputStream(outfile);
-           }
-       } catch (FileNotFoundException e) { 
-           // If input stream had been initialized before exception occurred we
-           // need to close it
-           if (inStream != null && inStream != System.in) {
-               try {
-                   inStream.close();
-               } catch (IOException x) {
-                   // Nothing we can do about it here
-               }
-           }
-           throw new IllegalArgumentException(
-               "Error while accessing file '" + infile + "' :" + e.getMessage()
-           );
-       }
-       // Optional list of layout options
-       List<GraphLayoutOption> options = new ArrayList<GraphLayoutOption>();
-       // Layout options are defined by double '-' prefix; the first '-' was removed
-       // when parsing the command line arguments into the argument map with parseArgs()
-       for (String argument : arguments.keySet()) {
-           System.out.println(argument);
-           if (argument.startsWith("-") && arguments.get(argument) != null) {
-               options.add(new GraphLayoutOption(argument.substring(1), arguments.get(argument)));
-           }
-       }
-       try { 
-           connect(server);
-           String input = new String(readStream(inStream));
-           if (inStream != System.in) {
-               inStream.close();
-           }
-           String output = layoutPort.graphLayout(input, format, options); 
-           outStream.write(output.getBytes());
-           if (outStream != System.out) {
-               outStream.flush();
-               outStream.close();
-           }
-       } catch (Exception e) {
-           e.printStackTrace();
-       }
-    }
+    public static void main(final String[] args) throws Exception {
+        int exitCode = 0;
+        
+        // Parse the command-line arguments
+        Arguments arguments = new Arguments(args);
+        
+        // The address of the layout service to connect to
+        String server = arguments.getParam(Arguments.SERVER);
+        if (server == null) {
+            server = DEFAULT_SERVER;
+        }
+       
+        // The format specifier 
+        String format = arguments.getParam(Arguments.FORMAT);
+        // The optional file to read graph from
+        String infile = arguments.getParam(Arguments.INFILE);
+        // The optional file to write graph to
+        String outfile = arguments.getParam(Arguments.OUTFILE);
+        // Try to acquire the format specifier from file extension
+        if (format == null && infile != null) {
+            int extIndex = infile.lastIndexOf('.');
+            if (extIndex >= 0) {
+                String extension = infile.substring(extIndex + 1).toLowerCase();
+                format = formatsByExtension().get(extension);
+            }
+        }
+        if (format == null) {
+            format = FORMAT_KGRAPH_XMI;
+        }
+        
+        // The stream to read the input graph from
+        InputStream inStream = System.in;
+        // The stream to write the resulting graph to
+        OutputStream outStream = System.out;
+        try {
+            // Shall we read the graph from a file?
+            if (infile != null) {
+                inStream = new FileInputStream(infile);
+            }
+            // Shall we write the result to a file?
+            if (outfile != null) { 
+                outStream = new FileOutputStream(outfile);
+            }
+            
+            // Optional list of layout options
+            List<GraphLayoutOption> options = new ArrayList<GraphLayoutOption>();
+            for (Map.Entry<String, String> entry : arguments.getOptions()) {
+                options.add(new GraphLayoutOption(entry.getKey(), entry.getValue()));
+            }
 
-    //CHECKSTYLEOFF LineLength
-    
-    /** The help text. */
-    private static final String[] HELPTEXT 
-        = new String[] {
-            "",
-            "ConsoleClient for KWebS",
-            "",
-            "Copyright 2011 by Real-Time and Embedded Systems Group, Department",
-            "of Computer Science, Christian-Albrechts-University of Kiel",
-            "",
-            "This application calls a KWebS layout service and does a single layout",
-            "request. It is intended to be used on script basis for doing batch tests",
-            "on the service. By default the graph to be layouted is read from stdin",
-            "and the result is written to stdout. ",
-            "",
-            "Command line arguments to the application are specified in the form",
-            "     '-'<NAME>=<VALUE>",
-            "",
-            "You can override the default input/output behaviour by",
-            "specifying the -infile or the -outfile option to read from",
-            "or write to a file. Layout options can be specified by using a double '-'",
-            " followed by the layout option identifer and the assigned value.",
-            "",
-            "List of command line options:",
-            "",
-            "-server=<ADDRESS OF LAYOUT SERVER>",
-            "-infile=<FILE TO READ GRAPH FROM>",
-            "-outfile=<FILE TO WRITE RESULT GRAPH TO>",
-            "-format=<FORMAT ID>",
-            "--<LAYOUT OPTION ID>=<LAYOUT OPTION VALUE>"
-        };
-
-    //CHECKSTYLEON LineLength
-    
-    /**
-     * Displays information about how to use this tool.
-     */
-    private static void displayHelp() {
-        for (String line : HELPTEXT) {
-            System.out.println(line);
+            // Connect to the layout service and call it
+            LayoutServicePort layoutPort = connect(server);
+            String input = new String(readStream(inStream));
+            String output = layoutPort.graphLayout(input, format, options);
+            
+            // Write result to the output stream
+            outStream.write(output.getBytes());
+            outStream.flush();
+            
+        } catch (Exception exception) {
+            if (arguments.getParam(Arguments.STACKTRACE) != null) { 
+                exception.printStackTrace();
+            } else {
+                System.err.println("Error: " + exception.getMessage());
+            }
+            exitCode = 1;
+        } finally {
+            try {
+                inStream.close();
+                outStream.close();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+        }
+        
+        if (exitCode != 0) {
+            System.exit(exitCode);
         }
     }
 
-    /** */
-    private static final String QNAME_NS
-        = "http://rtsys.informatik.uni-kiel.de/layout";
-
-    /** */
-    private static final String QNAME_SERVICE
-        = "LayoutService";
-
-    /** Postfix to be added to the service address when connecting to a layout service. */
-    private static final String WSDL_POSTFIX
-        = "?wsdl";
-
     /**
-     * Connects to the layout service at the given address.
+     * Connect to the layout service at the given address.
      * 
      * @param server
      *            the server address to connect to
+     * @returns the layout service port
      * @throws MalformedURLException
-     *            when the given server address is malformed 
+     *            when the given server address is malformed
      */
-    private static void connect(final String server) throws MalformedURLException {
-        layoutService = new LayoutService(
-            new URL(server + WSDL_POSTFIX),
-            new QName(QNAME_NS, QNAME_SERVICE)
-        );
-        layoutPort = layoutService.getLayoutServicePort();         
+    private static LayoutServicePort connect(final String server) throws MalformedURLException {
+        LayoutService layoutService = new LayoutService(new URL(server + WSDL_POSTFIX),
+                new QName(QNAME_NS, QNAME_SERVICE));
+        return layoutService.getLayoutServicePort();         
     }
     
     /** Buffer size for stream IO. */
-    private static final int BUFFER_SIZE
-        = 10240;
+    private static final int BUFFER_SIZE = 2048;
     
     /**
      * Reads data from a stream.
      * 
-     * @param inStream
-     *            the stream to read from
-     * @return the data read
-     * @throws IOException
-     *             when an error happens while reading from the stream
+     * @param inStream the stream to read from
+     * @return the data as a {@code String} instance
+     * @throws IOException when an error happens while reading from the stream
      */
     private static byte[] readStream(final InputStream inStream) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -286,56 +194,21 @@ public final class ConsoleClient {
     }
 
     /**
-     * Parses the command line arguments and stores the key/value
-     * pairs in a {@code HashMap}. A '/' or '-' at the first position is removed.
-     *
-     * @param args
-     *            Array of type {@code String} containing
-     *            the command line arguments
-     * @return a {@code HashMap<String, String>} containing key/value pairs generated
-     *         from the command line arguments
+     * Creates a mapping of file extensions to format specifiers.
+     * 
+     * @return a file extensions mapping
      */
-    private static HashMap<String, String> parseArgs(final String[] args) {
-        HashMap<String, String> result = new HashMap<String, String>();
-        if (args == null || args.length == 0) {
-            return result;
-        }
-        int index = 0;
-        String key = null;
-        String value = null;
-        for (String arg : args) {
-            // Exception on parsing of a command line argument is ignored
-            // since it can only come from an illegal formed argument
-            //CHECKSTYLEOFF EmptyBlock
-            try {
-                if (arg.charAt(0) == '/' || arg.charAt(0) == '-') {
-                    arg = arg.substring(1);
-                }
-                index = arg.indexOf("=");
-                // Ignoring arguments without '=' or of the form 'a=' or '=a'
-                if (index > 0 && index < arg.length() - 1) { 
-                    key = arg.substring(0, index);
-                    value = arg.substring(index + 1);
-                    if (value.startsWith("\"") && value.endsWith("\"")) {
-                        value = value.substring(1, value.length() - 1).trim();
-                    } else if (value.startsWith("'") && value.endsWith("'")) {
-                        value = value.substring(1, value.length() - 1).trim();
-                    }
-                    if (key != null && key.length() > 0 && value != null) {
-                        result.put(key, value);
-                    }
-                }
-            } catch (Exception e) {
-            }
-            //CHECKSTYLEON EmptyBlock            
-        }
-        return result;
-    }
-
-    /**
-     * Private constructor.
-     */
-    private ConsoleClient() {        
+    private static Hashtable<String, String> formatsByExtension() {
+        Hashtable<String, String> formats = new Hashtable<String, String>();
+        formats.put("kgraph", FORMAT_KGRAPH_XMI);
+        formats.put("xmi", FORMAT_KGRAPH_XMI);
+        formats.put("dot", FORMAT_DOT);
+        formats.put("graphviz", FORMAT_DOT);
+        formats.put("graphml", FORMAT_GRAPHML);
+        formats.put("ogml", FORMAT_OGML);
+        formats.put("mtx", FORMAT_MATRIX);
+        formats.put("matrix", FORMAT_MATRIX);
+        return formats;
     }
     
 }
