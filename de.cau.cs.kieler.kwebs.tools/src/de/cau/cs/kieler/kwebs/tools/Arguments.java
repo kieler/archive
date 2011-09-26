@@ -91,7 +91,7 @@ public class Arguments {
                 }
             }
             if (key.length() == 0 || keyIndex == 0 && !isknown(key) || argMap.containsKey(key)) {
-                helpExit();
+                helpExit(key.equals(HELP[0]) || key.equals(HELP[1]));
             }
             argMap.put(key, value);
         }
@@ -125,17 +125,30 @@ public class Arguments {
     
     /**
      * Display help on tool usage and exit.
+     * 
+     * @param normal whether the help message is generated normally, i.e. by the
+     *     {@link #HELP} parameter
      */
-    private static void helpExit() {
-        for (String line : HELP_TEXT) {
-            System.out.println(line);
+    private static void helpExit(final boolean normal) {
+        if (normal) {
+            for (String line : HELP_INTRO) {
+                System.out.println(line);
+            }
+            System.out.println();
+            for (String line : HELP_USAGE) {
+                System.out.println(line);
+            }
+            System.exit(0);
+        } else {
+            for (String line : HELP_USAGE) {
+                System.err.println(line);
+            }
+            System.exit(1);
         }
-        System.exit(0);
     }
     
-    /** The help text. */
-    private static final String[] HELP_TEXT 
-        = new String[] {
+    /** The introductory help text. */
+    private static final String[] HELP_INTRO = new String[] {
             "Console Client for the KIELER Layout Web Service (KWebS)",
             "   Copyright 2011 by Real-Time and Embedded Systems Group,",
             "   Department of Computer Science, Christian-Albrechts-Universitaet zu Kiel",
@@ -144,25 +157,28 @@ public class Arguments {
             "and receiving the layout result. If called with no arguments, the input",
             "is read from stdin, the result is written to stdout, the KGraph format is",
             "assumed, and the KIELER layout server is used, which is available at",
-            "   " + ConsoleClient.DEFAULT_SERVER,
-            "",
-            "Available arguments:",
-            "   " + HELP[0] + " or " + HELP[1],
-            "      Display this information.",
-            "   " + STACKTRACE[0] + " or " + STACKTRACE[1],
-            "      Print complete stack traces in case of error.",
-            "   " + SERVER[0] + "=val or " + SERVER[1] + "=val",
-            "      Choose 'val' as server address.",
-            "   " + INFILE[0] + "=val or " + INFILE[1] + "=val",
-            "      Read the input from the file specified by 'val'. If possible, the graph",
-            "      format is derived from the file extension.",
-            "   " + OUTFILE[0] + "=val or " + OUTFILE[1] + "=val",
-            "      Write the result to the file specified by 'val'.",
-            "   " + FORMAT[0] + "=val or " + FORMAT[1] + "=val",
-            "      Choose 'val' as graph format.",
-            "   --key=val",
-            "      Set the layout parameter 'key' to 'val'. A layout parameter can be",
-            "      a fully qualified layout option identifier or only its last segment."
+            "   " + ConsoleClient.DEFAULT_SERVER
         };
+    
+    /** The usage help text. */
+    private static final String[] HELP_USAGE = new String[] {
+        "Available arguments:",
+        "   " + HELP[0] + " or " + HELP[1],
+        "      Display detailed information.",
+        "   " + STACKTRACE[0] + " or " + STACKTRACE[1],
+        "      Print complete stack traces in case of error.",
+        "   " + SERVER[0] + "=val or " + SERVER[1] + "=val",
+        "      Choose 'val' as server address.",
+        "   " + INFILE[0] + "=val or " + INFILE[1] + "=val",
+        "      Read the input from the file specified by 'val'. If possible, the graph",
+        "      format is derived from the file extension.",
+        "   " + OUTFILE[0] + "=val or " + OUTFILE[1] + "=val",
+        "      Write the result to the file specified by 'val'.",
+        "   " + FORMAT[0] + "=val or " + FORMAT[1] + "=val",
+        "      Choose 'val' as graph format.",
+        "   --key=val",
+        "      Set the layout parameter 'key' to 'val'. A layout parameter can be",
+        "      a fully qualified layout option identifier or only its last segment."
+    };
 
 }
