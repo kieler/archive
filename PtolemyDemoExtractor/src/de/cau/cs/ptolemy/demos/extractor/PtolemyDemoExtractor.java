@@ -186,7 +186,6 @@ public class PtolemyDemoExtractor {
         
         // Get a list of xml files
         items = demoFolder.list(new FilenameFilter() {
-            @Override
             public boolean accept(File dir, String name) {
                 return name.endsWith(".xml");
             }
