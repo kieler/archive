@@ -97,12 +97,14 @@ public final class ConsoleClient {
         if (format == null && infile != null) {
             int extIndex = infile.lastIndexOf('.');
             if (extIndex >= 0) {
-                String extension = infile.substring(extIndex + 1).toLowerCase();
-                format = formatsByExtension().get(extension);
+                format = infile.substring(extIndex + 1).toLowerCase();
             }
-        }
-        if (format == null) {
+        } else if (format == null && infile == null) {
             format = FORMAT_KGRAPH_XMI;
+        }
+        String translatedFormat = formatsByExtension().get(format);
+        if (translatedFormat != null) {
+            format = translatedFormat;
         }
         
         // The stream to read the input graph from
