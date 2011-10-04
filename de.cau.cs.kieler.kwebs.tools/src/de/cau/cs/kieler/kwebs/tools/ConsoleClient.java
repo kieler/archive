@@ -23,11 +23,14 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.BindingProvider;
+import javax.xml.ws.handler.MessageContext;
 
 import de.cau.cs.kieler.kwebs.jaxws.GraphLayoutOption;
 import de.cau.cs.kieler.kwebs.jaxws.LayoutService;
@@ -48,9 +51,9 @@ public final class ConsoleClient {
     }
 
     /** The KGraph format identifier in XMI serialization. */
-    static final String FORMAT_KGRAPH_XMI = "de.cau.cs.kieler.format.kgraph.xmi";
+    static final String FORMAT_KGRAPH_XMI = "de.cau.cs.kieler.kgraph";
     /** The KGraph format identifier in compressed XMI serialization. */
-    static final String FORMAT_KGRAPH_XMI_COMPRESSED = "de.cau.cs.kieler.format.kgraph.xmi.compressed";
+    static final String FORMAT_KGRAPH_XMI_COMPRESSED = "de.cau.cs.kieler.kgraph.gz";
     /** The OGML format identifier. */
     static final String FORMAT_OGML = "net.ogdf.ogml";
     /** The GraphML format identifier. */
@@ -169,7 +172,20 @@ public final class ConsoleClient {
     private static LayoutServicePort connect(final String server) throws MalformedURLException {
         LayoutService layoutService = new LayoutService(new URL(server + WSDL_POSTFIX),
                 new QName(QNAME_NS, QNAME_SERVICE));
-        return layoutService.getLayoutServicePort();         
+        LayoutServicePort layoutPort = layoutService.getLayoutServicePort();
+//* Adding support for GZip and Deflate encoding                
+        Map<String, List<String>> httpHeaders = new HashMap<String, List<String>>();
+        List<String> acceptList = new ArrayList<String>();
+        acceptList.add("gzip");
+        acceptList.add("deflate");
+        httpHeaders.put("Accept-Encoding", acceptList);
+        List<String> contentList = new ArrayList<String>();
+        contentList.add("gzip");
+        httpHeaders.put("Content-Encoding", contentList);
+        Map<String, Object> context = ((BindingProvider) layoutPort).getRequestContext();  
+        context.put(MessageContext.HTTP_REQUEST_HEADERS, httpHeaders);
+//*/              
+        return layoutPort;         
     }
     
     /** Buffer size for stream IO. */
