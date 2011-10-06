@@ -99,17 +99,19 @@ public final class ConsoleClient {
         // Try to acquire the format specifier from file extension
         if (format == null && infile != null) {
             int extIndex = infile.lastIndexOf('.');
-            if (extIndex >= 0) {
+            if (extIndex >= 0 && extIndex < infile.length() - 1) {
                 format = infile.substring(extIndex + 1).toLowerCase();
             }
-        } else if (format == null && infile == null) {
+        }
+        if (format != null) {
+            String translatedFormat = formatsByExtension().get(format);
+            if (translatedFormat != null) {
+                format = translatedFormat;
+            }
+        } else {        
             format = FORMAT_KGRAPH_XMI;
         }
-        String translatedFormat = formatsByExtension().get(format);
-        if (translatedFormat != null) {
-            format = translatedFormat;
-        }
-        
+
         // The stream to read the input graph from
         InputStream inStream = System.in;
         // The stream to write the resulting graph to
@@ -225,7 +227,7 @@ public final class ConsoleClient {
         formats.put("graphml", FORMAT_GRAPHML);
         formats.put("ogml", FORMAT_OGML);
         formats.put("mtx", FORMAT_MATRIX);
-        formats.put("matrix", FORMAT_MATRIX);
+        formats.put("matrix", FORMAT_MATRIX);        
         return formats;
     }
     
