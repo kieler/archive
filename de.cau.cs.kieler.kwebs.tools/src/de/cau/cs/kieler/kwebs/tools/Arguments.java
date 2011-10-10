@@ -138,6 +138,10 @@ public class Arguments {
             for (String line : HELP_USAGE) {
                 System.out.println(line);
             }
+            System.out.println();
+            for (String line : HELP_SERVICEDATA) {
+                System.out.println(line);
+            }
             System.exit(0);
         } else {
             for (String line : HELP_USAGE) {
@@ -179,6 +183,13 @@ public class Arguments {
         "   --key=val",
         "      Set the layout parameter 'key' to 'val'. A layout parameter can be",
         "      a fully qualified layout option identifier or only its last segment."
+    };
+    
+    /** The service data help text. */
+    private static final String[] HELP_SERVICEDATA = new String[] {
+        "Information on available layout algorithms, options, and file formats",
+        "is found at",
+        "   " + ConsoleClient.DEFAULT_SERVICEDATA
     };
 
 }

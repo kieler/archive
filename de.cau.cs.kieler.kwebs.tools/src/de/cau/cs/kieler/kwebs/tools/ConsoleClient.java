@@ -65,6 +65,9 @@ public final class ConsoleClient {
 
     /** The default server address: Rtsys group server at CAU Kiel. */
     static final String DEFAULT_SERVER = "http://rtsys.informatik.uni-kiel.de:9442/layout";
+    /** The default service data information address. */
+    static final String DEFAULT_SERVICEDATA
+            = "http://rtsys.informatik.uni-kiel.de:9444/ServiceData.html";
     /** The namespace of the web service. */
     private static final String QNAME_NS = "http://rtsys.informatik.uni-kiel.de/layout";
     /** The service name of the web service. */
