@@ -51,28 +51,27 @@ public final class ConsoleClient {
     }
 
     /** The KGraph format identifier in XMI serialization. */
-    static final String FORMAT_KGRAPH_XMI = "de.cau.cs.kieler.kgraph";
-    /** The KGraph format identifier in compressed XMI serialization. */
-    static final String FORMAT_KGRAPH_XMI_COMPRESSED = "de.cau.cs.kieler.kgraph.gz";
+    public static final String FORMAT_KGRAPH_XMI = "de.cau.cs.kieler.kgraph";
     /** The OGML format identifier. */
-    static final String FORMAT_OGML = "net.ogdf.ogml";
+    public static final String FORMAT_OGML = "net.ogdf.ogml";
     /** The GraphML format identifier. */
-    static final String FORMAT_GRAPHML = "org.graphdrawing.graphml";
+    public static final String FORMAT_GRAPHML = "org.graphdrawing.graphml";
     /** The Graphviz Dot format identifier. */
-    static final String FORMAT_DOT = "org.graphviz.dot";
+    public static final String FORMAT_DOT = "org.graphviz.dot";
     /** The Matrix Market format identifier. */
-    static final String FORMAT_MATRIX = "gov.nist.math.matrix";
+    public static final String FORMAT_MATRIX = "gov.nist.math.matrix";
 
     /** The default server address: Rtsys group server at CAU Kiel. */
-    static final String DEFAULT_SERVER = "http://rtsys.informatik.uni-kiel.de:9442/layout";
+    public static final String DEFAULT_SERVER = "http://rtsys.informatik.uni-kiel.de:9442/layout";
     /** The default service data information address. */
-    static final String DEFAULT_SERVICEDATA
+    public static final String DEFAULT_SERVICEDATA
             = "http://rtsys.informatik.uni-kiel.de:9444/ServiceData.html";
+    
     /** The namespace of the web service. */
     private static final String QNAME_NS = "http://rtsys.informatik.uni-kiel.de/layout";
     /** The service name of the web service. */
     private static final String QNAME_SERVICE = "LayoutService";
-    /** Postfix to be added to the service address when connecting to a layout service. */
+    /** Suffix to be added to the service address when connecting to a layout service. */
     private static final String WSDL_POSTFIX = "?wsdl";
     
     /**
@@ -170,15 +169,15 @@ public final class ConsoleClient {
      * 
      * @param server
      *            the server address to connect to
-     * @returns the layout service port
+     * @return the layout service port
      * @throws MalformedURLException
-     *            when the given server address is malformed
+     *            if the given server address is malformed
      */
-    private static LayoutServicePort connect(final String server) throws MalformedURLException {
+    public static LayoutServicePort connect(final String server) throws MalformedURLException {
         LayoutService layoutService = new LayoutService(new URL(server + WSDL_POSTFIX),
                 new QName(QNAME_NS, QNAME_SERVICE));
         LayoutServicePort layoutPort = layoutService.getLayoutServicePort();
-//* Adding support for GZip and Deflate encoding                
+        // Adding support for GZip and Deflate encoding
         Map<String, List<String>> httpHeaders = new HashMap<String, List<String>>();
         List<String> acceptList = new ArrayList<String>();
         acceptList.add("gzip");
@@ -189,7 +188,6 @@ public final class ConsoleClient {
         httpHeaders.put("Content-Encoding", contentList);
         Map<String, Object> context = ((BindingProvider) layoutPort).getRequestContext();  
         context.put(MessageContext.HTTP_REQUEST_HEADERS, httpHeaders);
-//*/              
         return layoutPort;         
     }
     
