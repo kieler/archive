@@ -35,9 +35,12 @@ public class Arguments {
     public static final String[] FORMAT = { "format", "-f" };
     /** Display full stack traces. */
     public static final String[] STACKTRACE = { "stacktrace", "-t", "trace" };
-    
+    /** Output layout time and not calculated layout. */
+    public static final String[] LAYOUTTIME = { "layouttime", "-lt" };
+    /** Print file name of source graph to stderr. */
+    public static final String[] GRAPHNAME = { "graphname", "-gn" };
     /** The list of known parameters, except {@link #HELP}. */
-    private static final String[][] PARAMS = { SERVER, INFILE, OUTFILE, FORMAT, STACKTRACE };
+    private static final String[][] PARAMS = { SERVER, INFILE, OUTFILE, FORMAT, STACKTRACE, LAYOUTTIME, GRAPHNAME };
     
     /**
      * Check whether the given parameter is one of the known program parameters.

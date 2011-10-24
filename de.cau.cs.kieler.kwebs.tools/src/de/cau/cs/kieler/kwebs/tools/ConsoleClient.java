@@ -133,14 +133,24 @@ public final class ConsoleClient {
             for (Map.Entry<String, String> entry : arguments.getOptions()) {
                 options.add(new GraphLayoutOption(entry.getKey(), entry.getValue()));
             }
-
+            //
+            if (arguments.getParam(Arguments.GRAPHNAME) != null) {
+                System.err.println(infile);
+            }
             // Connect to the layout service and call it
             LayoutServicePort layoutPort = connect(server);
             String input = new String(readStream(inStream));
-            String output = layoutPort.graphLayout(input, format, options);
-            
+            double timeLayoutStart = System.nanoTime();
+            String output = layoutPort.graphLayout(input, format, null, options);
+            double timeLayout = System.nanoTime() - timeLayoutStart;
+
             // Write result to the output stream
-            outStream.write(output.getBytes());
+            if (arguments.getParam(Arguments.LAYOUTTIME) != null) {
+                outStream.write((new Double(timeLayout * 1e-9).toString() + "\n").getBytes());
+            } else {
+                outStream.write(output.getBytes());
+            }
+            
             outStream.flush();
             
         } catch (Exception exception) {

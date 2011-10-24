@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+
 /**
  * <p>Java class for graphLayout complex type.
  * 
@@ -19,7 +20,8 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="serializedGraph" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="format" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="informat" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="outformat" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="options" type="{http://rtsys.informatik.uni-kiel.de/layout}graphLayoutOption" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -32,7 +34,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "graphLayout", propOrder = {
     "serializedGraph",
-    "format",
+    "informat",
+    "outformat",
     "options"
 })
 public class GraphLayout {
@@ -40,7 +43,9 @@ public class GraphLayout {
     @XmlElement(required = true)
     protected String serializedGraph;
     @XmlElement(required = true)
-    protected String format;
+    protected String informat;
+    @XmlElement(required = true, nillable = true)
+    protected String outformat;
     @XmlElement(nillable = true)
     protected List<GraphLayoutOption> options;
 
@@ -69,27 +74,51 @@ public class GraphLayout {
     }
 
     /**
-     * Gets the value of the format property.
+     * Gets the value of the informat property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getFormat() {
-        return format;
+    public String getInformat() {
+        return informat;
     }
 
     /**
-     * Sets the value of the format property.
+     * Sets the value of the informat property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setFormat(String value) {
-        this.format = value;
+    public void setInformat(String value) {
+        this.informat = value;
+    }
+
+    /**
+     * Gets the value of the outformat property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getOutformat() {
+        return outformat;
+    }
+
+    /**
+     * Sets the value of the outformat property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setOutformat(String value) {
+        this.outformat = value;
     }
 
     /**
