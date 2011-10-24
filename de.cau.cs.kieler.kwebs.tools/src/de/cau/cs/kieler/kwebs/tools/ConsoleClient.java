@@ -92,26 +92,35 @@ public final class ConsoleClient {
             server = DEFAULT_SERVER;
         }
        
-        // The format specifier 
-        String format = arguments.getParam(Arguments.FORMAT);
+        // The input format specifier 
+        String informat = arguments.getParam(Arguments.INFORMAT);
+        // The output format specifier
+        String outformat = arguments.getParam(Arguments.OUTFORMAT);
         // The optional file to read graph from
         String infile = arguments.getParam(Arguments.INFILE);
         // The optional file to write graph to
         String outfile = arguments.getParam(Arguments.OUTFILE);
         // Try to acquire the format specifier from file extension
-        if (format == null && infile != null) {
+        if (informat == null && infile != null) {
             int extIndex = infile.lastIndexOf('.');
             if (extIndex >= 0 && extIndex < infile.length() - 1) {
-                format = infile.substring(extIndex + 1).toLowerCase();
+                informat = infile.substring(extIndex + 1).toLowerCase();
             }
         }
-        if (format != null) {
-            String translatedFormat = formatsByExtension().get(format);
+        Hashtable<String, String> formatsByExtension = formatsByExtension();
+        if (informat != null) {
+            String translatedFormat = formatsByExtension.get(informat);
             if (translatedFormat != null) {
-                format = translatedFormat;
+                informat = translatedFormat;
             }
         } else {        
-            format = FORMAT_KGRAPH_XMI;
+            informat = FORMAT_KGRAPH_XMI;
+        }
+        if (outformat != null) {
+            String translatedFormat = formatsByExtension.get(outformat);
+            if (translatedFormat != null) {
+                outformat = translatedFormat;
+            }
         }
 
         // The stream to read the input graph from
@@ -133,24 +142,14 @@ public final class ConsoleClient {
             for (Map.Entry<String, String> entry : arguments.getOptions()) {
                 options.add(new GraphLayoutOption(entry.getKey(), entry.getValue()));
             }
-            //
-            if (arguments.getParam(Arguments.GRAPHNAME) != null) {
-                System.err.println(infile);
-            }
+
             // Connect to the layout service and call it
             LayoutServicePort layoutPort = connect(server);
             String input = new String(readStream(inStream));
-            double timeLayoutStart = System.nanoTime();
-            String output = layoutPort.graphLayout(input, format, null, options);
-            double timeLayout = System.nanoTime() - timeLayoutStart;
+            String output = layoutPort.graphLayout(input, informat, outformat, options);
 
             // Write result to the output stream
-            if (arguments.getParam(Arguments.LAYOUTTIME) != null) {
-                outStream.write((new Double(timeLayout * 1e-9).toString() + "\n").getBytes());
-            } else {
-                outStream.write(output.getBytes());
-            }
-            
+            outStream.write(output.getBytes());            
             outStream.flush();
             
         } catch (Exception exception) {

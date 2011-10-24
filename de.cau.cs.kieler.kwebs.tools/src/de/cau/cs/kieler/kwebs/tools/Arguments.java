@@ -31,16 +31,15 @@ public class Arguments {
     public static final String[] INFILE = { "infile", "-i", "input", "in" };
     /** Write to the given output file. */
     public static final String[] OUTFILE = { "outfile", "-o", "output", "out" };
-    /** Select a specific graph format. */
-    public static final String[] FORMAT = { "format", "-f" };
+    /** Select a specific input graph format. */
+    public static final String[] INFORMAT = { "informat", "-if" };
+    /** Select a specific output graph format. */
+    public static final String[] OUTFORMAT = { "outformat", "-of" };
     /** Display full stack traces. */
     public static final String[] STACKTRACE = { "stacktrace", "-t", "trace" };
-    /** Output layout time and not calculated layout. */
-    public static final String[] LAYOUTTIME = { "layouttime", "-lt" };
-    /** Print file name of source graph to stderr. */
-    public static final String[] GRAPHNAME = { "graphname", "-gn" };
     /** The list of known parameters, except {@link #HELP}. */
-    private static final String[][] PARAMS = { SERVER, INFILE, OUTFILE, FORMAT, STACKTRACE, LAYOUTTIME, GRAPHNAME };
+    private static final String[][] PARAMS = { SERVER, INFILE, OUTFILE, INFORMAT, OUTFORMAT,
+            STACKTRACE };
     
     /**
      * Check whether the given parameter is one of the known program parameters.
@@ -181,8 +180,10 @@ public class Arguments {
         "      format is derived from the file extension.",
         "   " + OUTFILE[0] + "=val or " + OUTFILE[1] + "=val",
         "      Write the result to the file specified by 'val'.",
-        "   " + FORMAT[0] + "=val or " + FORMAT[1] + "=val",
-        "      Choose 'val' as graph format.",
+        "   " + INFORMAT[0] + "=val or " + INFORMAT[1] + "=val",
+        "      Choose 'val' as input graph format.",
+        "   " + OUTFORMAT[0] + "=val or " + OUTFORMAT[1] + "=val",
+        "      Choose 'val' as output graph format (default: same as input format).",
         "   --key=val",
         "      Set the layout parameter 'key' to 'val'. A layout parameter can be",
         "      a fully qualified layout option identifier or only its last segment."
