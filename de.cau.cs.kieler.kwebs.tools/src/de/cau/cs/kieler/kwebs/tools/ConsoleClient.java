@@ -100,7 +100,7 @@ public final class ConsoleClient {
         String infile = arguments.getParam(Arguments.INFILE);
         // The optional file to write graph to
         String outfile = arguments.getParam(Arguments.OUTFILE);
-        // Try to acquire the format specifier from file extension
+        // Try to acquire the input format specifier from file extension
         if (informat == null && infile != null) {
             int extIndex = infile.lastIndexOf('.');
             if (extIndex >= 0 && extIndex < infile.length() - 1) {
@@ -116,6 +116,13 @@ public final class ConsoleClient {
         } else {        
             informat = FORMAT_KGRAPH_XMI;
         }
+        // Try to acquire the output format specifier from file extension
+        if (outformat == null && outfile != null) {
+            int extIndex = outfile.lastIndexOf('.');
+            if (extIndex >= 0 && extIndex < outfile.length() - 1) {
+                outformat = outfile.substring(extIndex + 1).toLowerCase();
+            }
+        }        
         if (outformat != null) {
             String translatedFormat = formatsByExtension.get(outformat);
             if (translatedFormat != null) {
