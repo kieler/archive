@@ -60,6 +60,8 @@ public final class ConsoleClient {
     public static final String FORMAT_DOT = "org.graphviz.dot";
     /** The Matrix Market format identifier. */
     public static final String FORMAT_MATRIX = "gov.nist.math.matrix";
+    /** The GML format identifier. */
+    public static final String FORMAT_GML = "de.uni-passau.fim.gml";
 
     /** The default server address: Rtsys group server at CAU Kiel. */
     public static final String DEFAULT_SERVER = "http://rtsys.informatik.uni-kiel.de:9442/layout";
@@ -244,7 +246,8 @@ public final class ConsoleClient {
         formats.put("graphml", FORMAT_GRAPHML);
         formats.put("ogml", FORMAT_OGML);
         formats.put("mtx", FORMAT_MATRIX);
-        formats.put("matrix", FORMAT_MATRIX);        
+        formats.put("matrix", FORMAT_MATRIX);
+        formats.put("gml", FORMAT_GML);
         return formats;
     }
     
