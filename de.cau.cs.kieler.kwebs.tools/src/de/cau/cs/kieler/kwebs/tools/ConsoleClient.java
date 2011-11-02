@@ -24,7 +24,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -41,27 +40,18 @@ import de.cau.cs.kieler.kwebs.jaxws.LayoutServicePort;
  * read from stdin and the result is written to stdout for script based usage.
  *
  * @author swe
+ * @author msp
  */
 public final class ConsoleClient {
     
     /**
      * Hidden constructor to prevent instantiation.
      */
-    private ConsoleClient() {        
+    private ConsoleClient() {
     }
 
     /** The KGraph format identifier in XMI serialization. */
     public static final String FORMAT_KGRAPH_XMI = "de.cau.cs.kieler.kgraph";
-    /** The OGML format identifier. */
-    public static final String FORMAT_OGML = "net.ogdf.ogml";
-    /** The GraphML format identifier. */
-    public static final String FORMAT_GRAPHML = "org.graphdrawing.graphml";
-    /** The Graphviz Dot format identifier. */
-    public static final String FORMAT_DOT = "org.graphviz.dot";
-    /** The Matrix Market format identifier. */
-    public static final String FORMAT_MATRIX = "gov.nist.math.matrix";
-    /** The GML format identifier. */
-    public static final String FORMAT_GML = "de.uni-passau.fim.gml";
 
     /** The default server address: Rtsys group server at CAU Kiel. */
     public static final String DEFAULT_SERVER = "http://rtsys.informatik.uni-kiel.de:9442/layout";
@@ -107,16 +97,9 @@ public final class ConsoleClient {
             int extIndex = infile.lastIndexOf('.');
             if (extIndex >= 0 && extIndex < infile.length() - 1) {
                 informat = infile.substring(extIndex + 1).toLowerCase();
+            } else {
+                informat = FORMAT_KGRAPH_XMI;
             }
-        }
-        Hashtable<String, String> formatsByExtension = formatsByExtension();
-        if (informat != null) {
-            String translatedFormat = formatsByExtension.get(informat);
-            if (translatedFormat != null) {
-                informat = translatedFormat;
-            }
-        } else {        
-            informat = FORMAT_KGRAPH_XMI;
         }
         // Try to acquire the output format specifier from file extension
         if (outformat == null && outfile != null) {
@@ -125,12 +108,6 @@ public final class ConsoleClient {
                 outformat = outfile.substring(extIndex + 1).toLowerCase();
             }
         }        
-        if (outformat != null) {
-            String translatedFormat = formatsByExtension.get(outformat);
-            if (translatedFormat != null) {
-                outformat = translatedFormat;
-            }
-        }
 
         // The stream to read the input graph from
         InputStream inStream = System.in;
@@ -230,25 +207,6 @@ public final class ConsoleClient {
             }
         } while (read > 0);
         return out.toByteArray();
-    }
-
-    /**
-     * Creates a mapping of file extensions to format specifiers.
-     * 
-     * @return a file extensions mapping
-     */
-    private static Hashtable<String, String> formatsByExtension() {
-        Hashtable<String, String> formats = new Hashtable<String, String>();
-        formats.put("kgraph", FORMAT_KGRAPH_XMI);
-        formats.put("xmi", FORMAT_KGRAPH_XMI);
-        formats.put("dot", FORMAT_DOT);
-        formats.put("graphviz", FORMAT_DOT);
-        formats.put("graphml", FORMAT_GRAPHML);
-        formats.put("ogml", FORMAT_OGML);
-        formats.put("mtx", FORMAT_MATRIX);
-        formats.put("matrix", FORMAT_MATRIX);
-        formats.put("gml", FORMAT_GML);
-        return formats;
     }
     
 }
