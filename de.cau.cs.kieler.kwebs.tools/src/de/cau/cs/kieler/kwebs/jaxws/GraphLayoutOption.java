@@ -40,21 +40,6 @@ public class GraphLayoutOption {
      */
     public GraphLayoutOption() {
     }
-
-    /**
-     * This constructor initiates from a {@link IProperty} and
-     * its associated value. The identifier of this {@link GraphLayoutOption}
-     * is derived from the property by {@link getId} and the value by calling
-     * {@code thevalue.toString()}.
-     *
-     * @param theproperty
-     *            the property
-     * @param thevalue
-     *            the value
-     *//*
-    public GraphLayoutOption(final IProperty<?> theproperty, final Object thevalue) {
-        this(theproperty.getId(), thevalue.toString());
-    }*/
     
     /**
      * Constructs a new instance with the given id and value.
