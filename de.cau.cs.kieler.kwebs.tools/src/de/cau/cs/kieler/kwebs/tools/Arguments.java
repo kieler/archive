@@ -80,9 +80,11 @@ public class Arguments {
                 argMap = parsedParams;
             }
             int valueIndex = arg.indexOf('=');
-            String key, value = "";
+            String key, value;
             if (valueIndex < 0) {
                 key = arg.substring(keyIndex);
+                // options with no value are interpreted as boolean flags that are set to true
+                value = "true";
             } else {
                 key = arg.substring(keyIndex, valueIndex);
                 value = arg.substring(valueIndex + 1);
