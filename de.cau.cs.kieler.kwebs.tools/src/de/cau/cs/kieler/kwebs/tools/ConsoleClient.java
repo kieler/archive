@@ -54,13 +54,13 @@ public final class ConsoleClient {
     public static final String FORMAT_KGRAPH_XMI = "de.cau.cs.kieler.kgraph";
 
     /** The default server address: Rtsys group server at CAU Kiel. */
-    public static final String DEFAULT_SERVER = "http://rtsys.informatik.uni-kiel.de:9442/layout";
+    public static final String DEFAULT_SERVER = "http://layout.rtsys.informatik.uni-kiel.de:9442/layout";
     /** The default service data information address. */
     public static final String DEFAULT_SERVICEDATA
-            = "http://rtsys.informatik.uni-kiel.de:9444/ServiceData.html";
+            = "http://layout.rtsys.informatik.uni-kiel.de:9444/ServiceData.html";
     
     /** The namespace of the web service. */
-    private static final String QNAME_NS = "http://rtsys.informatik.uni-kiel.de/layout";
+    private static final String QNAME_NS = "http://layout.rtsys.informatik.uni-kiel.de/layout";
     /** The service name of the web service. */
     private static final String QNAME_SERVICE = "LayoutService";
     /** Suffix to be added to the service address when connecting to a layout service. */

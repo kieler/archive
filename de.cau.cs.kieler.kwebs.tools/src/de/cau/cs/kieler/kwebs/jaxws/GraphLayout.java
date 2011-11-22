@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="serializedGraph" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="informat" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="outformat" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="options" type="{http://rtsys.informatik.uni-kiel.de/layout}graphLayoutOption" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="options" type="{http://layout.rtsys.informatik.uni-kiel.de/layout}graphLayoutOption" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
