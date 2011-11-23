@@ -97,8 +97,6 @@ public final class ConsoleClient {
             int extIndex = infile.lastIndexOf('.');
             if (extIndex >= 0 && extIndex < infile.length() - 1) {
                 informat = infile.substring(extIndex + 1).toLowerCase();
-            } else {
-                informat = FORMAT_KGRAPH_XMI;
             }
         }
         // Try to acquire the output format specifier from file extension
@@ -114,6 +112,9 @@ public final class ConsoleClient {
         // The stream to write the resulting graph to
         OutputStream outStream = System.out;
         try {
+            if (informat == null) {
+                informat = FORMAT_KGRAPH_XMI;
+            }
             // Shall we read the graph from a file?
             if (infile != null) {
                 inStream = new FileInputStream(infile);

@@ -15,6 +15,9 @@ public class ServiceFault_Exception
     extends Exception
 {
 
+    /** serial version uid. */
+    private static final long serialVersionUID = 1L;
+    
     /**
      * Java type that goes as soapenv:Fault detail element.
      * 
