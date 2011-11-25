@@ -16,6 +16,7 @@ package test.layout;
 import de.cau.cs.kieler.core.alg.IKielerProgressMonitor;
 import de.cau.cs.kieler.core.alg.BasicProgressMonitor;
 import de.cau.cs.kieler.core.kgraph.KEdge;
+import de.cau.cs.kieler.core.kgraph.KLabel;
 import de.cau.cs.kieler.core.kgraph.KNode;
 import de.cau.cs.kieler.core.kgraph.KPort;
 import de.cau.cs.kieler.kiml.AbstractLayoutProvider;
@@ -82,10 +83,12 @@ public final class Test {
         KNode childNode1 = KimlUtil.createInitializedNode();
         // This automatically adds the child to the list of its parent's children.
         childNode1.setParent(parentNode);
-        childNode1.getLabel().setText("node1");
+        KLabel nodeLabel1 = KimlUtil.createInitializedLabel(childNode1);
+        nodeLabel1.setText("node1");
         KNode childNode2 = KimlUtil.createInitializedNode();
         childNode2.setParent(parentNode);
-        childNode2.getLabel().setText("node2");
+        KLabel nodeLabel2 = KimlUtil.createInitializedLabel(childNode2);
+        nodeLabel2.setText("node2");
 
         // create ports (optional)
         KPort port1 = KimlUtil.createInitializedPort();
@@ -140,7 +143,7 @@ public final class Test {
                 KShapeLayout portLayout = port.getData(KShapeLayout.class);
                 // set position and side
                 portLayout.setYpos(i * 30.0f / (childNode.getPorts().size() + 1));
-                if (childNode.getLabel().getText().equals("node1")) {
+                if (childNode.getLabels().get(0).getText().equals("node1")) {
                     portLayout.setXpos(30.0f);
                     portLayout.setProperty(LayoutOptions.PORT_SIDE, PortSide.EAST);
                 } else {
@@ -168,7 +171,7 @@ public final class Test {
         // print position of each node
         for (KNode childNode : parentNode.getChildren()) {
             KShapeLayout childLayout = childNode.getData(KShapeLayout.class);
-            System.out.println(childNode.getLabel().getText() + ": x = "
+            System.out.println(childNode.getLabels().get(0).getText() + ": x = "
                     + childLayout.getXpos() + ", y = " + childLayout.getYpos());
         }
     }

@@ -16,6 +16,7 @@ package de.cau.cs.kieler.kiml.layouter.metrics;
 import java.util.Random;
 
 import de.cau.cs.kieler.core.kgraph.KEdge;
+import de.cau.cs.kieler.core.kgraph.KLabel;
 import de.cau.cs.kieler.core.kgraph.KNode;
 import de.cau.cs.kieler.core.kgraph.KPort;
 import de.cau.cs.kieler.kiml.klayoutdata.KShapeLayout;
@@ -93,7 +94,8 @@ public final class GraphGenerator {
         for (int i = 0; i < nodeCount; i++) {
             // Create a node
             nodes[i] = KimlUtil.createInitializedNode();
-            nodes[i].getLabel().setText("N" + i);
+            KLabel label = KimlUtil.createInitializedLabel(nodes[i]);
+            label.setText("N" + i);
             nodes[i].setParent(layoutGraph);
             
             // Set node properties

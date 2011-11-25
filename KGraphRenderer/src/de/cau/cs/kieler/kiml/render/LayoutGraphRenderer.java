@@ -136,13 +136,15 @@ public class LayoutGraphRenderer {
         for (KPort port : layoutNode.getPorts()) {
             Rectangle rect = getRect(port.getData(KShapeLayout.class), offset);
             graphics.fill(rect);
-            if (port.getLabel() != null && port.getLabel().getText() != null) {
-                KVector portOffset = new KVector(rect.x, rect.y);
-                rect = getRect(port.getLabel().getData(KShapeLayout.class), portOffset);
-                graphics.setColor(LABEL_BACK_COLOR);
-                graphics.fill(rect);
-                graphics.setColor(PORT_COLOR);
-                drawString(port.getLabel().getText(), graphics, rect);
+            for (KLabel label : port.getLabels()) {
+                if (label.getText() != null) {
+                    KVector portOffset = new KVector(rect.x, rect.y);
+                    rect = getRect(label.getData(KShapeLayout.class), portOffset);
+                    graphics.setColor(LABEL_BACK_COLOR);
+                    graphics.fill(rect);
+                    graphics.setColor(PORT_COLOR);
+                    drawString(label.getText(), graphics, rect);
+                }
             }
         }
 
@@ -162,13 +164,15 @@ public class LayoutGraphRenderer {
             graphics.draw(rect);
             KVector childOffset = new KVector(rect.x, rect.y);
             paintLayoutNode(child, graphics, childOffset);
-            if (child.getLabel() != null && child.getLabel().getText() != null) {
-                graphics.setFont(NODE_FONT);
-                rect = getRect(child.getLabel().getData(KShapeLayout.class), childOffset);
-                graphics.setColor(LABEL_BACK_COLOR);
-                graphics.fill(rect);
-                graphics.setColor(NODE_BORDER_COLOR);
-                drawString(child.getLabel().getText(), graphics, rect);
+            for (KLabel label : child.getLabels()) {
+                if (label.getText() != null) {
+                    graphics.setFont(NODE_FONT);
+                    rect = getRect(label.getData(KShapeLayout.class), childOffset);
+                    graphics.setColor(LABEL_BACK_COLOR);
+                    graphics.fill(rect);
+                    graphics.setColor(NODE_BORDER_COLOR);
+                    drawString(label.getText(), graphics, rect);
+                }
             }
 
             // paint edges, deactivate label painting for incoming edges

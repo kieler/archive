@@ -22,7 +22,6 @@ import de.cau.cs.kieler.kiml.klayoutdata.KShapeLayout;
 import de.cau.cs.kieler.klay.layered.LayeredLayoutProvider;
 import de.cau.cs.kieler.klay.layered.p2layers.LayeringStrategy;
 import de.cau.cs.kieler.klay.layered.properties.Properties;
-import de.cau.cs.kieler.klodd.hierarchical.HierarchicalDataflowLayoutProvider;
 
 /**
  * Main class of the layouter metrics program. This program measures the performance
@@ -81,16 +80,8 @@ public final class MetricsProgram {
             String fileName = "measurement" + (System.currentTimeMillis() & TIME_MASK) + ".csv";
             fileStream = new FileOutputStream(fileName);
             
-            // Measure the KLoDD Hierarchical layouter
-            ExecutionTimeMetric executionTimeMetric = new ExecutionTimeMetric(
-                    new HierarchicalDataflowLayoutProvider(),
-                    fileStream,
-                    parameters,
-                    null);
-            executionTimeMetric.measure();
-            
             // Measure the KLay Layered layouter
-            executionTimeMetric = new ExecutionTimeMetric(
+            ExecutionTimeMetric executionTimeMetric = new ExecutionTimeMetric(
                     new LayeredLayoutProvider(),
                     fileStream,
                     parameters,
