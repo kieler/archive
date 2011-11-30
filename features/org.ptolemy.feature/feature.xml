@@ -2,7 +2,7 @@
 <feature
       id="org.ptolemy"
       label="PtolemyII"
-      version="8.0.0.qualifier"
+      version="8.1.0.qualifier"
       provider-name="CHESS, UC Berkeley">
 
    <description>
