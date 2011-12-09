@@ -71,7 +71,6 @@ Export-Package:
  lbnl.lib.labview,
  lbnl.test.junit,
  lbnl.util,
- org.json,
  org.mlc.swing.example,
  org.mlc.swing.layout,
  org.ptolemy;uses:="org.eclipse.ui.plugin",
