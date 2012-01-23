@@ -31,8 +31,8 @@ public class RatingTaglet implements Taglet {
     /** the header that is displayed in generated markup. */
     private static final String HEADER = "Rating";
     /** the path to icon files. */
-    private static final String ICON_PATH = "http://rtsys.informatik.uni-kiel.de/"
-            + "trac/kieler/browser/trunk/standalone/de.cau.cs.kieler.taglets/icons/";
+    private static final String ICON_PATH = "http://trac.rtsys.informatik.uni-kiel.de/"
+            + "trac/kieler/browser/standalone/de.cau.cs.kieler.taglets/icons/";
     
     /** enumeration of ratings. */
     private enum Rating {

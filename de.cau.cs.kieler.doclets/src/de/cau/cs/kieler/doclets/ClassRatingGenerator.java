@@ -39,9 +39,9 @@ public class ClassRatingGenerator {
     public static final String GENERATED_TAG = "@generated";
     // CHECKSTYLEOFF LineLength
     /** the path to rating icon files. */
-    public static final String RATING_ICON_PATH = "http://rtsys.informatik.uni-kiel.de/trac/kieler/browser/trunk/standalone/de.cau.cs.kieler.taglets/icons/";
+    public static final String RATING_ICON_PATH = "http://trac.rtsys.informatik.uni-kiel.de/trac/kieler/browser/standalone/de.cau.cs.kieler.taglets/icons/";
     /** the path to class icon files. */
-    public static final String CLASS_ICON_PATH = "http://rtsys.informatik.uni-kiel.de/trac/kieler/browser/trunk/standalone/de.cau.cs.kieler.doclets/icons/";
+    public static final String CLASS_ICON_PATH = "http://trac.rtsys.informatik.uni-kiel.de/trac/kieler/browser/standalone/de.cau.cs.kieler.doclets/icons/";
     // CHECKSTYLEON LineLength
 
     /** prefix for output file names. */
