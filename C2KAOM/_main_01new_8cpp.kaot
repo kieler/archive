@@ -1,1 +1,0 @@
-@spacing 100.0 entity model{@portConstraints Free entity fill "fill" {port fill_i1 "i1";port fill_o1 "o1";}@portConstraints Free entity main "main" {port main_i1 "i1";port main_o1 "o1";}link fill_o1 to main_i1;}

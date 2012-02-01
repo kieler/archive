@@ -66,9 +66,10 @@ void BuilderKaom::deleteBlank() {
 
 void BuilderKaom::extractArgument(std::string keyword) {
 	//local variables used for store and modify sub-contents
-	std::string entity, subEntity, linkEntity, blankLessEntity, replace;
+	std::string entity, currentEntity, linkEntity, blankLessEntity, replace;
 
-	unsigned int startPos, endPos, foundAt, foundArrow = 0;
+	//todo reallocate
+	unsigned int startPos, endPos, foundDot, foundArrow = 0;
 	//condition indicates that if there are more entries in the content
 	bool condition;
 
@@ -76,12 +77,21 @@ void BuilderKaom::extractArgument(std::string keyword) {
 	entity = input_.front();
 
 	//find the position of first occurrence in the entry
-	startPos = entity.find(keyword) + keyword.length();
+	startPos = entity.find(keyword);
 
-	//switch for name, input and output
+	if (startPos == std::string::npos) {
+		//todo debug
+		//std::cout << keyword << " not found in " << entityType_ << std::endl;
+		//std::cout << entity << std::endl;
+		return;
+	} else {
+		startPos += keyword.length();
+	}
+
+	//switch for type, input and output
 	switch (keyword[0]) {
-	//in case of name
-	case 'n':
+	//in case of type
+	case 'k':
 
 		//find the marked ending of the content
 		endPos = entity.find(";", startPos);
@@ -90,17 +100,12 @@ void BuilderKaom::extractArgument(std::string keyword) {
 		//compute the length of the content
 		entity = entity.substr(startPos, endPos);
 
-		//make a copy without spaces for internal identification in kaom
-		std::remove_copy(entity.begin(), entity.end(), back_inserter(blankLessEntity), ' ');
+		//save type
+		entityType_ = entity;
 
-		//build content added to result
+		//start a new entityMap_ entry
+		mapEntry_ = " @portConstraints Free entity <blankLess@lias> \" <@lias> \" {";
 
-		entityName_ = blankLessEntity;
-
-		replace = "@portConstraints Free entity " + blankLessEntity + " \"" + entity + "\" {}}";
-
-		//add content to result
-		result_.replace(result_.end() - 1, result_.end(), replace);
 		break;
 		//in case of input
 	case 'i':
@@ -117,40 +122,20 @@ void BuilderKaom::extractArgument(std::string keyword) {
 			}
 
 			//extract the current content
-			subEntity = entity.substr(startPos, endPos);
+			currentEntity = entity.substr(startPos, endPos);
 
 			//make a copy without spaces for internal identification in kaom
-			std::remove_copy(subEntity.begin(), subEntity.end(), back_inserter(blankLessEntity), ' ');
-
-			//look for links
-			foundArrow = blankLessEntity.find("<-", foundArrow);
-
-			// if a link is found extract the method it comes from and
-			if (foundArrow != std::string::npos) {
-				//search the position of colon after the arrow
-				foundAt = blankLessEntity.find(":", foundArrow + 2);
-				//build identification for the source of the link
-				linkEntity = blankLessEntity.substr(foundAt + 1) + "_" + blankLessEntity.substr(foundArrow + 2, foundAt - foundArrow - 2);
-				//extract identification of the target for koam without spaces
-				blankLessEntity = blankLessEntity.substr(0, foundArrow);
-				//extract name of the target for koam with spaces
-				subEntity = entity.substr(startPos, entity.find("<-", startPos) - startPos);
-				isLinked_ = true;
-			}
+			std::remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
 
 			//build kaom content for current input
-			replace = "port " + entityName_ + "_" + blankLessEntity + " \"" + subEntity + "\";}}";
+			replace = "port <blankLess@lias>_" + blankLessEntity + " \"" + currentEntity + "\";";
 
-			//store and add kaom content for current links
-			linkEntity_ += "link " + linkEntity + " to " + entityName_ + "_" + blankLessEntity + ";";
-
-			//add current input to kaom result
-			result_.replace(result_.end() - 2, result_.end(), replace);
+			//add current input to the current entityMap entry
+			mapEntry_.append(replace);
 
 			//update variables for next round
 			blankLessEntity.clear();
 			startPos = entity.find(",", startPos) + 1;
-			foundArrow += 2;
 
 			//is this not the last occurrence
 		} while (condition);
@@ -158,7 +143,6 @@ void BuilderKaom::extractArgument(std::string keyword) {
 		break;
 		//in case of output
 	case 'o':
-
 		do {
 			//if the current content is not the last content in the entry search for a comma else search for a semicolon
 			if (entity.find(",", startPos) < entity.find(";", startPos)) {
@@ -172,16 +156,16 @@ void BuilderKaom::extractArgument(std::string keyword) {
 			}
 
 			//extract the current content
-			subEntity = entity.substr(startPos, endPos);
+			currentEntity = entity.substr(startPos, endPos);
 
 			//make a copy without spaces for internal identification in kaom
-			std::remove_copy(subEntity.begin(), subEntity.end(), back_inserter(blankLessEntity), ' ');
+			std::remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
 
 			//build kaom content for current output
-			replace = "port " + entityName_ + "_" + blankLessEntity + " \"" + subEntity + "\";}}";
+			replace = "port <blankLess@lias>_" + blankLessEntity + " \"" + currentEntity + "\";";
 
-			//add current output to kaom result
-			result_.replace(result_.end() - 2, result_.end(), replace);
+			//add current output to the current entityMap entry
+			mapEntry_.append(replace);
 
 			//update variables for next round
 			blankLessEntity.clear();
@@ -189,6 +173,118 @@ void BuilderKaom::extractArgument(std::string keyword) {
 
 			//is this not the last occurrence
 		} while (condition);
+		break;
+	case 'l':
+		do {
+			//if the current content is not the last content in the entry search for a comma else search for a semicolon
+			if (entity.find(",", startPos) < entity.find(";", startPos)) {
+				endPos = entity.find(",", startPos);
+				endPos = endPos - startPos;
+				condition = true;
+			} else {
+				endPos = entity.find(";", startPos);
+				endPos = endPos - startPos;
+				condition = false;
+			}
+
+			//extract the current content
+			currentEntity = entity.substr(startPos, endPos);
+
+			//make a copy without spaces for internal identification in kaom
+			std::remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
+
+			//look for links
+			foundArrow = blankLessEntity.find("->");
+
+			//extract identification for the source of the link
+			linkEntity = blankLessEntity.substr(foundArrow + 2);
+
+			//search the position of the dot after the arrow
+			foundDot = linkEntity.find(".");
+
+			//if a colon is found it's a internal link else it is a link between the current and a internal entity
+			if (foundDot != std::string::npos) {
+				//replace the colon with a underline
+				linkEntity.replace(foundDot, 1, "_");
+				linkEntity = "<blankLess@lias>_" + linkEntity;
+			} else {
+				foundDot = linkEntity.rfind(":", foundArrow);
+				if (foundDot == std::string::npos) {
+					linkEntity = "<blankLess@lias>_" + linkEntity;
+				} else {
+					//replace the colon with a underline
+					linkEntity.replace(foundDot, 1, "_");
+				}
+			}
+
+			//extract identification of the target for koam without spaces
+			blankLessEntity = blankLessEntity.substr(0, foundArrow);
+			//search the position of the dot before the arrow
+			foundDot = blankLessEntity.rfind(".", foundArrow);
+			//if a colon is found it's a internal link else it is a link between the current and a internal entity
+			if (foundDot != std::string::npos) {
+				//replace the colon with a underline
+				blankLessEntity.replace(foundDot, 1, "_");
+				blankLessEntity = "<blankLess@lias>_" + blankLessEntity;
+			} else {
+				foundDot = blankLessEntity.rfind(":", foundArrow);
+				if (foundDot == std::string::npos) {
+					blankLessEntity = "<blankLess@lias>_" + blankLessEntity;
+				} else {
+					//replace the colon with a underline
+					blankLessEntity.replace(foundDot, 1, "_");
+				}
+			}
+
+			//build kaom content for current link
+			replace = "link " + blankLessEntity + " to " + linkEntity + ";";
+
+			//add current link to the current entityMap entry
+			mapEntry_.append(replace);
+
+			//update variables for next round
+			blankLessEntity.clear();
+			startPos = entity.find(",", startPos) + 1;
+
+		} while (condition);
+		break;
+	case 'c':
+		do {
+			//if the current content is not the last content in the entry search for a comma else search for a semicolon
+			if (entity.find(",", startPos) < entity.find(";", startPos)) {
+				endPos = entity.find(",", startPos);
+				endPos = endPos - startPos;
+				condition = true;
+			} else {
+				endPos = entity.find(";", startPos);
+				endPos = endPos - startPos;
+				condition = false;
+			}
+
+			//extract the current content
+			currentEntity = entity.substr(startPos, endPos);
+
+			//build kaom content for current output
+			replace = "replace " + currentEntity + ";";
+
+			//add current component to the current entityMap entry
+			mapEntry_.append(replace);
+
+			//update variables for next round
+			startPos = entity.find(",", startPos) + 1;
+
+			//is this not the last occurrence
+		} while (condition);
+		break;
+	case 't':
+		//find the marked ending of the content
+		endPos = entity.find(";", startPos);
+		endPos = endPos - startPos;
+
+		//compute the length of the content
+		currentEntity = entity.substr(startPos, endPos);
+
+		result_.append("replace " + currentEntity + ":" + entityType_ + ";");
 
 		break;
 	default:
@@ -197,33 +293,117 @@ void BuilderKaom::extractArgument(std::string keyword) {
 	}
 }
 
+void BuilderKaom::composeArgument() {
+	//close canvas
+
+	//todo reallocate
+	unsigned int startPos, endPos, foundColon;
+	//condition indicates that if there are more entries in the content
+	bool condition;
+	std::string currentEntity, currentType, blankLessEntity;
+
+	blankLessEntity.clear();
+
+	//find the position of first occurrence in the entry
+	startPos = result_.find("replace ");
+
+	result_.append("}");
+	do {
+		endPos = result_.find(";", startPos);
+		endPos = endPos - startPos;
+
+		currentEntity = result_.substr(startPos, endPos);
+
+		//search the position of the colon
+		foundColon = currentEntity.find(":");
+
+		//
+		currentType = currentEntity.substr(foundColon + 1);
+		currentEntity = currentEntity.substr(8, foundColon - 8);
+
+		//make a copy without spaces for internal identification in kaom
+		std::remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
+
+		result_.replace(startPos, endPos + 1, entityMap_[currentType]);
+
+		if (result_.find("<@lias>", startPos) < result_.find("replace ", startPos)) {
+			endPos = result_.find("<@lias>", startPos);
+			result_.replace(endPos, 7, currentEntity);
+		}
+
+		do {
+			if (result_.find("<blankLess@lias>", startPos) < result_.find("replace ", startPos)) {
+				endPos = result_.find("<blankLess@lias>", startPos);
+				result_.replace(endPos, 16, blankLessEntity);
+				condition = true;
+			} else {
+
+				while (result_.find("}", startPos) < result_.find("replace ", startPos)) {
+					startPos = result_.find("}", startPos) + 1;
+					foundColon = (blankLessEntity.rfind("_") == std::string::npos ? 0 : blankLessEntity.rfind("_"));
+					blankLessEntity.erase(blankLessEntity.begin() + foundColon, blankLessEntity.end());
+				}
+				startPos = result_.find("replace ", startPos);
+				if (blankLessEntity.length() > 0)
+					blankLessEntity += "_";
+
+				condition = false;
+			}
+		} while (condition);
+
+		//blankLessEntity.clear();
+	} while (startPos != std::string::npos);
+}
+
 void BuilderKaom::buildResult() {
 
-	//set spacing to 100
-	result_.append("@spacing 100.0 entity model{}");
+	if (input_.empty()) {
+		std::cerr << "Empty Queue in builder. This should not happen." << std::endl;
+		return;
+	}
+
+	//start canvas and set spacing to 100
+	result_.append("@spacing 100.0 entity model{");
 
 	//delete blankchars in the entries of the queue
 	deleteBlank();
 
 	//until the queue is not empty extract the arguments
 	while (!input_.empty()) {
-		extractArgument("name:");
+		extractArgument("kind:");
 		extractArgument("input:");
 		extractArgument("output:");
+		extractArgument("link:");
+		extractArgument("content:");
+		extractArgument("toplevel:");
 
-		//if a link was found add it now at the end
-		if (isLinked_) {
-			result_.replace(result_.end() - 2, result_.end(), "}" + linkEntity_ + "}");
-			isLinked_ = false;
-		}
+		//close current entity
+		mapEntry_.append("}");
+
+		//create new entry in entityMap_ with key entityType_ and value mapEntry_
+		entityMap_[entityType_] = mapEntry_;
 
 		//delete edited entry and update the rest of the variables for the next entry
 		input_.pop();
-		linkEntity_.clear();
-		entityName_.clear();
+		entityType_.clear();
 	}
 
-	std::cout << "Start writing file with \n" << result_ << std::endl;
+	//todo debug
+
+	std::map<std::string, std::string>::iterator it;
+
+	// show content:
+	for (it = entityMap_.begin(); it != entityMap_.end(); it++)
+		std::cout << (*it).first << " => " << (*it).second << std::endl;
+
+	std::cout << result_ << std::endl;
+
+	composeArgument();
+
+	//todo debug
+	//std::cout << "Start writing file" << std::endl;
+	//std::cout << "with \n" << result_ << std::endl;
+
 	//Write the result to the output file
 	SaveKaom(outputFileName_);
 }

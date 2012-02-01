@@ -34,7 +34,7 @@ public:
 	virtual ~FilterXml();
 
 	//main function calling the internal functions
-	void filter();
+	int filter();
 
 	//load inputfile
 	bool loadFile();
@@ -42,6 +42,11 @@ public:
 	//getter result
 	inline std::queue<std::string> GetResult() {
 		return result_;
+	}
+
+	//getter outputFileName
+	inline std::string GetOutputFileName() {
+		return outputFileName_;
 	}
 
 private:
@@ -58,7 +63,7 @@ private:
 	// empty queue for the result
 	std::queue<std::string> result_;
 	//internal variables
-	std::string fileName_, comment_, entity_;
+	std::string fileName_, comment_, entity_, outputFileName_;
 	pugi::xpath_node_set set_comment_;
 	pugi::xml_document doc_;
 
