@@ -18,39 +18,55 @@ BuilderKaom::~BuilderKaom() {
 	// nothing
 }
 
-BuilderKaom::BuilderKaom(std::queue<std::string> input, std::string filename) :
+BuilderKaom::BuilderKaom(queue<string> input, string filename) :
 		input_(input), outputFileName_(filename), isLinked_(false) {
+	//todo input and filename !empty
 }
 
 BuilderKaom::BuilderKaom() {
-	std::cout << "Need input queue: " << std::endl;
+	cout << "Need input queue: " << endl;
 }
 
-void BuilderKaom::deleteBlank() {
+void BuilderKaom::ReplaceSpecial(string& str) {
+
+	int max = str.length();
+
+	for (int i = 0; i < max; i++) {
+		if ((str[i] >= 48 && str[i] <= 58) || (str[i] >= 65 && str[i] <= 90) || (str[i] == 95) || (str[i] >= 97 && str[i] <= 122)) {
+
+		} else {
+			str[i] = '_';
+		}
+
+	}
+
+}
+
+int BuilderKaom::deleteBlank() {
 
 	//local variables used for extract and modify the content of the queue
-	std::string entity;
-	std::queue<int>::size_type sz = input_.size();
+	string entity;
+	unsigned int lenght, i, found, sz = input_.size();
 
 	//for all entries in the queue
 	for (unsigned int t = 0; t < sz; t++) {
 		entity = input_.front();
-		unsigned int found, i = 0;
-
+		i = 0;
+		lenght = entity.length();
 		//find the first occurrence of ":,;<-" in the string
 		found = entity.find_first_of(":,;<-");
 
 		//if one is found erase all blank chars before and after
 		//then search the next one
-		while (found != std::string::npos) {
-			while (entity[found - i - 1] == ' ') {
+		while (found != string::npos) {
+			while ((found - i - 1 > -1) && (entity[found - i - 1] == ' ')) {
 				i++;
 			}
 			entity.erase(found - i, i);
 			found -= i;
 			i = 0;
 
-			while (entity[found + i + 1] == ' ') {
+			while ((found - i - 1 < lenght) && (entity[found + i + 1] == ' ')) {
 				i++;
 			}
 			entity.erase(found + 1, i);
@@ -62,46 +78,38 @@ void BuilderKaom::deleteBlank() {
 		input_.push(entity);
 		input_.pop();
 	}
+	return 1;
 }
 
-void BuilderKaom::extractArgument(std::string keyword) {
+void BuilderKaom::extractArgument() {
 	//local variables used for store and modify sub-contents
-	std::string entity, currentEntity, linkEntity, blankLessEntity, replace;
+	string entity, currentEntity, linkEntity, blankLessEntity, replace, keyword;
 
 	//todo reallocate
 	unsigned int startPos, endPos, foundDot, foundArrow = 0;
 	//condition indicates that if there are more entries in the content
 	bool condition;
 
-	//read first entry of the queue
-	entity = input_.front();
-
 	//find the position of first occurrence in the entry
-	startPos = entity.find(keyword);
-
-	if (startPos == std::string::npos) {
-		//todo debug
-		//std::cout << keyword << " not found in " << entityType_ << std::endl;
-		//std::cout << entity << std::endl;
-		return;
+	startPos = argsQueue_.top().first;
+	keyword = argsQueue_.top().second;
+	argsQueue_.pop();
+	if (!argsQueue_.empty()) {
+		entity = entity_.substr(startPos, argsQueue_.top().first - startPos);
 	} else {
-		startPos += keyword.length();
+		entity = entity_.substr(startPos);
 	}
+
+	startPos = keyword.length();
 
 	//switch for type, input and output
 	switch (keyword[0]) {
 	//in case of type
 	case 'k':
+		endPos = entity.find(";");
+		endPos -= startPos;
 
-		//find the marked ending of the content
-		endPos = entity.find(";", startPos);
-		endPos = endPos - startPos;
-
-		//compute the length of the content
-		entity = entity.substr(startPos, endPos);
-
-		//save type
-		entityType_ = entity;
+		entityType_ = entity.substr(startPos, endPos);
 
 		//start a new entityMap_ entry
 		mapEntry_ = " @portConstraints Free entity <blankLess@lias> \" <@lias> \" {";
@@ -111,13 +119,16 @@ void BuilderKaom::extractArgument(std::string keyword) {
 	case 'i':
 		do {
 			//if the current content is not the last content in the entry search for a comma else search for a semicolon
+			//todo  ; at end
+			//!(, ,)
+			//!(,...)
 			if (entity.find(",", startPos) < entity.find(";", startPos)) {
 				endPos = entity.find(",", startPos);
-				endPos = endPos - startPos;
+				endPos -= startPos;
 				condition = true;
 			} else {
 				endPos = entity.find(";", startPos);
-				endPos = endPos - startPos;
+				endPos -= startPos;
 				condition = false;
 			}
 
@@ -125,7 +136,9 @@ void BuilderKaom::extractArgument(std::string keyword) {
 			currentEntity = entity.substr(startPos, endPos);
 
 			//make a copy without spaces for internal identification in kaom
-			std::remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
+			remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
+
+			ReplaceSpecial(blankLessEntity);
 
 			//build kaom content for current input
 			replace = "port <blankLess@lias>_" + blankLessEntity + " \"" + currentEntity + "\";";
@@ -147,11 +160,11 @@ void BuilderKaom::extractArgument(std::string keyword) {
 			//if the current content is not the last content in the entry search for a comma else search for a semicolon
 			if (entity.find(",", startPos) < entity.find(";", startPos)) {
 				endPos = entity.find(",", startPos);
-				endPos = endPos - startPos;
+				endPos -= startPos;
 				condition = true;
 			} else {
 				endPos = entity.find(";", startPos);
-				endPos = endPos - startPos;
+				endPos -= startPos;
 				condition = false;
 			}
 
@@ -159,7 +172,9 @@ void BuilderKaom::extractArgument(std::string keyword) {
 			currentEntity = entity.substr(startPos, endPos);
 
 			//make a copy without spaces for internal identification in kaom
-			std::remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
+			remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
+
+			ReplaceSpecial(blankLessEntity);
 
 			//build kaom content for current output
 			replace = "port <blankLess@lias>_" + blankLessEntity + " \"" + currentEntity + "\";";
@@ -179,11 +194,11 @@ void BuilderKaom::extractArgument(std::string keyword) {
 			//if the current content is not the last content in the entry search for a comma else search for a semicolon
 			if (entity.find(",", startPos) < entity.find(";", startPos)) {
 				endPos = entity.find(",", startPos);
-				endPos = endPos - startPos;
+				endPos -= startPos;
 				condition = true;
 			} else {
 				endPos = entity.find(";", startPos);
-				endPos = endPos - startPos;
+				endPos -= startPos;
 				condition = false;
 			}
 
@@ -191,52 +206,38 @@ void BuilderKaom::extractArgument(std::string keyword) {
 			currentEntity = entity.substr(startPos, endPos);
 
 			//make a copy without spaces for internal identification in kaom
-			std::remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
+			remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
 
 			//look for links
+
+			//todo !(!->)
+			//todo !!.
 			foundArrow = blankLessEntity.find("->");
 
 			//extract identification for the source of the link
 			linkEntity = blankLessEntity.substr(foundArrow + 2);
+			blankLessEntity = blankLessEntity.substr(0, foundArrow);
 
-			//search the position of the dot after the arrow
-			foundDot = linkEntity.find(".");
+			foundArrow = linkEntity.rfind(":");
+			foundDot = blankLessEntity.rfind(":");
+			ReplaceSpecial(blankLessEntity);
+			ReplaceSpecial(linkEntity);
 
-			//if a colon is found it's a internal link else it is a link between the current and a internal entity
-			if (foundDot != std::string::npos) {
-				//replace the colon with a underline
-				linkEntity.replace(foundDot, 1, "_");
+			if (foundArrow == string::npos) {
 				linkEntity = "<blankLess@lias>_" + linkEntity;
+
 			} else {
-				foundDot = linkEntity.rfind(":", foundArrow);
-				if (foundDot == std::string::npos) {
-					linkEntity = "<blankLess@lias>_" + linkEntity;
-				} else {
-					//replace the colon with a underline
-					linkEntity.replace(foundDot, 1, "_");
-				}
+				//replace the colon with a underline
+				linkEntity.replace(foundArrow, 1, "_");
 			}
 
-			//extract identification of the target for koam without spaces
-			blankLessEntity = blankLessEntity.substr(0, foundArrow);
-			//search the position of the dot before the arrow
-			foundDot = blankLessEntity.rfind(".", foundArrow);
-			//if a colon is found it's a internal link else it is a link between the current and a internal entity
-			if (foundDot != std::string::npos) {
-				//replace the colon with a underline
-				blankLessEntity.replace(foundDot, 1, "_");
+			if (foundDot == string::npos) {
 				blankLessEntity = "<blankLess@lias>_" + blankLessEntity;
 			} else {
-				foundDot = blankLessEntity.rfind(":", foundArrow);
-				if (foundDot == std::string::npos) {
-					blankLessEntity = "<blankLess@lias>_" + blankLessEntity;
-				} else {
-					//replace the colon with a underline
-					blankLessEntity.replace(foundDot, 1, "_");
-				}
+				//replace the colon with a underline
+				blankLessEntity.replace(foundDot, 1, "_");
 			}
 
-			//build kaom content for current link
 			replace = "link " + blankLessEntity + " to " + linkEntity + ";";
 
 			//add current link to the current entityMap entry
@@ -253,19 +254,21 @@ void BuilderKaom::extractArgument(std::string keyword) {
 			//if the current content is not the last content in the entry search for a comma else search for a semicolon
 			if (entity.find(",", startPos) < entity.find(";", startPos)) {
 				endPos = entity.find(",", startPos);
-				endPos = endPos - startPos;
+				endPos -= startPos;
 				condition = true;
 			} else {
 				endPos = entity.find(";", startPos);
-				endPos = endPos - startPos;
+				endPos -= startPos;
 				condition = false;
 			}
 
 			//extract the current content
 			currentEntity = entity.substr(startPos, endPos);
 
+			ReplaceSpecial(currentEntity);
+
 			//build kaom content for current output
-			replace = "replace " + currentEntity + ";";
+			replace = "repl@ce " + currentEntity + ";";
 
 			//add current component to the current entityMap entry
 			mapEntry_.append(replace);
@@ -278,13 +281,16 @@ void BuilderKaom::extractArgument(std::string keyword) {
 		break;
 	case 't':
 		//find the marked ending of the content
-		endPos = entity.find(";", startPos);
-		endPos = endPos - startPos;
+		//todo !(!;)
+		endPos = entity.find(";");
+		endPos -= startPos;
 
 		//compute the length of the content
 		currentEntity = entity.substr(startPos, endPos);
 
-		result_.append("replace " + currentEntity + ":" + entityType_ + ";");
+		ReplaceSpecial(currentEntity);
+
+		result_.append("repl@ce " + currentEntity + ":" + entityType_ + ";");
 
 		break;
 	default:
@@ -300,65 +306,90 @@ void BuilderKaom::composeArgument() {
 	unsigned int startPos, endPos, foundColon;
 	//condition indicates that if there are more entries in the content
 	bool condition;
-	std::string currentEntity, currentType, blankLessEntity;
+	string currentEntity, currentType, blankLessEntity;
 
 	blankLessEntity.clear();
 
 	//find the position of first occurrence in the entry
-	startPos = result_.find("replace ");
+	//todo !(!repl@ce)
+	startPos = result_.find("repl@ce ");
 
 	result_.append("}");
 	do {
+		//todo no ;
 		endPos = result_.find(";", startPos);
 		endPos = endPos - startPos;
 
 		currentEntity = result_.substr(startPos, endPos);
 
 		//search the position of the colon
+		//todo no :
 		foundColon = currentEntity.find(":");
 
 		//
+
 		currentType = currentEntity.substr(foundColon + 1);
 		currentEntity = currentEntity.substr(8, foundColon - 8);
 
 		//make a copy without spaces for internal identification in kaom
-		std::remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
+		remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
 
 		result_.replace(startPos, endPos + 1, entityMap_[currentType]);
 
-		if (result_.find("<@lias>", startPos) < result_.find("replace ", startPos)) {
+		if (result_.find("<@lias>", startPos) < result_.find("repl@ce ", startPos)) {
 			endPos = result_.find("<@lias>", startPos);
 			result_.replace(endPos, 7, currentEntity);
 		}
 
 		do {
-			if (result_.find("<blankLess@lias>", startPos) < result_.find("replace ", startPos)) {
+			if (result_.find("<blankLess@lias>", startPos) < result_.find("repl@ce ", startPos)) {
 				endPos = result_.find("<blankLess@lias>", startPos);
 				result_.replace(endPos, 16, blankLessEntity);
 				condition = true;
 			} else {
 
-				while (result_.find("}", startPos) < result_.find("replace ", startPos)) {
+				while (result_.find("}", startPos) < result_.find("repl@ce ", startPos)) {
 					startPos = result_.find("}", startPos) + 1;
-					foundColon = (blankLessEntity.rfind("_") == std::string::npos ? 0 : blankLessEntity.rfind("_"));
+					foundColon = (blankLessEntity.rfind("@@") == string::npos ? 0 : blankLessEntity.rfind("@@"));
 					blankLessEntity.erase(blankLessEntity.begin() + foundColon, blankLessEntity.end());
 				}
-				startPos = result_.find("replace ", startPos);
+				startPos = result_.find("repl@ce ", startPos);
 				if (blankLessEntity.length() > 0)
-					blankLessEntity += "_";
-
+					blankLessEntity += "@@";
 				condition = false;
 			}
 		} while (condition);
 
 		//blankLessEntity.clear();
-	} while (startPos != std::string::npos);
+	} while (startPos != string::npos);
+
+	foundColon = result_.rfind("@@");
+	if (foundColon != string::npos) {
+		do {
+			result_.replace(foundColon, 2, "_");
+			foundColon = result_.rfind("@@");
+		} while (foundColon != string::npos);
+	}
+
+}
+
+void BuilderKaom::buildArgsQueue(string keyword) {
+	//find the position of first occurrence in the entry
+	unsigned int startPos;
+
+	startPos = entity_.find(keyword);
+
+	if (startPos == string::npos) {
+		return;
+	} else {
+		argsQueue_.push(make_pair(startPos, keyword));
+	}
 }
 
 void BuilderKaom::buildResult() {
 
 	if (input_.empty()) {
-		std::cerr << "Empty Queue in builder. This should not happen." << std::endl;
+		cerr << "Empty input queue in builder. This should not happen." << endl;
 		return;
 	}
 
@@ -370,12 +401,20 @@ void BuilderKaom::buildResult() {
 
 	//until the queue is not empty extract the arguments
 	while (!input_.empty()) {
-		extractArgument("kind:");
-		extractArgument("input:");
-		extractArgument("output:");
-		extractArgument("link:");
-		extractArgument("content:");
-		extractArgument("toplevel:");
+
+		entity_ = input_.front();
+
+		buildArgsQueue("kind:");
+		buildArgsQueue("input:");
+		buildArgsQueue("output:");
+		buildArgsQueue("link:");
+		buildArgsQueue("content:");
+		buildArgsQueue("toplevel:");
+
+		//todo !(argsQueue_.empty())
+		while (!argsQueue_.empty()) {
+			extractArgument();
+		}
 
 		//close current entity
 		mapEntry_.append("}");
@@ -389,20 +428,16 @@ void BuilderKaom::buildResult() {
 	}
 
 	//todo debug
+	/*
+	 map<string, string>::iterator it;
 
-	std::map<std::string, std::string>::iterator it;
+	 // show content:
+	 for (it = entityMap_.begin(); it != entityMap_.end(); it++)
+	 cout << (*it).first << " => " << (*it).second << endl;
 
-	// show content:
-	for (it = entityMap_.begin(); it != entityMap_.end(); it++)
-		std::cout << (*it).first << " => " << (*it).second << std::endl;
-
-	std::cout << result_ << std::endl;
-
+	 cout << result_ << endl;
+	 */
 	composeArgument();
-
-	//todo debug
-	//std::cout << "Start writing file" << std::endl;
-	//std::cout << "with \n" << result_ << std::endl;
 
 	//Write the result to the output file
 	SaveKaom(outputFileName_);
@@ -413,23 +448,23 @@ bool BuilderKaom::Valid() {
 	return !result_.empty();
 }
 
-int BuilderKaom::SaveKaom(const std::string &filename) {
+int BuilderKaom::SaveKaom(const string &filename) {
 
 	//is result empty
 	if (!Valid()) {
-		std::cout << "result_ is empty" << std::endl;
+		cout << "result_ is empty" << endl;
 		return -1;
 	}
 	// open file
-	std::ofstream file;
-	file.open(filename.c_str(), std::ios::out | std::ios::binary);
+	ofstream file;
+	file.open(filename.c_str(), ios::out | ios::binary);
 	// check if file is ready for writing
 	if (!file.good()) {
-		std::cout << "file not writable" << std::endl;
+		cout << "file not writable" << endl;
 		return -1;
 	}
 	// write data
-	file << result_ << std::endl;
+	file << result_ << endl;
 
 	file.close();
 	return 0;

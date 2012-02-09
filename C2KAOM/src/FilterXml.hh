@@ -21,14 +21,13 @@
 #include <string>
 #include <queue>
 
+using namespace std;
+
 class FilterXml {
 public:
 
-	//constructor with no arguments to manually set fileName_
-	FilterXml();
-
 	//constructor with arguments to set fileName_
-	FilterXml(std::string filename);
+	FilterXml(string filename);
 
 	//simple destructor
 	virtual ~FilterXml();
@@ -40,32 +39,33 @@ public:
 	bool loadFile();
 
 	//getter result
-	inline std::queue<std::string> GetResult() {
+	inline queue<string> GetResult() {
 		return result_;
 	}
 
 	//getter outputFileName
-	inline std::string GetOutputFileName() {
+	inline string GetOutputFileName() {
 		return outputFileName_;
 	}
 
 private:
 
 	//filter comment tags and store them in set_comment
-	void xmltoXpath();
+	int xmltoXpath();
 
 	//take tags from set_comment and filter tag marked with KAOM; store these tags in result
-	void xpathtoQueue();
+	int xpathtoQueue();
 
 	//build the tags for the result
-	void buildResult(std::string keyword);
+	int buildResult(string keyword);
 
 	// empty queue for the result
-	std::queue<std::string> result_;
+	queue<string> result_;
 	//internal variables
-	std::string fileName_, comment_, entity_, outputFileName_;
+	string fileName_, comment_, entity_, outputFileName_;
 	pugi::xpath_node_set set_comment_;
 	pugi::xml_document doc_;
+	unsigned int startPos_;
 
 };
 
