@@ -64,14 +64,14 @@ int BuilderKaom::deleteBlank() {
 		//if one is found erase all blank chars before and after
 		//then search the next one
 		while (found != string::npos) {
-			while ((found - i - 1 > -1) && (entity[found - i - 1] == ' ')) {
+			while ((found > i) && (entity[found - i - 1] == ' ')) {
 				i++;
 			}
 			entity.erase(found - i, i);
 			found -= i;
 			i = 0;
 
-			while ((found - i - 1 < lenght) && (entity[found + i + 1] == ' ')) {
+			while ((found + i + 1 < lenght) && (entity[found + i + 1] == ' ')) {
 				i++;
 			}
 			entity.erase(found + 1, i);
@@ -306,7 +306,7 @@ void BuilderKaom::composeArgument() {
 	//close canvas
 
 	//todo reallocate
-	unsigned int startPos, endPos, foundColon;
+	unsigned int startPos, endPos, foundColon, dotsPos;
 	//condition indicates that if there are more entries in the content
 	bool condition;
 	string currentEntity, currentType, blankLessEntity;
@@ -336,10 +336,11 @@ void BuilderKaom::composeArgument() {
 
 		result_.replace(startPos, endPos + 1, entityMap_[currentType]);
 
-		cout << "currentType: " << currentType<< endl;
-		cout << "currentEntity: " << currentEntity<< endl;
-
 		currentType = currentEntity;
+		dotsPos = currentEntity.find("\"");
+		if (dotsPos != string::npos) {
+			currentType.erase(currentType.begin() + dotsPos, currentType.end());
+		}
 		ReplaceSpecial(currentType);
 
 		//make a copy without spaces for internal identification in kaom
@@ -347,6 +348,11 @@ void BuilderKaom::composeArgument() {
 
 		if (result_.find("<@lias>", startPos) < result_.find("repl@ce ", startPos)) {
 			endPos = result_.find("<@lias>", startPos);
+			if (dotsPos != string::npos) {
+				//todo another dot is there
+				currentEntity = currentEntity.substr(dotsPos + 1, currentEntity.find("\"", dotsPos + 1) - 1 - dotsPos);
+			}
+
 			result_.replace(endPos, 7, currentEntity);
 		}
 
@@ -437,15 +443,15 @@ void BuilderKaom::buildResult() {
 	}
 
 	//todo debug
+	/*
+	 map<string, string>::iterator it;
 
-	map<string, string>::iterator it;
+	 // show content:
+	 for (it = entityMap_.begin(); it != entityMap_.end(); it++)
+	 cout << (*it).first << " => " << (*it).second << endl;
 
-	// show content:
-	for (it = entityMap_.begin(); it != entityMap_.end(); it++)
-		cout << (*it).first << " => " << (*it).second << endl;
-
-	cout << result_ << endl;
-
+	 cout << result_ << endl;
+	 */
 	composeArgument();
 
 	//Write the result to the output file
