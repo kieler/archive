@@ -32,8 +32,13 @@ void BuilderKaom::ReplaceSpecial(string& str) {
 	int max = str.length();
 
 	for (int i = 0; i < max; i++) {
-		if ((str[i] >= 48 && str[i] <= 58) || (str[i] >= 65 && str[i] <= 90) || (str[i] == 95) || (str[i] >= 97 && str[i] <= 122)) {
-
+		if ((str[i] == 32) || (str[i] >= 48 && str[i] <= 58) || (str[i] >= 65 && str[i] <= 90) || (str[i] == 95)
+				|| (str[i] >= 97 && str[i] <= 122)) {
+			if (str[i] == 32) {
+				str.erase(i, 1);
+				i--;
+				max--;
+			}
 		} else {
 			str[i] = '_';
 		}
@@ -265,8 +270,6 @@ void BuilderKaom::extractArgument() {
 			//extract the current content
 			currentEntity = entity.substr(startPos, endPos);
 
-			ReplaceSpecial(currentEntity);
-
 			//build kaom content for current output
 			replace = "repl@ce " + currentEntity + ";";
 
@@ -290,7 +293,7 @@ void BuilderKaom::extractArgument() {
 
 		ReplaceSpecial(currentEntity);
 
-		result_.append("repl@ce " + currentEntity + ":" + entityType_ + ";");
+		result_.append("repl@ce " + entityType_ + ":" + currentEntity + ";");
 
 		break;
 	default:
@@ -328,13 +331,19 @@ void BuilderKaom::composeArgument() {
 
 		//
 
-		currentType = currentEntity.substr(foundColon + 1);
-		currentEntity = currentEntity.substr(8, foundColon - 8);
-
-		//make a copy without spaces for internal identification in kaom
-		remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
+		currentType = currentEntity.substr(8, foundColon - 8);
+		currentEntity = currentEntity.substr(foundColon + 1);
 
 		result_.replace(startPos, endPos + 1, entityMap_[currentType]);
+
+		cout << "currentType: " << currentType<< endl;
+		cout << "currentEntity: " << currentEntity<< endl;
+
+		currentType = currentEntity;
+		ReplaceSpecial(currentType);
+
+		//make a copy without spaces for internal identification in kaom
+		remove_copy(currentType.begin(), currentType.end(), back_inserter(blankLessEntity), ' ');
 
 		if (result_.find("<@lias>", startPos) < result_.find("repl@ce ", startPos)) {
 			endPos = result_.find("<@lias>", startPos);
@@ -428,15 +437,15 @@ void BuilderKaom::buildResult() {
 	}
 
 	//todo debug
-	/*
-	 map<string, string>::iterator it;
 
-	 // show content:
-	 for (it = entityMap_.begin(); it != entityMap_.end(); it++)
-	 cout << (*it).first << " => " << (*it).second << endl;
+	map<string, string>::iterator it;
 
-	 cout << result_ << endl;
-	 */
+	// show content:
+	for (it = entityMap_.begin(); it != entityMap_.end(); it++)
+		cout << (*it).first << " => " << (*it).second << endl;
+
+	cout << result_ << endl;
+
 	composeArgument();
 
 	//Write the result to the output file
