@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.ptolemy"
+      id="org.ptolemy.feature"
       label="PtolemyII"
       version="8.1.0.qualifier"
       provider-name="CHESS, UC Berkeley">
