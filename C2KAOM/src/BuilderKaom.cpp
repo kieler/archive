@@ -140,11 +140,19 @@ void BuilderKaom::extractArgument() {
 			//extract the current content
 			currentEntity = entity.substr(startPos, endPos);
 
-			//make a copy without spaces for internal identification in kaom
-			remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
+			//if a dot is there the label the id stand before the dot else the whole id is the label too
+			//in every case make a copy without spaces for internal identification in kaom
+			endPos = currentEntity.find("\"");
+			if (endPos != string::npos) {
+				//todo another dot is there
+				remove_copy(currentEntity.begin(), currentEntity.begin() + endPos , back_inserter(blankLessEntity), ' ');
+				currentEntity = currentEntity.substr(endPos + 1, currentEntity.find("\"", endPos + 1) - 1 - endPos);
+			}
+			else {
+				remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
+			}
 
 			ReplaceSpecial(blankLessEntity);
-
 			//build kaom content for current input
 			replace = "port <blankLess@lias>_" + blankLessEntity + " \"" + currentEntity + "\";";
 
@@ -176,8 +184,17 @@ void BuilderKaom::extractArgument() {
 			//extract the current content
 			currentEntity = entity.substr(startPos, endPos);
 
-			//make a copy without spaces for internal identification in kaom
-			remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
+			//if a dot is there the label the id stand before the dot else the whole id is the label too
+			//in every case make a copy without spaces for internal identification in kaom
+			endPos = currentEntity.find("\"");
+			if (endPos != string::npos) {
+				//todo another dot is there
+				remove_copy(currentEntity.begin(), currentEntity.begin() + endPos , back_inserter(blankLessEntity), ' ');
+				currentEntity = currentEntity.substr(endPos + 1, currentEntity.find("\"", endPos + 1) - 1 - endPos);
+			}
+			else {
+				remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
+			}
 
 			ReplaceSpecial(blankLessEntity);
 
@@ -291,8 +308,6 @@ void BuilderKaom::extractArgument() {
 		//compute the length of the content
 		currentEntity = entity.substr(startPos, endPos);
 
-		ReplaceSpecial(currentEntity);
-
 		result_.append("repl@ce " + entityType_ + ":" + currentEntity + ";");
 
 		break;
@@ -338,11 +353,11 @@ void BuilderKaom::composeArgument() {
 
 		currentType = currentEntity;
 		dotsPos = currentEntity.find("\"");
+
 		if (dotsPos != string::npos) {
 			currentType.erase(currentType.begin() + dotsPos, currentType.end());
 		}
 		ReplaceSpecial(currentType);
-
 		//make a copy without spaces for internal identification in kaom
 		remove_copy(currentType.begin(), currentType.end(), back_inserter(blankLessEntity), ' ');
 
@@ -443,19 +458,21 @@ void BuilderKaom::buildResult() {
 	}
 
 	//todo debug
-	/*
+/*
 	 map<string, string>::iterator it;
 
 	 // show content:
 	 for (it = entityMap_.begin(); it != entityMap_.end(); it++)
 	 cout << (*it).first << " => " << (*it).second << endl;
 
-	 cout << result_ << endl;
-	 */
+	cout << result_ << endl;
+*/
+
 	composeArgument();
 
 	//Write the result to the output file
 	SaveKaom(outputFileName_);
+
 }
 
 bool BuilderKaom::Valid() {
