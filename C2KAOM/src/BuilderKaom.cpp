@@ -21,13 +21,21 @@ BuilderKaom::~BuilderKaom() {
 BuilderKaom::BuilderKaom(queue<string> input, string filename) :
 		input_(input), outputFileName_(filename), isLinked_(false) {
 	//todo input and filename !empty
+
+	//todo
+	 for (int i = 0; i < input_.size(); i++){
+	 cout <<  "constr 1 input_[" << i << "]: " << (input_.front())<< endl;
+	 input_.push(input_.front());
+	 input_.pop();
+	 }
+	cout << "constr 1 outputFileName_: " << outputFileName_ << endl<< endl;
 }
 
 BuilderKaom::BuilderKaom() {
 	cout << "Need input queue: " << endl;
 }
 
-void BuilderKaom::ReplaceSpecial(string& str) {
+void BuilderKaom::replaceSpecial(string& str) {
 
 	int max = str.length();
 
@@ -59,7 +67,7 @@ int BuilderKaom::deleteBlank() {
 		i = 0;
 		lenght = entity.length();
 		//find the first occurrence of ":,;<-" in the string
-		found = entity.find_first_of(":,;<-");
+		found = entity.find_first_of(":,;->.");
 
 		//if one is found erase all blank chars before and after
 		//then search the next one
@@ -76,7 +84,7 @@ int BuilderKaom::deleteBlank() {
 			}
 			entity.erase(found + 1, i);
 			i = 0;
-			found = entity.find_first_of(":,;<-", found + 1);
+			found = entity.find_first_of(":,;->.", found + 1);
 		}
 
 		//if no one more is found write the content back to queue
@@ -105,6 +113,12 @@ void BuilderKaom::extractArgument() {
 		entity = entity_.substr(startPos);
 	}
 
+	//todo
+	cout << "args 1 entity_: " << entity_ << endl;
+	cout << "args 1 entity: " << entity << endl;
+
+
+
 	startPos = keyword.length();
 
 	//switch for type, input and output
@@ -116,8 +130,12 @@ void BuilderKaom::extractArgument() {
 
 		entityType_ = entity.substr(startPos, endPos);
 
+		//todo
+		cout << "kind 1 entityType_: " << entityType_ << endl;
+		cout << "kind 1 entity: " << entity << endl << endl;
+
 		//start a new entityMap_ entry
-		mapEntry_ = " @portConstraints Free entity <blankLess@lias> \" <@lias> \" {";
+		mapEntry_ = " @portConstraints Free entity <blankLess@lias> \"<@lias>\" {";
 
 		break;
 		//in case of input
@@ -140,6 +158,9 @@ void BuilderKaom::extractArgument() {
 			//extract the current content
 			currentEntity = entity.substr(startPos, endPos);
 
+			//todo
+			cout << "input 1 currentEntity: " << currentEntity << endl;
+
 			//if a dot is there the label the id stand before the dot else the whole id is the label too
 			//in every case make a copy without spaces for internal identification in kaom
 			endPos = currentEntity.find("\"");
@@ -152,9 +173,16 @@ void BuilderKaom::extractArgument() {
 				remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
 			}
 
-			ReplaceSpecial(blankLessEntity);
+			//todo
+			cout << "input 2 currentEntity: " << currentEntity << endl;
+			cout << "input 2 blankLessEntity: " << blankLessEntity << endl;
+
+			replaceSpecial(blankLessEntity);
 			//build kaom content for current input
 			replace = "port <blankLess@lias>_" + blankLessEntity + " \"" + currentEntity + "\";";
+
+			//todo
+			cout << "input 3 blankLessEntity: " << blankLessEntity << endl << endl;
 
 			//add current input to the current entityMap entry
 			mapEntry_.append(replace);
@@ -184,6 +212,9 @@ void BuilderKaom::extractArgument() {
 			//extract the current content
 			currentEntity = entity.substr(startPos, endPos);
 
+			//todo
+			cout << "output 1 currentEntity: " << currentEntity << endl;
+
 			//if a dot is there the label the id stand before the dot else the whole id is the label too
 			//in every case make a copy without spaces for internal identification in kaom
 			endPos = currentEntity.find("\"");
@@ -196,7 +227,13 @@ void BuilderKaom::extractArgument() {
 				remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
 			}
 
-			ReplaceSpecial(blankLessEntity);
+			//todo
+			cout << "output 2 currentEntity: " << currentEntity << endl;
+			cout << "output 2 blankLessEntity: " << blankLessEntity << endl;
+
+			replaceSpecial(blankLessEntity);
+
+			cout << "output 3 blankLessEntity: " << blankLessEntity << endl << endl;
 
 			//build kaom content for current output
 			replace = "port <blankLess@lias>_" + blankLessEntity + " \"" + currentEntity + "\";";
@@ -232,6 +269,10 @@ void BuilderKaom::extractArgument() {
 
 			//look for links
 
+			//todo
+			cout << "link 1 currentEntity: " << currentEntity << endl;
+			cout << "link 1 blankLessEntity: " << blankLessEntity << endl;
+
 			//todo !(!->)
 			//todo !!.
 			foundArrow = blankLessEntity.find("->");
@@ -240,10 +281,18 @@ void BuilderKaom::extractArgument() {
 			linkEntity = blankLessEntity.substr(foundArrow + 2);
 			blankLessEntity = blankLessEntity.substr(0, foundArrow);
 
+			//todo
+			cout << "link 2 linkEntity: " << linkEntity << endl;
+			cout << "link 2 blankLessEntity: " << blankLessEntity << endl;
+
 			foundArrow = linkEntity.rfind(":");
 			foundDot = blankLessEntity.rfind(":");
-			ReplaceSpecial(blankLessEntity);
-			ReplaceSpecial(linkEntity);
+			replaceSpecial(blankLessEntity);
+			replaceSpecial(linkEntity);
+
+			//todo
+			cout << "link 3 linkEntity: " << linkEntity << endl;
+			cout << "link 3 blankLessEntity: " << blankLessEntity << endl;
 
 			if (foundArrow == string::npos) {
 				linkEntity = "<blankLess@lias>_" + linkEntity;
@@ -259,6 +308,10 @@ void BuilderKaom::extractArgument() {
 				//replace the colon with a underline
 				blankLessEntity.replace(foundDot, 1, "_");
 			}
+
+			//todo
+			cout << "link 4 linkEntity: " << linkEntity << endl;
+			cout << "link 4 blankLessEntity: " << blankLessEntity << endl << endl;
 
 			replace = "link " + blankLessEntity + " to " + linkEntity + ";";
 
@@ -287,6 +340,10 @@ void BuilderKaom::extractArgument() {
 			//extract the current content
 			currentEntity = entity.substr(startPos, endPos);
 
+			//todo
+			cout << "content 1 currentEntity: " << currentEntity << endl;
+			cout << "content 1 entity: " << entity << endl << endl;
+
 			//build kaom content for current output
 			replace = "repl@ce " + currentEntity + ";";
 
@@ -307,6 +364,10 @@ void BuilderKaom::extractArgument() {
 
 		//compute the length of the content
 		currentEntity = entity.substr(startPos, endPos);
+
+		//todo
+		cout << "toplevel 1 currentEntity: " << currentEntity << endl;
+		cout << "toplevel 1 entity: " << entity << endl << endl;
 
 		result_.append("repl@ce " + entityType_ + ":" + currentEntity + ";");
 
@@ -333,12 +394,19 @@ void BuilderKaom::composeArgument() {
 	startPos = result_.find("repl@ce ");
 
 	result_.append("}");
+
+	//todo
+	cout << "comp 0 result_: " << result_ << endl;
+
 	do {
 		//todo no ;
 		endPos = result_.find(";", startPos);
 		endPos = endPos - startPos;
 
 		currentEntity = result_.substr(startPos, endPos);
+
+		//todo
+		cout << "comp 1 currentEntity: " << currentEntity << endl;
 
 		//search the position of the colon
 		//todo no :
@@ -349,7 +417,14 @@ void BuilderKaom::composeArgument() {
 		currentType = currentEntity.substr(8, foundColon - 8);
 		currentEntity = currentEntity.substr(foundColon + 1);
 
+		//todo
+		cout << "comp 2 currentType: " << currentType << endl;
+		cout << "comp 2 currentEntity: " << currentEntity << endl;
+
 		result_.replace(startPos, endPos + 1, entityMap_[currentType]);
+
+		//todo
+		cout << "comp 3 result_: " << result_ << endl;
 
 		currentType = currentEntity;
 		dotsPos = currentEntity.find("\"");
@@ -357,9 +432,17 @@ void BuilderKaom::composeArgument() {
 		if (dotsPos != string::npos) {
 			currentType.erase(currentType.begin() + dotsPos, currentType.end());
 		}
-		ReplaceSpecial(currentType);
+
+		//todo
+		cout << "comp 4 currentType: " << currentType << endl;
+
+		replaceSpecial(currentType);
 		//make a copy without spaces for internal identification in kaom
 		remove_copy(currentType.begin(), currentType.end(), back_inserter(blankLessEntity), ' ');
+
+		//todo
+		cout << "comp 5 currentType: " << currentType << endl;
+		cout << "comp 5 blankLessEntity: " << blankLessEntity << endl;
 
 		if (result_.find("<@lias>", startPos) < result_.find("repl@ce ", startPos)) {
 			endPos = result_.find("<@lias>", startPos);
@@ -371,23 +454,38 @@ void BuilderKaom::composeArgument() {
 			result_.replace(endPos, 7, currentEntity);
 		}
 
+		//todo
+		cout << "comp 6 currentEntity: " << currentEntity << endl;
+		cout << "comp 6 result_: " << result_ << endl;
+
 		do {
 			if (result_.find("<blankLess@lias>", startPos) < result_.find("repl@ce ", startPos)) {
 				endPos = result_.find("<blankLess@lias>", startPos);
 				result_.replace(endPos, 16, blankLessEntity);
 				condition = true;
-			} else {
 
+				//todo
+				cout << "comp 7 result_: " << result_ << endl;
+
+			} else {
 				while (result_.find("}", startPos) < result_.find("repl@ce ", startPos)) {
 					startPos = result_.find("}", startPos) + 1;
 					foundColon = (blankLessEntity.rfind("@@") == string::npos ? 0 : blankLessEntity.rfind("@@"));
 					blankLessEntity.erase(blankLessEntity.begin() + foundColon, blankLessEntity.end());
+
+					//todo
+					cout << "comp 8 blankLessEntity: " << blankLessEntity << endl;
+
 				}
 				startPos = result_.find("repl@ce ", startPos);
 				if (blankLessEntity.length() > 0)
 					blankLessEntity += "@@";
 				condition = false;
+
+				//todo
+				cout << "comp 9 blankLessEntity: " << blankLessEntity << endl<<endl;
 			}
+
 		} while (condition);
 
 		//blankLessEntity.clear();
@@ -398,6 +496,10 @@ void BuilderKaom::composeArgument() {
 		do {
 			result_.replace(foundColon, 2, "_");
 			foundColon = result_.rfind("@@");
+
+			//todo
+			cout << "comp 10 result_: " << result_ << endl;
+
 		} while (foundColon != string::npos);
 	}
 
@@ -458,7 +560,7 @@ void BuilderKaom::buildResult() {
 	}
 
 	//todo debug
-/*
+
 	 map<string, string>::iterator it;
 
 	 // show content:
@@ -466,24 +568,23 @@ void BuilderKaom::buildResult() {
 	 cout << (*it).first << " => " << (*it).second << endl;
 
 	cout << result_ << endl;
-*/
 
 	composeArgument();
 
 	//Write the result to the output file
-	SaveKaom(outputFileName_);
+	saveKaom(outputFileName_);
 
 }
 
-bool BuilderKaom::Valid() {
+bool BuilderKaom::valid() {
 	//is the result empty
 	return !result_.empty();
 }
 
-int BuilderKaom::SaveKaom(const string &filename) {
+int BuilderKaom::saveKaom(const string &filename) {
 
 	//is result empty
-	if (!Valid()) {
+	if (!valid()) {
 		cout << "result_ is empty" << endl;
 		return -1;
 	}

@@ -18,11 +18,9 @@ using namespace std;
 
 BuilderXml::BuilderXml(string inputPath, string outputPath) :
 		inputPath_(inputPath), outputPath_(outputPath) {
-	//todo path !empty
-	loadDoxyfile();
-	completeDoxyfile();
-	callDoxygen();
-	buildFileQueue();
+	if (loadDoxyfile() || completeDoxyfile() || callDoxygen() || buildFileQueue()) {
+		cerr << "Error occurred in BuilderXml!!" << endl;
+	}
 }
 
 BuilderXml::~BuilderXml() {
@@ -31,9 +29,14 @@ BuilderXml::~BuilderXml() {
 
 int BuilderXml::loadDoxyfile() {
 	ifstream inputFile("Doxyfile");
+
+	if (!inputFile) {
+		cerr << "Need a Doxyfile (configuration for Doxygen) in the same folder as C2KAOM!" << endl;
+		return 1;
+	}
+
 	string buffer;
 
-	//todo Doxyfile is there
 	while (inputFile.good()) {
 		getline(inputFile, buffer);
 		content_ += buffer;
@@ -51,7 +54,11 @@ int BuilderXml::completeDoxyfile() {
 	content_ += "\n";
 	content_ += "OUTPUT_DIRECTORY       = " + outputPath_;
 
-	//todo file bad ?
+	if (!outputFile) {
+		cerr << "Cannot write a  modified tempDoxyfile in the same folder as C2KAOM!" << endl;
+		return 1;
+	}
+
 	if (outputFile.good())
 		outputFile << content_;
 
@@ -62,12 +69,23 @@ int BuilderXml::completeDoxyfile() {
 
 int BuilderXml::callDoxygen() {
 	//Checking if processor is available
-	if (!system(NULL))
+	if (!system(NULL)) {
+		cerr << "system command is not available" << endl;
 		return 1;
+	}
 	//"Executing command doxygen
-	//todo doxygen error
 	system("doxygen tempDoxyfile");
-	return 0;
+
+	FILE * stream = fopen("DoxyWarnLog", "r");
+	fseek(stream, 0L, SEEK_END);
+	long endPos = ftell(stream);
+	fclose(stream);
+
+	if (endPos == 0) {
+		return 0;
+	} else {
+		return 1;
+	}
 }
 
 int BuilderXml::buildFileQueue() {

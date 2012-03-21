@@ -62,7 +62,7 @@ private:
 	// empty queue for the result
 	queue<string> result_;
 	//internal variables
-	string fileName_, comment_, entity_, outputFileName_;
+	string fileName_, comment_, entity_, outputFileName_,backupName_;
 	pugi::xpath_node_set set_comment_;
 	pugi::xml_document doc_;
 	unsigned int startPos_;

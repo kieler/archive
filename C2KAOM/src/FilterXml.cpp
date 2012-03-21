@@ -27,14 +27,13 @@ int FilterXml::filter() {
 	//First the xml document is evaluated to a xpath node set
 	xmltoXpath();
 
-	// todo debug
 	//the leading entry is the filename tag
 	outputFileName_ = set_comment_[0].node().first_child().value();
 	cout << outputFileName_;
 	outputFileName_ = outputFileName_.substr(0, outputFileName_.rfind(".")) + ".kaot";
-	cout << "->" << outputFileName_ << endl;
+	cout << "->" << outputFileName_;
 	//each method has two entries
-	cout << "Found " << set_comment_.size() / 2 << " Methods with labeled comments." << endl;
+	cout << " -- Found " << set_comment_.size() / 2 << " Objects with labeled comments --" << endl;
 
 	//if nothing was found except the file name, there's nothing to do here.
 	if (set_comment_.size() < 2) {
@@ -64,20 +63,20 @@ int FilterXml::xmltoXpath() {
 
 int FilterXml::xpathtoQueue() {
 	//local variable used to store methods name witch are not explicit set
-	string backupName;
+
 
 	//evaluate all other entries in set_comment
 	for (unsigned int i = 1; i < set_comment_.size(); ++i) {
 
 		//the first entry is the name tag
-		backupName = set_comment_[i].node().first_child().value();
+		backupName_ = set_comment_[i].node().first_child().value();
 
 		//the second entry is the briefdescription
 		comment_.append(set_comment_[++i].node().first_child().value());
 
 		//todo rename
-		//at the type information to the entity
-		entity_.append("kind: " + backupName + ";");
+		//add the type information to the entity
+		entity_.append("kind: " + backupName_ + ";");
 
 		//if a input value is found append it to the entity else do nothing
 		startPos_ = comment_.find("input:");
@@ -121,8 +120,11 @@ int FilterXml::buildResult(string keyword) {
 	//local variables for append command
 	unsigned int endPos;
 
-	//todo !; -> warning
 	endPos = comment_.find(";", startPos_);
+
+	if (endPos == string::npos) {
+		cerr << "Missing semicolon after " << keyword << " in " << backupName_ << endl;
+	}
 
 	//compute length of content
 	endPos -= startPos_ ;

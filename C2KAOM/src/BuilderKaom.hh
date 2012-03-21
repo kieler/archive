@@ -50,7 +50,7 @@ public:
 	//build priority queue
 	void buildArgsQueue(string keyword);
 
-	void  ReplaceSpecial(string& str);
+	void replaceSpecial(string& str);
 
 private:
 
@@ -64,10 +64,10 @@ private:
 	void composeArgument();
 
 	//write the result to the output file
-	int SaveKaom(const string &filename);
+	int saveKaom(const string &filename);
 
 	//test if the output file is valid
-	bool Valid();
+	bool valid();
 
 	//priority queue that store the a argument and its position in the entity
 	//least position at top
