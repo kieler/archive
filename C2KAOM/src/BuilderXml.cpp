@@ -69,6 +69,8 @@ int BuilderXml::completeDoxyfile() {
 
 int BuilderXml::callDoxygen() {
 	//Checking if processor is available
+	long endPos;
+
 	if (!system(NULL)) {
 		cerr << "system command is not available" << endl;
 		return 1;
@@ -76,14 +78,20 @@ int BuilderXml::callDoxygen() {
 	//"Executing command doxygen
 	system("doxygen tempDoxyfile");
 
-	FILE * stream = fopen("DoxyWarnLog", "r");
-	fseek(stream, 0L, SEEK_END);
-	long endPos = ftell(stream);
-	fclose(stream);
+	FILE * doxyLog = fopen("DoxyWarnLog", "r");
+	if (doxyLog != NULL) {
+		fseek(doxyLog, 0L, SEEK_END);
+		endPos = ftell(doxyLog);
+		fclose(doxyLog);
+	} else {
+		cerr << "Cannot write or read the the doxygen logfile in the same folder as C2KAOM!" << endl;
+		return 1;
+	}
 
 	if (endPos == 0) {
 		return 0;
 	} else {
+		cerr << "Error occured in doxygen! Check logfile." << endl;
 		return 1;
 	}
 }
