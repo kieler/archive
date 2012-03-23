@@ -34,7 +34,7 @@ public:
 
 	int loadDoxyfile();
 
-	int completeDoxyfile();
+	int fillDoxyfile();
 
 	int callDoxygen();
 

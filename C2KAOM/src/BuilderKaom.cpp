@@ -20,22 +20,13 @@ BuilderKaom::~BuilderKaom() {
 
 BuilderKaom::BuilderKaom(queue<string> input, string filename) :
 		input_(input), outputFileName_(filename), isLinked_(false) {
-
-	//todo
-	for (int i = 0; i < input_.size(); i++) {
-		cout << "constr 1 input_[" << i << "]: " << (input_.front()) << endl;
-		input_.push(input_.front());
-		input_.pop();
-	}
-	cout << "constr 1 outputFileName_: " << outputFileName_ << endl << endl;
 }
 
 BuilderKaom::BuilderKaom() {
 	cout << "Need input queue: " << endl;
 }
 
-void BuilderKaom::replaceSpecial(string& str) {
-
+void BuilderKaom::replaceSpecChar(string& str) {
 	int max = str.length();
 
 	for (int i = 0; i < max; i++) {
@@ -49,13 +40,10 @@ void BuilderKaom::replaceSpecial(string& str) {
 		} else {
 			str[i] = '_';
 		}
-
 	}
-
 }
 
 int BuilderKaom::deleteBlank() {
-
 	//local variables used for extract and modify the content of the queue
 	string entity;
 	unsigned int lenght, i, found, sz = input_.size();
@@ -93,344 +81,213 @@ int BuilderKaom::deleteBlank() {
 	return 1;
 }
 
-void BuilderKaom::extractArgument() {
+void BuilderKaom::buildEntities() {
 	//local variables used for store and modify sub-contents
-	string entity, currentEntity, linkEntity, blankLessEntity, replace, keyword;
+	string entity, actEntity, entityID, pattern, key;
 
-	//todo reallocate
-	unsigned int startPos, endPos, foundDot, foundArrow = 0, foundSemi;
+	unsigned int begPos, size, posMark, sclnPos;
 	//condition indicates that if there are more entries in the content
 	bool condition;
 
 	//find the position of first occurrence in the entry
-	startPos = argsQueue_.top().first;
-	keyword = argsQueue_.top().second;
-	argsQueue_.pop();
-	if (!argsQueue_.empty()) {
-		entity = entity_.substr(startPos, argsQueue_.top().first - startPos);
+	begPos = argsQ_.top().first;
+	key = argsQ_.top().second;
+	argsQ_.pop();
+	if (!argsQ_.empty()) {
+		entity = entity_.substr(begPos, argsQ_.top().first - begPos);
 	} else {
-		entity = entity_.substr(startPos);
+		entity = entity_.substr(begPos);
 	}
 
-	//todo
-	cout << "args 1 entity_: " << entity_ << "." << endl;
-	cout << "args 1 entity: " << entity << "." << endl;
+	begPos = key.length();
 
-	startPos = keyword.length();
+	sclnPos = entity.find(";", begPos);
 
-	foundSemi = entity.find(";", startPos);
-
-	if (foundSemi == string::npos) {
-		cerr << "Missing semicolon after " << keyword << " in the annotation of " << entityType_ << endl;
-		foundSemi = entity.length() - 1;
+	if (sclnPos == string::npos) {
+		cerr << "Missing semicolon after " << key << " in the annotation of " << entityType_ << endl;
+		sclnPos = entity.length() - 1;
 	}
 
-	if (startPos > foundSemi) {
-		cerr << keyword << " in the annotation of " << entityType_ << "is empty and has no semicolon. -> skipping" << endl;
-		keyword = "error";
+	if (begPos > sclnPos) {
+		cerr << key << " in the annotation of " << entityType_ << "is empty and has no semicolon. -> skipping" << endl;
+		key = "error";
 	}
-
-	cout << "args 2 foundSemi: " << foundSemi << "." << endl;
-	cout << "args 2 entity.length()-1: " << (entity.length() - 1) << "." << endl;
 
 	//switch for type, input and output
-	switch (keyword[0]) {
+	switch (key[0]) {
 	//in case of type
 	case 'k':
-		endPos = foundSemi;
-		endPos -= startPos;
+		size = sclnPos - begPos;
 
-		entityType_ = entity.substr(startPos, endPos);
-
-		//todo
-		cout << "kind 1 entityType_: " << entityType_ << "." << endl;
-		cout << "kind 1 entity: " << entity << "." << endl << endl;
+		entityType_ = entity.substr(begPos, size);
 
 		//start a new entityMap_ entry
-		mapEntry_ = " @portConstraints Free entity <blankLess@lias> \"<@lias>\" {";
+		mapEntry_ = " @portConstraints Free entity <ID@lias> \"<@lias>\" {";
 
 		break;
-		//in case of input
+		//in case of input or output
 	case 'i':
-		do {
-			//if the current content is not the last content in the entry search for a comma else search for a semicolon
-			if (entity.find(",", startPos) < foundSemi) {
-				endPos = entity.find(",", startPos);
-				endPos -= startPos;
-				condition = true;
-			} else {
-				endPos = foundSemi;
-				endPos -= startPos;
-				condition = false;
-			}
-
-			if (endPos != 0) {
-
-				//extract the current content
-				currentEntity = entity.substr(startPos, endPos);
-
-				//todo
-				cout << "input 1 currentEntity: " << currentEntity << "." << endl;
-				cout << "input 1 endPos: " << endPos << "." << endl;
-				cout << "input 1 startPos: " << startPos << "." << endl;
-
-				//if a dot is there the label the id stand before the dot else the whole id is the label too
-				//in every case make a copy without spaces for internal identification in kaom
-				endPos = currentEntity.find("\"");
-				if (endPos != string::npos) {
-					remove_copy(currentEntity.begin(), currentEntity.begin() + endPos, back_inserter(blankLessEntity), ' ');
-
-					foundArrow = currentEntity.find("\"", endPos + 1);
-
-					if (foundArrow != string::npos) {
-						currentEntity = currentEntity.substr(endPos + 1, foundArrow - 1 - endPos);
-					} else {
-						cerr << "found single a quote within " << keyword << " in the annotation of " << entityType_ << " -> skipping label"
-								<< endl;
-						currentEntity = currentEntity.substr(0, endPos);
-					}
-
-				} else {
-					remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
-				}
-
-				//todo
-				cout << "input 2 currentEntity: " << currentEntity << "." << endl;
-				cout << "input 2 blankLessEntity: " << blankLessEntity << "." << endl;
-
-				replaceSpecial(blankLessEntity);
-				//build kaom content for current input
-				replace = "port <blankLess@lias>_" + blankLessEntity + " \"" + currentEntity + "\";";
-
-				//todo
-				cout << "input 3 blankLessEntity: " << blankLessEntity << "." << endl << endl;
-
-				//add current input to the current entityMap entry
-				mapEntry_.append(replace);
-
-				//update variables for next round
-				blankLessEntity.clear();
-
-			} else {
-				cerr << "Found two consecutive commas within " << keyword << " in the annotation of " << entityType_ << " -> skipping" << endl;
-			}
-			startPos = entity.find(",", startPos) + 1;
-			//is this not the last occurrence
-		} while (condition);
-
-		break;
-		//in case of output
 	case 'o':
 		do {
 			//if the current content is not the last content in the entry search for a comma else search for a semicolon
-			if (entity.find(",", startPos) < foundSemi) {
-				endPos = entity.find(",", startPos);
-				endPos -= startPos;
+			posMark = entity.find(",", begPos);
+			if (posMark < sclnPos) {
+				size = posMark - begPos;
 				condition = true;
 			} else {
-				endPos = foundSemi;
-				endPos -= startPos;
+				size = sclnPos - begPos;
 				condition = false;
 			}
 
-			if (endPos != 0) {
+			if (size != 0) {
 
 				//extract the current content
-				currentEntity = entity.substr(startPos, endPos);
-
-				//todo
-				cout << "output 1 currentEntity: " << currentEntity << "." << endl;
-				cout << "output 1 endPos: " << endPos << "." << endl;
-				cout << "output 1 startPos: " << startPos << "." << endl;
+				actEntity = entity.substr(begPos, size);
+				begPos = posMark + 1;
 
 				//if a dot is there the label the id stand before the dot else the whole id is the label too
 				//in every case make a copy without spaces for internal identification in kaom
-				endPos = currentEntity.find("\"");
-				if (endPos != string::npos) {
-					remove_copy(currentEntity.begin(), currentEntity.begin() + endPos, back_inserter(blankLessEntity), ' ');
-					foundArrow = currentEntity.find("\"", endPos + 1);
+				size = actEntity.find("\"");
+				if (size != string::npos) {
+					remove_copy(actEntity.begin(), actEntity.begin() + size, back_inserter(entityID), ' ');
 
-					if (foundArrow != string::npos) {
-						currentEntity = currentEntity.substr(endPos + 1, foundArrow - 1 - endPos);
+					posMark = actEntity.find("\"", size + 1);
+
+					if (posMark != string::npos) {
+						actEntity = actEntity.substr(size + 1, posMark - 1 - size);
 					} else {
-						cerr << "found single a quote within " << keyword << " in the annotation of " << entityType_ << " -> skipping label"
-								<< endl;
-						currentEntity = currentEntity.substr(0, endPos);
+						cerr << "found single a quote within " << key << " in the annotation of " << entityType_ << " -> skipping label" << endl;
+						actEntity = actEntity.substr(0, size);
 					}
+
 				} else {
-					remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
+					remove_copy(actEntity.begin(), actEntity.end(), back_inserter(entityID), ' ');
 				}
 
-				//todo
-				cout << "output 2 currentEntity: " << currentEntity << "." << endl;
-				cout << "output 2 blankLessEntity: " << blankLessEntity << "." << endl;
+				replaceSpecChar(entityID);
+				//build kaom content for current input
+				pattern = "port <ID@lias>_" + entityID + " \"" + actEntity + "\";";
 
-				replaceSpecial(blankLessEntity);
-
-				cout << "output 3 blankLessEntity: " << blankLessEntity << "." << endl << endl;
-
-				//build kaom content for current output
-				replace = "port <blankLess@lias>_" + blankLessEntity + " \"" + currentEntity + "\";";
-
-				//add current output to the current entityMap entry
-				mapEntry_.append(replace);
+				//add current input to the current entityMap entry
+				mapEntry_.append(pattern);
 
 				//update variables for next round
-				blankLessEntity.clear();
+				entityID.clear();
 
 			} else {
-				cerr << "Found two consecutive commas within " << keyword << " in the annotation of " << entityType_ << " -> skipping" << endl;
+				cerr << "Found two consecutive commas within " << key << " in the annotation of " << entityType_ << " -> skipping" << endl;
+				begPos = posMark + 1;
 			}
-
-			startPos = entity.find(",", startPos) + 1;
-
 			//is this not the last occurrence
 		} while (condition);
+
 		break;
 	case 'l':
 		do {
 			//if the current content is not the last content in the entry search for a comma else search for a semicolon
-			if (entity.find(",", startPos) < foundSemi) {
-				endPos = entity.find(",", startPos);
-				cout << "link 0 entity.find(, , startPos): " << endPos << "." << endl;
-				endPos -= startPos;
-				cout << "link 0 endPos -= startPos;: " << endPos << "." << endl;
+			posMark = entity.find(",", begPos);
+			if (posMark < sclnPos) {
+				size = posMark - begPos;
 				condition = true;
 			} else {
-				endPos = foundSemi;
-				cout << "link 0 endPos = foundSemi: " << endPos << "." << endl;
-				endPos -= startPos;
-				cout << "link 0 endPos -= startPos;: " << endPos << "." << endl;
+				size = sclnPos - begPos;
 				condition = false;
 			}
 
-			if (endPos != 0) {
+			if (size != 0) {
 
 				//extract the current content
-				currentEntity = entity.substr(startPos, endPos);
+				actEntity = entity.substr(begPos, size);
+				begPos = posMark + 1;
 
 				//make a copy without spaces for internal identification in kaom
-				remove_copy(currentEntity.begin(), currentEntity.end(), back_inserter(blankLessEntity), ' ');
+				remove_copy(actEntity.begin(), actEntity.end(), back_inserter(entityID), ' ');
 
 				//look for links
+				posMark = entityID.find("->");
 
-				//todo
-				cout << "link 1 currentEntity: " << currentEntity << "." << endl;
-				cout << "link 1 blankLessEntity: " << blankLessEntity << "." << endl;
-				cout << "link 1 endPos: " << endPos << "." << endl;
-				cout << "link 1 startPos: " << startPos << "." << endl;
-
-				foundArrow = blankLessEntity.find("->");
-
-				if (foundArrow != string::npos) {
+				if (posMark != string::npos) {
 
 					//extract identification for the source of the link
-					linkEntity = blankLessEntity.substr(foundArrow + 2);
-					blankLessEntity = blankLessEntity.substr(0, foundArrow);
+					actEntity = entityID.substr(posMark + 2);
+					entityID = entityID.substr(0, posMark);
 
-					//todo
-					cout << "link 2 linkEntity: " << linkEntity << "." << endl;
-					cout << "link 2 blankLessEntity: " << blankLessEntity << "." << endl;
+					posMark = actEntity.rfind(":");
+					replaceSpecChar(actEntity);
 
-					foundArrow = linkEntity.rfind(":");
-					foundDot = blankLessEntity.rfind(":");
-					replaceSpecial(blankLessEntity);
-					replaceSpecial(linkEntity);
-
-					//todo
-					cout << "link 3 linkEntity: " << linkEntity << "." << endl;
-					cout << "link 3 blankLessEntity: " << blankLessEntity << "." << endl;
-
-					if (foundArrow == string::npos) {
-						linkEntity = "<blankLess@lias>_" + linkEntity;
-
+					if (posMark == string::npos) {
+						actEntity = "<ID@lias>_" + actEntity;
 					} else {
 						//replace the colon with a underline
-						linkEntity.replace(foundArrow, 1, "_");
+						actEntity.replace(posMark, 1, "_");
 					}
 
-					if (foundDot == string::npos) {
-						blankLessEntity = "<blankLess@lias>_" + blankLessEntity;
+					posMark = entityID.rfind(":");
+					replaceSpecChar(entityID);
+
+					if (posMark == string::npos) {
+						entityID = "<ID@lias>_" + entityID;
 					} else {
 						//replace the colon with a underline
-						blankLessEntity.replace(foundDot, 1, "_");
+						entityID.replace(posMark, 1, "_");
 					}
-
-					//todo
-					cout << "link 4 linkEntity: " << linkEntity << "." << endl;
-					cout << "link 4 blankLessEntity: " << blankLessEntity << "." << endl << endl;
-
-					replace = "link " + blankLessEntity + " to " + linkEntity + ";";
+					pattern = "link " + entityID + " to " + actEntity + ";";
 
 					//add current link to the current entityMap entry
-					mapEntry_.append(replace);
+					mapEntry_.append(pattern);
 
 					//update variables for next round
 				} else {
-					cerr << "found no arrow within " << keyword << " in the annotation of " << entityType_ << " -> skipping" << endl;
+					cerr << "found no arrow within " << key << " in the annotation of " << entityType_ << " -> skipping" << endl;
 				}
-				blankLessEntity.clear();
+				entityID.clear();
 			} else {
-				cerr << "Found two consecutive commas within " << keyword << " in the annotation of " << entityType_ << " -> skipping" << endl;
+				cerr << "Found two consecutive commas within " << key << " in the annotation of " << entityType_ << " -> skipping" << endl;
+				begPos = posMark + 1;
 			}
-
-			startPos = entity.find(",", startPos) + 1;
 
 		} while (condition);
 		break;
 	case 'c':
 		do {
 			//if the current content is not the last content in the entry search for a comma else search for a semicolon
-			if (entity.find(",", startPos) < foundSemi) {
-				endPos = entity.find(",", startPos);
-				endPos -= startPos;
+			posMark = entity.find(",", begPos);
+			if (posMark < sclnPos) {
+				size = posMark - begPos;
 				condition = true;
 			} else {
-				endPos = foundSemi;
-				endPos -= startPos;
+				size = sclnPos - begPos;
 				condition = false;
 			}
 
-			if (endPos != 0) {
+			if (size != 0) {
 
 				//extract the current content
-				currentEntity = entity.substr(startPos, endPos);
-
-				//todo
-				cout << "content 1 currentEntity: " << currentEntity << "." << endl;
-				cout << "content 1 entity: " << entity << "." << endl << endl;
-				cout << "content 1 endPos: " << endPos << "." << endl;
-				cout << "content 1 startPos: " << startPos << "." << endl;
+				actEntity = entity.substr(begPos, size);
 
 				//build kaom content for current output
-				replace = "repl@ce " + currentEntity + ";";
+				pattern = "repl@ce " + actEntity + ";";
 
 				//add current component to the current entityMap entry
-				mapEntry_.append(replace);
+				mapEntry_.append(pattern);
 
 			} else {
-				cerr << "Found two consecutive commas within " << keyword << " in the annotation of " << entityType_ << " -> skipping" << endl;
+				cerr << "Found two consecutive commas within " << key << " in the annotation of " << entityType_ << " -> skipping" << endl;
 			}
 
 			//update variables for next round
-			startPos = entity.find(",", startPos) + 1;
+			begPos = posMark + 1;
 
 			//is this not the last occurrence
 		} while (condition);
 		break;
 	case 't':
 		//find the marked ending of the content
-		endPos = foundSemi;
-		endPos -= startPos;
+		size = sclnPos - begPos;
 
 		//compute the length of the content
-		currentEntity = entity.substr(startPos, endPos);
-
-		//todo
-		cout << "toplevel 1 currentEntity: " << currentEntity << "." << endl;
-		cout << "toplevel 1 entity: " << entity << "." << endl << endl;
-
-		result_.append("repl@ce " + entityType_ + ":" + currentEntity + ";");
+		actEntity = entity.substr(begPos, size);
+		result_.append("repl@ce " + entityType_ + ":" + actEntity + ";");
 
 		break;
 	default:
@@ -439,133 +296,94 @@ void BuilderKaom::extractArgument() {
 	}
 }
 
-void BuilderKaom::composeArgument() {
+void BuilderKaom::buildKaom() {
 	//close canvas
 
-	//todo reallocate
-	unsigned int startPos, endPos, foundColon, dotsPos;
+	unsigned int begPos, size, posMark, rPos;
 	//condition indicates that if there are more entries in the content
 	bool condition;
-	string currentEntity, currentType, blankLessEntity;
+	string actEntity, actType, entityID;
 
-	blankLessEntity.clear();
+	entityID.clear();
 
 	//find the position of first occurrence in the entry
-	startPos = result_.find("repl@ce ");
+	begPos = result_.find("repl@ce ");
 	result_.append("}");
-	if (startPos != string::npos) {
-
-	//todo
-	cout << "comp 0 result_: " << result_ << endl;
-
-	do {
-		endPos = result_.find(";", startPos);
-		endPos = endPos - startPos;
-
-		currentEntity = result_.substr(startPos, endPos);
-
-		//todo
-		cout << "comp 1 currentEntity: " << currentEntity << endl;
-
-		//search the position of the colon
-		//todo no : warnung und raustreichen
-		foundColon = currentEntity.find(":");
-
-		currentType = currentEntity.substr(8, foundColon - 8);
-		currentEntity = currentEntity.substr(foundColon + 1);
-
-		//todo
-		cout << "comp 2 currentType: " << currentType << endl;
-		cout << "comp 2 currentEntity: " << currentEntity << endl;
-
-		//todo schlüssel ist nicht da dann warnung und aufruf raustreichen
-		result_.replace(startPos, endPos + 1, entityMap_[currentType]);
-
-		//todo
-		cout << "comp 3 result_: " << result_ << endl;
-
-		currentType = currentEntity;
-		dotsPos = currentEntity.find("\"");
-
-		if (dotsPos != string::npos) {
-			currentType.erase(currentType.begin() + dotsPos, currentType.end());
-		}
-
-		//todo
-		cout << "comp 4 currentType: " << currentType << endl;
-
-		replaceSpecial(currentType);
-		//make a copy without spaces for internal identification in kaom
-		remove_copy(currentType.begin(), currentType.end(), back_inserter(blankLessEntity), ' ');
-
-		//todo
-		cout << "comp 5 currentType: " << currentType << endl;
-		cout << "comp 5 blankLessEntity: " << blankLessEntity << endl;
-
-		if (result_.find("<@lias>", startPos) < result_.find("repl@ce ", startPos)) {
-			endPos = result_.find("<@lias>", startPos);
-			if (dotsPos != string::npos) {
-				//todo another dot is there
-				currentEntity = currentEntity.substr(dotsPos + 1, currentEntity.find("\"", dotsPos + 1) - 1 - dotsPos);
-			}
-
-			result_.replace(endPos, 7, currentEntity);
-		}
-
-		//todo
-		cout << "comp 6 currentEntity: " << currentEntity << endl;
-		cout << "comp 6 result_: " << result_ << endl;
+	if (begPos != string::npos) {
 
 		do {
-			if (result_.find("<blankLess@lias>", startPos) < result_.find("repl@ce ", startPos)) {
-				endPos = result_.find("<blankLess@lias>", startPos);
-				result_.replace(endPos, 16, blankLessEntity);
-				condition = true;
+			size = result_.find(";", begPos) - begPos;
 
-				//todo
-				cout << "comp 7 result_: " << result_ << endl;
+			actEntity = result_.substr(begPos, size);
+			//search the position of the colon
+			posMark = actEntity.find(":");
 
-			} else {
-				while (result_.find("}", startPos) < result_.find("repl@ce ", startPos)) {
-					startPos = result_.find("}", startPos) + 1;
-					foundColon = (blankLessEntity.rfind("@@") == string::npos ? 0 : blankLessEntity.rfind("@@"));
-					blankLessEntity.erase(blankLessEntity.begin() + foundColon, blankLessEntity.end());
+			if (posMark != string::npos) {
+				actType = actEntity.substr(8, posMark - 8);
+				actEntity = actEntity.substr(posMark + 1);
 
-					//todo
-					cout << "comp 8 blankLessEntity: " << blankLessEntity << endl;
+				if (entityMap_.count(actType) > 0) {
+					result_.replace(begPos, size + 1, entityMap_[actType]);
+					actType = actEntity;
+					posMark = actEntity.find("\"");
 
+					if (posMark != string::npos) {
+						actType.erase(actType.begin() + posMark, actType.end());
+						if (actEntity.find("\"", posMark + 1) != string::npos) {
+							actEntity = actEntity.substr(posMark + 1, actEntity.find("\"", posMark + 1) - 1 - posMark);
+						} else {
+							cerr << "found single a quote within " << actEntity << " -> skipping label" << endl;
+							actEntity = actType;
+						}
+					}
+					replaceSpecChar(actType);
+					//make a copy without spaces for internal identification in kaom
+					remove_copy(actType.begin(), actType.end(), back_inserter(entityID), ' ');
+
+					if (result_.find("<@lias>", begPos) < result_.find("repl@ce ", begPos)) {
+						posMark = result_.find("<@lias>", begPos);
+						result_.replace(posMark, 7, actEntity);
+					}
+					do {
+						posMark = result_.find("<ID@lias>", begPos);
+						rPos = result_.find("repl@ce ", begPos);
+						if (posMark < rPos) {
+							result_.replace(posMark, 9, entityID);
+							condition = true;
+						} else {
+							begPos = result_.find("}", begPos);
+							while (begPos < rPos) {
+								posMark = entityID.rfind("@@");
+								posMark = (posMark == string::npos ? 0 : posMark);
+								entityID.erase(entityID.begin() + posMark, entityID.end());
+								begPos = result_.find("}", begPos + 1);
+							}
+							if (entityID.length() > 0)
+								entityID += "@@";
+							condition = false;
+						}
+					} while (condition);
+					begPos = rPos;
+				} else {
+					cerr << "found no object with ID " << actType << " -> skipping" << endl;
+					result_.replace(begPos, size + 1, "");
+					begPos = result_.find("repl@ce ", begPos);
 				}
-				startPos = result_.find("repl@ce ", startPos);
-				if (blankLessEntity.length() > 0)
-					blankLessEntity += "@@";
-				condition = false;
-
-				//todo
-				cout << "comp 9 blankLessEntity: " << blankLessEntity << endl << endl;
+			} else {
+				cerr << "found no colon in " << actEntity << " -> skipping" << endl;
+				result_.replace(begPos, size + 1, "");
+				begPos = result_.find("repl@ce ", begPos);
 			}
-
-		} while (condition);
-
-		//blankLessEntity.clear();
-	} while (startPos != string::npos);
-
-	foundColon = result_.rfind("@@");
-	if (foundColon != string::npos) {
-		do {
-			result_.replace(foundColon, 2, "_");
-			foundColon = result_.rfind("@@");
-
-			//todo
-			cout << "comp 10 result_: " << result_ << endl;
-
-		} while (foundColon != string::npos);
-	}
-
-	}
-	else {
+			//blankLessEntity.clear();
+		} while (begPos != string::npos);
+		posMark = result_.rfind("@@");
+		while (posMark != string::npos) {
+			result_.replace(posMark, 2, "_");
+			posMark = result_.rfind("@@");
+		}
+	} else {
 		cerr << "found no toplevel for " << outputFileName_ << endl;
 	}
-
 }
 
 void BuilderKaom::buildArgsQueue(string keyword) {
@@ -577,7 +395,7 @@ void BuilderKaom::buildArgsQueue(string keyword) {
 	if (startPos == string::npos) {
 		return;
 	} else {
-		argsQueue_.push(make_pair(startPos, keyword));
+		argsQ_.push(make_pair(startPos, keyword));
 	}
 }
 
@@ -606,34 +424,26 @@ void BuilderKaom::buildResult() {
 		buildArgsQueue("content:");
 		buildArgsQueue("toplevel:");
 
-		//todo !(argsQueue_.empty())
-		while (!argsQueue_.empty()) {
-			extractArgument();
+		if (!argsQ_.empty()) {
+
+			while (!argsQ_.empty()) {
+				buildEntities();
+			}
+
+			//close current entity
+			mapEntry_.append("}");
+
+			//create new entry in entityMap_ with key entityType_ and value mapEntry_
+			//abfragen ob schlüssel schon vorhanden wenn ja warnung und überschreiben
+			entityMap_[entityType_] = mapEntry_;
 		}
-
-		//close current entity
-		mapEntry_.append("}");
-
-		//create new entry in entityMap_ with key entityType_ and value mapEntry_
-		//abfragen ob schlüssel schon vorhanden wenn ja warnung und überschreiben
-		entityMap_[entityType_] = mapEntry_;
 
 		//delete edited entry and update the rest of the variables for the next entry
 		input_.pop();
 		entityType_.clear();
 	}
 
-	//todo debug
-
-	map<string, string>::iterator it;
-
-	// show content:
-	for (it = entityMap_.begin(); it != entityMap_.end(); it++)
-		cout << (*it).first << " => " << (*it).second << endl;
-
-	cout << result_ << endl;
-
-	composeArgument();
+	buildKaom();
 
 	//Write the result to the output file
 	saveKaom(outputFileName_);

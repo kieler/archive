@@ -72,7 +72,6 @@ int FilterXml::xpathtoQueue() {
 		//the second entry is the briefdescription
 		comment_.append(set_comment_[++i].node().first_child().value());
 
-		//todo rename
 		//add the type information to the entity
 		entity_.append("kind: " + backupName_ + ";");
 
@@ -104,8 +103,12 @@ int FilterXml::xpathtoQueue() {
 			buildResult("toplevel:");
 		}
 
-		//store the finished entity in the queue
-		result_.push(entity_);
+		if (!entity_.empty()) {
+			//store the finished entity in the queue
+			result_.push(entity_);
+		} else {
+			cerr << "Found annotation without content for " << backupName_ << " ->skipping" << endl;
+		}
 
 		//clear global entries for new use
 		comment_.clear();

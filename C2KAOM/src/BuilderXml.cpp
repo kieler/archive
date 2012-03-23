@@ -18,8 +18,8 @@ using namespace std;
 
 BuilderXml::BuilderXml(string inputPath, string outputPath) :
 		inputPath_(inputPath), outputPath_(outputPath) {
-	if (loadDoxyfile() || completeDoxyfile() || callDoxygen() || buildFileQueue()) {
-		cerr << "Error occurred in BuilderXml!!" << endl;
+	if (loadDoxyfile() || fillDoxyfile() || callDoxygen() || buildFileQueue()) {
+		cerr << "An error occurred during construction of the XML file!!!" << endl;
 	}
 }
 
@@ -47,7 +47,7 @@ int BuilderXml::loadDoxyfile() {
 	return 0;
 }
 
-int BuilderXml::completeDoxyfile() {
+int BuilderXml::fillDoxyfile() {
 	ofstream outputFile("tempDoxyfile");
 
 	content_ += "INPUT                  = " + inputPath_;
@@ -78,7 +78,7 @@ int BuilderXml::callDoxygen() {
 	//"Executing command doxygen
 	system("doxygen tempDoxyfile");
 
-	FILE * doxyLog = fopen("DoxyWarnLog", "r");
+	FILE * doxyLog = fopen("logfile", "r");
 	if (doxyLog != NULL) {
 		fseek(doxyLog, 0L, SEEK_END);
 		endPos = ftell(doxyLog);

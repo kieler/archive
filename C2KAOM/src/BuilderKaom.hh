@@ -50,7 +50,7 @@ public:
 	//build priority queue
 	void buildArgsQueue(string keyword);
 
-	void replaceSpecial(string& str);
+	void replaceSpecChar(string& str);
 
 private:
 
@@ -58,10 +58,10 @@ private:
 	int deleteBlank();
 
 	//fill internal map with koam code for every method from the input queue
-	void extractArgument();
+	void buildEntities();
 
 	//build kaom code from the internal map
-	void composeArgument();
+	void buildKaom();
 
 	//write the result to the output file
 	int saveKaom(const string &filename);
@@ -71,7 +71,7 @@ private:
 
 	//priority queue that store the a argument and its position in the entity
 	//least position at top
-	priority_queue<pair<unsigned int, string> ,vector<pair<unsigned int, string> > , PairComparator<unsigned int, string> > argsQueue_;
+	priority_queue<pair<unsigned int, string> ,vector<pair<unsigned int, string> > , PairComparator<unsigned int, string> > argsQ_;
 	map<string, string> entityMap_;
 	// empty queue for the arguments
 	queue<string> input_;
