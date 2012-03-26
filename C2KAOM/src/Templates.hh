@@ -17,6 +17,10 @@
 
 using namespace std;
 
+/*
+ * Template for comparing of pair-objects.
+ */
+
 template<typename FirstType, typename SecondType>
 struct PairComparator {
 	bool operator()(const pair<FirstType, SecondType>& p1, const pair<FirstType, SecondType>& p2) const {

@@ -12,7 +12,6 @@
  * See the file epl-v10.html for the license text.
  */
 
-//creates kaom code from the input queue
 #ifndef BUILDERKAOM_HH_
 #define BUILDERKAOM_HH_
 
@@ -26,60 +25,63 @@
 
 using namespace std;
 
+/*
+ * The class BuilderKaom realizes the synthesis of the data flow diagrams to KAOM-model.
+ * It also realizes that the data flow diagrams are stored as .kaot-files in the destination directory.
+ */
+
 class BuilderKaom {
 public:
 
-	BuilderKaom();
+	//simple constructor with annotation queue and target file path
 	BuilderKaom(queue<string> input, string filename);
 
 	virtual ~BuilderKaom();
 
-	//getter result
+	//getter result_
 	inline string GetResult() {
 		return result_;
 	}
 
-	//getter input
+	//getter input_
 	inline queue<string> GetInput() {
 		return input_;
 	}
 
-	//main method calling the internal methods
+	//main method calling the internal methods and fill the internal map with patterns
 	void buildResult();
 
 	//build priority queue
 	void buildArgsQueue(string keyword);
 
+	//replace all chars expect 32,48-58,65-90,95,97-122 (ASCII) from a string with a underline
 	void replaceSpecChar(string& str);
 
 private:
 
-	//delete blank char before and after one of these chars ", ; : < -"
+	//delete all blank chars before and after one of the chars ", ; : - > ."
 	int deleteBlank();
 
-	//fill internal map with koam code for every method from the input queue
-	void buildEntities();
+	//build a pattern for every entity from the input queue
+	void buildPattern();
 
-	//build kaom code from the internal map
+	//build KAOM-code from the internal map
 	void buildKaom();
 
 	//write the result to the output file
 	int saveKaom(const string &filename);
 
-	//test if the output file is valid
-	bool valid();
-
-	//priority queue that store the a argument and its position in the entity
-	//least position at top
+	//priority queue that store the a argument and its position in the entity, least position at top
 	priority_queue<pair<unsigned int, string> ,vector<pair<unsigned int, string> > , PairComparator<unsigned int, string> > argsQ_;
+	//map which contains the function patterns
 	map<string, string> entityMap_;
-	// empty queue for the arguments
+	//empty queue for the annotations
 	queue<string> input_;
-	//empty strings for the result,the name of the output file and a temporary for the map entries
+	//strings for the the name of the output file, the result and the elemts for the map
 	string outputFileName_, result_ , mapEntry_;
 	//internal variables
 	string fileName_, comment_, entity_, entityType_, linkEntity_;
-	bool isLinked_;
+	bool isValid_;
 
 };
 

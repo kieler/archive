@@ -12,14 +12,17 @@
  * See the file epl-v10.html for the license text.
  */
 
-//extract comment line marked with KAOM
-
 #ifndef FILTERXML_HH_
 #define FILTERXML_HH_
 
 #include <pugixml.hpp>
 #include <string>
 #include <queue>
+
+/*
+ * The class FilterXml realizes the execution of XPath
+ * and thus the conversion from XML to the filtered annotations.
+ */
 
 using namespace std;
 
@@ -32,18 +35,18 @@ public:
 	//simple destructor
 	virtual ~FilterXml();
 
-	//main function calling the internal functions
+	//main function which calls the internal functions
 	int filter();
 
-	//load inputfile
+	//load input file
 	bool loadFile();
 
-	//getter result
+	//getter result_
 	inline queue<string> GetResult() {
 		return result_;
 	}
 
-	//getter outputFileName
+	//getter outputFileName_
 	inline string GetOutputFileName() {
 		return outputFileName_;
 	}

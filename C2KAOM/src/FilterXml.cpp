@@ -24,35 +24,35 @@ FilterXml::FilterXml(string filename) :
 }
 
 int FilterXml::filter() {
-	//First the xml document is evaluated to a xpath node set
+	//evaluate the XML-file to a XPath node set
 	xmltoXpath();
 
 	//the leading entry is the filename tag
+	//print the file name and the number of annotations found on the console
 	outputFileName_ = set_comment_[0].node().first_child().value();
 	cout << outputFileName_;
 	outputFileName_ = outputFileName_.substr(0, outputFileName_.rfind(".")) + ".kaot";
-	cout << "->" << outputFileName_;
-	//each method has two entries
-	cout << " -- Found " << set_comment_.size() / 2 << " Objects with labeled comments --" << endl;
+	cout << "->" << outputFileName_ << " -- Found " << set_comment_.size() / 2 << " Objects with labeled comments --" << endl;
 
-	//if nothing was found except the file name, there's nothing to do here.
-	if ((set_comment_.size() < 2) || (xpathtoQueue() == 1)) {
+	//if nothing was found except the file name, then there is nothing to do here
+	//else the xpath node set is evaluated to a queue
+	if ((set_comment_.size() > 1) && (xpathtoQueue() == 0)) {
+		return 0;
+	} else {
 		return 1;
 	}
-	//then the xpath node set is evaluated to a queue
-	return 0;
-
 }
 
 bool FilterXml::loadFile() {
-	//load file specified in fileName_
+	//load file specified XML-file with pugixml
 	pugi::xml_parse_result result = doc_.load_file(fileName_.c_str());
 	return result.operator bool();
 }
 
 int FilterXml::xmltoXpath() {
-	//search for name and briefdescription tags in the definition of methods
+	//search for function names and briefdescription tags in the definition of methods
 	//comments marked with @kaom are stored in briefdescription tags
+	//the filename is stored in compoundname
 	pugi::xpath_query query_comment("//memberdef/briefdescription/para | //memberdef/briefdescription/para/preceding::name[1] | //compoundname");
 
 	//store the result in a node set
@@ -61,59 +61,52 @@ int FilterXml::xmltoXpath() {
 }
 
 int FilterXml::xpathtoQueue() {
-	//local variable used to store methods name witch are not explicit set
-
-	//evaluate all other entries in set_comment
+	//analyze all entries in set_comment_
 	for (unsigned int i = 1; i < set_comment_.size(); ++i) {
 
-		//the first entry is the name tag
-		backupName_ = set_comment_[i].node().first_child().value();
-
-		//the second entry is the briefdescription
-		comment_.append(set_comment_[++i].node().first_child().value());
-
 		//add the type information to the entity
+		backupName_ = set_comment_[i].node().first_child().value();
 		entity_.append("kind: " + backupName_ + ";");
 
-		//if a input value is found append it to the entity else do nothing
+		//search in the briefdescription tags for keywords
+		//and add every found keyword to the entity
+		comment_.append(set_comment_[++i].node().first_child().value());
 		startPos_ = comment_.find("input:");
 		if (string::npos != startPos_) {
 			buildResult("input:");
 		}
-		//if a output value is found append it to the entity else do nothing
 		startPos_ = comment_.find("output:");
 		if (string::npos != startPos_) {
 			buildResult("output:");
 		}
-		//if a link value is found append it to the entity else do nothing
 		startPos_ = comment_.find("link:");
 		if (string::npos != startPos_) {
 			buildResult("link:");
 		}
-		//if a container value is found append it to the entity else do nothing
 		startPos_ = comment_.find("content:");
 		if (string::npos != startPos_) {
 			buildResult("content:");
 		}
-		//if a toplevel value is found append toplevel to the entity else do nothing
+		//normaly there is no toplevel
 		startPos_ = comment_.find("toplevel:");
 		if (string::npos == startPos_) {
-
 		} else {
 			buildResult("toplevel:");
 		}
 
+		//store the entity in the queue
 		if (!entity_.empty()) {
-			//store the finished entity in the queue
 			result_.push(entity_);
 		} else {
 			cerr << "Found annotation without content for " << backupName_ << " ->skipping" << endl;
 		}
 
-		//clear global entries for new use
+		//clear global entries for next round
 		comment_.clear();
 		entity_.clear();
 	}
+
+	//test if a entity with annotations were found
 	if (!result_.empty()) {
 		return 0;
 	} else {
@@ -122,11 +115,11 @@ int FilterXml::xpathtoQueue() {
 }
 
 int FilterXml::buildResult(string keyword) {
-	//local variables for append command
+	//local ending position
 	unsigned int endPos;
 
+	//find the marked ending
 	endPos = comment_.find(";", startPos_);
-
 	if (endPos == string::npos) {
 		cerr << "Missing semicolon after " << keyword << " in the annotation of " << backupName_ << endl;
 	}
