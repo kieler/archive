@@ -19,7 +19,7 @@ BuilderKaom::~BuilderKaom() {
 }
 
 BuilderKaom::BuilderKaom(queue<string> input, string filename) :
-		input_(input), outputFileName_(filename), isValid_(true){
+		input_(input), outputFileName_(filename), isValid_(true) {
 }
 
 void BuilderKaom::replaceSpecChar(string& str) {
@@ -414,7 +414,7 @@ void BuilderKaom::buildKaom() {
 
 	} else {
 		cerr << "found no toplevel for " << outputFileName_ << endl;
-		isValid_=false;
+		isValid_ = false;
 	}
 }
 
@@ -456,7 +456,7 @@ void BuilderKaom::buildResult() {
 			}
 			mapEntry_.append("}");
 			if (entityMap_.count(entityType_) > 0) {
-				cerr << "Found two annotations for " << entityType_ <<" -> skip first annotation" << endl;
+				cerr << "Found two annotations for " << entityType_ << " -> skip first annotation" << endl;
 			}
 			entityMap_[entityType_] = mapEntry_;
 		}

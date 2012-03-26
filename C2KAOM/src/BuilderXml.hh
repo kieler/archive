@@ -38,6 +38,13 @@ public:
 	//simple destructor
 	virtual ~BuilderXml();
 
+	//getter inputFiles
+	inline queue<string> GetInput() {
+		return inputFiles_;
+	}
+
+private:
+
 	//load the configuration for Doxygen
 	int loadDoxyfile();
 
@@ -50,12 +57,6 @@ public:
 	//lists the XML-files in the subdirectory "xml"
 	int buildFileQueue();
 
-	//getter inputFiles
-	inline queue<string> GetInput() {
-		return inputFiles_;
-	}
-
-private:
 	queue<string> inputFiles_;
 	string inputPath_, outputPath_, content_;
 

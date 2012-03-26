@@ -51,13 +51,13 @@ public:
 	//main method calling the internal methods and fill the internal map with patterns
 	void buildResult();
 
+private:
+
 	//build priority queue
 	void buildArgsQueue(string keyword);
 
 	//replace all chars expect 32,48-58,65-90,95,97-122 (ASCII) from a string with a underline
 	void replaceSpecChar(string& str);
-
-private:
 
 	//delete all blank chars before and after one of the chars ", ; : - > ."
 	int deleteBlank();
