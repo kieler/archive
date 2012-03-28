@@ -19,11 +19,11 @@ FilterXml::~FilterXml() {
 	// nothing
 }
 
+map<string, string> FilterXml::globalMap_=map<string, string>();
+
 FilterXml::FilterXml(string filename) :
 		fileName_(filename) {
 }
-
-map<string, string> FilterXml::globalMap_=map<string, string>();
 
 int FilterXml::filter() {
 	//check if it is a subfiles from a header file
