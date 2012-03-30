@@ -18,6 +18,7 @@
 #include <pugixml.hpp>
 #include <string>
 #include <queue>
+#include <map>
 
 /*
  * The class FilterXml realizes the execution of XPath
@@ -53,15 +54,23 @@ public:
 
 private:
 
-	//filter comment tags and store them in set_comment
-	int xmltoXpath();
+	//filter compound descriptions and store them in set_comment
+	int xpathCompound();
+
+	//filter member and innerclass descriptions and store them in set_comment
+	int xpathMember();
 
 	//take tags from set_comment and filter tag marked with KAOM; store these tags in result
 	int xpathtoQueue();
 
+	//take tags from set_comment and filter tag marked with KAOM; store these tags in externMap_
+	int xpathtoMap();
+
 	//build the tags for the result
 	int buildResult(string keyword);
 
+	//map which contains annotations from other XML-Files -- used for headers which are bursted to multiple XML-Files
+	static map<string, string> globalMap_;
 	// empty queue for the result
 	queue<string> result_;
 	//internal variables
