@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description name="PtolemyII" url="http://rtsys.informatik.uni-kiel.de/~kieler/updatesite/ptolemy/">
+      
+   </description>
+   <feature url="features/org.ptolemy_8.0.0.qualifier.jar" id="org.ptolemy" version="8.0.0.qualifier">
+      <category name="PtolemyII"/>
+   </feature>
+   <category-def name="PtolemyII" label="PtolemyII"/>
+</site>
