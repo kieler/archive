@@ -38,10 +38,8 @@ public class ClassRatingGenerator {
     /** tag for generated code. */
     public static final String GENERATED_TAG = "@generated";
     // CHECKSTYLEOFF LineLength
-    /** the path to rating icon files. */
-    public static final String RATING_ICON_PATH = "http://trac.rtsys.informatik.uni-kiel.de/trac/kieler/browser/standalone/de.cau.cs.kieler.taglets/icons/";
-    /** the path to class icon files. */
-    public static final String CLASS_ICON_PATH = "http://trac.rtsys.informatik.uni-kiel.de/trac/kieler/browser/standalone/de.cau.cs.kieler.doclets/icons/";
+    /** the path to icon files. */
+    public static final String ICON_PATH = "http://rtsys.informatik.uni-kiel.de/fisheye/browse/~raw,r=HEAD/kieler/standalone/de.cau.cs.kieler.doclets/icons/";
     // CHECKSTYLEON LineLength
 
     /** prefix for output file names. */
@@ -135,19 +133,19 @@ public class ClassRatingGenerator {
                 if (classDoc.containingClass() == null && !isGenerated(classDoc)) {
                     writer.write("<tr>");
                     if (classDoc.isEnum()) {
-                        writer.write("<td><img src=\"" + CLASS_ICON_PATH
+                        writer.write("<td><img src=\"" + ICON_PATH
                                 + "enum.png?format=raw\"></td><td>"
                                 + classDoc.typeName() + "</td>");
                     } else if (classDoc.isInterface()) {
-                        writer.write("<td><img src=\"" + CLASS_ICON_PATH
+                        writer.write("<td><img src=\"" + ICON_PATH
                                 + "interface.png?format=raw\"></td><td><i>"
                                 + classDoc.typeName() + "</i></td>");
                     } else if (classDoc.isAbstract()) {
-                        writer.write("<td><img src=\"" + CLASS_ICON_PATH
+                        writer.write("<td><img src=\"" + ICON_PATH
                                 + "class.png?format=raw\"></td><td><i>"
                                 + classDoc.typeName() + "</i></td>");
                     } else {
-                        writer.write("<td><img src=\"" + CLASS_ICON_PATH
+                        writer.write("<td><img src=\"" + ICON_PATH
                                 + "class.png?format=raw\"></td><td>"
                                 + classDoc.typeName() + "</td>");
                     }
@@ -264,7 +262,7 @@ public class ClassRatingGenerator {
     private void writeClassRating(final Writer writer, final boolean proposed,
             final Rating rating, final String date) throws IOException {
         String ratingName = rating.toString().toLowerCase();
-        writer.write("<td><img src=\"" + RATING_ICON_PATH);
+        writer.write("<td><img src=\"" + ICON_PATH);
         if (proposed) {
             writer.write("prop_");
         }

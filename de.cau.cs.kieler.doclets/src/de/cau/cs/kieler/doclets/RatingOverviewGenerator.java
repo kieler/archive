@@ -101,7 +101,7 @@ public class RatingOverviewGenerator {
         Rating[] ratingTypes = Rating.values();
         for (int i = 0; i < ratingTypes.length; i += 2) {
             String ratingName = ratingTypes[i].toString().toLowerCase();
-            writer.write("<th><img src=\"" + ClassRatingGenerator.RATING_ICON_PATH
+            writer.write("<th><img src=\"" + ClassRatingGenerator.ICON_PATH
                     + ratingName + ".png?format=raw\" alt=\"" + ratingName + "\"></th>");
         }
         writer.write("<th>Proposed</th><th>Relative</th><th>Generated</th></tr>\n");
