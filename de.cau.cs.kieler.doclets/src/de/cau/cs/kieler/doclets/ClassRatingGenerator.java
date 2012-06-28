@@ -134,19 +134,19 @@ public class ClassRatingGenerator {
                     writer.write("<tr>");
                     if (classDoc.isEnum()) {
                         writer.write("<td><img src=\"" + ICON_PATH
-                                + "enum.png?format=raw\"></td><td>"
+                                + "enum.png\"></td><td>"
                                 + classDoc.typeName() + "</td>");
                     } else if (classDoc.isInterface()) {
                         writer.write("<td><img src=\"" + ICON_PATH
-                                + "interface.png?format=raw\"></td><td><i>"
+                                + "interface.png\"></td><td><i>"
                                 + classDoc.typeName() + "</i></td>");
                     } else if (classDoc.isAbstract()) {
                         writer.write("<td><img src=\"" + ICON_PATH
-                                + "class.png?format=raw\"></td><td><i>"
+                                + "class.png\"></td><td><i>"
                                 + classDoc.typeName() + "</i></td>");
                     } else {
                         writer.write("<td><img src=\"" + ICON_PATH
-                                + "class.png?format=raw\"></td><td>"
+                                + "class.png\"></td><td>"
                                 + classDoc.typeName() + "</td>");
                     }
                     Rating rating = writeClassRating(writer, classDoc.tags(RATING_TAG));
