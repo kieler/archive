@@ -60,6 +60,7 @@ public class RatingDoclet extends Doclet {
         } catch (IOException exception) {
             rootDoc.printError("Could not write to the specified destination: "
                     + exception.getMessage());
+            return false;
         }
         return true;
     }
