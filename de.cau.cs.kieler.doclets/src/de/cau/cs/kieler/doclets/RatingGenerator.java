@@ -23,13 +23,14 @@ import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.PackageDoc;
 import com.sun.javadoc.RootDoc;
 
+import de.cau.cs.kieler.doclets.htmlgen.OverviewHtmlWriter;
 import de.cau.cs.kieler.doclets.model.ClassItem;
 import de.cau.cs.kieler.doclets.model.Plugin;
 import de.cau.cs.kieler.doclets.model.Project;
 
 /**
  * Does the actual work of loading classes, partitioning them into projects and plug-ins and finally
- * generating the HTML output.
+ * delegating the work of generating the HTML output.
  * 
  * @author cds
  */
@@ -56,34 +57,15 @@ public class RatingGenerator {
         
         // Build the map of projects, plug-ins and classes
         buildModel(rootDoc);
+        aggregateStatistics();
+        writeModelToDebugFile(destinationFolder);
         
         // TODO: Setup the basic output file system structure with CSS, icons, and all
         
-        // TODO: Generate HTML file
+        // TODO: Generate progress bars for ratings
         
-        
-        File outFile = new File(destinationFolder, "output.txt");
-        outFile.createNewFile();
-        BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
-        
-        for (Project project : projects.values()) {
-            writer.write("Project " + project.getName() + "\n");
-            
-            for (Plugin plugin : project.getPlugins().values()) {
-                writer.write("    Plug-In " + plugin.getName() + "\n");
-                
-                for (PackageDoc packageDoc : plugin.getPackageToClassMap().keySet()) {
-                    writer.write("         Package " + packageDoc.name() + "\n");
-                    
-                    for (ClassItem classItem : plugin.getPackageToClassMap().get(packageDoc)) {
-                        writer.write("              Class " + classItem.getClassDoc().name() + "\n");
-                    }
-                }
-            }
-        }
-        
-        writer.flush();
-        writer.close();
+        // Generate HTML files
+        new OverviewHtmlWriter().generateOverviewPage(projects, destinationFolder);
     }
 
     
@@ -169,5 +151,49 @@ public class RatingGenerator {
         }
         
         return project;
+    }
+    
+    /**
+     * Aggregates the statistics of all projects.
+     */
+    private void aggregateStatistics() {
+        for (Project project : projects.values()) {
+            project.aggregateStatistics();
+        }
+    }
+
+    
+    /////////////////////////////////////////////////////////////////////////////
+    // DEBUG
+    
+    /**
+     * Writes the model to a debug file in the destination folder.
+     * 
+     * @param destinationFolder the destination folder.
+     * @throws Exception if anything bad happens.
+     */
+    private void writeModelToDebugFile(final File destinationFolder) throws Exception {
+        File outFile = new File(destinationFolder, "debug.txt");
+        outFile.createNewFile();
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
+        
+        for (Project project : projects.values()) {
+            writer.write("Project " + project.getName() + "\n");
+            
+            for (Plugin plugin : project.getPlugins().values()) {
+                writer.write("    Plug-In " + plugin.getName() + "\n");
+                
+                for (PackageDoc packageDoc : plugin.getPackageToClassMap().keySet()) {
+                    writer.write("         Package " + packageDoc.name() + "\n");
+                    
+                    for (ClassItem classItem : plugin.getPackageToClassMap().get(packageDoc)) {
+                        writer.write("              Class " + classItem.getClassDoc().name() + "\n");
+                    }
+                }
+            }
+        }
+        
+        writer.flush();
+        writer.close();
     }
 }

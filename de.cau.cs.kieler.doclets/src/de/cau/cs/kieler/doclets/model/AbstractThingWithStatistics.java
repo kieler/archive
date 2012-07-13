@@ -19,6 +19,7 @@ package de.cau.cs.kieler.doclets.model;
  * @author cds
  */
 public abstract class AbstractThingWithStatistics {
+    // CHECKSTYLEOFF VisibilityModifier
     /**
      * The number of classes in this package.
      */
@@ -35,6 +36,7 @@ public abstract class AbstractThingWithStatistics {
      * Code rating statistics.
      */
     protected int[] statsCode = new int[CodeRating.values().length];
+    // CHECKSTYLEON VisibilityModifier
     
     
     /**

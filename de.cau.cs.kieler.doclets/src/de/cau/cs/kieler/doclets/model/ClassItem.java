@@ -27,6 +27,7 @@ import de.cau.cs.kieler.doclets.RatingDocletConstants;
  * classes (src-gen, xtend-gen) is marked as a generated class.
  * 
  * @author cds
+ * @kieler.design proposed
  */
 public class ClassItem {
     /**

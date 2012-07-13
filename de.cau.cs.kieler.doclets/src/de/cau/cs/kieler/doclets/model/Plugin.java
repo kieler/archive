@@ -34,6 +34,11 @@ public class Plugin extends AbstractThingWithStatistics {
     private String name;
     
     /**
+     * The plugin's parent project.
+     */
+    private Project parent;
+    
+    /**
      * Map mapping packages to containing class items.
      */
     private Map<PackageDoc, List<ClassItem>> packageToClassMap
@@ -43,9 +48,11 @@ public class Plugin extends AbstractThingWithStatistics {
      * Creates a new instance representing the plug-in with the given name.
      * 
      * @param name the plug-in's name.
+     * @param parent the plug-in's parent project.
      */
-    public Plugin(final String name) {
+    public Plugin(final String name, final Project parent) {
         this.name = name;
+        this.parent = parent;
     }
 
 
@@ -63,6 +70,11 @@ public class Plugin extends AbstractThingWithStatistics {
         Set<PackageDoc> packages = packageToClassMap.keySet();
         for (PackageDoc packageDoc : packages) {
             for (ClassItem classItem : packageToClassMap.get(packageDoc)) {
+                statsClasses++;
+                if (classItem.isGenerated()) {
+                    statsGenerated++;
+                }
+                
                 // Design Rating
                 DesignRating designRating = classItem.getDesignRating();
                 if (designRating != null) {
@@ -106,6 +118,15 @@ public class Plugin extends AbstractThingWithStatistics {
      */
     public String getName() {
         return name;
+    }
+    
+    /**
+     * Returns the project this plug-in is part of.
+     * 
+     * @return the parent project.
+     */
+    public Project getProject() {
+        return parent;
     }
 
     /**

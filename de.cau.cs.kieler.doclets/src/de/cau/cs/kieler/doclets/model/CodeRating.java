@@ -17,6 +17,7 @@ package de.cau.cs.kieler.doclets.model;
  * Enumeration of code ratings.
  * 
  * @author msp
+ * @kieler.design 2012-05-13 KI-16 cds, msp, jjc
  */
 public enum CodeRating {
     /** rating red. */

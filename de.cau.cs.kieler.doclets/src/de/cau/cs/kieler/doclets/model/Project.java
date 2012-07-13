@@ -13,9 +13,7 @@
  */
 package de.cau.cs.kieler.doclets.model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,7 +21,7 @@ import java.util.Map;
  * 
  * @author cds
  */
-public class Project extends AbstractThingWithStatistics {
+public class Project extends AbstractThingWithStatistics implements Comparable<Project> {
     /**
      * The project's name.
      */
@@ -76,6 +74,14 @@ public class Project extends AbstractThingWithStatistics {
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
+    public int compareTo(final Project o) {
+        return name.compareTo(o.name);
+    }
+    
+    
     /////////////////////////////////////////////////////////////////////////////
     // GETTERS
 
@@ -107,7 +113,7 @@ public class Project extends AbstractThingWithStatistics {
         Plugin plugin = plugins.get(pluginName);
         
         if (plugin == null) {
-            plugin = new Plugin(pluginName);
+            plugin = new Plugin(pluginName, this);
             plugins.put(pluginName, plugin);
         }
         

@@ -52,10 +52,12 @@ public final class RatingDocletConstants {
      */
     public static final String[] GEN_FOLDERS = {"src-gen", "xtend-gen"};
     
-    /**
-     * The page title.
-     */
+    // INTERNATIONALIZATION
+    // CHECKSTYLEOFF JavadocVariable
     public static final String TXT_TITLE = "KIELER Code Ratings";
+    public static final String TXT_RATINGS = "Ratings";
+    public static final String TXT_TOP_TEN = "Top 10";
+    public static final String TXT_WALLBOARD = "Wallboard";
     
     
     /**
