@@ -26,6 +26,8 @@ import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.PackageDoc;
 import com.sun.javadoc.Tag;
 
+import de.cau.cs.kieler.doclets.model.CodeRating;
+
 /**
  * Generator for class and package ratings.
  *
@@ -33,10 +35,6 @@ import com.sun.javadoc.Tag;
  */
 public class ClassRatingGenerator {
 
-    /** tag for class ratings. */
-    public static final String RATING_TAG = "@kieler.rating";
-    /** tag for generated code. */
-    public static final String GENERATED_TAG = "@generated";
     // CHECKSTYLEOFF LineLength
     /** the path to icon files. */
     public static final String ICON_PATH = "http://rtsys.informatik.uni-kiel.de/fisheye/browse/~raw,r=HEAD/kieler/standalone/de.cau.cs.kieler.doclets/icons/";
@@ -48,49 +46,6 @@ public class ClassRatingGenerator {
     private static final String TITLE_PREFIX = "Class Rating for ";
     /** path, relative or absolute, to the API files. */
     private static final String API_PATH = "..";
-    /** source folder for generated classes. */
-    private static final String GEN_FOLDER = "src-gen";
-    
-    /** enumeration of ratings. */
-    public enum Rating {
-        /** rating red. */
-        RED,
-        /** rating proposed yellow. */
-        PROP_YELLOW,
-        /** rating yellow. */
-        YELLOW,
-        /** rating proposed green. */
-        PROP_GREEN,
-        /** rating green. */
-        GREEN,
-        /** rating proposed blue. */
-        PROP_BLUE,
-        /** rating blue. */
-        BLUE;
-        
-        /**
-         * Returns whether this rating is a proposed rating.
-         * 
-         * @return true if this rating is proposed
-         */
-        public boolean isProposed() {
-            return ordinal() % 2 == 1;
-        }
-        
-        /**
-         * Returns a modified rating that is one level lower than this rating.
-         * 
-         * @return a lower rating
-         */
-        public Rating getDegraded() {
-            int ordinal = ordinal();
-            if (ordinal > 0) {
-                return values()[ordinal - 1];
-            } else {
-                return this;
-            }
-        }
-    }
     
     /** path to the destination folder. */
     private String destinationPath;
@@ -118,7 +73,7 @@ public class ClassRatingGenerator {
         
         // write code rating for each package and file
         writer.write("<table>\n");
-        ratingCounts = new int[Rating.values().length];
+        ratingCounts = new int[CodeRating.values().length];
         ratedClasses = 0;
         PackageDoc[] packages = containedPackages.toArray(new PackageDoc[containedPackages.size()]);
         Arrays.sort(packages);
@@ -149,7 +104,8 @@ public class ClassRatingGenerator {
                                 + "class.png\"></td><td>"
                                 + classDoc.typeName() + "</td>");
                     }
-                    Rating rating = writeClassRating(writer, classDoc.tags(RATING_TAG));
+                    CodeRating rating = writeClassRating(writer,
+                            classDoc.tags(RatingDocletConstants.TAG_CODE_REVIEW));
                     writer.write("</tr>\n");
                     ratingCounts[rating.ordinal()]++;
                     ratedClasses++;
@@ -185,7 +141,7 @@ public class ClassRatingGenerator {
      * @return the rating for the class
      * @throws IOException if writing output fails
      */
-    private Rating writeClassRating(final Writer writer, final Tag[] tagArray)
+    private CodeRating writeClassRating(final Writer writer, final Tag[] tagArray)
             throws IOException {
         // find the tag with highest rating
         int maxIndex = -1;
@@ -200,7 +156,7 @@ public class ClassRatingGenerator {
                         proposed = true;
                     } else {
                         try {
-                            Rating rating = Rating.valueOf(token.toUpperCase());
+                            CodeRating rating = CodeRating.valueOf(token.toUpperCase());
                             float value = rating.ordinal() - (proposed ? PROPOSED_VAL : 0.0f);
                             if (value > maxValue) {
                                 maxValue = value;
@@ -218,7 +174,7 @@ public class ClassRatingGenerator {
         if (maxIndex >= 0) {
             String date = null;
             boolean proposed = false;
-            Rating rating = null;
+            CodeRating rating = null;
             StringTokenizer tokenizer = new StringTokenizer(tagArray[maxIndex].text(), " \t\n\r");
             while (tokenizer.hasMoreTokens()) {
                 String token = tokenizer.nextToken();
@@ -226,7 +182,7 @@ public class ClassRatingGenerator {
                     proposed = true;
                 } else {
                     try {
-                        rating = Rating.valueOf(token.toUpperCase());
+                        rating = CodeRating.valueOf(token.toUpperCase());
                         break;
                     } catch (IllegalArgumentException exception) {
                         if (date == null) {
@@ -235,7 +191,7 @@ public class ClassRatingGenerator {
                     }
                 }
             }
-            if (proposed && rating == Rating.RED) {
+            if (proposed && rating == CodeRating.RED) {
                 proposed = false;
             }
             writeClassRating(writer, proposed, rating, date);
@@ -245,8 +201,8 @@ public class ClassRatingGenerator {
                 return rating;
             }
         } else {
-            writeClassRating(writer, false, Rating.RED, null);
-            return Rating.RED;
+            writeClassRating(writer, false, CodeRating.RED, null);
+            return CodeRating.RED;
         }
     }
     
@@ -260,7 +216,7 @@ public class ClassRatingGenerator {
      * @throws IOException if writing output fails
      */
     private void writeClassRating(final Writer writer, final boolean proposed,
-            final Rating rating, final String date) throws IOException {
+            final CodeRating rating, final String date) throws IOException {
         String ratingName = rating.toString().toLowerCase();
         writer.write("<td><img src=\"" + ICON_PATH);
         if (proposed) {
@@ -313,9 +269,20 @@ public class ClassRatingGenerator {
      * @return true if the corresponding class is automatically generated
      */
     public static boolean isGenerated(final ClassDoc classDoc) {
+        // Check for the @generated tag
+        if (classDoc.tags(RatingDocletConstants.TAG_GENERATED).length > 0) {
+            return true;
+        }
+        
+        // Check if the class is in one of the folders known for generated classes
         String path = classDoc.position().file().getPath();
-        return classDoc.tags(ClassRatingGenerator.GENERATED_TAG).length > 0
-            || path.indexOf(GEN_FOLDER) >= 0;
+        for (int i = 0; i < RatingDocletConstants.GEN_FOLDERS.length; i++) {
+            if (path.indexOf(RatingDocletConstants.GEN_FOLDERS[i]) >= 0) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
 }

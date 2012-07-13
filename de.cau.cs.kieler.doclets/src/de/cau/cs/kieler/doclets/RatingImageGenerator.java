@@ -20,7 +20,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import de.cau.cs.kieler.doclets.ClassRatingGenerator.Rating;
+import de.cau.cs.kieler.doclets.model.CodeRating;
+
 
 /**
  * Generator for images that show the relative rating counts.
@@ -65,7 +66,7 @@ public class RatingImageGenerator {
         WritableRaster raster = image.getRaster();
         int offset = 0;
         for (int i = 0; i < ratings.length; i++) {
-            Rating rating = Rating.values()[i];
+            CodeRating rating = CodeRating.values()[i];
             offset += fillRatingArea(raster, offset, rating,
                     (float) ratings[i] / ratedClasses);
         }
@@ -84,7 +85,7 @@ public class RatingImageGenerator {
      * @return the number of horizontal pixels used for the current rating
      */
     private int fillRatingArea(final WritableRaster raster, final int offset,
-            final Rating rating, final float ratingRate) {
+            final CodeRating rating, final float ratingRate) {
         int size = Math.round(ratingRate * IMG_WIDTH);
         if (offset + size > IMG_WIDTH) {
             size = IMG_WIDTH - offset;

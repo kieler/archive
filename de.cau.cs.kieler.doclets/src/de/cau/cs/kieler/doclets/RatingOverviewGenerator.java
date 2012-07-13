@@ -31,7 +31,8 @@ import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.PackageDoc;
 import com.sun.javadoc.RootDoc;
 
-import de.cau.cs.kieler.doclets.ClassRatingGenerator.Rating;
+import de.cau.cs.kieler.doclets.model.CodeRating;
+
 
 /**
  * Generator for code rating overviews.
@@ -40,11 +41,6 @@ import de.cau.cs.kieler.doclets.ClassRatingGenerator.Rating;
  */
 public class RatingOverviewGenerator {
 
-    /** prefix for all packages of the project. */
-    private static final String PROJECT_PREFIX = "de.cau.cs.kieler.";
-    /** title of the rating overview. */
-    private static final String TITLE = "KIELER Rating Overview";
-    
     /** path to the destination folder. */
     private String destinationPath;
 
@@ -66,11 +62,11 @@ public class RatingOverviewGenerator {
             if (classDoc.containingClass() == null) {
                 PackageDoc packageDoc = classDoc.containingPackage();
                 String packageName = packageDoc.name();
-                if (packageName.startsWith(PROJECT_PREFIX)) {
-                    int dotIndex = packageName.indexOf('.', PROJECT_PREFIX.length());
+                if (packageName.startsWith(RatingDocletConstants.PROJECT_PREFIX)) {
+                    int dotIndex = packageName.indexOf('.', RatingDocletConstants.PROJECT_PREFIX.length());
                     String projectName = dotIndex < 0
-                            ? packageName.substring(PROJECT_PREFIX.length())
-                            : packageName.substring(PROJECT_PREFIX.length(), dotIndex);
+                            ? packageName.substring(RatingDocletConstants.PROJECT_PREFIX.length())
+                            : packageName.substring(RatingDocletConstants.PROJECT_PREFIX.length(), dotIndex);
                     if (ClassRatingGenerator.isGenerated(classDoc)) {
                         Integer generatedCount = generatedCountMap.get(projectName);
                         if (generatedCount == null) {
@@ -96,9 +92,9 @@ public class RatingOverviewGenerator {
         File outFile = new File(destinationPath, "index.html");
         outFile.createNewFile();
         BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
-        HtmlWriter.writeHeader(writer, TITLE);
+        HtmlWriter.writeHeader(writer, RatingDocletConstants.TXT_TITLE);
         writer.write("<table>\n<tr><th>Project</th><th>Classes</th>");
-        Rating[] ratingTypes = Rating.values();
+        CodeRating[] ratingTypes = CodeRating.values();
         for (int i = 0; i < ratingTypes.length; i += 2) {
             String ratingName = ratingTypes[i].toString().toLowerCase();
             writer.write("<th><img src=\"" + ClassRatingGenerator.ICON_PATH
