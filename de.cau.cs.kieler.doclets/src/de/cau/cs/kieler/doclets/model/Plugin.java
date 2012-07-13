@@ -94,8 +94,6 @@ public class Plugin extends AbstractThingWithStatistics {
         
         classItemList.add(classItem);
     }
-    
-    
 
     
     /////////////////////////////////////////////////////////////////////////////

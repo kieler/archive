@@ -14,7 +14,9 @@
 package de.cau.cs.kieler.doclets.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a KIELER project.
@@ -28,9 +30,9 @@ public class Project extends AbstractThingWithStatistics {
     private String name;
     
     /**
-     * List of plug-ins in this project.
+     * Map of plug-in names to plug-ins.
      */
-    private List<Plugin> plugins = new ArrayList<Plugin>();
+    private Map<String, Plugin> plugins = new HashMap<String, Plugin>();
     
     
     /**
@@ -43,15 +45,6 @@ public class Project extends AbstractThingWithStatistics {
     }
     
     
-    /**
-     * Adds the given plug-in to this project.
-     * 
-     * @param plugin the plug-in to add.
-     */
-    public void addPlugin(final Plugin plugin) {
-        plugins.add(plugin);
-    }
-
     /**
      * {@inheritDoc}
      * 
@@ -66,7 +59,7 @@ public class Project extends AbstractThingWithStatistics {
         statsDesign = new int[DesignRating.values().length];
         statsCode = new int[CodeRating.values().length];
         
-        for (Plugin plugin : plugins) {
+        for (Plugin plugin : plugins.values()) {
             plugin.aggregateStatistics();
             
             statsClasses += plugin.getStatsClasses();
@@ -81,7 +74,10 @@ public class Project extends AbstractThingWithStatistics {
             }
         }
     }
-
+    
+    
+    /////////////////////////////////////////////////////////////////////////////
+    // GETTERS
 
     /**
      * Returns the project's name.
@@ -93,11 +89,28 @@ public class Project extends AbstractThingWithStatistics {
     }
 
     /**
-     * Returns the list of plug-ins in this project.
+     * Returns the map mapping plug-in names to plug-ins of this project.
      * 
-     * @return the project's list of plug-ins.
+     * @return the project's map of plug-ins.
      */
-    public List<Plugin> getPlugins() {
+    public Map<String, Plugin> getPlugins() {
         return plugins;
+    }
+    
+    /**
+     * Retrieves the plugin with the given name. Creates one if there is none yet.
+     * 
+     * @param pluginName name of the plugin.
+     * @return the plugin.
+     */
+    public Plugin retrievePlugin(final String pluginName) {
+        Plugin plugin = plugins.get(pluginName);
+        
+        if (plugin == null) {
+            plugin = new Plugin(pluginName);
+            plugins.put(pluginName, plugin);
+        }
+        
+        return plugin;
     }
 }
