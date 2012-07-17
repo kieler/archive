@@ -69,6 +69,9 @@ public class OverviewHtmlWriter extends BasicHtmlWriter {
      * @throws Exception if something bad happens
      */
     private void writeTable(final Project[] projects, final BufferedWriter writer) throws Exception {
+        // We're generating HTML code; to make things easier, we don't care about long lines.
+        // CHECKSTYLEOFF LineLength
+        
         // Sums of statistics
         int totalClasses = 0;
         int totalGenerated = 0;
@@ -183,5 +186,7 @@ public class OverviewHtmlWriter extends BasicHtmlWriter {
         
         // Footer
         writer.write("</table>");
+
+        // CHECKSTYLEON LineLength
     }
 }

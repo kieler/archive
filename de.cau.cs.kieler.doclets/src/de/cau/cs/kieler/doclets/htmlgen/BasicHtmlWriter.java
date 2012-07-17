@@ -70,6 +70,25 @@ public class BasicHtmlWriter {
         writer.write("<head>");
         writer.write("<title>" + RatingDocletConstants.TXT_TITLE + "</title>");
         writer.write("<link rel='stylesheet' type='text/css' href='style.css'>");
+        
+        writer.write("<script type='text/javascript'>");
+        writer.write("  function expandAll() {");
+        writer.write("    document.getElementById('package_klay_layered').style.display = 'block';");
+        writer.write("    document.getElementById('package_klay_layered_lgraph').style.display = 'block';");
+        writer.write("  }");
+        writer.write("  function collapseAll() {");
+        writer.write("    document.getElementById('package_klay_layered').style.display = 'none';");
+        writer.write("    document.getElementById('package_klay_layered_lgraph').style.display = 'none';");
+        writer.write("  }");
+        writer.write("  function toggleVisibility(id) {");
+        writer.write("    if (document.getElementById(id).style.display == 'none') {");
+        writer.write("      document.getElementById(id).style.display = 'block';");
+        writer.write("    } else {");
+        writer.write("      document.getElementById(id).style.display = 'none';");
+        writer.write("    }");
+        writer.write("  }");
+        writer.write("</script>");
+        
         writer.write("</head><body>");
         writer.write("<h1>" + RatingDocletConstants.TXT_TITLE + "</h1>");
         
