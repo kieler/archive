@@ -18,8 +18,12 @@ package de.cau.cs.kieler.doclets.model;
  * 
  * @author cds
  */
-public abstract class AbstractThingWithStatistics {
+public abstract class AbstractThingWithStatistics implements Comparable<AbstractThingWithStatistics> {
     // CHECKSTYLEOFF VisibilityModifier
+    /**
+     * The thing's name.
+     */
+    private String name = "";
     /**
      * The number of classes in this package.
      */
@@ -40,11 +44,30 @@ public abstract class AbstractThingWithStatistics {
     
     
     /**
+     * Creates a new instance with the given name.
+     * 
+     * @param name the thing's name.
+     */
+    public AbstractThingWithStatistics(final String name) {
+        this.name = name;
+    }
+    
+    
+    /**
      * Calculates the sum of contained classes, packages, generated classes and rating statistics. This
      * should be run just once as soon as all classes have been processed.
      */
     public abstract void aggregateStatistics();
     
+
+    /**
+     * Returns this thing's fully qualified name.
+     * 
+     * @return the thing's fully qualified name.
+     */
+    public String getName() {
+        return name;
+    }
     
     /**
      * Returns the number of classes in this plug-in, including generated classes.
@@ -80,6 +103,13 @@ public abstract class AbstractThingWithStatistics {
      */
     public int[] getStatsCode() {
         return statsCode;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int compareTo(final AbstractThingWithStatistics o) {
+        return name.compareTo(o.name);
     }
 
 }

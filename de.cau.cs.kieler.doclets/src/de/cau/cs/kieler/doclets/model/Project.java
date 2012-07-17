@@ -21,12 +21,7 @@ import java.util.Map;
  * 
  * @author cds
  */
-public class Project extends AbstractThingWithStatistics implements Comparable<Project> {
-    /**
-     * The project's name.
-     */
-    private String name;
-    
+public class Project extends AbstractThingWithStatistics {
     /**
      * Map of plug-in names to plug-ins.
      */
@@ -39,7 +34,7 @@ public class Project extends AbstractThingWithStatistics implements Comparable<P
      * @param name the project's name.
      */
     public Project(final String name) {
-        this.name = name;
+        super(name);
     }
     
     
@@ -74,25 +69,8 @@ public class Project extends AbstractThingWithStatistics implements Comparable<P
     }
     
     
-    /**
-     * {@inheritDoc}
-     */
-    public int compareTo(final Project o) {
-        return name.compareTo(o.name);
-    }
-    
-    
     /////////////////////////////////////////////////////////////////////////////
     // GETTERS
-
-    /**
-     * Returns the project's name.
-     * 
-     * @return the project's name.
-     */
-    public String getName() {
-        return name;
-    }
 
     /**
      * Returns the map mapping plug-in names to plug-ins of this project.

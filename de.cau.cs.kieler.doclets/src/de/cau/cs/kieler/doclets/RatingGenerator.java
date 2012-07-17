@@ -24,6 +24,7 @@ import com.sun.javadoc.PackageDoc;
 import com.sun.javadoc.RootDoc;
 
 import de.cau.cs.kieler.doclets.htmlgen.OverviewHtmlWriter;
+import de.cau.cs.kieler.doclets.htmlgen.ProjectHtmlWriter;
 import de.cau.cs.kieler.doclets.model.ClassItem;
 import de.cau.cs.kieler.doclets.model.Plugin;
 import de.cau.cs.kieler.doclets.model.Project;
@@ -66,6 +67,7 @@ public class RatingGenerator {
         
         // Generate HTML files
         new OverviewHtmlWriter().generateOverviewPage(projects, destinationFolder);
+        new ProjectHtmlWriter().generateOverviewPage(projects, destinationFolder);
     }
 
     

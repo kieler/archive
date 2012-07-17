@@ -29,11 +29,6 @@ import com.sun.javadoc.PackageDoc;
  */
 public class Plugin extends AbstractThingWithStatistics {
     /**
-     * The plugin's name.
-     */
-    private String name;
-    
-    /**
      * The plugin's parent project.
      */
     private Project parent;
@@ -51,7 +46,7 @@ public class Plugin extends AbstractThingWithStatistics {
      * @param parent the plug-in's parent project.
      */
     public Plugin(final String name, final Project parent) {
-        this.name = name;
+        super(name);
         this.parent = parent;
     }
 
@@ -110,15 +105,6 @@ public class Plugin extends AbstractThingWithStatistics {
     
     /////////////////////////////////////////////////////////////////////////////
     // GETTERS
-    
-    /**
-     * Returns this plug-in's fully qualified name.
-     * 
-     * @return the plug-in's fully qualified name.
-     */
-    public String getName() {
-        return name;
-    }
     
     /**
      * Returns the project this plug-in is part of.
