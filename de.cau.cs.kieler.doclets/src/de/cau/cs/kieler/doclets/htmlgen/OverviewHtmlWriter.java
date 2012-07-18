@@ -49,7 +49,7 @@ public class OverviewHtmlWriter extends BasicHtmlWriter {
         // Sort the list of projects and write the overview table
         Project[] projectsArray = projects.values().toArray(new Project[0]);
         Arrays.sort(projectsArray);
-        writeTable(projectsArray, writer);
+        generateSummaryTable(projectsArray, writer);
         
         // Generate the HTML footer
         generateFooter(Categories.RATINGS, null, writer);

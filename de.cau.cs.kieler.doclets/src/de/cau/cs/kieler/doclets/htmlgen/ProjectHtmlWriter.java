@@ -36,7 +36,7 @@ public class ProjectHtmlWriter extends BasicHtmlWriter {
      * @param destinationFolder folder to place the documentation in.
      * @throws Exception if something bad happens.
      */
-    public void generateOverviewPage(final Map<String, Project> projects, final File destinationFolder)
+    public void generateProjectPages(final Map<String, Project> projects, final File destinationFolder)
             throws Exception {
 
         // Sort the list of projects
@@ -58,7 +58,7 @@ public class ProjectHtmlWriter extends BasicHtmlWriter {
             
             // Generate the HTML code
             generateHeader(Categories.RATINGS, projectsArray[i], writer);
-            writeTable(pluginsArray, writer);
+            generateSummaryTable(pluginsArray, writer);
             generateFooter(Categories.RATINGS, projectsArray[i], writer);
             
             // Close the file writer

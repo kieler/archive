@@ -28,8 +28,9 @@ import de.cau.cs.kieler.doclets.RatingDocletConstants;
  * 
  * @author cds
  * @kieler.design proposed
+ * @kieler.rating proposed yellow 2012-06-20 cds msp jjc
  */
-public class ClassItem {
+public class ClassItem implements Comparable<ClassItem> {
     /**
      * The class doc object describing this class.
      */
@@ -165,32 +166,19 @@ public class ClassItem {
         Tag[] designRatingTags = classDoc.tags(RatingDocletConstants.TAG_DESIGN_REVIEW);
         
         if (designRatingTags != null && designRatingTags.length > 0) {
-            String tagText = designRatingTags[designRatingTags.length - 1].text();
+            String tagText = designRatingTags[designRatingTags.length - 1].text().trim();
             if (tagText != null) {
-                // Break the tag's text into tokens
-                StringTokenizer tokenizer = new StringTokenizer(tagText, " \t\n\r");
-                boolean proposed = false;
-                String token = "";
-                
-                while (tokenizer.hasMoreTokens()) {
-                    token = tokenizer.nextToken();
-    
-                    if (token.equalsIgnoreCase(RatingDocletConstants.TAG_PROPOSED)) {
-                        // Proposed
-                        proposed = true;
-                        break;
-                    }
-                }
-                
-                if (proposed) {
+                // Check if the first word of the text is the PROPOSED tag
+                if (tagText.toLowerCase().startsWith(RatingDocletConstants.TAG_PROPOSED)) {
                     designRatingCandidate = DesignRating.PROPOSED;
+                    
+                    // The comment starts after the proposed tag
+                    designRatingDetails =
+                            tagText.substring(RatingDocletConstants.TAG_PROPOSED.length()).trim();
                 } else {
                     designRatingCandidate = DesignRating.REVIEWED;
+                    designRatingDetails = tagText;
                 }
-                
-                // The last token we read is the last before the comment string starts
-                int commentStartIndex = tagText.indexOf(token) + token.length();
-                designRatingDetails = tagText.substring(commentStartIndex).trim();
             }
         }
         
@@ -261,5 +249,16 @@ public class ClassItem {
      */
     public String getCodeRatingDetails() {
         return codeRatingDetails;
+    }
+
+    
+    /////////////////////////////////////////////////////////////////////////////
+    // Comparable Interface
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int compareTo(final ClassItem o) {
+        return classDoc.name().compareTo(o.classDoc.name());
     }
 }

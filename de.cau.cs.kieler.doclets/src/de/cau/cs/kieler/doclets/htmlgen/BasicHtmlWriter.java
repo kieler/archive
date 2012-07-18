@@ -16,6 +16,9 @@ package de.cau.cs.kieler.doclets.htmlgen;
 import java.io.BufferedWriter;
 import java.util.Date;
 
+import com.sun.javadoc.ClassDoc;
+import com.sun.javadoc.PackageDoc;
+
 import de.cau.cs.kieler.doclets.RatingDocletConstants;
 import de.cau.cs.kieler.doclets.model.AbstractThingWithStatistics;
 import de.cau.cs.kieler.doclets.model.ClassItem;
@@ -29,6 +32,7 @@ import de.cau.cs.kieler.doclets.model.Project;
  * 
  * @author cds
  * @generated
+ * @kieler.design bla bla bla yadda yadda yadda
  */
 public class BasicHtmlWriter {
     
@@ -75,24 +79,6 @@ public class BasicHtmlWriter {
         writer.write("<head>");
         writer.write("<title>" + RatingDocletConstants.TXT_TITLE + "</title>");
         writer.write("<link rel='stylesheet' type='text/css' href='style.css'>");
-        
-        writer.write("<script type='text/javascript'>");
-        writer.write("  function expandAll() {");
-        writer.write("    document.getElementById('package_klay_layered').style.display = 'block';");
-        writer.write("    document.getElementById('package_klay_layered_lgraph').style.display = 'block';");
-        writer.write("  }");
-        writer.write("  function collapseAll() {");
-        writer.write("    document.getElementById('package_klay_layered').style.display = 'none';");
-        writer.write("    document.getElementById('package_klay_layered_lgraph').style.display = 'none';");
-        writer.write("  }");
-        writer.write("  function toggleVisibility(id) {");
-        writer.write("    if (document.getElementById(id).style.display == 'none') {");
-        writer.write("      document.getElementById(id).style.display = 'block';");
-        writer.write("    } else {");
-        writer.write("      document.getElementById(id).style.display = 'none';");
-        writer.write("    }");
-        writer.write("  }");
-        writer.write("</script>");
         
         writer.write("</head><body>");
         writer.write("<h1>" + RatingDocletConstants.TXT_TITLE + "</h1>");
@@ -203,8 +189,8 @@ public class BasicHtmlWriter {
      * @param writer where to write to.
      * @throws Exception if something bad happens
      */
-    protected void writeTable(final AbstractThingWithStatistics[] items, final BufferedWriter writer)
-            throws Exception {
+    protected void generateSummaryTable(final AbstractThingWithStatistics[] items,
+            final BufferedWriter writer) throws Exception {
         
         // We're generating HTML code; to make things easier, we don't care about long lines.
         // CHECKSTYLEOFF LineLength
@@ -330,23 +316,98 @@ public class BasicHtmlWriter {
     /**
      * Returns the proper icon URL for the given thing.
      * 
-     * @param thing the thing to return the icon for. Either a {@code Project}, a {@code Plugin}, or a
-     *              {@code ClassItem}.
+     * @param thing the thing to return the icon for. Either a {@code Project}, a {@code Plugin},
+     *              a {@code ClassItem}, a {@code PackageDoc}, a {@code CodeRating}, or a
+     *              {@code DesignRating}.
      * @return the URL of a proper icon, or the empty string if the thing was of an unexpected type.
      */
-    private String getIconForThing(final Object thing) {
+    protected String getIconForThing(final Object thing) {
         if (thing instanceof Project) {
             return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/type_project.png";
         } else if (thing instanceof Plugin) {
             return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/type_plugin.png";
         } else if (thing instanceof ClassItem) {
-            // TODO: Return sensible values
-            return "";
+            // There's different finds of classes...
+            ClassDoc classDoc = ((ClassItem) thing).getClassDoc();
+            
+            if (classDoc.isEnum()) {
+                return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/type_enum.png";
+            } else if (classDoc.isInterface()) {
+                return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/type_interface.png";
+            } else {
+                return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/type_class.png";
+            }
+        } else if (thing instanceof PackageDoc) {
+            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/type_package.png";
         } else {
             return "";
         }
     }
-
+    
+    /**
+     * Returns the proper icon URL for the given code rating.
+     * 
+     * @param rating the rating to return the icon for.
+     * @return the URL of a proper icon.
+     */
+    protected String getIconForCodeRating(final CodeRating rating) {
+        if (rating == null) {
+            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/code_red.png";
+        }
+        
+        switch (rating) {
+        case RED:
+            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/code_red.png";
+        
+        case PROP_YELLOW:
+            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/code_yellow_prop.png";
+        
+        case YELLOW:
+            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/code_yellow.png";
+            
+        case PROP_GREEN:
+            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/code_green_prop.png";
+        
+        case GREEN:
+            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/code_green.png";
+            
+        case PROP_BLUE:
+            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/code_blue_prop.png";
+        
+        case BLUE:
+            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/code_blue.png";
+        
+        default:
+            return "";
+        }
+    }
+    
+    /**
+     * Returns the proper icon URL for the given design rating.
+     * 
+     * @param rating the rating to return the icon for.
+     * @return the URL of a proper icon.
+     */
+    protected String getIconForDesignRating(final DesignRating rating) {
+        if (rating == null) {
+            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/design_no.png";
+        }
+        
+        switch (rating) {
+        case NONE:
+            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/design_no.png";
+            
+        case PROPOSED:
+            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/design_prop.png";
+            
+        case REVIEWED:
+            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/design_yes.png";
+        
+        default:
+            return "";
+        }
+    }
+    
     
     /////////////////////////////////////////////////////////////////////////////
     // UTILITY METHODS

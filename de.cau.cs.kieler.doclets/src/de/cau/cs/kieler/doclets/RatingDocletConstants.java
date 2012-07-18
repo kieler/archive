@@ -52,6 +52,13 @@ public final class RatingDocletConstants {
      */
     public static final String[] GEN_FOLDERS = {"src-gen", "xtend-gen"};
     
+    /**
+     * URL of the source code management system used to generate links to class files. Must end with
+     * a slash.
+     */
+    public static final String SCM_PATH =
+            "https://git.rtsys.informatik.uni-kiel.de/kieler/mainline/blobs/master/";
+    
     // INTERNATIONALIZATION
     // CHECKSTYLEOFF JavadocVariable
     public static final String TXT_TITLE = "KIELER Code Ratings";
