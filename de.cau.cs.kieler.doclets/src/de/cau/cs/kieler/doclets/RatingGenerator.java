@@ -64,7 +64,8 @@ public class RatingGenerator {
         
         // TODO: Setup the basic output file system structure with CSS, icons, and all
         
-        // TODO: Generate progress bars for ratings
+        // Generate progress bars for ratings
+        new RatingImageGenerator().generateRatingGraphs(projects, destinationFolder);
         
         // Generate HTML files
         new OverviewHtmlWriter().generateOverviewPage(projects, destinationFolder);

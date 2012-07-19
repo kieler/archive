@@ -170,9 +170,9 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
         writer.write("</a></h2>");
         writer.write("<div id='" + pack.name() + "'><table cellspacing='0' cellpadding='6'>");
         writer.write("  <tr class='oddheader headerlinebottom'>");
-        writer.write("    <th>Thing</th>");
-        writer.write("    <th class='newcolgroup'>Design Review</th>");
-        writer.write("    <th>Code Review</th>");
+        writer.write("    <th width='30%'>Thing</th>");
+        writer.write("    <th width='35%' class='newcolgroup'>Design Review</th>");
+        writer.write("    <th width='35%'>Code Review</th>");
         writer.write("  </tr>");
         
         // Iterate through classes (not every class is written into the table, requiring the use of a

@@ -260,8 +260,8 @@ public class BasicHtmlWriter {
 
             totalDesignProposed += statsDesign[DesignRating.PROPOSED.ordinal()];
             writer.write("<td class='numbercell'>" + statsDesign[DesignRating.PROPOSED.ordinal()] + "</td>");
-            
-            writer.write("<td>TODO: Graph</td>");
+
+            writer.write("<td><img src='" + generateGraphFileName(item, false) + "' /></td>");
             
             // Code Ratings
             int[] statsCode = item.getStatsCode();
@@ -283,7 +283,7 @@ public class BasicHtmlWriter {
             totalCodeProposed += proposed;
             writer.write("<td class='numbercell'>" + proposed + "</td>");
 
-            writer.write("<td>TODO: Graph</td>");
+            writer.write("<td><img src='" + generateGraphFileName(item, true) + "' /></td>");
             
             // End table row
             writer.write("</tr>");
@@ -299,13 +299,13 @@ public class BasicHtmlWriter {
         writer.write("<th class='numbercell'>" + totalGenerated + "</th>");
         writer.write("<th class='numbercell newcolgroup'>" + totalDesignReviewed + "</th>");
         writer.write("<th class='numbercell'>" + totalDesignProposed + "</th>");
-        writer.write("<th>TODO: Graph</th>");
+        writer.write("<th><img src='" + generateGraphFileName(null, false) + "' /></th>");
         writer.write("<th class='numbercell newcolgroup'>" + totalCodeRed + "</th>");
         writer.write("<th class='numbercell'>" + totalCodeYellow + "</th>");
         writer.write("<th class='numbercell'>" + totalCodeGreen + "</th>");
         writer.write("<th class='numbercell'>" + totalCodeBlue + "</th>");
         writer.write("<th class='numbercell'>" + totalCodeProposed + "</th>");
-        writer.write("<th>TODO: Graph</th>");
+        writer.write("<th><img src='" + generateGraphFileName(null, true) + "' /></th>");
         
         // Footer
         writer.write("</table>");
@@ -434,5 +434,39 @@ public class BasicHtmlWriter {
         default:
             return "index.html";
         }
+    }
+    
+    /**
+     * Returns the name of the image file for the review coverage graph of the given object.
+     * 
+     * @param targetObject the object whose coverage graph file name to return. This can either be a
+     *                     {@code Project}, a {@code Plugin}, or {@code null}, which stands for the
+     *                     overview summary graphs.
+     * @param codeReview if {@code true}, the code review coverage graph file name is generated.
+     *                   Otherwise, the design review coverage graph file name is generated.
+     * @return the graph file name, or an undefined String in case of unsupported arguments.
+     */
+    public static String generateGraphFileName(final Object targetObject, final boolean codeReview) {
+        StringBuffer buffer = new StringBuffer("graph_");
+        
+        // Code review or design review?
+        if (codeReview) {
+            buffer.append("code_");
+        } else {
+            buffer.append("design_");
+        }
+        
+        if (targetObject == null) {
+            // Overview graphs
+            buffer.append("overview");
+        } else if (targetObject instanceof Project) {
+            // Project graphs
+            buffer.append(((Project) targetObject).getName());
+        } else if (targetObject instanceof Plugin) {
+            // Plugin graphs
+            buffer.append(((Plugin) targetObject).getName());
+        }
+        
+        return buffer.append(".png").toString();
     }
 }
