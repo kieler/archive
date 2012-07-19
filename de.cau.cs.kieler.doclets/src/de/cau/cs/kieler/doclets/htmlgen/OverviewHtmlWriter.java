@@ -25,7 +25,6 @@ import de.cau.cs.kieler.doclets.model.Project;
  * Generates the overview page.
  * 
  * @author cds
- * @deprecated
  */
 public class OverviewHtmlWriter extends BasicHtmlWriter {
     
