@@ -15,7 +15,10 @@ package de.cau.cs.kieler.doclets;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,6 +66,7 @@ public class RatingGenerator {
         writeModelToDebugFile(destinationFolder);
         
         // TODO: Setup the basic output file system structure with CSS, icons, and all
+        prepareDestinationFolder(destinationFolder);
         
         // Generate progress bars for ratings
         new RatingImageGenerator().generateRatingGraphs(projects, destinationFolder);
@@ -165,6 +169,75 @@ public class RatingGenerator {
         for (Project project : projects.values()) {
             project.aggregateStatistics();
         }
+    }
+
+    
+    /////////////////////////////////////////////////////////////////////////////
+    // RESSOURCE ASSEMBLY
+    
+    /**
+     * Size of the buffer used to copy resource files.
+     */
+    private static final int READ_BUFFER_SIZE = 1024;
+    
+    /**
+     * Prepares the destination folder by copying over all the required icons and the stylesheet.
+     * 
+     * @param destinationFolder the destination folder.
+     * @throws Exception if anything goes wrong during copying.
+     */
+    private void prepareDestinationFolder(final File destinationFolder) throws Exception {
+        // Create a resources folder
+        File resFolder = new File(destinationFolder, RatingDocletConstants.RES_FOLDER);
+        resFolder.mkdir();
+        
+        // Copy stylesheet
+        copyResource("style.css", resFolder);
+        
+        // Copy icons
+        copyResource("act_collapse_all.png", resFolder);
+        copyResource("act_expand_all.png", resFolder);
+        copyResource("code_blue_prop.png", resFolder);
+        copyResource("code_blue.png", resFolder);
+        copyResource("code_green_prop.png", resFolder);
+        copyResource("code_green.png", resFolder);
+        copyResource("code_red.png", resFolder);
+        copyResource("code_yellow_prop.png", resFolder);
+        copyResource("code_yellow.png", resFolder);
+        copyResource("design_no.png", resFolder);
+        copyResource("design_prop.png", resFolder);
+        copyResource("design_yes.png", resFolder);
+        copyResource("type_class.png", resFolder);
+        copyResource("type_enum.png", resFolder);
+        copyResource("type_interface.png", resFolder);
+        copyResource("type_package.png", resFolder);
+        copyResource("type_plugin.png", resFolder);
+        copyResource("type_project.png", resFolder);
+    }
+    
+    /**
+     * Finds and copies the resource with the given name in the JAR file and copies it to the given
+     * folder.
+     * 
+     * @param resName name of the resource to copy.
+     * @param resFolder name of the folder to copy it to.
+     * @throws Exception if anything goes wrong during copying.
+     */
+    private void copyResource(final String resName, final File resFolder) throws Exception {
+        File outFile = new File(resFolder, resName);
+        
+        InputStream resIn = this.getClass().getClassLoader().getResourceAsStream(resName);
+        OutputStream resOut = new FileOutputStream(outFile, false);
+        
+        byte[] buffer = new byte[READ_BUFFER_SIZE];
+        int readBytes = 0;
+        
+        while ((readBytes = resIn.read(buffer)) > 0) {
+            resOut.write(buffer, 0, readBytes);
+        }
+        
+        resIn.close();
+        resOut.close();
     }
 
     

@@ -78,7 +78,7 @@ public class BasicHtmlWriter {
         writer.write("<!DOCTYPE doctype PUBLIC '-//w3c//dtd html 4.0 transitional//en'><html>");
         writer.write("<head>");
         writer.write("<title>" + RatingDocletConstants.TXT_TITLE + "</title>");
-        writer.write("<link rel='stylesheet' type='text/css' href='style.css'>");
+        writer.write("<link rel='stylesheet' type='text/css' href='" + RatingDocletConstants.RES_FOLDER + "/style.css'>");
         
         writer.write("</head><body>");
         writer.write("<h1>" + RatingDocletConstants.TXT_TITLE + "</h1>");
@@ -230,10 +230,10 @@ public class BasicHtmlWriter {
         writer.write("    <th class='numbercell newcolgroup'>Reviewed</th>");
         writer.write("    <th class='numbercell'>Proposed</th>");
         writer.write("    <th>Progress</th>");
-        writer.write("    <th class='numbercell newcolgroup'><img src='http://rtsys.informatik.uni-kiel.de/fisheye/browse/~raw,r=HEAD/kieler/standalone/de.cau.cs.kieler.doclets/icons/red.png?format=raw' alt='red' /></th>");
-        writer.write("    <th class='numbercell'><img src='http://rtsys.informatik.uni-kiel.de/fisheye/browse/~raw,r=HEAD/kieler/standalone/de.cau.cs.kieler.doclets/icons/yellow.png?format=raw' alt='yellow' /></th>");
-        writer.write("    <th class='numbercell'><img src='http://rtsys.informatik.uni-kiel.de/fisheye/browse/~raw,r=HEAD/kieler/standalone/de.cau.cs.kieler.doclets/icons/green.png?format=raw' alt='green' /></th>");
-        writer.write("    <th class='numbercell'><img src='http://rtsys.informatik.uni-kiel.de/fisheye/browse/~raw,r=HEAD/kieler/standalone/de.cau.cs.kieler.doclets/icons/blue.png?format=raw' alt='blue' /></th>");
+        writer.write("    <th class='numbercell newcolgroup'><img src='" + RatingDocletConstants.RES_FOLDER + "/red.png' alt='red' /></th>");
+        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/yellow.png' alt='yellow' /></th>");
+        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/green.png' alt='green' /></th>");
+        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/blue.png' alt='blue' /></th>");
         writer.write("    <th class='numbercell'>Proposed</th>");
         writer.write("    <th>Progress</th>");
         writer.write("  </tr>");
@@ -335,22 +335,22 @@ public class BasicHtmlWriter {
      */
     protected static String getIconForThing(final Object thing) {
         if (thing instanceof Project) {
-            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/type_project.png";
+            return RatingDocletConstants.RES_FOLDER + "/type_project.png";
         } else if (thing instanceof Plugin) {
-            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/type_plugin.png";
+            return RatingDocletConstants.RES_FOLDER + "/type_plugin.png";
         } else if (thing instanceof ClassItem) {
             // There's different finds of classes...
             ClassDoc classDoc = ((ClassItem) thing).getClassDoc();
             
             if (classDoc.isEnum()) {
-                return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/type_enum.png";
+                return RatingDocletConstants.RES_FOLDER + "/type_enum.png";
             } else if (classDoc.isInterface()) {
-                return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/type_interface.png";
+                return RatingDocletConstants.RES_FOLDER + "/type_interface.png";
             } else {
-                return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/type_class.png";
+                return RatingDocletConstants.RES_FOLDER + "/type_class.png";
             }
         } else if (thing instanceof PackageDoc) {
-            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/type_package.png";
+            return RatingDocletConstants.RES_FOLDER + "/type_package.png";
         } else {
             return "";
         }
@@ -364,30 +364,30 @@ public class BasicHtmlWriter {
      */
     protected static String getIconForCodeRating(final CodeRating rating) {
         if (rating == null) {
-            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/code_red.png";
+            return RatingDocletConstants.RES_FOLDER + "/code_red.png";
         }
         
         switch (rating) {
         case RED:
-            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/code_red.png";
+            return RatingDocletConstants.RES_FOLDER + "/code_red.png";
         
         case PROP_YELLOW:
-            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/code_yellow_prop.png";
+            return RatingDocletConstants.RES_FOLDER + "/code_yellow_prop.png";
         
         case YELLOW:
-            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/code_yellow.png";
+            return RatingDocletConstants.RES_FOLDER + "/code_yellow.png";
             
         case PROP_GREEN:
-            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/code_green_prop.png";
+            return RatingDocletConstants.RES_FOLDER + "/code_green_prop.png";
         
         case GREEN:
-            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/code_green.png";
+            return RatingDocletConstants.RES_FOLDER + "/icons/code_green.png";
             
         case PROP_BLUE:
-            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/code_blue_prop.png";
+            return RatingDocletConstants.RES_FOLDER + "/code_blue_prop.png";
         
         case BLUE:
-            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/code_blue.png";
+            return RatingDocletConstants.RES_FOLDER + "/code_blue.png";
         
         default:
             return "";
@@ -402,18 +402,18 @@ public class BasicHtmlWriter {
      */
     protected static String getIconForDesignRating(final DesignRating rating) {
         if (rating == null) {
-            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/design_no.png";
+            return RatingDocletConstants.RES_FOLDER + "/design_no.png";
         }
         
         switch (rating) {
         case NONE:
-            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/design_no.png";
+            return RatingDocletConstants.RES_FOLDER + "/design_no.png";
             
         case PROPOSED:
-            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/design_prop.png";
+            return RatingDocletConstants.RES_FOLDER + "/design_prop.png";
             
         case REVIEWED:
-            return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/design_yes.png";
+            return RatingDocletConstants.RES_FOLDER + "/design_yes.png";
         
         default:
             return "";

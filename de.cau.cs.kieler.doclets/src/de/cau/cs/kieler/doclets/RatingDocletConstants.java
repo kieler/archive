@@ -58,6 +58,11 @@ public final class RatingDocletConstants {
     public static final String[] GEN_FOLDERS = {"src-gen", "xtend-gen"};
     
     /**
+     * Name of the destination folder's subfolder where resources are put.
+     */
+    public static final String RES_FOLDER = "resources";
+    
+    /**
      * URL of the source code management system used to generate links to class files. Must end with
      * a slash.
      */
