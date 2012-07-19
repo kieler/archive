@@ -194,12 +194,8 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
             
             // Data! DATA!
             writer.write("<td>" + linkifyClassName(plugin, classes[i]));
-            writer.write("<img src='" + getIconForThing(classes[i]) + "' /> ");
-            writer.write(classes[i].getClassDoc().name() + "</a>");
-            if (classes[i].isGenerated()) {
-                writer.write(" (generated)");
-            }
-            writer.write("</td>");
+            writer.write(generateClassNameHtml(classes[i], true));
+            writer.write("</a></td>");
             
             // Design review
             writer.write("<td>");

@@ -185,12 +185,14 @@ public class BasicHtmlWriter {
     /**
      * Generates a statistics table for the given array of items.
      * 
+     * @param currentPageObject the object the current page is generated for. This has consequences for
+     *                          the column names of the table. Pass {@code null} for the overview page.
      * @param items array of items in the order they are to appear in the generated table.
      * @param writer where to write to.
      * @throws Exception if something bad happens
      */
-    protected void generateSummaryTable(final AbstractThingWithStatistics[] items,
-            final BufferedWriter writer) throws Exception {
+    protected void generateSummaryTable(final Object currentPageObject,
+            final AbstractThingWithStatistics[] items, final BufferedWriter writer) throws Exception {
         
         // We're generating HTML code; to make things easier, we don't care about long lines.
         // CHECKSTYLEOFF LineLength
@@ -216,7 +218,13 @@ public class BasicHtmlWriter {
         writer.write("    <th class='multiheader newcolgroup' colspan='6'>Code</th>");
         writer.write("  </tr>");
         writer.write("  <tr class='oddheader headerlinebottom'>");
-        writer.write("    <th>Project</th>");
+        
+        if (currentPageObject == null) {
+            writer.write("    <th>Project</th>");
+        } else if (currentPageObject instanceof Project) {
+            writer.write("    <th>Plugin</th>");
+        }
+        
         writer.write("    <th class='numbercell newcolgroup'>Classes</th>");
         writer.write("    <th class='numbercell'>Generated</th>");
         writer.write("    <th class='numbercell newcolgroup'>Reviewed</th>");
@@ -313,6 +321,10 @@ public class BasicHtmlWriter {
         // CHECKSTYLEON LineLength
     }
     
+    
+    /////////////////////////////////////////////////////////////////////////////
+    // UTILITY METHODS
+    
     /**
      * Returns the proper icon URL for the given thing.
      * 
@@ -321,7 +333,7 @@ public class BasicHtmlWriter {
      *              {@code DesignRating}.
      * @return the URL of a proper icon, or the empty string if the thing was of an unexpected type.
      */
-    protected String getIconForThing(final Object thing) {
+    protected static String getIconForThing(final Object thing) {
         if (thing instanceof Project) {
             return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/type_project.png";
         } else if (thing instanceof Plugin) {
@@ -350,7 +362,7 @@ public class BasicHtmlWriter {
      * @param rating the rating to return the icon for.
      * @return the URL of a proper icon.
      */
-    protected String getIconForCodeRating(final CodeRating rating) {
+    protected static String getIconForCodeRating(final CodeRating rating) {
         if (rating == null) {
             return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/code_red.png";
         }
@@ -388,7 +400,7 @@ public class BasicHtmlWriter {
      * @param rating the rating to return the icon for.
      * @return the URL of a proper icon.
      */
-    protected String getIconForDesignRating(final DesignRating rating) {
+    protected static String getIconForDesignRating(final DesignRating rating) {
         if (rating == null) {
             return "file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/design_no.png";
         }
@@ -407,10 +419,6 @@ public class BasicHtmlWriter {
             return "";
         }
     }
-    
-    
-    /////////////////////////////////////////////////////////////////////////////
-    // UTILITY METHODS
     
     /**
      * Returns the name of the HTML file for the given object in the given site category.
@@ -468,5 +476,44 @@ public class BasicHtmlWriter {
         }
         
         return buffer.append(".png").toString();
+    }
+    
+    /**
+     * Generates the HTML code for displaying the given class. The way a class is displayed depends on
+     * its attributes, such as the class being an interface or an abstract class, a deprecated class, or
+     * a generated class.
+     * 
+     * @param classItem the class to generate the HTML name for.
+     * @param includeIcon {@code true} if the HTML code should also include an icon for the class.
+     * @return the HTML code for the class name.
+     */
+    public static String generateClassNameHtml(final ClassItem classItem, final boolean includeIcon) {
+        ClassDoc classDoc = classItem.getClassDoc();
+        StringBuffer buffer = new StringBuffer("<div class='");
+        
+        // Distinguish class attributes
+        if (classDoc.isAbstract() || classDoc.isInterface()) {
+            buffer.append(" abstract");
+        }
+        
+        if (classDoc.tags(RatingDocletConstants.TAG_DEPRECATED).length > 0) {
+            buffer.append(" deprecated");
+        }
+        
+        buffer.append("'>");
+        
+        // Append an icon
+        if (includeIcon) {
+            buffer.append("<img src='" + getIconForThing(classItem) + "' /> ");
+        }
+        
+        buffer.append(classDoc.name());
+        
+        // Generated class?
+        if (classItem.isGenerated()) {
+            buffer.append(" (generated");
+        }
+        
+        return buffer.append("</div>").toString();
     }
 }

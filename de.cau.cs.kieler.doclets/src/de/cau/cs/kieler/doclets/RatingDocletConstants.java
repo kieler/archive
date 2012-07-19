@@ -40,6 +40,11 @@ public final class RatingDocletConstants {
      * Tag identifying generated code.
      */
     public static final String TAG_GENERATED = "@generated";
+
+    /**
+     * Tag identifying deprecated code.
+     */
+    public static final String TAG_DEPRECATED = "@deprecated";
     
     /**
      * String used to indicate that a code or design status is currently just proposed.

@@ -25,6 +25,7 @@ import de.cau.cs.kieler.doclets.model.Project;
  * Generates the overview page.
  * 
  * @author cds
+ * @deprecated
  */
 public class OverviewHtmlWriter extends BasicHtmlWriter {
     
@@ -49,7 +50,7 @@ public class OverviewHtmlWriter extends BasicHtmlWriter {
         // Sort the list of projects and write the overview table
         Project[] projectsArray = projects.values().toArray(new Project[0]);
         Arrays.sort(projectsArray);
-        generateSummaryTable(projectsArray, writer);
+        generateSummaryTable(null, projectsArray, writer);
         
         // Generate the HTML footer
         generateFooter(Categories.RATINGS, null, writer);

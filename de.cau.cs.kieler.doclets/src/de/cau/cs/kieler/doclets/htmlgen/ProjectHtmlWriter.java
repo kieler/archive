@@ -58,7 +58,7 @@ public class ProjectHtmlWriter extends BasicHtmlWriter {
             
             // Generate the HTML code
             generateHeader(Categories.RATINGS, projectsArray[i], writer);
-            generateSummaryTable(pluginsArray, writer);
+            generateSummaryTable(projectsArray[i], pluginsArray, writer);
             generateFooter(Categories.RATINGS, projectsArray[i], writer);
             
             // Close the file writer
