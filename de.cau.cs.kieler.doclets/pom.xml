@@ -27,6 +27,15 @@
 
       </plugin>
     </plugins>
+    
+    <resources>
+      <resource>
+        <directory>icons</directory>
+      </resource>
+      <resource>
+        <directory>css</directory>
+      </resource>
+    </resources>
   </build>
 
   <dependencies>
