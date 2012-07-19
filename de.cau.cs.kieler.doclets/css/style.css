@@ -1,0 +1,167 @@
+/* GENERAL TEXT ATTRIBUTES */
+
+body {
+    font-family: Verdana, sans-serif;
+    font-size: small;
+}
+
+h1 {
+    font-size: xx-large;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+h2.package a {
+    color: black;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.timestamp {
+    font-size: x-small;
+    margin-top: 6ex;
+}
+
+.actionbar {
+    text-align: right;
+}
+
+
+/* CLASS ATTRIBUTES */
+
+.abstract {
+    font-style: italic;
+}
+
+.deprecated {
+    text-decoration: line-through;
+}
+
+
+/* NAVIGATION BAR */
+
+.navbar {
+    border-top: 4px solid #e8e8e8;
+    height: 8ex;
+    margin-bottom: 6ex;
+}
+
+.navbar .breadcrumbs {
+    float: left;
+    margin-left: 4px;
+    margin-top: 6px;
+}
+
+.navbar .breadcrumbs a {
+    color: black;
+}
+
+.navbar .categories {
+    float: right;
+    margin-right: 4px;
+    margin-top: 6px;
+}
+
+.navbar .categories ul {
+    display: inline;
+    margin: 0px 0px 0px 0px;
+}
+
+.navbar .categories ul li {
+    display: inline;
+}
+
+.navbar .categories ul li a {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e8e8e8;
+    border-left: 1px solid #e8e8e8;
+    border-right: 1px solid #e8e8e8;
+    color: black;
+    padding: 6px 8px;
+}
+
+.navbar .categories ul li a:hover {
+    background-color: #f5f5fc;
+}
+
+.navbar .categories ul li a.active {
+    background-color: #e8e8e8;
+}
+
+.navbar .categories ul li a.active:hover {
+    background-color: #e8e8e8;
+}
+
+
+/* TABLES */
+
+.linebottom td {
+    /* I originally thought horizontal lines would be a good
+     * idea, but they are actually just unnecessary clutter.
+     */
+    /*border-bottom: 1px solid #f0f0f0;*/
+}
+
+.headerlinetop th {
+    border-top: 2px solid #e8e8e8;
+}
+
+.headerlinebottom th {
+    border-bottom: 2px solid #e8e8e8;
+}
+
+.multiheader {
+    text-align: center;
+}
+
+.numbercell {
+    text-align: right;
+}
+
+.evenheader {
+    background-color: #ffffff;
+}
+
+.oddheader {
+    background-color: #fcfcfc;
+}
+
+.even {
+    background-color: #ffffff;
+}
+
+.even:hover {
+    background-color: #f5f5fc;
+}
+
+.odd {
+    background-color: #fcfcfc;
+}
+
+.odd:hover {
+    background-color: #f5f5fc;
+}
+
+.newcolgroup {
+    border-left: 1px solid #f0f0f0;
+}
+
+table {
+    border-bottom: 2px solid #e8e8e8;
+    border-top: 2px solid #e8e8e8;
+    font-family: Verdana, sans-serif;
+    font-size: small;
+    margin-bottom: 6ex;
+    width: 100%;
+}
+
+th {
+    font-weight: bold;
+    text-align: left;
+}
