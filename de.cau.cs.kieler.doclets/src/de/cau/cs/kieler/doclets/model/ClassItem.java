@@ -28,7 +28,7 @@ import de.cau.cs.kieler.doclets.RatingDocletConstants;
  * 
  * @author cds
  * @kieler.design proposed
- * @kieler.rating proposed yellow 2012-06-20 cds msp jjc
+ * @kieler.rating proposed yellow 2012-06-20 KI-16 cds msp jjc
  */
 public class ClassItem implements Comparable<ClassItem> {
     /**

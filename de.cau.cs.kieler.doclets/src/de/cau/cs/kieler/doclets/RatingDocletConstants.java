@@ -59,6 +59,12 @@ public final class RatingDocletConstants {
     public static final String SCM_PATH =
             "https://git.rtsys.informatik.uni-kiel.de/kieler/mainline/blobs/master/";
     
+    /**
+     * Beginning of Crucible URLs to which a code review number only needs to be appended to arrive at
+     * a valid code review link.
+     */
+    public static final String CRUCIBLE_PATH = "http://rtsys.informatik.uni-kiel.de/fisheye/cru/";
+    
     // INTERNATIONALIZATION
     // CHECKSTYLEOFF JavadocVariable
     public static final String TXT_TITLE = "KIELER Code Ratings";

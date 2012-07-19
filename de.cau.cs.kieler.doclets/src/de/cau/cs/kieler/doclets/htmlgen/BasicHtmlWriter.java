@@ -91,8 +91,8 @@ public class BasicHtmlWriter {
         
         writer.write("<div class='categories'><ul>");
         writer.write("<li><a class='active' href='" + generateFileName(Categories.RATINGS, null) + "'>" + RatingDocletConstants.TXT_RATINGS + "</a></li> ");
-        writer.write("<li><a href='" + generateFileName(Categories.WALLBOARD, null) + "'>" + RatingDocletConstants.TXT_WALLBOARD + "</a></li> ");
-        writer.write("<li><a href='" + generateFileName(Categories.TOP_TEN, null) + "'>" + RatingDocletConstants.TXT_TOP_TEN + "</a></li> ");
+//        writer.write("<li><a href='" + generateFileName(Categories.WALLBOARD, null) + "'>" + RatingDocletConstants.TXT_WALLBOARD + "</a></li> ");
+//        writer.write("<li><a href='" + generateFileName(Categories.TOP_TEN, null) + "'>" + RatingDocletConstants.TXT_TOP_TEN + "</a></li> ");
         writer.write("</ul></div>");
         
         writer.write("</div>");

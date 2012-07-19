@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.sun.javadoc.PackageDoc;
 
@@ -228,6 +230,16 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
      * @return link linking to the class, but only the opening tag.
      */
     private String linkifyClassName(final Plugin plugin, final ClassItem clazz) {
+        /* We assume the path to look like the following:
+         * 
+         *   ...../kieler_dir/{plugins | standalone}/plugin-dir/...
+         * 
+         * We first look for the index of the plug-in directory. Once we've found that, we get the
+         * substring right up to, but excluding, the path separator character just preceding the
+         * plug-in directory. In that substring, we look for the last occurrence of the separator
+         * character, which tells us where the "plugins" or "standalone" folder starts.
+         */
+        
         String path = clazz.getClassDoc().position().file().getAbsolutePath();
         
         // The plugin name must be in there somewhere
@@ -251,8 +263,23 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
         if (comment == null) {
             return "";
         } else {
-            // TODO: Turn review things into links
-            return comment;
+            // We're looking for crucible review names (e.g., 'KI-16')
+            Pattern cruciblePattern = Pattern.compile("\\bKI-\\d+\\b");
+            Matcher patternMatcher = cruciblePattern.matcher(comment);
+            
+            // Build the linkified comment
+            StringBuffer linkified = new StringBuffer();
+            
+            while (patternMatcher.find()) {
+                String crucibleReview = patternMatcher.group();
+                String reviewLink = "<a href='" + RatingDocletConstants.CRUCIBLE_PATH + crucibleReview
+                        + "'>";
+                patternMatcher.appendReplacement(
+                        linkified, reviewLink + crucibleReview + "</a>");
+            }
+            patternMatcher.appendTail(linkified);
+            
+            return linkified.toString();
         }
     }
 }
