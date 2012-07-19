@@ -27,8 +27,6 @@ import de.cau.cs.kieler.doclets.RatingDocletConstants;
  * classes (src-gen, xtend-gen) is marked as a generated class.
  * 
  * @author cds
- * @kieler.design proposed
- * @kieler.rating proposed yellow 2012-06-20 KI-16 cds msp jjc
  */
 public class ClassItem implements Comparable<ClassItem> {
     /**
@@ -114,21 +112,24 @@ public class ClassItem implements Comparable<ClassItem> {
                 StringTokenizer tokenizer = new StringTokenizer(tagText, " \t\n\r");
                 boolean proposed = false;
                 String token = "";
+                StringBuilder finalComment = new StringBuilder();
                 
                 while (tokenizer.hasMoreTokens()) {
                     token = tokenizer.nextToken();
     
-                    if (token.equalsIgnoreCase(RatingDocletConstants.TAG_PROPOSED)) {
+                    if (token.equalsIgnoreCase(RatingDocletConstants.TAG_PROPOSED) && !proposed) {
                         // Proposed
                         proposed = true;
-                    } else {
-                        // Rating
+                    } else if (codeRatingCandidate == null) {
+                        // We haven't had a code rating yet, so try to interpret this as one
                         try {
                             codeRatingCandidate = CodeRating.valueOf(token.toUpperCase());
-                            break;
                         } catch (IllegalArgumentException exception) {
-                            // ignore exception
+                            // This was not a code rating, so just add it to the comment
+                            finalComment.append(" " + token);
                         }
+                    } else {
+                        finalComment.append(" " + token);
                     }
                 }
                 
@@ -137,9 +138,7 @@ public class ClassItem implements Comparable<ClassItem> {
                     codeRatingCandidate = codeRatingCandidate.getDegraded();
                 }
                 
-                // The last token we read is the last before the comment string starts
-                int commentStartIndex = tagText.indexOf(token) + token.length();
-                codeRatingDetails = tagText.substring(commentStartIndex).trim();
+                codeRatingDetails = finalComment.toString();
             }
         }
         

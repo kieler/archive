@@ -31,8 +31,6 @@ import de.cau.cs.kieler.doclets.model.Project;
  * Base class of all Html writers. Containts a whole lot of utility methods.
  * 
  * @author cds
- * @generated
- * @kieler.design bla bla bla yadda yadda yadda
  */
 public class BasicHtmlWriter {
     
@@ -227,13 +225,13 @@ public class BasicHtmlWriter {
         
         writer.write("    <th class='numbercell newcolgroup'>Classes</th>");
         writer.write("    <th class='numbercell'>Generated</th>");
-        writer.write("    <th class='numbercell newcolgroup'>Reviewed</th>");
+        writer.write("    <th class='numbercell newcolgroup'><img src='" + RatingDocletConstants.RES_FOLDER + "/design_yes.png' alt='reviewed' /></th>");
         writer.write("    <th class='numbercell'>Proposed</th>");
         writer.write("    <th>Progress</th>");
-        writer.write("    <th class='numbercell newcolgroup'><img src='" + RatingDocletConstants.RES_FOLDER + "/red.png' alt='red' /></th>");
-        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/yellow.png' alt='yellow' /></th>");
-        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/green.png' alt='green' /></th>");
-        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/blue.png' alt='blue' /></th>");
+        writer.write("    <th class='numbercell newcolgroup'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_red.png' alt='red' /></th>");
+        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_yellow.png' alt='yellow' /></th>");
+        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_green.png' alt='green' /></th>");
+        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_blue.png' alt='blue' /></th>");
         writer.write("    <th class='numbercell'>Proposed</th>");
         writer.write("    <th>Progress</th>");
         writer.write("  </tr>");
@@ -511,7 +509,7 @@ public class BasicHtmlWriter {
         
         // Generated class?
         if (classItem.isGenerated()) {
-            buffer.append(" (generated");
+            buffer.append(" (generated)");
         }
         
         return buffer.append("</div>").toString();

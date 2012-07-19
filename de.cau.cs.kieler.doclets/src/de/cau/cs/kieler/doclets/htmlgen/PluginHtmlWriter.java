@@ -119,8 +119,8 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
         
         writer.write("<p class='actionbar'>");
         writer.write("  Packages:");
-        writer.write("  <a href='javascript:expandAll();'><img src='file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/act_expand_all.png' /> Expand all</a>");
-        writer.write("  <a href='javascript:collapseAll();'><img src='file:///home/cds/Programming/Kieler/git/cdline/standalone/de.cau.cs.kieler.doclets/icons/act_collapse_all.png' /> Collapse all</a>");
+        writer.write("  <a href='javascript:expandAll();'><img src='" + RatingDocletConstants.RES_FOLDER + "/act_expand_all.png' /> Expand all</a>");
+        writer.write("  <a href='javascript:collapseAll();'><img src='" + RatingDocletConstants.RES_FOLDER + "/act_collapse_all.png' /> Collapse all</a>");
         writer.write("</p>");
 
         // CHECKSTYLEON LineLength

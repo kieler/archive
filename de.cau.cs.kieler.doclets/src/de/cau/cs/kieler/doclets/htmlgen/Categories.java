@@ -17,7 +17,6 @@ package de.cau.cs.kieler.doclets.htmlgen;
  * Enumeration of documentation categories.
  * 
  * @author cds
- * @generated
  */
 public enum Categories {
     /**
