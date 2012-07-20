@@ -198,7 +198,7 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
             writer.write("</a></td>");
             
             // Design review
-            writer.write("<td>");
+            writer.write("<td class='newcolgroup'>");
             writer.write("<img src='" + getIconForDesignRating(classes[i].getDesignRating()) + "' /> ");
             writer.write(linkifyReviewComment(classes[i].getDesignRatingDetails()));
             writer.write("</td>");

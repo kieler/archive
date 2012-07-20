@@ -16,11 +16,16 @@ h2.package a {
 }
 
 a {
+    color: blue;
     text-decoration: none;
 }
 
 a:hover {
     text-decoration: underline;
+}
+
+a:visited {
+    color: blue;
 }
 
 .timestamp {
@@ -47,7 +52,7 @@ a:hover {
 /* NAVIGATION BAR */
 
 .navbar {
-    border-top: 4px solid #e8e8e8;
+    border-top: 4px solid #c6c6c6;
     height: 8ex;
     margin-bottom: 6ex;
 }
@@ -79,9 +84,9 @@ a:hover {
 
 .navbar .categories ul li a {
     background-color: #ffffff;
-    border-bottom: 1px solid #e8e8e8;
-    border-left: 1px solid #e8e8e8;
-    border-right: 1px solid #e8e8e8;
+    border-bottom: 1px solid #c6c6c6;
+    border-left: 1px solid #c6c6c6;
+    border-right: 1px solid #c6c6c6;
     color: black;
     padding: 6px 8px;
 }
@@ -91,11 +96,11 @@ a:hover {
 }
 
 .navbar .categories ul li a.active {
-    background-color: #e8e8e8;
+    background-color: #f6f6f6;
 }
 
 .navbar .categories ul li a.active:hover {
-    background-color: #e8e8e8;
+    background-color: #f6f6f6;
 }
 
 
@@ -105,15 +110,15 @@ a:hover {
     /* I originally thought horizontal lines would be a good
      * idea, but they are actually just unnecessary clutter.
      */
-    /*border-bottom: 1px solid #f0f0f0;*/
+    /*border-bottom: 1px solid #c6c6c6;*/
 }
 
 .headerlinetop th {
-    border-top: 2px solid #e8e8e8;
+    border-top: 2px solid #c6c6c6;
 }
 
 .headerlinebottom th {
-    border-bottom: 2px solid #e8e8e8;
+    border-bottom: 2px solid #c6c6c6;
 }
 
 .multiheader {
@@ -129,7 +134,7 @@ a:hover {
 }
 
 .oddheader {
-    background-color: #fcfcfc;
+    background-color: #f6f6f6;
 }
 
 .even {
@@ -141,7 +146,7 @@ a:hover {
 }
 
 .odd {
-    background-color: #fcfcfc;
+    background-color: #f6f6f6;
 }
 
 .odd:hover {
@@ -149,12 +154,12 @@ a:hover {
 }
 
 .newcolgroup {
-    border-left: 1px solid #f0f0f0;
+    border-left: 1px solid #c6c6c6;
 }
 
 table {
-    border-bottom: 2px solid #e8e8e8;
-    border-top: 2px solid #e8e8e8;
+    border-bottom: 2px solid #c6c6c6;
+    border-top: 2px solid #c6c6c6;
     font-family: Verdana, sans-serif;
     font-size: small;
     margin-bottom: 6ex;
