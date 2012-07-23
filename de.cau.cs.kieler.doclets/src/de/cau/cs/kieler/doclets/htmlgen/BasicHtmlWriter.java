@@ -519,6 +519,11 @@ public class BasicHtmlWriter {
             buffer.append(" (generated)");
         }
         
+        // Ignored class?
+        if (classItem.isIgnored()) {
+            buffer.append(" (ignored)");
+        }
+        
         return buffer.append("</div>").toString();
     }
 }

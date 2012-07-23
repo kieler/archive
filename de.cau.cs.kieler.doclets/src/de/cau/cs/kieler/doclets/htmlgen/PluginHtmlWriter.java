@@ -179,8 +179,8 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
         // second iteration variable to get alternating row colors)
         int tableRow = 0;
         for (int i = 0; i < classes.length; i++) {
-            // Generated classes are only added to the table if they have explicit ratings
-            if (classes[i].isGenerated()
+            // Generated and ignored classes are only added to the table if they have explicit ratings
+            if ((classes[i].isGenerated() || classes[i].isIgnored())
                     && classes[i].getDesignRating() == null
                     && classes[i].getCodeRating() == null) {
                 
