@@ -120,6 +120,15 @@ public class ClassItem implements Comparable<ClassItem> {
     // UTILITY METHODS
     
     /**
+     * Checks if the class should be displayed in class tables.
+     * 
+     * @return {@code true} if it should be displayed in class tables.
+     */
+    public boolean isClassDisplayed() {
+        return (!generated && !ignored) || designRating != null || codeRating != null;
+    }
+    
+    /**
      * Extracts the class's code rating, if any. If the class doesn't have a code rating, what happens
      * depends on whether the class was generated or not. If it was, the code rating isn't set at all.
      * If it was not, its rating is set to red.

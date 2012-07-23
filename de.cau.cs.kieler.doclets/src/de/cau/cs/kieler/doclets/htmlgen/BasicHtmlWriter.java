@@ -240,7 +240,7 @@ public class BasicHtmlWriter {
         writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_blue.png' alt='blue' /></th>");
         writer.write("    <th class='numbercell'>Proposed</th>");
         writer.write("    <th>Progress</th>");
-        writer.write("    <th class='numbercell'>LOC</th>");
+        writer.write("    <th class='numbercell'>LoC</th>");
         writer.write("  </tr>");
         
         // Iterate through projects (i will be used again later and is thus declared outside the loop)

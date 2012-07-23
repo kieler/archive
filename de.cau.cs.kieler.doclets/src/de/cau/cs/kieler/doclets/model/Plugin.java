@@ -87,7 +87,7 @@ public class Plugin extends AbstractThingWithStatistics {
                 }
                 
                 // Lines of code
-                if (classItem.getLoc() > 0) {
+                if (classItem.isClassDisplayed() && classItem.getLoc() > 0) {
                     statsLoc += classItem.getLoc();
                 }
             }

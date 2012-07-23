@@ -96,7 +96,7 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
             // Determine if this package will be displayed
             boolean displayPackage = false;
             for (ClassItem item : plugin.getPackageToClassMap().get(pkgDoc)) {
-                if (isClassDisplayed(item)) {
+                if (item.isClassDisplayed()) {
                     displayPackage = true;
                     break;
                 }
@@ -160,7 +160,7 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
             // Check if we have at least one class to be displayed here
             boolean hasTableRows = false;
             for (int j = 0; j < classes.length; j++) {
-                if (isClassDisplayed(classes[j])) {
+                if (classes[j].isClassDisplayed()) {
                     hasTableRows = true;
                     break;
                 }
@@ -196,7 +196,7 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
         writer.write("    <th width='30%'>Thing</th>");
         writer.write("    <th width='30%' class='newcolgroup'>Design Review</th>");
         writer.write("    <th width='30%'>Code Review</th>");
-        writer.write("    <th width='10%' class='numbercell'>LOC</th>");
+        writer.write("    <th width='10%' class='numbercell'>LoC</th>");
         writer.write("  </tr>");
         
         // Iterate through classes (not every class is written into the table, requiring the use of a
@@ -204,7 +204,7 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
         int tableRow = 0;
         for (int i = 0; i < classes.length; i++) {
             // Generated and ignored classes are only added to the table if they have explicit ratings
-            if (!isClassDisplayed(classes[i])) {
+            if (!classes[i].isClassDisplayed()) {
                 continue;
             }
             
@@ -246,18 +246,6 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
         }
         
         writer.write("</table></div>");
-    }
-    
-    /**
-     * Checks if the given class should be included in the table.
-     * 
-     * @param classItem class to check.
-     * @return {@code true} if it should be shown in the table.
-     */
-    private boolean isClassDisplayed(final ClassItem classItem) {
-        return (!classItem.isGenerated() && !classItem.isIgnored())
-                || classItem.getDesignRating() != null
-                || classItem.getCodeRating() != null;
     }
     
     /**
