@@ -31,7 +31,6 @@ import de.cau.cs.kieler.doclets.model.Project;
  * Base class of all Html writers. Containts a whole lot of utility methods.
  * 
  * @author cds
- * @kieler.ignore
  */
 public class BasicHtmlWriter {
     
