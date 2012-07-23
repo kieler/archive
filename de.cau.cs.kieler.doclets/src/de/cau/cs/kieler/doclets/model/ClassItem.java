@@ -157,7 +157,7 @@ public class ClassItem implements Comparable<ClassItem> {
         if (codeRatingCandidate != null) {
             // A code rating was determined
             codeRating = codeRatingCandidate;
-        } else if (codeRatingCandidate == null && !isGenerated()) {
+        } else if (codeRatingCandidate == null && !isGenerated() && !isIgnored()) {
             // A code rating could not be found, but the class is not generated and must thus be
             // rated RED
             codeRating = CodeRating.RED;
@@ -196,7 +196,7 @@ public class ClassItem implements Comparable<ClassItem> {
         if (designRatingCandidate != null) {
             // A design rating was determined
             designRating = designRatingCandidate;
-        } else if (designRatingCandidate == null && !isGenerated()) {
+        } else if (designRatingCandidate == null && !isGenerated() && !isIgnored()) {
             // A design rating could not be found, but the class is not generated and must thus be
             // rated NONE
             designRating = DesignRating.NONE;
