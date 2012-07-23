@@ -67,6 +67,8 @@ public class Project extends AbstractThingWithStatistics {
             for (int i = 0; i < statsCode.length; i++) {
                 statsCode[i] += plugin.getStatsCode()[i];
             }
+            
+            statsLoc += plugin.getStatsLoc();
         }
     }
     

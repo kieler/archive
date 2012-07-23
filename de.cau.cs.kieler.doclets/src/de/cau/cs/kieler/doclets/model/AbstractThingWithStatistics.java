@@ -44,6 +44,10 @@ public abstract class AbstractThingWithStatistics implements Comparable<Abstract
      * Code rating statistics.
      */
     protected int[] statsCode = new int[CodeRating.values().length];
+    /**
+     * Lines of code statistics.
+     */
+    protected int statsLoc = 0;
     // CHECKSTYLEON VisibilityModifier
     
     
@@ -116,6 +120,15 @@ public abstract class AbstractThingWithStatistics implements Comparable<Abstract
      */
     public int[] getStatsCode() {
         return statsCode;
+    }
+    
+    /**
+     * Returns the lines of code of contained classes.
+     * 
+     * @return the lines of code.
+     */
+    public int getStatsLoc() {
+        return statsLoc;
     }
     
     /**

@@ -194,8 +194,9 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
         writer.write("<div id='" + pack.name() + "'><table cellspacing='0' cellpadding='6'>");
         writer.write("  <tr class='oddheader headerlinebottom'>");
         writer.write("    <th width='30%'>Thing</th>");
-        writer.write("    <th width='35%' class='newcolgroup'>Design Review</th>");
-        writer.write("    <th width='35%'>Code Review</th>");
+        writer.write("    <th width='30%' class='newcolgroup'>Design Review</th>");
+        writer.write("    <th width='30%'>Code Review</th>");
+        writer.write("    <th width='10%' class='numbercell'>LOC</th>");
         writer.write("  </tr>");
         
         // Iterate through classes (not every class is written into the table, requiring the use of a
@@ -227,6 +228,15 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
             writer.write("<td>");
             writer.write("<img src='" + getIconForCodeRating(classes[i].getCodeRating()) + "' /> ");
             writer.write(linkifyReviewComment(classes[i].getCodeRatingDetails()));
+            writer.write("</td>");
+            
+            // Lines of code
+            writer.write("<td class='numbercell'>");
+            if (classes[i].getLoc() < 0) {
+                writer.write("n/a");
+            } else {
+                writer.write(Integer.toString(classes[i].getLoc()));
+            }
             writer.write("</td>");
             
             // End table row

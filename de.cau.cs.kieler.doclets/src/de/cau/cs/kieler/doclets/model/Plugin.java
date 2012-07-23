@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.sun.javadoc.PackageDoc;
 
@@ -63,9 +62,8 @@ public class Plugin extends AbstractThingWithStatistics {
         statsDesign = new int[DesignRating.values().length];
         statsCode = new int[CodeRating.values().length];
         
-        Set<PackageDoc> packages = packageToClassMap.keySet();
-        for (PackageDoc packageDoc : packages) {
-            for (ClassItem classItem : packageToClassMap.get(packageDoc)) {
+        for (List<ClassItem> classList : packageToClassMap.values()) {
+            for (ClassItem classItem : classList) {
                 statsClasses++;
                 
                 if (classItem.isGenerated()) {
@@ -76,16 +74,21 @@ public class Plugin extends AbstractThingWithStatistics {
                     statsIgnored++;
                 }
                 
-                // Design Rating
+                // Design rating
                 DesignRating designRating = classItem.getDesignRating();
                 if (designRating != null) {
                     statsDesign[designRating.ordinal()]++;
                 }
                 
-                // Code Rating
+                // Code rating
                 CodeRating codeRating = classItem.getCodeRating();
                 if (codeRating != null) {
                     statsCode[codeRating.ordinal()]++;
+                }
+                
+                // Lines of code
+                if (classItem.getLoc() > 0) {
+                    statsLoc += classItem.getLoc();
                 }
             }
         }

@@ -207,6 +207,7 @@ public class BasicHtmlWriter {
         int totalCodeGreen = 0;
         int totalCodeBlue = 0;
         int totalCodeProposed = 0;
+        int totalLoc = 0;
         
         // Header
         writer.write("<table cellspacing='0' cellpadding='6'>");
@@ -216,7 +217,7 @@ public class BasicHtmlWriter {
         writer.write("    <th>&nbsp;</th>");
         writer.write("    <th>&nbsp;</th>");
         writer.write("    <th class='multiheader newcolgroup' colspan='4'>Design</th>");
-        writer.write("    <th class='multiheader newcolgroup' colspan='6'>Code</th>");
+        writer.write("    <th class='multiheader newcolgroup' colspan='7'>Code</th>");
         writer.write("  </tr>");
         writer.write("  <tr class='oddheader headerlinebottom'>");
         
@@ -239,6 +240,7 @@ public class BasicHtmlWriter {
         writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_blue.png' alt='blue' /></th>");
         writer.write("    <th class='numbercell'>Proposed</th>");
         writer.write("    <th>Progress</th>");
+        writer.write("    <th class='numbercell'>LOC</th>");
         writer.write("  </tr>");
         
         // Iterate through projects (i will be used again later and is thus declared outside the loop)
@@ -324,6 +326,11 @@ public class BasicHtmlWriter {
             }
             writer.write("</td>");
             
+            totalLoc += item.getStatsLoc();
+            writer.write("<td class='numbercell'>");
+            writer.write(Integer.toString(item.getStatsLoc()));
+            writer.write("</td>");
+            
             // End table row
             writer.write("</tr>");
         }
@@ -347,6 +354,7 @@ public class BasicHtmlWriter {
         writer.write("<th class='numbercell'>" + totalCodeBlue + "</th>");
         writer.write("<th class='numbercell'>" + totalCodeProposed + "</th>");
         writer.write("<th><img src='" + generateGraphFileName(null, true) + "' /></th>");
+        writer.write("<th class='numbercell'>" + totalLoc + "</th>");
         
         // Footer
         writer.write("</table>");

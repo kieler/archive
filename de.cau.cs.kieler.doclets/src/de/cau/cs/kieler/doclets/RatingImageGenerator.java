@@ -263,7 +263,7 @@ public class RatingImageGenerator {
     // COLOR COMPUTATION
     
     /** factor for darkening towards the bottom of the image. */
-    private static final float BOTTOM_DARKEN = 0.65f;
+    private static final float BOTTOM_DARKEN = 0.6f;
     /** factor for darkening on the border of the image. */
     private static final float BORDER_DARKEN = 0.5f;
     
