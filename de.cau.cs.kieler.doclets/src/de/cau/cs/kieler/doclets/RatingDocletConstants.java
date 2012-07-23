@@ -37,6 +37,11 @@ public final class RatingDocletConstants {
     public static final String TAG_DESIGN_REVIEW = "@kieler.design";
 
     /**
+     * Tag identifying ignored code.
+     */
+    public static final String TAG_IGNORE = "@kieler.ignore";
+
+    /**
      * Tag identifying generated code.
      */
     public static final String TAG_GENERATED = "@generated";

@@ -31,6 +31,7 @@ import de.cau.cs.kieler.doclets.model.Project;
  * Base class of all Html writers. Containts a whole lot of utility methods.
  * 
  * @author cds
+ * @kieler.ignore
  */
 public class BasicHtmlWriter {
     
@@ -198,6 +199,7 @@ public class BasicHtmlWriter {
         // Sums of statistics
         int totalClasses = 0;
         int totalGenerated = 0;
+        int totalIgnored = 0;
         int totalDesignReviewed = 0;
         int totalDesignProposed = 0;
         int totalCodeRed = 0;
@@ -212,6 +214,7 @@ public class BasicHtmlWriter {
         writer.write("    <th>&nbsp;</th>");
         writer.write("    <th class='newcolgroup'>&nbsp;</th>");
         writer.write("    <th>&nbsp;</th>");
+        writer.write("    <th>&nbsp;</th>");
         writer.write("    <th class='multiheader newcolgroup' colspan='3'>Design</th>");
         writer.write("    <th class='multiheader newcolgroup' colspan='6'>Code</th>");
         writer.write("  </tr>");
@@ -225,6 +228,7 @@ public class BasicHtmlWriter {
         
         writer.write("    <th class='numbercell newcolgroup'>Classes</th>");
         writer.write("    <th class='numbercell'>Generated</th>");
+        writer.write("    <th class='numbercell'>Ignored</th>");
         writer.write("    <th class='numbercell newcolgroup'><img src='" + RatingDocletConstants.RES_FOLDER + "/design_yes.png' alt='reviewed' /></th>");
         writer.write("    <th class='numbercell'>Proposed</th>");
         writer.write("    <th>Progress</th>");
@@ -252,12 +256,15 @@ public class BasicHtmlWriter {
             writer.write("<img src='" + getIconForThing(item) + "' /> ");
             writer.write(item.getName() + "</a></td>");
             
-            // Classes and Generated
+            // Classes and Generated / Ignored
             totalClasses += item.getStatsClasses();
             writer.write("<td class='numbercell newcolgroup'>" + item.getStatsClasses() + "</td>");
 
             totalGenerated += item.getStatsGenerated();
             writer.write("<td class='numbercell'>" + item.getStatsGenerated() + "</td>");
+            
+            totalIgnored += item.getStatsIgnored();
+            writer.write("<td class='numbercell'>" + item.getStatsIgnored() + "</td>");
             
             // Design Ratings
             int[] statsDesign = item.getStatsDesign();
@@ -303,6 +310,7 @@ public class BasicHtmlWriter {
         writer.write("<th>Total</th>");
         writer.write("<th class='numbercell newcolgroup'>" + totalClasses + "</th>");
         writer.write("<th class='numbercell'>" + totalGenerated + "</th>");
+        writer.write("<th class='numbercell'>" + totalIgnored + "</th>");
         writer.write("<th class='numbercell newcolgroup'>" + totalDesignReviewed + "</th>");
         writer.write("<th class='numbercell'>" + totalDesignProposed + "</th>");
         writer.write("<th><img src='" + generateGraphFileName(null, false) + "' /></th>");

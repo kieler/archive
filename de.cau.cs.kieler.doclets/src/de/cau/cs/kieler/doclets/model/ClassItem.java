@@ -36,9 +36,15 @@ public class ClassItem implements Comparable<ClassItem> {
     
     /**
      * Whether the class was generated or not. A generated class will usually not be counted, but may
-     * be if it still has a design or code rating.
+     * be if it still has an explicit design or code rating.
      */
     private boolean generated = false;
+    
+    /**
+     * Whether the class has an ignore tag. As generated classes, an ignored class will usually not be
+     * counted, but may be if it still has an explicit design or code rating.
+     */
+    private boolean ignored = false;
     
     /**
      * The class's design rating.
@@ -75,6 +81,11 @@ public class ClassItem implements Comparable<ClassItem> {
         // Check for the @generated tag
         if (classDoc.tags(RatingDocletConstants.TAG_GENERATED).length > 0) {
             generated = true;
+        }
+        
+        // Check for the @kieler.ignore tag
+        if (classDoc.tags(RatingDocletConstants.TAG_IGNORE).length > 0) {
+            ignored = true;
         }
         
         // Check if the class is in one of the folders known for generated classes
@@ -212,6 +223,15 @@ public class ClassItem implements Comparable<ClassItem> {
      */
     public boolean isGenerated() {
         return generated;
+    }
+    
+    /**
+     * Checks whether this class is tagged to be ignored.
+     * 
+     * @return {@code true} if this class has an ignore tag.
+     */
+    public boolean isIgnored() {
+        return ignored;
     }
 
     /**

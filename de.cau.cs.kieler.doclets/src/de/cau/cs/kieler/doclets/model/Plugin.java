@@ -59,6 +59,7 @@ public class Plugin extends AbstractThingWithStatistics {
         // Reset statistics
         statsClasses = 0;
         statsGenerated = 0;
+        statsIgnored = 0;
         statsDesign = new int[DesignRating.values().length];
         statsCode = new int[CodeRating.values().length];
         
@@ -66,8 +67,13 @@ public class Plugin extends AbstractThingWithStatistics {
         for (PackageDoc packageDoc : packages) {
             for (ClassItem classItem : packageToClassMap.get(packageDoc)) {
                 statsClasses++;
+                
                 if (classItem.isGenerated()) {
                     statsGenerated++;
+                }
+                
+                if (classItem.isIgnored()) {
+                    statsIgnored++;
                 }
                 
                 // Design Rating
