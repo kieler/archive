@@ -88,21 +88,32 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
         writer.write("    }");
         writer.write("  }");
         
-        // Expansion function
-        writer.write("  function expandAll() {");
-        for (PackageDoc pkgDoc : plugin.getPackageToClassMap().keySet()) {
-            writer.write("    document.getElementById('"
-                    + pkgDoc.name() + "').style.display = 'block';");
-        }
-        writer.write("  }");
+        // Build the code for mass expansion and collaps
+        StringBuilder expandCode = new StringBuilder();
+        StringBuilder collapseCode = new StringBuilder();
         
-        // Collapse function
-        writer.write("  function collapseAll() {");
         for (PackageDoc pkgDoc : plugin.getPackageToClassMap().keySet()) {
-            writer.write("    document.getElementById('"
-                    + pkgDoc.name() + "').style.display = 'none';");
+            // Determine if this package will be displayed
+            boolean displayPackage = false;
+            for (ClassItem item : plugin.getPackageToClassMap().get(pkgDoc)) {
+                if (isClassDisplayed(item)) {
+                    displayPackage = true;
+                    break;
+                }
+            }
+            
+            // If it will be displayed, include expand and collapse code for it
+            if (displayPackage) {
+                expandCode.append("document.getElementById('" + pkgDoc.name()
+                        + "').style.display = 'block';");
+                collapseCode.append("document.getElementById('" + pkgDoc.name()
+                        + "').style.display = 'none';");
+            }
         }
-        writer.write("  }");
+        
+        // Expand and Collapse functions
+        writer.write("  function expandAll() {" + expandCode.toString() + "}");
+        writer.write("  function collapseAll() {" + collapseCode.toString() + "}");
         
         writer.write("</script>");
     }
