@@ -199,6 +199,7 @@ public class BasicHtmlWriter {
         int totalClasses = 0;
         int totalGenerated = 0;
         int totalIgnored = 0;
+        int totalDesignReviewless = 0;
         int totalDesignReviewed = 0;
         int totalDesignProposed = 0;
         int totalCodeRed = 0;
@@ -214,7 +215,7 @@ public class BasicHtmlWriter {
         writer.write("    <th class='newcolgroup'>&nbsp;</th>");
         writer.write("    <th>&nbsp;</th>");
         writer.write("    <th>&nbsp;</th>");
-        writer.write("    <th class='multiheader newcolgroup' colspan='3'>Design</th>");
+        writer.write("    <th class='multiheader newcolgroup' colspan='4'>Design</th>");
         writer.write("    <th class='multiheader newcolgroup' colspan='6'>Code</th>");
         writer.write("  </tr>");
         writer.write("  <tr class='oddheader headerlinebottom'>");
@@ -228,7 +229,8 @@ public class BasicHtmlWriter {
         writer.write("    <th class='numbercell newcolgroup'>Classes</th>");
         writer.write("    <th class='numbercell'>Generated</th>");
         writer.write("    <th class='numbercell'>Ignored</th>");
-        writer.write("    <th class='numbercell newcolgroup'><img src='" + RatingDocletConstants.RES_FOLDER + "/design_yes.png' alt='reviewed' /></th>");
+        writer.write("    <th class='numbercell newcolgroup'><img src='" + RatingDocletConstants.RES_FOLDER + "/design_no.png' alt='reviewed' /></th>");
+        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/design_yes.png' alt='reviewed' /></th>");
         writer.write("    <th class='numbercell'>Proposed</th>");
         writer.write("    <th>Progress</th>");
         writer.write("    <th class='numbercell newcolgroup'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_red.png' alt='red' /></th>");
@@ -244,16 +246,32 @@ public class BasicHtmlWriter {
         for (; i < items.length; i++) {
             AbstractThingWithStatistics item = items[i];
             
+            // Check if the item has any design ratings and code ratings at all. If it doesn't, we will
+            // omit displaying the corresponding bar graph. If it doesn't have any of these ratings, we
+            // will also omit turning its name into a link
+            int[] statsDesign = item.getStatsDesign();
+            int[] statsCode = item.getStatsCode();
+            boolean hasDesignRatings = arraySum(statsDesign) > 0;
+            boolean hasCodeRatings = arraySum(statsCode) > 0;
+            
+            
             // New table row; determine the class
             writer.write("<tr class='");
             writer.write(i % 2 == 0 ? "even" : "odd");
             writer.write(i < items.length - 1 ? " linebottom" : "");
             writer.write("'>");
             
-            // Data! DATA!
-            writer.write("<td><a href='" + generateFileName(Categories.RATINGS, item) + "'>");
+            // Data! DATA! (only make this a link if the plugin has rated classes)
+            writer.write("<td>");
+            if (hasDesignRatings || hasCodeRatings) {
+                writer.write("<a href='" + generateFileName(Categories.RATINGS, item) + "'>");
+            }
             writer.write("<img src='" + getIconForThing(item) + "' /> ");
-            writer.write(item.getName() + "</a></td>");
+            writer.write(item.getName());
+            if (hasDesignRatings || hasCodeRatings) {
+                writer.write("</a>");
+            }
+            writer.write("</td>");
             
             // Classes and Generated / Ignored
             totalClasses += item.getStatsClasses();
@@ -266,17 +284,22 @@ public class BasicHtmlWriter {
             writer.write("<td class='numbercell'>" + item.getStatsIgnored() + "</td>");
             
             // Design Ratings
-            int[] statsDesign = item.getStatsDesign();
+            totalDesignReviewless += statsDesign[DesignRating.NONE.ordinal()];
+            writer.write("<td class='numbercell newcolgroup'>" + statsDesign[DesignRating.NONE.ordinal()] + "</td>");
+            
             totalDesignReviewed += statsDesign[DesignRating.REVIEWED.ordinal()];
-            writer.write("<td class='numbercell newcolgroup'>" + statsDesign[DesignRating.REVIEWED.ordinal()] + "</td>");
+            writer.write("<td class='numbercell'>" + statsDesign[DesignRating.REVIEWED.ordinal()] + "</td>");
 
             totalDesignProposed += statsDesign[DesignRating.PROPOSED.ordinal()];
             writer.write("<td class='numbercell'>" + statsDesign[DesignRating.PROPOSED.ordinal()] + "</td>");
 
-            writer.write("<td><img src='" + generateGraphFileName(item, false) + "' /></td>");
+            writer.write("<td>");
+            if (hasDesignRatings) {
+                writer.write("<img src='" + generateGraphFileName(item, false) + "' />");
+            }
+            writer.write("</td>");
             
             // Code Ratings
-            int[] statsCode = item.getStatsCode();
             totalCodeRed += statsCode[CodeRating.RED.ordinal()] + statsCode[CodeRating.PROP_YELLOW.ordinal()];
             writer.write("<td class='numbercell newcolgroup'>" + (statsCode[CodeRating.RED.ordinal()] + statsCode[CodeRating.PROP_YELLOW.ordinal()]) + "</td>");
 
@@ -295,7 +318,11 @@ public class BasicHtmlWriter {
             totalCodeProposed += proposed;
             writer.write("<td class='numbercell'>" + proposed + "</td>");
 
-            writer.write("<td><img src='" + generateGraphFileName(item, true) + "' /></td>");
+            writer.write("<td>");
+            if (hasCodeRatings) {
+                writer.write("<img src='" + generateGraphFileName(item, true) + "' />");
+            }
+            writer.write("</td>");
             
             // End table row
             writer.write("</tr>");
@@ -310,7 +337,8 @@ public class BasicHtmlWriter {
         writer.write("<th class='numbercell newcolgroup'>" + totalClasses + "</th>");
         writer.write("<th class='numbercell'>" + totalGenerated + "</th>");
         writer.write("<th class='numbercell'>" + totalIgnored + "</th>");
-        writer.write("<th class='numbercell newcolgroup'>" + totalDesignReviewed + "</th>");
+        writer.write("<th class='numbercell newcolgroup'>" + totalDesignReviewless + "</th>");
+        writer.write("<th class='numbercell'>" + totalDesignReviewed + "</th>");
         writer.write("<th class='numbercell'>" + totalDesignProposed + "</th>");
         writer.write("<th><img src='" + generateGraphFileName(null, false) + "' /></th>");
         writer.write("<th class='numbercell newcolgroup'>" + totalCodeRed + "</th>");
@@ -525,5 +553,21 @@ public class BasicHtmlWriter {
         }
         
         return buffer.append("</div>").toString();
+    }
+    
+    /**
+     * Computes the sum of the array elements.
+     * 
+     * @param arr array whose elements to add.
+     * @return sum of the array elements.
+     */
+    private int arraySum(final int[] arr) {
+        int sum = 0;
+        
+        for (int i = 0; i < arr.length; i++) {
+            sum += arr[i];
+        }
+        
+        return sum;
     }
 }

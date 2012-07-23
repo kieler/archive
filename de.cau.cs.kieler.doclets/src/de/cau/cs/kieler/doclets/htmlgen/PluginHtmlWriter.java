@@ -142,12 +142,24 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
         Arrays.sort(packages);
         
         for (int i = 0; i < packages.length; i++) {
-            // Get sorted list of classes in the package
+            // Get list of classes in the package
             ClassItem[] classes =
                     plugin.getPackageToClassMap().get(packages[i]).toArray(new ClassItem[0]);
-            Arrays.sort(classes);
             
-            generatePackageInfos(plugin, packages[i], classes, writer);
+            // Check if we have at least one class to be displayed here
+            boolean hasTableRows = false;
+            for (int j = 0; j < classes.length; j++) {
+                if (isClassDisplayed(classes[j])) {
+                    hasTableRows = true;
+                    break;
+                }
+            }
+            
+            // If there are classes to be displayed, sort the list and generate package infos
+            if (hasTableRows) {
+                Arrays.sort(classes);
+                generatePackageInfos(plugin, packages[i], classes, writer);
+            }
         }
     }
     
@@ -180,10 +192,7 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
         int tableRow = 0;
         for (int i = 0; i < classes.length; i++) {
             // Generated and ignored classes are only added to the table if they have explicit ratings
-            if ((classes[i].isGenerated() || classes[i].isIgnored())
-                    && classes[i].getDesignRating() == null
-                    && classes[i].getCodeRating() == null) {
-                
+            if (!isClassDisplayed(classes[i])) {
                 continue;
             }
             
@@ -216,6 +225,18 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
         }
         
         writer.write("</table></div>");
+    }
+    
+    /**
+     * Checks if the given class should be included in the table.
+     * 
+     * @param classItem class to check.
+     * @return {@code true} if it should be shown in the table.
+     */
+    private boolean isClassDisplayed(final ClassItem classItem) {
+        return (!classItem.isGenerated() && !classItem.isIgnored())
+                || classItem.getDesignRating() != null
+                || classItem.getCodeRating() != null;
     }
     
     /**
