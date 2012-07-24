@@ -339,7 +339,7 @@ public class BasicHtmlWriter {
             writer.write("</td>");
             
             totalLoc += item.getStatsLoc();
-            writer.write("<td class='numbercell'>" + Integer.toString(item.getStatsLoc()) + "</td>");
+            writer.write("<td class='numbercell'>" + toString(item.getStatsLoc()) + "</td>");
             
             // End table row
             writer.write("</tr>");
@@ -383,26 +383,44 @@ public class BasicHtmlWriter {
      * @param x an integer number
      * @return a string representation
      */
+    // CHECKSTYLEOFF MagicNumber
     public static String toString(final int x) {
         // a negative number is treated as illegal
         if (x < 0) {
             return "n/a";
         }
-        // CHECKSTYLEOFF MagicNumber
         int thousands = x / 1000;
         if (thousands > 0) {
             int millions = thousands / 1000;
             if (millions > 0) {
-                return Integer.toString(millions) + " " + Integer.toString(thousands - millions * 1000)
-                        + " " + Integer.toString(x - thousands * 1000);
+                return Integer.toString(millions)
+                        + " " + toStringLeadingZeros(thousands - millions * 1000)
+                        + " " + toStringLeadingZeros(x - thousands * 1000);
             } else {
-                return Integer.toString(thousands) + " " + Integer.toString(x - thousands * 1000);
+                return Integer.toString(thousands) + " " + toStringLeadingZeros(x - thousands * 1000);
             }
         } else {
             return Integer.toString(x);
         }
-        // CHECKSTYLEON MagicNumber
     }
+    
+    /**
+     * Transforms an integer number (less than 1000) to a string with leading zeros.
+     * 
+     * @param x an integer number less than 1000
+     * @return a string with leading zeros
+     */
+    private static String toStringLeadingZeros(final int x) {
+        if (x < 10) {
+            return "00" + Integer.toString(x);
+        } else if (x < 100) {
+            return "0" + Integer.toString(x);
+        } else if (x < 1000) {
+            return Integer.toString(x);
+        }
+        throw new IllegalArgumentException();
+    }
+    // CHECKSTYLEON MagicNumber
     
     /**
      * Returns the proper icon URL for the given thing.
