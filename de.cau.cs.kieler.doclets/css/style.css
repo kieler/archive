@@ -127,6 +127,8 @@ a:visited {
 
 .numbercell {
     text-align: right;
+    word-spacing: 0.3em;
+    white-space: nowrap;
 }
 
 .evenheader {
