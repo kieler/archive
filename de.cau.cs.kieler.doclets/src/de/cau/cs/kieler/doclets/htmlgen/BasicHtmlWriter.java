@@ -133,7 +133,7 @@ public class BasicHtmlWriter {
         
         writer.write("<p class='helptext'>"
                 + "If you have no idea what all of this is about, feel free to take a look at our "
-                + "<a href='http://rtsys.informatik.uni-kiel.de/confluence/x/DQAm'>"
+                + "<a href='http://rtsys.informatik.uni-kiel.de/confluence/x/DIAN'>"
                 + "Wiki page on design and code reviews</a>!"
                 + "</p>");
         writer.write("<p class='timestamp'>" + new Date().toString() + "</p>");
