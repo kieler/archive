@@ -131,6 +131,11 @@ public class BasicHtmlWriter {
     private void generateRatingsFooter(final Object currentPage, final BufferedWriter writer)
             throws Exception {
         
+        writer.write("<p class='helptext'>"
+                + "If you have no idea what all of this is about, feel free to take a look at our "
+                + "<a href='http://rtsys.informatik.uni-kiel.de/confluence/x/DQAm'>"
+                + "Wiki page on design and code reviews</a>!"
+                + "</p>");
         writer.write("<p class='timestamp'>" + new Date().toString() + "</p>");
         writer.write("</body></html>");
     }
@@ -230,14 +235,14 @@ public class BasicHtmlWriter {
         writer.write("    <th class='numbercell newcolgroup'>Classes</th>");
         writer.write("    <th class='numbercell'>Generated</th>");
         writer.write("    <th class='numbercell'>Ignored</th>");
-        writer.write("    <th class='numbercell newcolgroup'><img src='" + RatingDocletConstants.RES_FOLDER + "/design_no.png' alt='reviewed' /></th>");
-        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/design_yes.png' alt='reviewed' /></th>");
+        writer.write("    <th class='numbercell newcolgroup'><img src='" + RatingDocletConstants.RES_FOLDER + "/design_no.png' title='Number of classes that have not been design-reviewed yet.' /></th>");
+        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/design_yes.png' title='Number of classes that have been design-reviewed already.' /></th>");
         writer.write("    <th class='numbercell'>Proposed</th>");
         writer.write("    <th>Progress</th>");
-        writer.write("    <th class='numbercell newcolgroup'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_red.png' alt='red' /></th>");
-        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_yellow.png' alt='yellow' /></th>");
-        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_green.png' alt='green' /></th>");
-        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_blue.png' alt='blue' /></th>");
+        writer.write("    <th class='numbercell newcolgroup'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_red.png' title='Number of classes with red code rating. (have not been code-reviewed yet)' /></th>");
+        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_yellow.png' title='Number of classes with yellow code rating. (have received at least one code review)' /></th>");
+        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_green.png' title='Number of classes with green code rating. (have received at least two code reviews; be careful about changing public API)' /></th>");
+        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_blue.png' title='Number of classes with blue code rating. (mature classes; do not touch these if you value your life!)' /></th>");
         writer.write("    <th class='numbercell'>Proposed</th>");
         writer.write("    <th>Progress</th>");
         writer.write("    <th class='numbercell'>LoC</th>");
