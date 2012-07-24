@@ -127,7 +127,7 @@ a:visited {
 
 .numbercell {
     text-align: right;
-    word-spacing: 0.3em;
+    word-spacing: -0.1em;
     white-space: nowrap;
 }
 
