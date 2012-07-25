@@ -131,16 +131,20 @@ a:visited {
     white-space: nowrap;
 }
 
-.evenheader {
-    background-color: #ffffff;
+.numbercellheader {
+    text-align: right;
 }
 
-.oddheader {
+.evenheader {
     background-color: #f6f6f6;
 }
 
-.even {
+.oddheader {
     background-color: #ffffff;
+}
+
+.even {
+    background-color: #f6f6f6;
 }
 
 .even:hover {
@@ -148,7 +152,7 @@ a:visited {
 }
 
 .odd {
-    background-color: #f6f6f6;
+    background-color: #ffffff;
 }
 
 .odd:hover {

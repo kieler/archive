@@ -229,7 +229,7 @@ public class BasicHtmlWriter {
 //        writer.write("    <th class='multiheader newcolgroup' colspan='6'>Code</th>");
 //        writer.write("  </tr>");
         writer.write("  <thead>");
-        writer.write("  <tr class='oddheader headerlinebottom'>");
+        writer.write("  <tr class='evenheader headerlinebottom'>");
         
         if (currentPageObject == null) {
             writer.write("    <th>Project</th>");
@@ -237,20 +237,20 @@ public class BasicHtmlWriter {
             writer.write("    <th>Plugin</th>");
         }
         
-        writer.write("    <th class='numbercell newcolgroup'>Classes</th>");
-        writer.write("    <th class='numbercell'>Generated</th>");
-        writer.write("    <th class='numbercell'>Ignored</th>");
-        writer.write("    <th class='numbercell newcolgroup'><img src='" + RatingDocletConstants.RES_FOLDER + "/design_no.png' title='Number of classes that have not been design-reviewed yet.' /></th>");
-        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/design_yes.png' title='Number of classes that have been design-reviewed already.' /></th>");
-        writer.write("    <th class='numbercell'>Proposed</th>");
+        writer.write("    <th class='numbercellheader newcolgroup'>Classes</th>");
+        writer.write("    <th class='numbercellheader'>Generated</th>");
+        writer.write("    <th class='numbercellheader'>Ignored</th>");
+        writer.write("    <th class='numbercellheader newcolgroup'><img src='" + RatingDocletConstants.RES_FOLDER + "/design_no.png' title='Number of classes that have not been design-reviewed yet.' /></th>");
+        writer.write("    <th class='numbercellheader'><img src='" + RatingDocletConstants.RES_FOLDER + "/design_yes.png' title='Number of classes that have been design-reviewed already.' /></th>");
+        writer.write("    <th class='numbercellheader'>Proposed</th>");
         writer.write("    <th>Progress</th>");
-        writer.write("    <th class='numbercell newcolgroup'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_red.png' title='Number of classes with red code rating. (have not been code-reviewed yet)' /></th>");
-        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_yellow.png' title='Number of classes with yellow code rating. (have received at least one code review)' /></th>");
-        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_green.png' title='Number of classes with green code rating. (have received at least two code reviews; be careful about changing public API)' /></th>");
-//        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_blue.png' title='Number of classes with blue code rating. (mature classes as determined by the high council; do not touch these if you value your life!)' /></th>");
-        writer.write("    <th class='numbercell'>Proposed</th>");
+        writer.write("    <th class='numbercellheader newcolgroup'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_red.png' title='Number of classes with red code rating. (have not been code-reviewed yet)' /></th>");
+        writer.write("    <th class='numbercellheader'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_yellow.png' title='Number of classes with yellow code rating. (have received at least one code review)' /></th>");
+        writer.write("    <th class='numbercellheader'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_green.png' title='Number of classes with green code rating. (have received at least two code reviews; be careful about changing public API)' /></th>");
+//        writer.write("    <th class='numbercellheader'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_blue.png' title='Number of classes with blue code rating. (mature classes as determined by the high council; do not touch these if you value your life!)' /></th>");
+        writer.write("    <th class='numbercellheader'>Proposed</th>");
         writer.write("    <th>Progress</th>");
-        writer.write("    <th class='numbercell'>LoC</th>");
+        writer.write("    <th class='numbercellheader'>LoC</th>");
         writer.write("  </tr>");
         writer.write("  </thead>");
         writer.write("  <tbody>");
@@ -268,12 +268,8 @@ public class BasicHtmlWriter {
             boolean hasDesignRatings = arraySum(statsDesign) > 0;
             boolean hasCodeRatings = arraySum(statsCode) > 0;
             
-            
             // New table row; determine the class
-            writer.write("<tr class='");
-            writer.write(i % 2 == 0 ? "even" : "odd");
-            writer.write(i < items.length - 1 ? " linebottom" : "");
-            writer.write("'>");
+            writer.write("<tr>");
             
             // Data! DATA! (only make this a link if the plugin has rated classes)
             writer.write("<td>");
@@ -289,66 +285,70 @@ public class BasicHtmlWriter {
             
             // Classes and Generated / Ignored
             totalClasses += item.getStatsClasses();
-            writer.write("<td class='numbercell newcolgroup'>" + toString(item.getStatsClasses()) + "</td>");
+            writer.write("<td class='numbercell newcolgroup'>" + item.getStatsClasses() + "</td>");
 
             totalGenerated += item.getStatsGenerated();
-            writer.write("<td class='numbercell'>" + toString(item.getStatsGenerated()) + "</td>");
+            writer.write("<td class='numbercell'>" + item.getStatsGenerated() + "</td>");
             
             totalIgnored += item.getStatsIgnored();
-            writer.write("<td class='numbercell'>" + toString(item.getStatsIgnored()) + "</td>");
+            writer.write("<td class='numbercell'>" + item.getStatsIgnored() + "</td>");
             
             // Design Ratings
             int designReviewless = statsDesign[DesignRating.NONE.ordinal()] + statsDesign[DesignRating.PROPOSED.ordinal()];
             totalDesignReviewless += designReviewless;
-            writer.write("<td class='numbercell newcolgroup'>" + toString(designReviewless) + "</td>");
+            writer.write("<td class='numbercell newcolgroup'>" + designReviewless + "</td>");
             
             int designReviewed = statsDesign[DesignRating.REVIEWED.ordinal()];
             totalDesignReviewed += designReviewed;
-            writer.write("<td class='numbercell'>" + toString(designReviewed) + "</td>");
+            writer.write("<td class='numbercell'>" + designReviewed + "</td>");
 
             int designProposed = statsDesign[DesignRating.PROPOSED.ordinal()];
             totalDesignProposed += designProposed;
-            writer.write("<td class='numbercell'>" + toString(designProposed) + "</td>");
+            writer.write("<td class='numbercell'>" + designProposed + "</td>");
 
             writer.write("<td>");
-            writer.write("<span class='hide'>" + (items.length - i) + "</span>");
             if (hasDesignRatings) {
+                writer.write("<span class='hide'>" + calculateDesignScore(designReviewless, designReviewed) + "</span>");
                 writer.write("<img src='" + generateGraphFileName(item, false) + "' />");
+            } else {
+                writer.write("<span class='hide'>0.0000</span>");
             }
             writer.write("</td>");
             
             // Code Ratings
             int codeRed = statsCode[CodeRating.RED.ordinal()] + statsCode[CodeRating.PROP_YELLOW.ordinal()];
             totalCodeRed += codeRed;
-            writer.write("<td class='numbercell newcolgroup'>" + toString(codeRed) + "</td>");
+            writer.write("<td class='numbercell newcolgroup'>" + codeRed + "</td>");
 
             int codeYellow = statsCode[CodeRating.YELLOW.ordinal()] + statsCode[CodeRating.PROP_GREEN.ordinal()];
             totalCodeYellow += codeYellow;
-            writer.write("<td class='numbercell'>" + toString(codeYellow) + "</td>");
+            writer.write("<td class='numbercell'>" + codeYellow + "</td>");
 
             int codeGreen = statsCode[CodeRating.GREEN.ordinal()] + statsCode[CodeRating.PROP_BLUE.ordinal()];
             totalCodeGreen += codeGreen;
-            writer.write("<td class='numbercell'>" + toString(codeGreen) + "</td>");
+            writer.write("<td class='numbercell'>" + codeGreen + "</td>");
 
 //            int codeBlue = statsCode[CodeRating.BLUE.ordinal()];
 //            totalCodeBlue += codeBlue;
-//            writer.write("<td class='numbercell'>" + toString(codeBlue) + "</td>");
+//            writer.write("<td class='numbercell'>" + codeBlue + "</td>");
             
             int codeProposed = statsCode[CodeRating.PROP_YELLOW.ordinal()]
                     + statsCode[CodeRating.PROP_GREEN.ordinal()]
                     + statsCode[CodeRating.PROP_BLUE.ordinal()];
             totalCodeProposed += codeProposed;
-            writer.write("<td class='numbercell'>" + toString(codeProposed) + "</td>");
+            writer.write("<td class='numbercell'>" + codeProposed + "</td>");
 
             writer.write("<td>");
-            writer.write("<span class='hide'>" + (items.length - i) + "</span>");
             if (hasCodeRatings) {
+                writer.write("<span class='hide'>" + calculateCodeScore(codeRed, codeYellow, codeGreen) + "</span>");
                 writer.write("<img src='" + generateGraphFileName(item, true) + "' />");
+            } else {
+                writer.write("<span class='hide'>0.0000</span>");
             }
             writer.write("</td>");
             
             totalLoc += item.getStatsLoc();
-            writer.write("<td class='numbercell'>" + toString(item.getStatsLoc()) + "</td>");
+            writer.write("<td class='numbercell'>" + item.getStatsLoc() + "</td>");
             
             // End table row
             writer.write("</tr>");
@@ -357,24 +357,24 @@ public class BasicHtmlWriter {
         
         // Summary table row
         writer.write("<tr class='headerlinetop ");
-        writer.write(i % 2 == 0 ? "evenheader" : "oddheader");
+        writer.write(i % 2 == 0 ? "oddheader" : "evenheader");
         writer.write("'>");
         
         writer.write("<th>Total</th>");
-        writer.write("<th class='numbercell newcolgroup'>" + toString(totalClasses) + "</th>");
-        writer.write("<th class='numbercell'>" + toString(totalGenerated) + "</th>");
-        writer.write("<th class='numbercell'>" + toString(totalIgnored) + "</th>");
-        writer.write("<th class='numbercell newcolgroup'>" + toString(totalDesignReviewless) + "</th>");
-        writer.write("<th class='numbercell'>" + toString(totalDesignReviewed) + "</th>");
-        writer.write("<th class='numbercell'>" + toString(totalDesignProposed) + "</th>");
+        writer.write("<th class='numbercell newcolgroup'>" + totalClasses + "</th>");
+        writer.write("<th class='numbercell'>" + totalGenerated + "</th>");
+        writer.write("<th class='numbercell'>" + totalIgnored + "</th>");
+        writer.write("<th class='numbercell newcolgroup'>" + totalDesignReviewless + "</th>");
+        writer.write("<th class='numbercell'>" + totalDesignReviewed + "</th>");
+        writer.write("<th class='numbercell'>" + totalDesignProposed + "</th>");
         writer.write("<th><img src='" + generateGraphFileName(null, false) + "' /></th>");
-        writer.write("<th class='numbercell newcolgroup'>" + toString(totalCodeRed) + "</th>");
-        writer.write("<th class='numbercell'>" + toString(totalCodeYellow) + "</th>");
-        writer.write("<th class='numbercell'>" + toString(totalCodeGreen) + "</th>");
-//        writer.write("<th class='numbercell'>" + toString(totalCodeBlue) + "</th>");
-        writer.write("<th class='numbercell'>" + toString(totalCodeProposed) + "</th>");
+        writer.write("<th class='numbercell newcolgroup'>" + totalCodeRed + "</th>");
+        writer.write("<th class='numbercell'>" + totalCodeYellow + "</th>");
+        writer.write("<th class='numbercell'>" + totalCodeGreen + "</th>");
+//        writer.write("<th class='numbercell'>" + totalCodeBlue + "</th>");
+        writer.write("<th class='numbercell'>" + totalCodeProposed + "</th>");
         writer.write("<th><img src='" + generateGraphFileName(null, true) + "' /></th>");
-        writer.write("<th class='numbercell'>" + toString(totalLoc) + "</th>");
+        writer.write("<th class='numbercell'>" + totalLoc + "</th>");
         
         // Footer
         writer.write("</table>");
@@ -387,50 +387,32 @@ public class BasicHtmlWriter {
     // UTILITY METHODS
     
     /**
-     * Create a string from an integer with thousands separator. Negative numbers are replaced
-     * by "n/a".
+     * Calculates the design review score for a table row with the given number of reviewed and
+     * not-yet reviewed classes.
      * 
-     * @param x an integer number
-     * @return a string representation
+     * @param withoutReview number of classes without a design review.
+     * @param withReview number of classes with a design review.
+     * @return design review score.
      */
-    // CHECKSTYLEOFF MagicNumber
-    public static String toString(final int x) {
-        // a negative number is treated as illegal
-        if (x < 0) {
-            return "n/a";
-        }
-        int thousands = x / 1000;
-        if (thousands > 0) {
-            int millions = thousands / 1000;
-            if (millions > 0) {
-                return Integer.toString(millions)
-                        + " " + toStringLeadingZeros(thousands - millions * 1000)
-                        + " " + toStringLeadingZeros(x - thousands * 1000);
-            } else {
-                return Integer.toString(thousands) + " " + toStringLeadingZeros(x - thousands * 1000);
-            }
-        } else {
-            return Integer.toString(x);
-        }
+    private String calculateDesignScore(final int withoutReview, final int withReview) {
+        double score = withReview / (double) (withoutReview + withReview);
+        return String.format("%1$.4f", score);
     }
     
     /**
-     * Transforms an integer number (less than 1000) to a string with leading zeros.
+     * Calculates the code review score for a table row with the given number of red, yellow, and
+     * green classes.
      * 
-     * @param x an integer number less than 1000
-     * @return a string with leading zeros
+     * @param red number of classes with red code rating.
+     * @param yellow number of classes with yellow code rating.
+     * @param green number of classes with green code rating.
+     * @return code review score.
      */
-    private static String toStringLeadingZeros(final int x) {
-        if (x < 10) {
-            return "00" + Integer.toString(x);
-        } else if (x < 100) {
-            return "0" + Integer.toString(x);
-        } else if (x < 1000) {
-            return Integer.toString(x);
-        }
-        throw new IllegalArgumentException();
+    public String calculateCodeScore(final int red, final int yellow, final int green) {
+        double score = yellow + 2 * green;
+        score /= (double) (red + yellow + green);
+        return String.format("%1$.4f", score);
     }
-    // CHECKSTYLEON MagicNumber
     
     /**
      * Returns the proper icon URL for the given thing.
