@@ -41,7 +41,7 @@ public class RatingImageGenerator {
     /** colors for the design rating image.  */
     private static final int[][] DESIGN_RATING_COLORS = {
         {255, 60, 60},
-        {35, 250, 35}
+        {90, 90, 255}
     };
     /** colors for the code rating image.  */
     private static final int[][] CODE_RATING_COLORS = {

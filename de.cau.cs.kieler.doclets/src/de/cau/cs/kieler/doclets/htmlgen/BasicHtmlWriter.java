@@ -210,7 +210,7 @@ public class BasicHtmlWriter {
         int totalCodeRed = 0;
         int totalCodeYellow = 0;
         int totalCodeGreen = 0;
-        int totalCodeBlue = 0;
+//        int totalCodeBlue = 0;
         int totalCodeProposed = 0;
         int totalLoc = 0;
         
@@ -222,7 +222,7 @@ public class BasicHtmlWriter {
         writer.write("    <th>&nbsp;</th>");
         writer.write("    <th>&nbsp;</th>");
         writer.write("    <th class='multiheader newcolgroup' colspan='4'>Design</th>");
-        writer.write("    <th class='multiheader newcolgroup' colspan='7'>Code</th>");
+        writer.write("    <th class='multiheader newcolgroup' colspan='6'>Code</th>");
         writer.write("  </tr>");
         writer.write("  <tr class='oddheader headerlinebottom'>");
         
@@ -242,7 +242,7 @@ public class BasicHtmlWriter {
         writer.write("    <th class='numbercell newcolgroup'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_red.png' title='Number of classes with red code rating. (have not been code-reviewed yet)' /></th>");
         writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_yellow.png' title='Number of classes with yellow code rating. (have received at least one code review)' /></th>");
         writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_green.png' title='Number of classes with green code rating. (have received at least two code reviews; be careful about changing public API)' /></th>");
-        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_blue.png' title='Number of classes with blue code rating. (mature classes; do not touch these if you value your life!)' /></th>");
+//        writer.write("    <th class='numbercell'><img src='" + RatingDocletConstants.RES_FOLDER + "/code_blue.png' title='Number of classes with blue code rating. (mature classes as determined by the high council; do not touch these if you value your life!)' /></th>");
         writer.write("    <th class='numbercell'>Proposed</th>");
         writer.write("    <th>Progress</th>");
         writer.write("    <th class='numbercell'>LoC</th>");
@@ -322,9 +322,9 @@ public class BasicHtmlWriter {
             totalCodeGreen += codeGreen;
             writer.write("<td class='numbercell'>" + toString(codeGreen) + "</td>");
 
-            int codeBlue = statsCode[CodeRating.BLUE.ordinal()];
-            totalCodeBlue += codeBlue;
-            writer.write("<td class='numbercell'>" + toString(codeBlue) + "</td>");
+//            int codeBlue = statsCode[CodeRating.BLUE.ordinal()];
+//            totalCodeBlue += codeBlue;
+//            writer.write("<td class='numbercell'>" + toString(codeBlue) + "</td>");
             
             int codeProposed = statsCode[CodeRating.PROP_YELLOW.ordinal()]
                     + statsCode[CodeRating.PROP_GREEN.ordinal()]
@@ -361,7 +361,7 @@ public class BasicHtmlWriter {
         writer.write("<th class='numbercell newcolgroup'>" + toString(totalCodeRed) + "</th>");
         writer.write("<th class='numbercell'>" + toString(totalCodeYellow) + "</th>");
         writer.write("<th class='numbercell'>" + toString(totalCodeGreen) + "</th>");
-        writer.write("<th class='numbercell'>" + toString(totalCodeBlue) + "</th>");
+//        writer.write("<th class='numbercell'>" + toString(totalCodeBlue) + "</th>");
         writer.write("<th class='numbercell'>" + toString(totalCodeProposed) + "</th>");
         writer.write("<th><img src='" + generateGraphFileName(null, true) + "' /></th>");
         writer.write("<th class='numbercell'>" + toString(totalLoc) + "</th>");
