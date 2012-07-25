@@ -35,6 +35,9 @@
       <resource>
         <directory>css</directory>
       </resource>
+      <resource>
+        <directory>js</directory>
+      </resource>
     </resources>
   </build>
 

@@ -76,6 +76,10 @@ public class BasicHtmlWriter {
         writer.write("<!DOCTYPE doctype PUBLIC '-//w3c//dtd html 4.0 transitional//en'><html>");
         writer.write("<head>");
         writer.write("<title>" + RatingDocletConstants.TXT_TITLE + "</title>");
+        
+        writer.write("<script type='text/javascript' src='" + RatingDocletConstants.RES_FOLDER + "/jquery-1.7.2.js'></script>");
+        writer.write("<script type='text/javascript' src='" + RatingDocletConstants.RES_FOLDER + "/jquery.tablesorter.js'></script>");
+        writer.write("<script type='text/javascript' src='" + RatingDocletConstants.RES_FOLDER + "/tablesorterstart.js'></script>");
         writer.write("<link rel='stylesheet' type='text/css' href='" + RatingDocletConstants.RES_FOLDER + "/style.css'>");
         
         writer.write("</head><body>");
@@ -215,15 +219,16 @@ public class BasicHtmlWriter {
         int totalLoc = 0;
         
         // Header
-        writer.write("<table cellspacing='0' cellpadding='6'>");
-        writer.write("  <tr class='oddheader'>");
-        writer.write("    <th>&nbsp;</th>");
-        writer.write("    <th class='newcolgroup'>&nbsp;</th>");
-        writer.write("    <th>&nbsp;</th>");
-        writer.write("    <th>&nbsp;</th>");
-        writer.write("    <th class='multiheader newcolgroup' colspan='4'>Design</th>");
-        writer.write("    <th class='multiheader newcolgroup' colspan='6'>Code</th>");
-        writer.write("  </tr>");
+        writer.write("<table cellspacing='0' cellpadding='6' id='sort' class='tablesorter'>");
+//        writer.write("  <tr class='oddheader'>");
+//        writer.write("    <th>&nbsp;</th>");
+//        writer.write("    <th class='newcolgroup'>&nbsp;</th>");
+//        writer.write("    <th>&nbsp;</th>");
+//        writer.write("    <th>&nbsp;</th>");
+//        writer.write("    <th class='multiheader newcolgroup' colspan='4'>Design</th>");
+//        writer.write("    <th class='multiheader newcolgroup' colspan='6'>Code</th>");
+//        writer.write("  </tr>");
+        writer.write("  <thead>");
         writer.write("  <tr class='oddheader headerlinebottom'>");
         
         if (currentPageObject == null) {
@@ -247,6 +252,8 @@ public class BasicHtmlWriter {
         writer.write("    <th>Progress</th>");
         writer.write("    <th class='numbercell'>LoC</th>");
         writer.write("  </tr>");
+        writer.write("  </thead>");
+        writer.write("  <tbody>");
         
         // Iterate through projects (i will be used again later and is thus declared outside the loop)
         int i = 0;
@@ -304,6 +311,7 @@ public class BasicHtmlWriter {
             writer.write("<td class='numbercell'>" + toString(designProposed) + "</td>");
 
             writer.write("<td>");
+            writer.write("<span class='hide'>" + (items.length - i) + "</span>");
             if (hasDesignRatings) {
                 writer.write("<img src='" + generateGraphFileName(item, false) + "' />");
             }
@@ -333,6 +341,7 @@ public class BasicHtmlWriter {
             writer.write("<td class='numbercell'>" + toString(codeProposed) + "</td>");
 
             writer.write("<td>");
+            writer.write("<span class='hide'>" + (items.length - i) + "</span>");
             if (hasCodeRatings) {
                 writer.write("<img src='" + generateGraphFileName(item, true) + "' />");
             }
@@ -344,6 +353,7 @@ public class BasicHtmlWriter {
             // End table row
             writer.write("</tr>");
         }
+        writer.write("  </tbody>");
         
         // Summary table row
         writer.write("<tr class='headerlinetop ");

@@ -65,7 +65,7 @@ public class RatingGenerator {
         aggregateStatistics();
         writeModelToDebugFile(destinationFolder);
         
-        // TODO: Setup the basic output file system structure with CSS, icons, and all
+        // Setup the basic output file system structure with CSS, icons, and all
         prepareDestinationFolder(destinationFolder);
         
         // Generate progress bars for ratings
@@ -194,7 +194,15 @@ public class RatingGenerator {
         // Copy stylesheet
         copyResource("style.css", resFolder);
         
+        // Copy Javascript files
+        copyResource("jquery-1.7.2.js", resFolder);
+        copyResource("jquery.tablesorter.js", resFolder);
+        copyResource("tablesorterstart.js", resFolder);
+        
         // Copy icons
+        copyResource("asc.gif", resFolder);
+        copyResource("bg.gif", resFolder);
+        copyResource("desc.gif", resFolder);
         copyResource("act_collapse_all.png", resFolder);
         copyResource("act_expand_all.png", resFolder);
         copyResource("code_blue_prop.png", resFolder);
