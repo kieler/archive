@@ -34,21 +34,24 @@ import de.cau.cs.kieler.doclets.model.Project;
  * @author msp
  */
 public class RatingImageGenerator {
-    /** width for generated images. */
-    private static final int IMG_WIDTH = 150;
+    
+    /** width for generated design rating images. */
+    private static final int IMG_DESIGN_WIDTH = 100;
+    /** width for generated code rating images. */
+    private static final int IMG_CODE_WIDTH = 150;
     /** height for generated images (must be even). */
     private static final int IMG_HEIGHT = 14;
     /** colors for the design rating image.  */
     private static final int[][] DESIGN_RATING_COLORS = {
-        {255, 60, 60},
-        {90, 90, 255}
+        {255, 110, 85},
+        {135, 150, 255}
     };
     /** colors for the code rating image.  */
     private static final int[][] CODE_RATING_COLORS = {
-        {255, 60, 60},
+        {255, 110, 85},
         {240, 240, 40},
         {35, 250, 35},
-        {90, 90, 255}
+        {135, 150, 255}
     };
     
 
@@ -138,7 +141,8 @@ public class RatingImageGenerator {
         }
         
         // Create image data
-        BufferedImage image = new BufferedImage(IMG_WIDTH, IMG_HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
+        BufferedImage image = new BufferedImage(IMG_DESIGN_WIDTH, IMG_HEIGHT,
+                BufferedImage.TYPE_3BYTE_BGR);
         WritableRaster raster = image.getRaster();
         int offset = 0;
         for (int i = 0; i < ratings.length; i++) {
@@ -163,22 +167,25 @@ public class RatingImageGenerator {
     private int fillDesignRatingArea(final WritableRaster raster, final int offset,
             final DesignRating rating, final float ratingRate) {
         
-        int size = Math.round(ratingRate * IMG_WIDTH);
-        if (offset + size > IMG_WIDTH) {
-            size = IMG_WIDTH - offset;
+        int size = Math.round(ratingRate * IMG_DESIGN_WIDTH);
+        if (offset + size > IMG_DESIGN_WIDTH) {
+            size = IMG_DESIGN_WIDTH - offset;
         }
         int ratingIndex = rating.ordinal() / 2;
         if (rating.isProposed()) {
             for (int x = offset; x < offset + size; x++) {
                 for (int y = 0; y < IMG_HEIGHT; y += 2) {
-                    raster.setPixel(x, y, darken(DESIGN_RATING_COLORS[ratingIndex], x, y));
-                    raster.setPixel(x, y + 1, darken(DESIGN_RATING_COLORS[ratingIndex + 1], x, y + 1));
+                    raster.setPixel(x, y, darken(DESIGN_RATING_COLORS[ratingIndex],
+                            x, y, IMG_DESIGN_WIDTH));
+                    raster.setPixel(x, y + 1, darken(DESIGN_RATING_COLORS[ratingIndex + 1],
+                            x, y + 1, IMG_DESIGN_WIDTH));
                 }
             }
         } else {
             for (int x = offset; x < offset + size; x++) {
                 for (int y = 0; y < IMG_HEIGHT; y++) {
-                    raster.setPixel(x, y, darken(DESIGN_RATING_COLORS[ratingIndex], x, y));
+                    raster.setPixel(x, y, darken(DESIGN_RATING_COLORS[ratingIndex],
+                            x, y, IMG_DESIGN_WIDTH));
                 }
             }
         }
@@ -211,7 +218,8 @@ public class RatingImageGenerator {
         }
         
         // Create image data
-        BufferedImage image = new BufferedImage(IMG_WIDTH, IMG_HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
+        BufferedImage image = new BufferedImage(IMG_CODE_WIDTH, IMG_HEIGHT,
+                BufferedImage.TYPE_3BYTE_BGR);
         WritableRaster raster = image.getRaster();
         int offset = 0;
         for (int i = 0; i < ratings.length; i++) {
@@ -236,22 +244,25 @@ public class RatingImageGenerator {
     private int fillCodeRatingArea(final WritableRaster raster, final int offset,
             final CodeRating rating, final float ratingRate) {
         
-        int size = Math.round(ratingRate * IMG_WIDTH);
-        if (offset + size > IMG_WIDTH) {
-            size = IMG_WIDTH - offset;
+        int size = Math.round(ratingRate * IMG_CODE_WIDTH);
+        if (offset + size > IMG_CODE_WIDTH) {
+            size = IMG_CODE_WIDTH - offset;
         }
         int ratingIndex = rating.ordinal() / 2;
         if (rating.isProposed()) {
             for (int x = offset; x < offset + size; x++) {
                 for (int y = 0; y < IMG_HEIGHT; y += 2) {
-                    raster.setPixel(x, y, darken(CODE_RATING_COLORS[ratingIndex], x, y));
-                    raster.setPixel(x, y + 1, darken(CODE_RATING_COLORS[ratingIndex + 1], x, y + 1));
+                    raster.setPixel(x, y, darken(CODE_RATING_COLORS[ratingIndex],
+                            x, y, IMG_CODE_WIDTH));
+                    raster.setPixel(x, y + 1, darken(CODE_RATING_COLORS[ratingIndex + 1],
+                            x, y + 1, IMG_CODE_WIDTH));
                 }
             }
         } else {
             for (int x = offset; x < offset + size; x++) {
                 for (int y = 0; y < IMG_HEIGHT; y++) {
-                    raster.setPixel(x, y, darken(CODE_RATING_COLORS[ratingIndex], x, y));
+                    raster.setPixel(x, y, darken(CODE_RATING_COLORS[ratingIndex],
+                            x, y, IMG_CODE_WIDTH));
                 }
             }
         }
@@ -263,9 +274,9 @@ public class RatingImageGenerator {
     // COLOR COMPUTATION
     
     /** factor for darkening towards the bottom of the image. */
-    private static final float BOTTOM_DARKEN = 0.6f;
+    private static final float BOTTOM_DARKEN = 0.5f;
     /** factor for darkening on the border of the image. */
-    private static final float BORDER_DARKEN = 0.5f;
+    private static final float BORDER_DARKEN = 0.6f;
     
     /**
      * Darkens a given color based on the current position.
@@ -273,12 +284,13 @@ public class RatingImageGenerator {
      * @param color a color
      * @param x x coordinate
      * @param y y coordinate
+     * @param width the image width
      * @return a darkened color
      */
-    private static int[] darken(final int[] color, final int x, final int y) {
+    private static int[] darken(final int[] color, final int x, final int y, final int width) {
         int[] result = new int[color.length];
         float factor = BOTTOM_DARKEN + (IMG_HEIGHT - (float) y) / IMG_HEIGHT * (1 - BOTTOM_DARKEN);
-        if (x == 0 || y == 0 || x == IMG_WIDTH - 1 || y == IMG_HEIGHT - 1) {
+        if (x <= 0 || y <= 0 || x >= width - 1 || y >= IMG_HEIGHT - 1) {
             factor *= BORDER_DARKEN;
         }
         for (int i = 0; i < color.length; i++) {
