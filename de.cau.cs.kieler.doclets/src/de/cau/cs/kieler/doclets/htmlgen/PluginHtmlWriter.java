@@ -232,7 +232,7 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
             
             // Lines of code
             writer.write("<td class='numbercell'>");
-            writer.write(classes[i].getLoc());
+            writer.write(Integer.toString(classes[i].getLoc()));
             writer.write("</td>");
             
             // End table row
