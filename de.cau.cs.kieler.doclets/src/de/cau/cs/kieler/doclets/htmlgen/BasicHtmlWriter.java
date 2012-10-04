@@ -458,26 +458,46 @@ public class BasicHtmlWriter {
         
         switch (rating) {
         case RED:
+        case PROP_YELLOW:
             return RatingDocletConstants.RES_FOLDER + "/code_red.png";
         
-        case PROP_YELLOW:
-            return RatingDocletConstants.RES_FOLDER + "/code_yellow_prop.png";
-        
         case YELLOW:
-            return RatingDocletConstants.RES_FOLDER + "/code_yellow.png";
-            
         case PROP_GREEN:
-            return RatingDocletConstants.RES_FOLDER + "/code_green_prop.png";
+            return RatingDocletConstants.RES_FOLDER + "/code_yellow.png";
         
         case GREEN:
-            return RatingDocletConstants.RES_FOLDER + "/icons/code_green.png";
-            
         case PROP_BLUE:
-            return RatingDocletConstants.RES_FOLDER + "/code_blue_prop.png";
+            return RatingDocletConstants.RES_FOLDER + "/code_green.png";
         
         case BLUE:
             return RatingDocletConstants.RES_FOLDER + "/code_blue.png";
         
+        default:
+            return "";
+        }
+    }
+    
+    /**
+     * Returns the proper icon URL for a code review proposal.
+     * 
+     * @param rating the rating to return the icon for.
+     * @return the URL of a proper icon.
+     */
+    protected static String getIconForProposal(final CodeRating rating) {
+        if (rating == null) {
+            return "";
+        }
+        
+        switch (rating) {
+        case PROP_YELLOW:
+            return RatingDocletConstants.RES_FOLDER + "/prop_yellow.png";
+            
+        case PROP_GREEN:
+            return RatingDocletConstants.RES_FOLDER + "/prop_green.png";
+            
+        case PROP_BLUE:
+            return RatingDocletConstants.RES_FOLDER + "/prop_blue.png";
+            
         default:
             return "";
         }
@@ -496,10 +516,8 @@ public class BasicHtmlWriter {
         
         switch (rating) {
         case NONE:
-            return RatingDocletConstants.RES_FOLDER + "/design_no.png";
-            
         case PROPOSED:
-            return RatingDocletConstants.RES_FOLDER + "/design_prop.png";
+            return RatingDocletConstants.RES_FOLDER + "/design_no.png";
             
         case REVIEWED:
             return RatingDocletConstants.RES_FOLDER + "/design_yes.png";
@@ -507,6 +525,19 @@ public class BasicHtmlWriter {
         default:
             return "";
         }
+    }
+    
+    /**
+     * Returns the proper icon URL for a design review proposal.
+     * 
+     * @param rating the rating to return the icon for.
+     * @return the URL of a proper icon.
+     */
+    protected static String getIconForProposal(final DesignRating rating) {
+        if (rating == DesignRating.PROPOSED) {
+            return RatingDocletConstants.RES_FOLDER + "/prop_blue.png";
+        }
+        return "";
     }
     
     /**

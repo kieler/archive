@@ -221,12 +221,18 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
             // Design review
             writer.write("<td class='newcolgroup'>");
             writer.write("<img src='" + getIconForDesignRating(classes[i].getDesignRating()) + "' /> ");
+            if (classes[i].getDesignRating() != null && classes[i].getDesignRating().isProposed()) {
+                writer.write("<img src='" + getIconForProposal(classes[i].getDesignRating()) + "' /> ");
+            }
             writer.write(linkifyReviewComment(classes[i].getDesignRatingDetails()));
             writer.write("</td>");
             
             // Code review
             writer.write("<td>");
             writer.write("<img src='" + getIconForCodeRating(classes[i].getCodeRating()) + "' /> ");
+            if (classes[i].getCodeRating() != null && classes[i].getCodeRating().isProposed()) {
+                writer.write("<img src='" + getIconForProposal(classes[i].getCodeRating()) + "' /> ");
+            }
             writer.write(linkifyReviewComment(classes[i].getCodeRatingDetails()));
             writer.write("</td>");
             
