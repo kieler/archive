@@ -60,10 +60,10 @@ public class RatingImageGenerator {
      * 
      * @param projects map mapping project names to projects.
      * @param destinationFolder folder to place the graphs in.
-     * @throws Exception if something bad happens.
+     * @throws IOException if something bad happens.
      */
     public void generateRatingGraphs(final Map<String, Project> projects, final File destinationFolder)
-            throws Exception {
+            throws IOException {
         
         // Arrays for aggregated ratings for the overview page
         int[] designRatings = new int[DesignRating.values().length];

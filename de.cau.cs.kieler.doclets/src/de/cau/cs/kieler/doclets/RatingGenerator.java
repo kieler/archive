@@ -15,8 +15,10 @@ package de.cau.cs.kieler.doclets;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
@@ -52,10 +54,10 @@ public class RatingGenerator {
      * @param rootDoc the root documentation object containing everything to generate rating
      *                documentation for.
      * @param destination the folder to place the generated documentation in.
-     * @throws Exception if something goes wrong. This is an internal tool, so we won't care about
+     * @throws IOException if something goes wrong. This is an internal tool, so we won't care about
      *                   robustness too much...
      */
-    public void generateRatings(final RootDoc rootDoc, final String destination) throws Exception {
+    public void generateRatings(final RootDoc rootDoc, final String destination) throws IOException {
         // Create destination folder
         File destinationFolder = new File(destination);
         destinationFolder.mkdirs();
@@ -184,9 +186,9 @@ public class RatingGenerator {
      * Prepares the destination folder by copying over all the required icons and the stylesheet.
      * 
      * @param destinationFolder the destination folder.
-     * @throws Exception if anything goes wrong during copying.
+     * @throws IOException if anything goes wrong during copying.
      */
-    private void prepareDestinationFolder(final File destinationFolder) throws Exception {
+    private void prepareDestinationFolder(final File destinationFolder) throws IOException {
         // Create a resources folder
         File resFolder = new File(destinationFolder, RatingDocletConstants.RES_FOLDER);
         resFolder.mkdir();
@@ -205,16 +207,15 @@ public class RatingGenerator {
         copyResource("desc.gif", resFolder);
         copyResource("act_collapse_all.png", resFolder);
         copyResource("act_expand_all.png", resFolder);
-        copyResource("code_blue_prop.png", resFolder);
         copyResource("code_blue.png", resFolder);
-        copyResource("code_green_prop.png", resFolder);
         copyResource("code_green.png", resFolder);
         copyResource("code_red.png", resFolder);
-        copyResource("code_yellow_prop.png", resFolder);
         copyResource("code_yellow.png", resFolder);
         copyResource("design_no.png", resFolder);
-        copyResource("design_prop.png", resFolder);
         copyResource("design_yes.png", resFolder);
+        copyResource("prop_blue.png", resFolder);
+        copyResource("prop_green.png", resFolder);
+        copyResource("prop_yellow.png", resFolder);
         copyResource("type_class.png", resFolder);
         copyResource("type_enum.png", resFolder);
         copyResource("type_interface.png", resFolder);
@@ -229,12 +230,15 @@ public class RatingGenerator {
      * 
      * @param resName name of the resource to copy.
      * @param resFolder name of the folder to copy it to.
-     * @throws Exception if anything goes wrong during copying.
+     * @throws IOException if anything goes wrong during copying.
      */
-    private void copyResource(final String resName, final File resFolder) throws Exception {
+    private void copyResource(final String resName, final File resFolder) throws IOException {
         File outFile = new File(resFolder, resName);
         
         InputStream resIn = this.getClass().getClassLoader().getResourceAsStream(resName);
+        if (resIn == null) {
+            throw new FileNotFoundException("Resource '" + resName + "' was not found.");
+        }
         OutputStream resOut = new FileOutputStream(outFile, false);
         
         byte[] buffer = new byte[READ_BUFFER_SIZE];
@@ -256,9 +260,9 @@ public class RatingGenerator {
      * Writes the model to a debug file in the destination folder.
      * 
      * @param destinationFolder the destination folder.
-     * @throws Exception if anything bad happens.
+     * @throws IOException if anything bad happens.
      */
-    private void writeModelToDebugFile(final File destinationFolder) throws Exception {
+    private void writeModelToDebugFile(final File destinationFolder) throws IOException {
         File outFile = new File(destinationFolder, "debug.txt");
         outFile.createNewFile();
         BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));

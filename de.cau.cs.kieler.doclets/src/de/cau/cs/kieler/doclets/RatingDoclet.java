@@ -13,6 +13,9 @@
  */
 package de.cau.cs.kieler.doclets;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
+
 import com.sun.javadoc.DocErrorReporter;
 import com.sun.javadoc.Doclet;
 import com.sun.javadoc.LanguageVersion;
@@ -50,15 +53,12 @@ public class RatingDoclet extends Doclet {
         RatingGenerator generator = new RatingGenerator();
         try {
             generator.generateRatings(rootDoc, destination);
-        } catch (Exception exception) {
+        } catch (Throwable exception) {
             // Build a proper exception message
-            StringBuilder message = new StringBuilder(
-                    "Error producing rating documentation: " + exception.getMessage());
-            
-            StackTraceElement[] stackTrace = exception.getStackTrace();
-            for (int i = 0; i < stackTrace.length; i++) {
-                message.append("\n" + stackTrace[i].toString());
-            }
+            StringBuilder message = new StringBuilder("Error producing rating documentation.\n");
+            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+            exception.printStackTrace(new PrintWriter(byteStream));
+            message.append(byteStream.toString());
             
             rootDoc.printError(message.toString());
             return false;

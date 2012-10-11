@@ -14,6 +14,7 @@
 package de.cau.cs.kieler.doclets.htmlgen;
 
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.Date;
 
 import com.sun.javadoc.ClassDoc;
@@ -43,10 +44,10 @@ public class BasicHtmlWriter {
      * @param category category the current site falls into.
      * @param currentPage the current page, used to generate breadcrumbs.
      * @param writer where to write to.
-     * @throws Exception if anything bad happens.
+     * @throws IOException if anything bad happens.
      */
     protected void generateHeader(final Categories category, final Object currentPage,
-            final BufferedWriter writer) throws Exception {
+            final BufferedWriter writer) throws IOException {
         
         // We will later support more categories, but for now we only have one.
         switch (category) {
@@ -65,10 +66,10 @@ public class BasicHtmlWriter {
      * @param category category the current site falls into.
      * @param currentPage the current page, used to generate breadcrumbs.
      * @param writer where to write to.
-     * @throws Exception if anything bad happens.
+     * @throws IOException if anything bad happens.
      */
     private void generateRatingsHeader(final Object currentPage, final BufferedWriter writer)
-            throws Exception {
+            throws IOException {
 
         // We're generating HTML code; to make things easier, we don't care about long lines.
         // CHECKSTYLEOFF LineLength
@@ -108,10 +109,10 @@ public class BasicHtmlWriter {
      * @param category category the current site falls into.
      * @param currentPage the current page.
      * @param writer where to write to.
-     * @throws Exception if anything bad happens.
+     * @throws IOException if anything bad happens.
      */
     protected void generateFooter(final Categories category, final Object currentPage,
-            final BufferedWriter writer) throws Exception {
+            final BufferedWriter writer) throws IOException {
         
         // We will later support more categories, but for now we only have one.
         switch (category) {
@@ -130,10 +131,10 @@ public class BasicHtmlWriter {
      * @param category category the current site falls into.
      * @param currentPage the current page, used to generate breadcrumbs.
      * @param writer where to write to.
-     * @throws Exception if anything bad happens.
+     * @throws IOException if anything bad happens.
      */
     private void generateRatingsFooter(final Object currentPage, final BufferedWriter writer)
-            throws Exception {
+            throws IOException {
         
         writer.write("<p class='helptext'>"
                 + "If you have no idea what all of this is about, feel free to take a look at our "
@@ -196,10 +197,10 @@ public class BasicHtmlWriter {
      *                          the column names of the table. Pass {@code null} for the overview page.
      * @param items array of items in the order they are to appear in the generated table.
      * @param writer where to write to.
-     * @throws Exception if something bad happens
+     * @throws IOException if something bad happens
      */
     protected void generateSummaryTable(final Object currentPageObject,
-            final AbstractThingWithStatistics[] items, final BufferedWriter writer) throws Exception {
+            final AbstractThingWithStatistics[] items, final BufferedWriter writer) throws IOException {
         
         // We're generating HTML code; to make things easier, we don't care about long lines.
         // CHECKSTYLEOFF LineLength

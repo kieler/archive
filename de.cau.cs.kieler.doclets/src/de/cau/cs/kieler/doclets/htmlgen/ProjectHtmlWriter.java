@@ -16,6 +16,7 @@ package de.cau.cs.kieler.doclets.htmlgen;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -34,10 +35,10 @@ public class ProjectHtmlWriter extends BasicHtmlWriter {
      * 
      * @param projects map mapping project names to projects.
      * @param destinationFolder folder to place the documentation in.
-     * @throws Exception if something bad happens.
+     * @throws IOException if something bad happens.
      */
     public void generateProjectPages(final Map<String, Project> projects, final File destinationFolder)
-            throws Exception {
+            throws IOException {
 
         // Sort the list of projects
         Project[] projectsArray = projects.values().toArray(new Project[0]);

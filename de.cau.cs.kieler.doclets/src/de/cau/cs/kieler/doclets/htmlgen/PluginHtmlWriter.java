@@ -16,6 +16,7 @@ package de.cau.cs.kieler.doclets.htmlgen;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -40,10 +41,10 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
      * 
      * @param projects map mapping project names to projects.
      * @param destinationFolder folder to place the documentation in.
-     * @throws Exception if something bad happens.
+     * @throws IOException if something bad happens.
      */
     public void generatePluginPages(final Map<String, Project> projects, final File destinationFolder)
-            throws Exception {
+            throws IOException {
 
         // Iterate over the list of projects, each containing a number of plugins
         for (Project project : projects.values()) {
@@ -74,10 +75,10 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
      * 
      * @param plugin the plugin to write the Javascript code for.
      * @param destinationFolder folder to place the documentation in.
-     * @throws Exception if something bad happens.
+     * @throws IOException if something bad happens.
      */
     private void generateJavascriptCode(final Plugin plugin, final BufferedWriter writer)
-            throws Exception {
+            throws IOException {
         
         writer.write("<script type='text/javascript'>");
         writer.write("  function toggleVisibility(id) {");
@@ -122,9 +123,9 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
      * Generates the action bar that allows the user to collapse and expand all package tables.
      * 
      * @param writer where to write the output to.
-     * @throws Exception if something bad happens.
+     * @throws IOException if something bad happens.
      */
-    private void generateActionBar(final BufferedWriter writer) throws Exception {
+    private void generateActionBar(final BufferedWriter writer) throws IOException {
         // We're generating HTML code; to make things easier, we don't care about long lines.
         // CHECKSTYLEOFF LineLength
         
@@ -143,10 +144,10 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
      * 
      * @param plugin the plugin whose packages to summarize.
      * @param writer where to write the output to.
-     * @throws Exception if something bad happens.
+     * @throws IOException if something bad happens.
      */
     private void generatePackageInfos(final Plugin plugin, final BufferedWriter writer)
-            throws Exception {
+            throws IOException {
         
         // Assemble array of packages
         PackageDoc[] packages = plugin.getPackageToClassMap().keySet().toArray(new PackageDoc[0]);
@@ -182,10 +183,10 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
      * @param pack the package.
      * @param classes the classes in the package.
      * @param writer where to write the output to.
-     * @throws Exception if something bad happens.
+     * @throws IOException if something bad happens.
      */
     private void generatePackageInfos(final Plugin plugin, final PackageDoc pack,
-            final ClassItem[] classes, final BufferedWriter writer) throws Exception {
+            final ClassItem[] classes, final BufferedWriter writer) throws IOException {
         
         writer.write("<h2 class='package'>");
         writer.write("<a href='#' onclick='toggleVisibility(\"" + pack.name() + "\");'>");
