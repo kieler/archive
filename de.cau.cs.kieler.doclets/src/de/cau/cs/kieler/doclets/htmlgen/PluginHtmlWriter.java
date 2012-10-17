@@ -223,7 +223,8 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
             writer.write("<td class='newcolgroup'>");
             writer.write("<img src='" + getIconForDesignRating(classes[i].getDesignRating()) + "' /> ");
             if (classes[i].getDesignRating() != null && classes[i].getDesignRating().isProposed()) {
-                writer.write("<img src='" + getIconForDesignProposal(classes[i].getDesignRating()) + "' /> ");
+                writer.write(
+                        "<img src='" + getIconForDesignProposal(classes[i].getDesignRating()) + "' /> ");
             }
             writer.write(linkifyReviewComment(classes[i].getDesignRatingDetails()));
             writer.write("</td>");

@@ -368,13 +368,13 @@ public class BasicHtmlWriter {
         writer.write("<th class='numbercell newcolgroup'>" + totalDesignReviewless + "</th>");
         writer.write("<th class='numbercell'>" + totalDesignReviewed + "</th>");
         writer.write("<th class='numbercell'>" + totalDesignProposed + "</th>");
-        writer.write("<th><img src='" + generateGraphFileName(null, false) + "' /></th>");
+        writer.write("<th><img src='" + generateGraphFileName(currentPageObject, false) + "' /></th>");
         writer.write("<th class='numbercell newcolgroup'>" + totalCodeRed + "</th>");
         writer.write("<th class='numbercell'>" + totalCodeYellow + "</th>");
         writer.write("<th class='numbercell'>" + totalCodeGreen + "</th>");
 //        writer.write("<th class='numbercell'>" + totalCodeBlue + "</th>");
         writer.write("<th class='numbercell'>" + totalCodeProposed + "</th>");
-        writer.write("<th><img src='" + generateGraphFileName(null, true) + "' /></th>");
+        writer.write("<th><img src='" + generateGraphFileName(currentPageObject, true) + "' /></th>");
         writer.write("<th class='numbercell'>" + totalLoc + "</th>");
         
         // Footer
