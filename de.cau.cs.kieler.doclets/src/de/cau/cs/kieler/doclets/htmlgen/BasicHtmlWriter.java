@@ -491,13 +491,13 @@ public class BasicHtmlWriter {
         
         switch (rating) {
         case PROP_YELLOW:
-            return RatingDocletConstants.RES_FOLDER + "/prop_yellow.png";
+            return RatingDocletConstants.RES_FOLDER + "/code_yellow_prop.png";
             
         case PROP_GREEN:
-            return RatingDocletConstants.RES_FOLDER + "/prop_green.png";
+            return RatingDocletConstants.RES_FOLDER + "/code_green_prop.png";
             
         case PROP_BLUE:
-            return RatingDocletConstants.RES_FOLDER + "/prop_blue.png";
+            return RatingDocletConstants.RES_FOLDER + "/code_blue_prop.png";
             
         default:
             return "";
@@ -534,9 +534,9 @@ public class BasicHtmlWriter {
      * @param rating the rating to return the icon for.
      * @return the URL of a proper icon.
      */
-    protected static String getIconForProposal(final DesignRating rating) {
+    protected static String getIconForDesignProposal(final DesignRating rating) {
         if (rating == DesignRating.PROPOSED) {
-            return RatingDocletConstants.RES_FOLDER + "/prop_blue.png";
+            return RatingDocletConstants.RES_FOLDER + "/design_yes_prop.png";
         }
         return "";
     }

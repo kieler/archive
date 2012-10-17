@@ -208,14 +208,15 @@ public class RatingGenerator {
         copyResource("act_collapse_all.png", resFolder);
         copyResource("act_expand_all.png", resFolder);
         copyResource("code_blue.png", resFolder);
+        copyResource("code_blue_prop.png", resFolder);
         copyResource("code_green.png", resFolder);
+        copyResource("code_green_prop.png", resFolder);
         copyResource("code_red.png", resFolder);
         copyResource("code_yellow.png", resFolder);
+        copyResource("code_yellow_prop.png", resFolder);
         copyResource("design_no.png", resFolder);
         copyResource("design_yes.png", resFolder);
-        copyResource("prop_blue.png", resFolder);
-        copyResource("prop_green.png", resFolder);
-        copyResource("prop_yellow.png", resFolder);
+        copyResource("design_yes_prop.png", resFolder);
         copyResource("type_class.png", resFolder);
         copyResource("type_enum.png", resFolder);
         copyResource("type_interface.png", resFolder);
