@@ -69,10 +69,16 @@ public final class RatingDocletConstants {
     
     /**
      * URL of the source code management system used to generate links to class files. Must end with
-     * a slash.
+     * a slash. The SCM might need additional arguments to be appended to the path, which are defined
+     * in {@link #SCM_ARGS}.
      */
     public static final String SCM_PATH =
-            "https://git.rtsys.informatik.uni-kiel.de/kieler/mainline/blobs/master/";
+            "http://rtsys.informatik.uni-kiel.de/fisheye/browse/~br=master,r=HEAD/kieler/";
+    
+    /**
+     * Additional arguments to be appended to the URL of the source code management system.
+     */
+    public static final String SCM_ARGS = "?hb=true";
     
     /**
      * Beginning of Crucible URLs to which a code review number only needs to be appended to arrive at

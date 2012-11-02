@@ -280,7 +280,8 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
         
         // Generate URL
         return "<a href='" + RatingDocletConstants.SCM_PATH
-                + path.substring(containingDirIndex + 1) + "'>";
+                + path.substring(containingDirIndex + 1)
+                + RatingDocletConstants.SCM_ARGS + "'>";
     }
     
     /**
