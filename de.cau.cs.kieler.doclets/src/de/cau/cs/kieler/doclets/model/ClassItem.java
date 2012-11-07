@@ -160,10 +160,10 @@ public class ClassItem implements Comparable<ClassItem> {
                             codeRatingCandidate = CodeRating.valueOf(token.toUpperCase());
                         } catch (IllegalArgumentException exception) {
                             // This was not a code rating, so just add it to the comment
-                            finalComment.append(" " + token);
+                            finalComment.append(" ").append(token);
                         }
                     } else {
-                        finalComment.append(" " + token);
+                        finalComment.append(" ").append(token);
                     }
                 }
                 
@@ -201,17 +201,29 @@ public class ClassItem implements Comparable<ClassItem> {
         if (designRatingTags != null && designRatingTags.length > 0) {
             String tagText = designRatingTags[designRatingTags.length - 1].text().trim();
             if (tagText != null) {
-                // Check if the first word of the text is the PROPOSED tag
-                if (tagText.toLowerCase().startsWith(RatingDocletConstants.TAG_PROPOSED)) {
-                    designRatingCandidate = DesignRating.PROPOSED;
+                // The design rating tag is present, so we'll treat this class as having been
+                // design-reviewed unless we find a "proposed" token
+                designRatingCandidate = DesignRating.REVIEWED;
+                
+                // Break the tag's text into tokens
+                StringTokenizer tokenizer = new StringTokenizer(tagText, " \t\n\r");
+                String token = "";
+                StringBuilder finalComment = new StringBuilder();
+                
+                while (tokenizer.hasMoreTokens()) {
+                    token = tokenizer.nextToken();
                     
-                    // The comment starts after the proposed tag
-                    designRatingDetails =
-                            tagText.substring(RatingDocletConstants.TAG_PROPOSED.length()).trim();
-                } else {
-                    designRatingCandidate = DesignRating.REVIEWED;
-                    designRatingDetails = tagText;
+                    if (token.equalsIgnoreCase(RatingDocletConstants.TAG_PROPOSED)
+                            && designRatingCandidate != DesignRating.PROPOSED) {
+                        
+                        // Proposed!
+                        designRatingCandidate = DesignRating.PROPOSED;
+                    } else {
+                        finalComment.append(" ").append(token);
+                    }
                 }
+                
+                designRatingDetails = finalComment.toString();
             }
         }
         
