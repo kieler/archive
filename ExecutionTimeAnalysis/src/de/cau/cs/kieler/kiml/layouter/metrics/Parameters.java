@@ -28,6 +28,14 @@ public class Parameters {
     // CHECKSTYLEOFF VisibilityModifier
     // CHECKSTYLEOFF MagicNumber
     
+    /** Enumeration of modes for the metrics program. */
+    public enum Mode {
+        /** Measure the execution time. */
+        TIME,
+        /** Measure the number of edge crossings. */
+        CROSSINGS;
+    }
+    
     
     ///////////////////////////////////////////////////////////////////////////////
     // Class ArrayIterator
@@ -117,6 +125,16 @@ public class Parameters {
     
     ///////////////////////////////////////////////////////////////////////////////
     // Variables
+    
+    /**
+     * The metrics program mode.
+     */
+    public Mode mode = Mode.TIME;
+    
+    /**
+     * Whether the generated graphs shall be exported.
+     */
+    public boolean exportGraphs = false;
     
     /**
      * Whether ports shall be created.
@@ -213,8 +231,14 @@ public class Parameters {
             String arg = iterator.nextString();
             
             // See which argument this is
-            if (arg.equals("-h")) {
+            if (arg.equals("--time")) {
+                mode = Mode.TIME;
+            } else if (arg.equals("--cross")) {
+                mode = Mode.CROSSINGS;
+            } else if (arg.equals("-h")) {
                 help = true;
+            } else if (arg.equals("-x")) {
+                exportGraphs = true;
             } else if (arg.equals("-sd")) {
                 try {
                     startDecade = iterator.nextInt();

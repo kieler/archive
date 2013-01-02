@@ -13,11 +13,18 @@
  */
 package de.cau.cs.kieler.kiml.layouter.metrics;
 
-import java.util.HashMap;
+import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 import de.cau.cs.kieler.core.kgraph.KEdge;
 import de.cau.cs.kieler.core.kgraph.KLabel;
@@ -71,12 +78,13 @@ public final class GraphGenerator {
      * @param nodeCount number of nodes in the graph.
      * @param parameters user-supplied paramaters affecting the graph generation.
      * @return a randomly generated graph.
+     * @throws IOException if exporting the graph fails
      */
-    public KNode generateGraph(final int nodeCount, final Parameters parameters) {
+    public KNode generateGraph(final int nodeCount, final Parameters parameters) throws IOException {
         
         // Create parent node
-        KNode layoutGraph = KimlUtil.createInitializedNode();
-        KShapeLayout nodeLayout = layoutGraph.getData(KShapeLayout.class);
+        KNode graph = KimlUtil.createInitializedNode();
+        KShapeLayout nodeLayout = graph.getData(KShapeLayout.class);
         
         // Create nodes
         KNode[] nodes = new KNode[nodeCount];
@@ -85,7 +93,7 @@ public final class GraphGenerator {
             nodes[i] = KimlUtil.createInitializedNode();
             KLabel label = KimlUtil.createInitializedLabel(nodes[i]);
             label.setText("N" + i);
-            nodes[i].setParent(layoutGraph);
+            nodes[i].setParent(graph);
             
             // Set node properties
             nodeLayout = nodes[i].getData(KShapeLayout.class);
@@ -134,7 +142,32 @@ public final class GraphGenerator {
             }
         }
         
-        return layoutGraph;
+        return graph;
+    }
+    
+    /**
+     * Export the given graph.
+     * 
+     * @param graph a graph
+     * @param serialNr the serial number to append to file names
+     * @throws IOException if writing the graph to a file fails
+     */
+    public void exportGraph(final KNode graph, final int serialNr) throws IOException {
+        // Create a resource set
+        ResourceSet resourceSet = new ResourceSetImpl();
+         
+        // Register the default resource factory
+        resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(
+            Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
+         
+        // Create a resource for the given graph
+        String fileName = "graph" + graph.getChildren().size() + "_" + serialNr + ".kgraph";
+        URI fileURI = URI.createFileURI(new File(fileName).getAbsolutePath());
+        Resource resource = resourceSet.createResource(fileURI);
+        resource.getContents().add(graph);
+         
+        // Save the contents of the resource to the file system.
+        resource.save(Collections.EMPTY_MAP);
     }
     
     /**

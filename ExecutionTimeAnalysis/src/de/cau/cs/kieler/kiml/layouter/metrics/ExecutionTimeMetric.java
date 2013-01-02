@@ -132,7 +132,7 @@ public class ExecutionTimeMetric {
     /**
      * Warms up the layout provider and system cache by performing some dummy layouts.
      */
-    private void warmup() {
+    private void warmup() throws IOException {
         // Create a set of warmup parameters
         Parameters warmupParameters = new Parameters();
         warmupParameters.minOutEdgesPerNode = 2;
@@ -182,6 +182,11 @@ public class ExecutionTimeMetric {
                 System.out.print(".");
             }
             
+            // Export the graph using the last computed layout, if requested
+            if (parameters.exportGraphs) {
+                graphGenerator.exportGraph(layoutGraph, i + 1);
+            }
+            
             totalTime += minTime;
         }
         
@@ -222,10 +227,14 @@ public class ExecutionTimeMetric {
             throw new IllegalArgumentException("There must be at least one run per graph.");
         }
         
-        // Outgoing edges
+        // Number of edges
+        
+        if (parameters.density > 1) {
+            throw new IllegalArgumentException("The density value must be between 0 and 1.");
+        }
+        
         if (parameters.minOutEdgesPerNode > parameters.maxOutEdgesPerNode
                 || parameters.minOutEdgesPerNode < 0) {
-
             throw new IllegalArgumentException("Minimum number of outgoing edges per node must be"
                     + " non-negative and less or equal than maximum number of outgoing edges per node.");
         }
@@ -233,7 +242,6 @@ public class ExecutionTimeMetric {
         // Probabilities
         if (parameters.invertedPortProb < 0.0f || parameters.northSouthPortProb < 0.0f
                 || parameters.invertedPortProb + parameters.northSouthPortProb > 1.0f) {
-
             throw new IllegalArgumentException("Port side probabilities must be greater than or equal"
                     + " to 0.0 and must add up to at most 1.0.");
         }

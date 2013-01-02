@@ -19,6 +19,9 @@ import java.io.OutputStream;
 
 import de.cau.cs.kieler.core.properties.IPropertyHolder;
 import de.cau.cs.kieler.core.properties.MapPropertyHolder;
+import de.cau.cs.kieler.kiml.AbstractLayoutProvider;
+import de.cau.cs.kieler.kiml.options.EdgeRouting;
+import de.cau.cs.kieler.kiml.options.LayoutOptions;
 import de.cau.cs.kieler.klay.layered.LayeredLayoutProvider;
 import de.cau.cs.kieler.klay.layered.p2layers.LayeringStrategy;
 import de.cau.cs.kieler.klay.layered.properties.Properties;
@@ -47,24 +50,15 @@ public final class MetricsProgram {
     /**
      * Hidden default constructor.
      */
-    private MetricsProgram(final String[] args) {
-        // Read command-line arguments
-        Parameters parameters = null;
-        try {
-            parameters = new Parameters(args);
-        } catch (IllegalArgumentException e) {
-            printHelp(e.getMessage());
-            System.exit(1);
-        }
+    private MetricsProgram(final Parameters parameters) {
+        // Create a layout provider instance
+        AbstractLayoutProvider layoutProvider = new LayeredLayoutProvider();
         
-        // Check if only the help text is to be printed
-        if (parameters.help) {
-            printHelp(null);
-            System.exit(0);
-        }
-        
-        // Define a property setter that makes KLay Layered use the Longest Path Layerer
+        // Define a property setter for layout configuration
         IPropertyHolder propertyHolder = new MapPropertyHolder();
+        propertyHolder.setProperty(LayoutOptions.RANDOM_SEED, 0);
+        propertyHolder.setProperty(LayoutOptions.EDGE_ROUTING, EdgeRouting.ORTHOGONAL);
+//        propertyHolder.setProperty(Properties.THOROUGHNESS, 1);
         propertyHolder.setProperty(Properties.NODE_LAYERING, LayeringStrategy.LONGEST_PATH);
         
         OutputStream fileStream = null;
@@ -73,13 +67,26 @@ public final class MetricsProgram {
             String fileName = "measurement" + (System.currentTimeMillis() & TIME_MASK) + ".csv";
             fileStream = new FileOutputStream(fileName);
             
-            // Measure the KLay Layered layouter
-            ExecutionTimeMetric executionTimeMetric = new ExecutionTimeMetric(
-                    new LayeredLayoutProvider(),
-                    fileStream,
-                    parameters,
-                    propertyHolder);
-            executionTimeMetric.measure();
+            // Perform measurement
+            switch (parameters.mode) {
+            case TIME:
+                ExecutionTimeMetric executionTimeMetric = new ExecutionTimeMetric(
+                        layoutProvider,
+                        fileStream,
+                        parameters,
+                        propertyHolder);
+                executionTimeMetric.measure();
+                break;
+            case CROSSINGS:
+                EdgeCrossingsMetric edgeCrossMetric = new EdgeCrossingsMetric(
+                        layoutProvider,
+                        fileStream,
+                        parameters,
+                        propertyHolder);
+                edgeCrossMetric.measure();
+                break;
+            }
+            
         } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
@@ -99,7 +106,21 @@ public final class MetricsProgram {
      * @param args command line arguments.
      */
     public static void main(final String[] args) {
-        new MetricsProgram(args);
+        // Read command-line arguments
+        Parameters parameters = null;
+        try {
+            parameters = new Parameters(args);
+        } catch (IllegalArgumentException e) {
+            printHelp(e.getMessage());
+            System.exit(1);
+        }
+        
+        // Check if only the help text is to be printed
+        if (parameters.help) {
+            printHelp(null);
+        } else {
+            new MetricsProgram(parameters);
+        }
     }
     
     
@@ -111,7 +132,7 @@ public final class MetricsProgram {
      * 
      * @param msg message to be printed before the help text. May be {@code null}.
      */
-    private void printHelp(final String msg) {
+    private static void printHelp(final String msg) {
         if (msg != null && msg.length() > 0) {
             System.out.println(msg);
             System.out.println();
@@ -121,6 +142,8 @@ public final class MetricsProgram {
         System.out.println("-------------------------");
         System.out.println();
         System.out.println("This program accepts the following options:");
+        System.out.println(" --time     measure execution time (this is the default mode).");
+        System.out.println(" --cross    measure the number of edge crossings.");
         System.out.println(" -sd <int>  start decade. (default: 1)");
         System.out.println(" -ed <int>  end decade. (default: 2)");
         System.out.println(" -md <int>  the number of different graph sizes per decade. (default: 5)");
@@ -136,7 +159,8 @@ public final class MetricsProgram {
         System.out.println("             1. inverted port side.");
         System.out.println("             2. northern or southern port side.");
         System.out.println("            The summed probability must not exceed 1.0.");
-        System.out.println(" -h         prints this help text and ends the program.");
+        System.out.println(" -x         export all generated graphs.");
+        System.out.println(" -h         print this help text and end the program.");
         System.out.println();
         System.out.println("Metrics is brought to you by:");
         System.out.println(" - msp and cds,");
