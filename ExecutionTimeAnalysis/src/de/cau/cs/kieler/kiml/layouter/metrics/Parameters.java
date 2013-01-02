@@ -119,6 +119,21 @@ public class Parameters {
     // Variables
     
     /**
+     * Whether ports shall be created.
+     */
+    public boolean withPorts = true;
+    
+    /**
+     * Whether self-loops shall be allowed.
+     */
+    public boolean allowSelfLoops = false;
+    
+    /**
+     * Whether cycles shall be allowed.
+     */
+    public boolean allowCycles = false;
+    
+    /**
      * Whether a help text should be printed.
      */
     public boolean help = false;
@@ -157,6 +172,11 @@ public class Parameters {
      * Maximum number of outgoing edges allowed for a node.
      */
     public int maxOutEdgesPerNode = 2;
+    
+    /**
+     * Optional density value (overrides the minimum and maximum number of edges).
+     */
+    public float density = -1;
     
     /**
      * The probability for a port to become an inverted port.
@@ -243,6 +263,13 @@ public class Parameters {
                 } catch (Exception e) {
                     throw new IllegalArgumentException(
                             "Option -ex must be followed by an integer value.");
+                }
+            } else if (arg.equals("-ds")) {
+                try {
+                    density = iterator.nextFloat();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException(
+                            "Option -ds must be followed by a floating point value.");
                 }
             } else if (arg.equals("-pr")) {
                 try {

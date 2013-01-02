@@ -16,21 +16,28 @@ package de.cau.cs.kieler.kiml.layouter.metrics;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import de.cau.cs.kieler.core.alg.IKielerProgressMonitor;
 import de.cau.cs.kieler.core.alg.BasicProgressMonitor;
+import de.cau.cs.kieler.core.kgraph.KEdge;
 import de.cau.cs.kieler.core.kgraph.KNode;
+import de.cau.cs.kieler.core.math.KVector;
+import de.cau.cs.kieler.core.math.KVectorChain;
 import de.cau.cs.kieler.core.properties.IPropertyHolder;
 import de.cau.cs.kieler.kiml.AbstractLayoutProvider;
+import de.cau.cs.kieler.kiml.klayoutdata.KEdgeLayout;
 import de.cau.cs.kieler.kiml.klayoutdata.KShapeLayout;
 
 /**
- * Metric class for measurement of execution times.
+ * Metric class for measurement of the number of edge crossings.
  * 
  * @author msp
  * @author cds
  */
-public class ExecutionTimeMetric {
+public class EdgeCrossingsMetric {
    
     // CHECKSTYLEOFF MagicNumber
     
@@ -79,7 +86,7 @@ public class ExecutionTimeMetric {
      *                       otherwise be left to default values.
      * @throws IllegalArgumentException if the parameters are not valid.
      */
-    public ExecutionTimeMetric(final AbstractLayoutProvider layoutProvider,
+    public EdgeCrossingsMetric(final AbstractLayoutProvider layoutProvider,
             final OutputStream outputStream, final Parameters parameters,
             final IPropertyHolder propertyHolder) {
         
@@ -97,14 +104,12 @@ public class ExecutionTimeMetric {
     // Measurement
     
     /**
-     * Performs an execution time measurement parameterized according to the parameters
+     * Performs an edge crossings measurement parameterized according to the parameters
      * given when this class was instantiated.
      * 
      * @throws IOException if writing to the output stream fails
      */
     public void measure() throws IOException {
-        // Warmup. Warmup! ROAAAAAAAR!!!
-        warmup();
         
         try {
             int currentDecade = parameters.startDecade;
@@ -128,28 +133,9 @@ public class ExecutionTimeMetric {
             outputWriter.flush();
         }
     }
-
-    /**
-     * Warms up the layout provider and system cache by performing some dummy layouts.
-     */
-    private void warmup() {
-        // Create a set of warmup parameters
-        Parameters warmupParameters = new Parameters();
-        warmupParameters.minOutEdgesPerNode = 2;
-        warmupParameters.maxOutEdgesPerNode = 2;
-        
-        // Generate a graph
-        KNode layoutGraph = graphGenerator.generateGraph(1000, warmupParameters);
-        IKielerProgressMonitor progressMonitor = new BasicProgressMonitor();
-        
-        // Do three runs over it
-        for (int i = 0; i < 3; i++) {
-            layoutProvider.doLayout(layoutGraph, progressMonitor);
-        }
-    }
     
     /**
-     * Performs an execution time measurement for the given number of nodes.
+     * Performs an edge crossings measurement for the given number of nodes.
      * 
      * @param nodeCount number of nodes for generated graphs
      * @throws IOException if writing to the output stream fails
@@ -159,9 +145,7 @@ public class ExecutionTimeMetric {
         
         System.out.print("n = " + nodeCount + ": ");
         
-        double totalTime = 0.0;
         for (int i = 0; i < parameters.graphsPerSize; i++) {
-            System.out.print(i);
             
             // Generate a graph with the given node and edge count
             KNode layoutGraph = graphGenerator.generateGraph(nodeCount, parameters);
@@ -169,28 +153,25 @@ public class ExecutionTimeMetric {
                 layoutGraph.getData(KShapeLayout.class).copyProperties(propertyHolder);
             }
             
-            // Do a bunch of layout runs and take the one that took the least amount of time
-            double minTime = Double.MAX_VALUE;
+            // Do a bunch of layout runs and write the number of crossings for each run
             for (int j = 0; j < parameters.runsPerGraph; j++) {
-                System.gc();
                 
                 IKielerProgressMonitor progressMonitor = new BasicProgressMonitor();
                 layoutProvider.doLayout(layoutGraph, progressMonitor);
                 
-                minTime = Math.min(minTime, progressMonitor.getExecutionTime());
+                int c = computeNumberOfCrossings(layoutGraph);
                 
-                System.out.print(".");
+                outputWriter.write("," + c);
+                if (j > 0) {
+                    System.out.print(", ");
+                }
+                System.out.print(c);
             }
             
-            totalTime += minTime;
         }
         
-        // Calculate the average time taken for the graphs
-        double avgTime = totalTime / parameters.graphsPerSize;
-        outputWriter.write("," + avgTime);
-        System.out.println(" -> " + avgTime);
-        
         outputWriter.write("\n");
+        System.out.println();
     }
     
     
@@ -238,4 +219,104 @@ public class ExecutionTimeMetric {
                     + " to 0.0 and must add up to at most 1.0.");
         }
     }
+    
+    /**
+     * Returns whether two line segments have an intersection.
+     * 
+     * @param p1
+     *            start point of the first line segment
+     * @param p2
+     *            end point of the first line segment
+     * @param q1
+     *            start point of the second line segment
+     * @param q2
+     *            end point of the second line segment
+     * @return true if the lines have an intersection
+     */
+    private static boolean hasIntersection(final KVector p1, final KVector p2,
+            final KVector q1, final KVector q2) {
+        double s = (q2.y - q1.y) * (p2.x - p1.x) - (q2.x - q1.x) * (p2.y - p1.y);
+        // are the line segments parallel?
+        if (s == 0) {
+            return false;
+        }
+        double a1 = (q2.x - q1.x) * (p1.y - q1.y) - (q2.y - q1.y) * (p1.x - q1.x);
+        double a2 = (p2.x - p1.x) * (p1.y - q1.y) - (p2.y - p1.y) * (p1.x - q1.x);
+        double t1 = a1 / s;
+        double t2 = a2 / s;
+        // the line segments intersect when t1 and t2 lie in the interval (0,1)
+        return 0 < t1 && t1 < 1 && 0 < t2 && t2 < 1;
+    }
+
+    /**
+     * Computes the number of crossings between two vector chains.
+     * 
+     * @param chain1 the first vector chain
+     * @param chain2 the second vector chain
+     * @return the number of crossings
+     */
+    private static int computeNumberOfCrossings(final KVectorChain chain1, final KVectorChain chain2) {
+        int numberOfCrossings = 0;
+        Iterator<KVector> points1 = chain1.iterator();
+        KVector p1 = points1.next();
+        while (points1.hasNext()) {
+            KVector p2 = points1.next();
+            numberOfCrossings += computeNumberOfCrossings(p1, p2, chain2);
+            p1 = p2;
+        }
+        return numberOfCrossings;
+    }
+    
+    /**
+     * Computes the number of crossings of a line and a vector chain.
+     * 
+     * @param p1 start point of the line
+     * @param p2 end point of the line
+     * @param chain2 a vector chain
+     * @return the number of crossings
+     */
+    private static int computeNumberOfCrossings(final KVector p1, final KVector p2,
+            final KVectorChain chain2) {
+        int numberOfCrossings = 0;
+        Iterator<KVector> points2 = chain2.iterator();
+        KVector q1 = points2.next();
+        while (points2.hasNext()) {
+            KVector q2 = points2.next();
+            numberOfCrossings += hasIntersection(p1, p2, q1, q2) ? 1 : 0;
+            q1 = q2;
+        }
+        return numberOfCrossings;
+    }
+
+    /**
+     * Computes the number of edge crossings in the given graph.
+     * 
+     * @param parentNode parent node of the graph
+     * @return the total number of crossings
+     */
+    private int computeNumberOfCrossings(final KNode parentNode) {
+        // collect all edges
+        List<KVectorChain> chains = new ArrayList<KVectorChain>();
+        for (KNode node : parentNode.getChildren()) {
+            for (KEdge edge : node.getOutgoingEdges()) {
+                KVectorChain chain = edge.getData(KEdgeLayout.class).createVectorChain();
+                chains.add(chain);
+            }
+        }
+        
+        // count the number of crossings between all edges of the graph
+        int edgeCount = chains.size();
+        int sum = 0;
+        for (int i = 0; i < edgeCount; i++) {
+            KVectorChain chain1 = chains.get(i);
+            for (int j = i + 1; j < edgeCount; j++) {
+                KVectorChain chain2 = chains.get(j);
+                int c = computeNumberOfCrossings(chain1, chain2);
+                sum += c;
+            }
+        }
+
+        return sum;
+    }
+    
 }

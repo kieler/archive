@@ -13,14 +13,17 @@
  */
 package de.cau.cs.kieler.kiml.layouter.metrics;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import de.cau.cs.kieler.core.kgraph.KEdge;
 import de.cau.cs.kieler.core.kgraph.KLabel;
 import de.cau.cs.kieler.core.kgraph.KNode;
 import de.cau.cs.kieler.core.kgraph.KPort;
 import de.cau.cs.kieler.kiml.klayoutdata.KShapeLayout;
-import de.cau.cs.kieler.kiml.options.Direction;
 import de.cau.cs.kieler.kiml.options.LayoutOptions;
 import de.cau.cs.kieler.kiml.options.PortConstraints;
 import de.cau.cs.kieler.kiml.options.PortSide;
@@ -54,20 +57,9 @@ public final class GraphGenerator {
     // Variables
     
     /**
-     * Randomizer to determine port placements.
+     * Randomizer for graph generation.
      */
-    private Random randomizer = null;
-    
-    
-    ///////////////////////////////////////////////////////////////////////////////
-    // Constructor
-    
-    /**
-     * Creates a new instance.
-     */
-    public GraphGenerator() {
-        randomizer = new Random();
-    }
+    private Random randomizer = new Random();
     
     
     ///////////////////////////////////////////////////////////////////////////////
@@ -77,17 +69,14 @@ public final class GraphGenerator {
      * Generates a random graph of given size.
      * 
      * @param nodeCount number of nodes in the graph.
-     * @param withPorts if true, ports are generated and connected to the edges.
      * @param parameters user-supplied paramaters affecting the graph generation.
      * @return a randomly generated graph.
      */
-    public KNode generateGraph(final int nodeCount, final boolean withPorts,
-            final Parameters parameters) {
+    public KNode generateGraph(final int nodeCount, final Parameters parameters) {
         
         // Create parent node
         KNode layoutGraph = KimlUtil.createInitializedNode();
         KShapeLayout nodeLayout = layoutGraph.getData(KShapeLayout.class);
-        nodeLayout.setProperty(LayoutOptions.DIRECTION, Direction.RIGHT);
         
         // Create nodes
         KNode[] nodes = new KNode[nodeCount];
@@ -102,34 +91,68 @@ public final class GraphGenerator {
             nodeLayout = nodes[i].getData(KShapeLayout.class);
             nodeLayout.setWidth(NODE_WIDTH);
             nodeLayout.setHeight(NODE_HEIGHT);
-            nodeLayout.setProperty(LayoutOptions.FIXED_SIZE, true);
-            if (withPorts) {
+            if (parameters.withPorts) {
                 nodeLayout.setProperty(LayoutOptions.PORT_CONSTRAINTS, PortConstraints.FIXED_POS);
             }
         }
         
-        // Precalculate the difference between minimal and maximal number of outgoing edges per node
-        int edgeCountDiff = parameters.maxOutEdgesPerNode - parameters.minOutEdgesPerNode;
-        
-        // Create edges
-        for (int i = 0; i < nodeCount; i++) {
-            // Randomize the number of edgs to generate for this node
-            int edgeCount = parameters.minOutEdgesPerNode
-                    + (int) (randomizer.nextFloat() * edgeCountDiff);
+        // If the density value is not set, use the min. and max. number of outgoing edges per node
+        if (parameters.density < 0) {
+            // Precalculate the difference between minimal and maximal number of outgoing edges per node
+            int edgeCountDiff = parameters.maxOutEdgesPerNode - parameters.minOutEdgesPerNode;
             
-            for (int j = 0; j < edgeCount; j++) {
-                KEdge edge = KimlUtil.createInitializedEdge();
-                edge.setSource(nodes[i]);
-                int targetIndex = (int) (Math.random() * nodeCount);
-                edge.setTarget(nodes[targetIndex]);
-                if (withPorts) {
-                    edge.setSourcePort(createPort(nodes[i], edge, true, parameters));
-                    edge.setTargetPort(createPort(nodes[targetIndex], edge, false, parameters));
+            // Create edges
+            for (int i = 0; i < nodeCount; i++) {
+                // Randomize the number of edges to generate for this node
+                int edgeCount = parameters.minOutEdgesPerNode
+                        + (int) (randomizer.nextFloat() * edgeCountDiff);
+                
+                for (int j = 0; j < edgeCount; j++) {
+                    int targetIndex;
+                    do {
+                        targetIndex = (int) (randomizer.nextFloat() * nodeCount);
+                    } while (!parameters.allowSelfLoops && i == targetIndex
+                            || !parameters.allowCycles && reachable(nodes[targetIndex], nodes[i]));
+                    createEdge(nodes[i], nodes[targetIndex], parameters);
                 }
+            }
+            
+        } else {
+            // Determine the total number of edges from the given density
+            int edgeCount = Math.round(parameters.density * 0.5f * nodeCount * (nodeCount - 1));
+            
+            // Create edges
+            for (int j = 0; j < edgeCount; j++) {
+                int sourceIndex, targetIndex;
+                do {
+                    sourceIndex = (int) (randomizer.nextFloat() * nodeCount);
+                    targetIndex = (int) (randomizer.nextFloat() * nodeCount);
+                } while (!parameters.allowSelfLoops && sourceIndex == targetIndex
+                        || !parameters.allowCycles
+                        && reachable(nodes[targetIndex], nodes[sourceIndex]));
+                createEdge(nodes[sourceIndex], nodes[targetIndex], parameters);
             }
         }
         
         return layoutGraph;
+    }
+    
+    /**
+     * Creates an edge for the given source and target nodes.
+     * 
+     * @param sourceNode the source node.
+     * @param targetNode the target node.
+     * @param parameters user-supplied parameters affecting port generation.
+     */
+    private void createEdge(final KNode sourceNode, final KNode targetNode,
+            final Parameters parameters) {
+        KEdge edge = KimlUtil.createInitializedEdge();
+        edge.setSource(sourceNode);
+        edge.setTarget(targetNode);
+        if (parameters.withPorts) {
+            edge.setSourcePort(createPort(sourceNode, edge, true, parameters));
+            edge.setTargetPort(createPort(targetNode, edge, false, parameters));
+        }
     }
     
     /**
@@ -149,34 +172,32 @@ public final class GraphGenerator {
         KPort port = KimlUtil.createInitializedPort();
         KShapeLayout portLayout = port.getData(KShapeLayout.class);
         PortSide portSide = determinePortPlacement(parameters.invertedPortProb,
-                parameters.northSouthPortProb,
-                source);
+                parameters.northSouthPortProb, source);
         portLayout.setProperty(LayoutOptions.PORT_SIDE, portSide);
         
         switch (portSide) {
         case NORTH:
-            portLayout.setXpos((float) (Math.random() * NODE_WIDTH));
+            portLayout.setXpos(randomizer.nextFloat() * NODE_WIDTH);
             portLayout.setYpos(0.0f);
             break;
             
         case EAST:
             portLayout.setXpos(NODE_WIDTH);
-            portLayout.setYpos((float) (Math.random() * NODE_HEIGHT));
+            portLayout.setYpos(randomizer.nextFloat() * NODE_HEIGHT);
             break;
             
         case SOUTH:
-            portLayout.setXpos((float) (Math.random() * NODE_WIDTH));
+            portLayout.setXpos(randomizer.nextFloat() * NODE_WIDTH);
             portLayout.setYpos(NODE_HEIGHT);
             break;
             
         case WEST:
             portLayout.setXpos(0.0f);
-            portLayout.setYpos((float) (Math.random() * NODE_HEIGHT));
+            portLayout.setYpos(randomizer.nextFloat() * NODE_HEIGHT);
             break;
         }
         
         port.setNode(node);
-        port.getEdges().add(edge);
         
         return port;
     }
@@ -195,24 +216,58 @@ public final class GraphGenerator {
             final boolean source) {
         
         float random = randomizer.nextFloat();
-        float border = invertedSideProb;
+        float threshold = invertedSideProb;
         
-        if (random < border) {
+        if (random < threshold) {
             return source ? PortSide.WEST : PortSide.EAST;
         }
         
-        border += 0.5 * northSouthSideProb;
+        threshold += 0.5 * northSouthSideProb;
         
-        if (random < border) {
+        if (random < threshold) {
             return PortSide.NORTH;
         }
         
-        border += 0.5 * northSouthSideProb;
+        threshold += 0.5 * northSouthSideProb;
         
-        if (random < border) {
+        if (random < threshold) {
             return PortSide.SOUTH;
         }
         
         return source ? PortSide.EAST : PortSide.WEST;
     }
+    
+    /**
+     * Determine whether the given target node is reachable from the source node.
+     * 
+     * @param sourceNode the source node
+     * @param targetNode the target node
+     * @return true if the target node is reachable
+     */
+    private boolean reachable(final KNode sourceNode, final KNode targetNode) {
+        return reachable(sourceNode, targetNode, new HashSet<KNode>());
+    }
+    
+    /**
+     * Determine whether the given target node is reachable from the source node using a recursive DFS.
+     * 
+     * @param node1 the source node
+     * @param targetNode the target node
+     * @param visited set of already visited nodes
+     * @return true if the target node is reachable
+     */
+    private boolean reachable(final KNode node1, final KNode targetNode,
+            final Set<KNode> visited) {
+        visited.add(node1);
+        
+        for (KEdge outgoing : node1.getOutgoingEdges()) {
+            KNode node2 = outgoing.getTarget();
+            if (node2 == targetNode
+                    || !visited.contains(node2) && reachable(node2, targetNode, visited)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
 }

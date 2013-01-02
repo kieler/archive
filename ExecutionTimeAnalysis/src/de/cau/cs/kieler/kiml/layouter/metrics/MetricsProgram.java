@@ -17,8 +17,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import de.cau.cs.kieler.core.kgraph.KNode;
-import de.cau.cs.kieler.kiml.klayoutdata.KShapeLayout;
+import de.cau.cs.kieler.core.properties.IPropertyHolder;
+import de.cau.cs.kieler.core.properties.MapPropertyHolder;
 import de.cau.cs.kieler.klay.layered.LayeredLayoutProvider;
 import de.cau.cs.kieler.klay.layered.p2layers.LayeringStrategy;
 import de.cau.cs.kieler.klay.layered.properties.Properties;
@@ -64,15 +64,8 @@ public final class MetricsProgram {
         }
         
         // Define a property setter that makes KLay Layered use the Longest Path Layerer
-        ExecutionTimeMetric.PropertySetter layeredPropertySetter =
-            new ExecutionTimeMetric.PropertySetter() {
-            
-            public void setProperties(final KNode graph) {
-                graph.getData(KShapeLayout.class).setProperty(
-                        Properties.NODE_LAYERING,
-                        LayeringStrategy.LONGEST_PATH);
-            }
-        };
+        IPropertyHolder propertyHolder = new MapPropertyHolder();
+        propertyHolder.setProperty(Properties.NODE_LAYERING, LayeringStrategy.LONGEST_PATH);
         
         OutputStream fileStream = null;
         try {
@@ -85,7 +78,7 @@ public final class MetricsProgram {
                     new LayeredLayoutProvider(),
                     fileStream,
                     parameters,
-                    layeredPropertySetter);
+                    propertyHolder);
             executionTimeMetric.measure();
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -135,6 +128,9 @@ public final class MetricsProgram {
         System.out.println(" -gr <int>  the number of runs per graph. (default: 5)");
         System.out.println(" -em <int>  minimum number of edges to leave each node. (default: 1)");
         System.out.println(" -ex <int>  maximum number of edges to leave each node. (default: 2)");
+        System.out.println(" -ds <float>");
+        System.out.println("            density value for the number of edges; if set, this value");
+        System.out.println("            overrides the -em and -ex settings.");
         System.out.println(" -pr <float> <float> (default: 0.05 0.1)");
         System.out.println("            the probability for ports to be placed on the different sides:");
         System.out.println("             1. inverted port side.");
