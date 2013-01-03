@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.Set;
 
@@ -66,7 +67,7 @@ public final class GraphGenerator {
     /**
      * Randomizer for graph generation.
      */
-    private final Random randomizer;
+    private final Random random;
     
     /**
      * Creates a graph generator with given random seed.
@@ -74,7 +75,7 @@ public final class GraphGenerator {
      * @param randomSeed seed for random number generators.
      */
     public GraphGenerator(final int randomSeed) {
-        randomizer = new Random(randomSeed);
+        random = new Random(randomSeed);
     }
     
     
@@ -85,15 +86,21 @@ public final class GraphGenerator {
      * Generates a random graph of given size.
      * 
      * @param nodeCount number of nodes in the graph.
-     * @param parameters user-supplied paramaters affecting the graph generation.
+     * @param parameters user-supplied parameters affecting the graph generation.
      * @return a randomly generated graph.
      * @throws IOException if exporting the graph fails
      */
     public KNode generateGraph(final int nodeCount, final Parameters parameters) throws IOException {
+        // If requested, generate a proper layered graph
+        if (parameters.properLayered) {
+            // these parameters have to be ignored for the proper-layered mode
+            parameters.allowSelfLoops = true;
+            parameters.allowCycles = true;
+            return generateProperLayeredGraph(nodeCount, parameters);
+        }
         
         // Create parent node
         KNode graph = KimlUtil.createInitializedNode();
-        KShapeLayout nodeLayout = graph.getData(KShapeLayout.class);
         
         // Create nodes
         KNode[] nodes = new KNode[nodeCount];
@@ -105,7 +112,7 @@ public final class GraphGenerator {
             nodes[i].setParent(graph);
             
             // Set node properties
-            nodeLayout = nodes[i].getData(KShapeLayout.class);
+            KShapeLayout nodeLayout = nodes[i].getData(KShapeLayout.class);
             nodeLayout.setWidth(NODE_WIDTH);
             nodeLayout.setHeight(NODE_HEIGHT);
             if (parameters.withPorts) {
@@ -121,16 +128,16 @@ public final class GraphGenerator {
             // Create edges
             for (int i = 0; i < nodeCount; i++) {
                 // Randomize the number of edges to generate for this node
-                int edgeCount = parameters.minOutEdgesPerNode
-                        + (int) (randomizer.nextFloat() * edgeCountDiff);
+                int edgeCount = parameters.minOutEdgesPerNode + random.nextInt(edgeCountDiff);
                 
                 for (int j = 0; j < edgeCount; j++) {
                     int targetIndex;
+                    int attempt = 0;  // abort the edge creation process if it takes too long
                     do {
-                        targetIndex = (int) (randomizer.nextFloat() * nodeCount);
-                    } while (!parameters.allowSelfLoops && i == targetIndex
-                            || !parameters.allowCycles && reachable(nodes[targetIndex], nodes[i]));
-                    createEdge(nodes[i], nodes[targetIndex], parameters);
+                        targetIndex = random.nextInt(nodeCount);
+                        attempt++;
+                    } while (!createEdge(nodes[i], nodes[targetIndex], parameters)
+                            && attempt < 2 * nodeCount);
                 }
             }
             
@@ -141,13 +148,100 @@ public final class GraphGenerator {
             // Create edges
             for (int j = 0; j < edgeCount; j++) {
                 int sourceIndex, targetIndex;
+                int attempt = 0;  // abort the edge creation process if it takes too long
                 do {
-                    sourceIndex = (int) (randomizer.nextFloat() * nodeCount);
-                    targetIndex = (int) (randomizer.nextFloat() * nodeCount);
-                } while (!parameters.allowSelfLoops && sourceIndex == targetIndex
-                        || !parameters.allowCycles
-                        && reachable(nodes[targetIndex], nodes[sourceIndex]));
-                createEdge(nodes[sourceIndex], nodes[targetIndex], parameters);
+                    sourceIndex = random.nextInt(nodeCount);
+                    targetIndex = random.nextInt(nodeCount);
+                    attempt++;
+                } while (!createEdge(nodes[sourceIndex], nodes[targetIndex], parameters)
+                        && attempt < 2 * nodeCount);
+            }
+        }
+        
+        return graph;
+    }
+    
+    /**
+     * Generates a random proper layered graph of given size.
+     * 
+     * @param nodeCount number of nodes in the graph.
+     * @param parameters user-supplied parameters affecting the graph generation.
+     * @return a randomly generated graph.
+     * @throws IOException if exporting the graph fails
+     */
+    private KNode generateProperLayeredGraph(final int nodeCount, final Parameters parameters)
+            throws IOException {
+        // Create parent node
+        KNode graph = KimlUtil.createInitializedNode();
+        
+        // First determine the number of layers and the number of nodes in each layer
+        double meanLayerSize = Math.sqrt(nodeCount);
+        LinkedList<Integer> layerSizes = new LinkedList<Integer>();
+        int remainingNodes = nodeCount;
+        while (remainingNodes > 0) {
+            int layerSize = (int) Math.round(meanLayerSize
+                    + random.nextGaussian() * meanLayerSize * 0.4);
+            if (layerSize < 1) {
+                layerSize = 1;
+            }
+            if (layerSize > remainingNodes) {
+                layerSize = remainingNodes;
+            }
+            layerSizes.add(layerSize);
+            remainingNodes -= layerSize;
+        }
+        
+        // Create layers and nodes
+        int layerCount = layerSizes.size();
+        KNode[][] layers = new KNode[layerCount][];
+        for (int l = 0; l < layerCount; l++) {
+            layers[l] = new KNode[layerSizes.get(l)];
+            for (int i = 0; i < layers[l].length; i++) {
+                // Create a node
+                layers[l][i] = KimlUtil.createInitializedNode();
+                KLabel label = KimlUtil.createInitializedLabel(layers[l][i]);
+                label.setText("N" + i);
+                layers[l][i].setParent(graph);
+                
+                // Set node properties
+                KShapeLayout nodeLayout = layers[l][i].getData(KShapeLayout.class);
+                nodeLayout.setWidth(NODE_WIDTH);
+                nodeLayout.setHeight(NODE_HEIGHT);
+                if (parameters.withPorts) {
+                    nodeLayout.setProperty(LayoutOptions.PORT_CONSTRAINTS, PortConstraints.FIXED_POS);
+                }
+            }
+        }
+        
+        // If the density value is not set, use the min. and max. number of outgoing edges per node
+        if (parameters.density < 0) {
+            // Precalculate the difference between minimal and maximal number of outgoing edges per node
+            int edgeCountDiff = parameters.maxOutEdgesPerNode - parameters.minOutEdgesPerNode;
+            
+            // Create edges
+            for (int l = 0; l < layerCount - 1; l++) {
+                for (int i = 0; i < layers[l].length; i++) {
+                    // Randomize the number of edges to generate for this node
+                    int edgeCount = parameters.minOutEdgesPerNode + random.nextInt(edgeCountDiff);
+                    
+                    for (int j = 0; j < edgeCount; j++) {
+                        int targetIndex = random.nextInt(layers[l + 1].length);
+                        createEdge(layers[l][i], layers[l + 1][targetIndex], parameters);
+                    }
+                }
+            }
+            
+        } else {
+            // Determine the total number of edges from the given density
+            int edgeCount = Math.round(parameters.density * 0.5f * nodeCount * (nodeCount - 1));
+            
+            // Create edges
+            for (int j = 0; j < edgeCount; j++) {
+                int sourceLayer = random.nextInt(layerCount - 1);
+                int sourceIndex = random.nextInt(layers[sourceLayer].length);
+                int targetIndex = random.nextInt(layers[sourceLayer + 1].length);
+                createEdge(layers[sourceLayer][sourceIndex], layers[sourceLayer + 1][targetIndex],
+                        parameters);
             }
         }
         
@@ -185,15 +279,24 @@ public final class GraphGenerator {
      * @param sourceNode the source node.
      * @param targetNode the target node.
      * @param parameters user-supplied parameters affecting port generation.
+     * @return true if the edge was created, or false if it is not allowed
      */
-    private void createEdge(final KNode sourceNode, final KNode targetNode,
+    private boolean createEdge(final KNode sourceNode, final KNode targetNode,
             final Parameters parameters) {
-        KEdge edge = KimlUtil.createInitializedEdge();
-        edge.setSource(sourceNode);
-        edge.setTarget(targetNode);
-        if (parameters.withPorts) {
-            edge.setSourcePort(createPort(sourceNode, edge, true, parameters));
-            edge.setTargetPort(createPort(targetNode, edge, false, parameters));
+        if (!parameters.allowSelfLoops && sourceNode == targetNode
+                || !parameters.allowCycles && reachable(targetNode, sourceNode)) {
+            // the edge is not allowed -- find another one
+            return false;
+        } else {
+        
+            KEdge edge = KimlUtil.createInitializedEdge();
+            edge.setSource(sourceNode);
+            edge.setTarget(targetNode);
+            if (parameters.withPorts) {
+                edge.setSourcePort(createPort(sourceNode, edge, true, parameters));
+                edge.setTargetPort(createPort(targetNode, edge, false, parameters));
+            }
+            return true;
         }
     }
     
@@ -219,23 +322,23 @@ public final class GraphGenerator {
         
         switch (portSide) {
         case NORTH:
-            portLayout.setXpos(randomizer.nextFloat() * NODE_WIDTH);
+            portLayout.setXpos(random.nextFloat() * NODE_WIDTH);
             portLayout.setYpos(0.0f);
             break;
             
         case EAST:
             portLayout.setXpos(NODE_WIDTH);
-            portLayout.setYpos(randomizer.nextFloat() * NODE_HEIGHT);
+            portLayout.setYpos(random.nextFloat() * NODE_HEIGHT);
             break;
             
         case SOUTH:
-            portLayout.setXpos(randomizer.nextFloat() * NODE_WIDTH);
+            portLayout.setXpos(random.nextFloat() * NODE_WIDTH);
             portLayout.setYpos(NODE_HEIGHT);
             break;
             
         case WEST:
             portLayout.setXpos(0.0f);
-            portLayout.setYpos(randomizer.nextFloat() * NODE_HEIGHT);
+            portLayout.setYpos(random.nextFloat() * NODE_HEIGHT);
             break;
         }
         
@@ -257,22 +360,22 @@ public final class GraphGenerator {
     private PortSide determinePortPlacement(final float invertedSideProb, final float northSouthSideProb,
             final boolean source) {
         
-        float random = randomizer.nextFloat();
+        float r = random.nextFloat();
         float threshold = invertedSideProb;
         
-        if (random < threshold) {
+        if (r < threshold) {
             return source ? PortSide.WEST : PortSide.EAST;
         }
         
         threshold += 0.5 * northSouthSideProb;
         
-        if (random < threshold) {
+        if (r < threshold) {
             return PortSide.NORTH;
         }
         
         threshold += 0.5 * northSouthSideProb;
         
-        if (random < threshold) {
+        if (r < threshold) {
             return PortSide.SOUTH;
         }
         

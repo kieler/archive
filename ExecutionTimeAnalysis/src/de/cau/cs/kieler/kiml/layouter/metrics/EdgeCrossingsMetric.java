@@ -17,10 +17,17 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
+import de.cau.cs.kieler.core.WrappedException;
+import de.cau.cs.kieler.core.alg.IFactory;
 import de.cau.cs.kieler.core.alg.IKielerProgressMonitor;
 import de.cau.cs.kieler.core.alg.BasicProgressMonitor;
+import de.cau.cs.kieler.core.alg.InstancePool;
 import de.cau.cs.kieler.core.kgraph.KEdge;
 import de.cau.cs.kieler.core.kgraph.KNode;
 import de.cau.cs.kieler.core.math.KVector;
@@ -38,7 +45,12 @@ import de.cau.cs.kieler.kiml.klayoutdata.KShapeLayout;
  */
 public class EdgeCrossingsMetric extends AbstractMetric {
    
-    // CHECKSTYLEOFF MagicNumber    
+    // CHECKSTYLEOFF MagicNumber
+    
+    /**
+     * The layout algorithm instance pool.
+     */
+    private InstancePool<AbstractLayoutProvider> algorithmPool;
     
     ///////////////////////////////////////////////////////////////////////////////
     // Constructor
@@ -46,7 +58,7 @@ public class EdgeCrossingsMetric extends AbstractMetric {
     /**
      * Creates an execution time metric instance.
      * 
-     * @param layoutProvider the layout provider to examine
+     * @param layoutFactory the layout algorithm factory
      * @param outputStream the output stream to which measurements are written
      * @param parameters user-supplied parameters controlling the graph generation and
      *                   measurement process.
@@ -55,10 +67,11 @@ public class EdgeCrossingsMetric extends AbstractMetric {
      *                       otherwise be left to default values.
      * @throws IllegalArgumentException if the parameters are not valid.
      */
-    public EdgeCrossingsMetric(final AbstractLayoutProvider layoutProvider,
+    public EdgeCrossingsMetric(final IFactory<AbstractLayoutProvider> layoutFactory,
             final OutputStream outputStream, final Parameters parameters,
             final IPropertyHolder propertyHolder) {
-        super(layoutProvider, outputStream, parameters, propertyHolder);
+        super(outputStream, parameters, propertyHolder);
+        this.algorithmPool = new InstancePool<AbstractLayoutProvider>(layoutFactory);
     }
     
     
@@ -75,30 +88,51 @@ public class EdgeCrossingsMetric extends AbstractMetric {
         
         String startString = "n = " + nodeCount + ": ";
         System.out.print(startString);
-        int outPos = startString.length();
         
-        long crossSum = 0;
+        // multi-threaded execution: submit tasks to the executor service
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        LinkedList<Future<int[]>> futures = new LinkedList<Future<int[]>>();
         
+        int[][] allResults = new int[parameters.graphsPerSize][];
         for (int i = 0; i < parameters.graphsPerSize; i++) {
 
             // Generate a graph with the given node and edge count
-            KNode layoutGraph = graphGenerator.generateGraph(nodeCount, parameters);
+            final KNode layoutGraph = graphGenerator.generateGraph(nodeCount, parameters);
             if (propertyHolder != null) {
                 layoutGraph.getData(KShapeLayout.class).copyProperties(propertyHolder);
             }
             
-            outputWriter.write(Integer.toString(nodeCount));
+            final int[] result = new int[parameters.runsPerGraph];
+            allResults[i] = result;
+            Future<int[]> future = executorService.submit(new Runnable() {
+                public void run() {
+                    AbstractLayoutProvider layoutProvider = algorithmPool.fetch();
+                    // Do a bunch of layout runs and write the number of crossings for each run
+                    for (int j = 0; j < parameters.runsPerGraph; j++) {
+                        
+                        IKielerProgressMonitor progressMonitor = new BasicProgressMonitor();
+                        layoutProvider.doLayout(layoutGraph, progressMonitor);
+                        
+                        int c = computeNumberOfCrossings(layoutGraph);
+                        result[j] = c;
+                    }
+                    algorithmPool.release(layoutProvider);
+                }
+            }, result);
+            futures.addLast(future);
             
-            // Do a bunch of layout runs and write the number of crossings for each run
-            for (int j = 0; j < parameters.runsPerGraph; j++) {
-                
-                IKielerProgressMonitor progressMonitor = new BasicProgressMonitor();
-                layoutProvider.doLayout(layoutGraph, progressMonitor);
-                
-                int c = computeNumberOfCrossings(layoutGraph);
-                
-                outputWriter.write("," + c);
-                crossSum += c;
+            // Export the graph using the last computed layout, if requested
+            if (parameters.exportGraphs) {
+                graphGenerator.exportGraph(layoutGraph, i + 1);
+            }
+        }
+        
+        // Wait for all tasks to finish execution
+        int outPos = startString.length();
+        while (!futures.isEmpty()) {
+            try {
+                // This call waits if necessary for the computation to complete
+                futures.removeFirst().get();
                 
                 if (outPos >= OUTPUT_WIDTH) {
                     // break the line if the maximal width has been reached
@@ -107,15 +141,23 @@ public class EdgeCrossingsMetric extends AbstractMetric {
                 }
                 System.out.print('.');
                 outPos++;
-            }
-            
-            outputWriter.write("\n");
-            
-            // Export the graph using the last computed layout, if requested
-            if (parameters.exportGraphs) {
-                graphGenerator.exportGraph(layoutGraph, i + 1);
+            } catch (Exception exception) {
+                throw new WrappedException(exception);
             }
         }
+        
+        // Output the gathered results
+        long crossSum = 0;
+        for (int i = 0; i < parameters.graphsPerSize; i++) {
+            outputWriter.write(Integer.toString(nodeCount));
+            for (int j = 0; j < parameters.runsPerGraph; j++) {
+                int c = allResults[i][j];
+                outputWriter.write("," + c);
+                crossSum += c;
+            }
+            outputWriter.write("\n");
+        }
+        
         long averageCross = crossSum / (parameters.graphsPerSize * parameters.runsPerGraph);
         System.out.println(" -> " + averageCross);
     }

@@ -17,10 +17,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import de.cau.cs.kieler.core.alg.DefaultFactory;
+import de.cau.cs.kieler.core.alg.IFactory;
 import de.cau.cs.kieler.core.properties.IPropertyHolder;
 import de.cau.cs.kieler.core.properties.MapPropertyHolder;
 import de.cau.cs.kieler.kiml.AbstractLayoutProvider;
-import de.cau.cs.kieler.kiml.options.EdgeRouting;
 import de.cau.cs.kieler.kiml.options.LayoutOptions;
 import de.cau.cs.kieler.klay.layered.LayeredLayoutProvider;
 import de.cau.cs.kieler.klay.layered.p3order.LayerSweepCrossingMinimizer;
@@ -50,14 +51,13 @@ public final class MetricsProgram {
      * Hidden default constructor.
      */
     private MetricsProgram(final Parameters parameters) {
-        // Create a layout provider instance
-        AbstractLayoutProvider layoutProvider = new LayeredLayoutProvider();
+        // Create a layout provider factory
+        IFactory<AbstractLayoutProvider> layoutProvider = new DefaultFactory<AbstractLayoutProvider>(
+                LayeredLayoutProvider.class);
         
         // Define a property setter for layout configuration
         IPropertyHolder propertyHolder = new MapPropertyHolder();
         propertyHolder.setProperty(LayoutOptions.RANDOM_SEED, 0);
-        propertyHolder.setProperty(LayoutOptions.EDGE_ROUTING, EdgeRouting.ORTHOGONAL);
-        propertyHolder.setProperty(LayerSweepCrossingMinimizer.DISTRIBUTION, 0);
         
         OutputStream fileStream = null;
         try {

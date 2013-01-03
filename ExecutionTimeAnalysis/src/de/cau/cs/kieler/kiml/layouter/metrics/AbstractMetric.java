@@ -18,7 +18,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import de.cau.cs.kieler.core.properties.IPropertyHolder;
-import de.cau.cs.kieler.kiml.AbstractLayoutProvider;
 
 /**
  * An abstract metric to be implemented by subclasses.
@@ -46,11 +45,6 @@ public abstract class AbstractMetric {
     protected GraphGenerator graphGenerator;
     
     /**
-     * The layout provider.
-     */
-    protected AbstractLayoutProvider layoutProvider;
-    
-    /**
      * An optional class that can set additional properties on generated random graphs.
      */
     protected IPropertyHolder propertyHolder;
@@ -58,7 +52,6 @@ public abstract class AbstractMetric {
     /**
      * Creates a metric instance.
      * 
-     * @param layoutProvider the layout provider to examine
      * @param outputStream the output stream to which measurements are written
      * @param parameters user-supplied parameters controlling the graph generation and
      *                   measurement process.
@@ -67,10 +60,8 @@ public abstract class AbstractMetric {
      *                       otherwise be left to default values.
      * @throws IllegalArgumentException if the parameters are not valid.
      */
-    public AbstractMetric(final AbstractLayoutProvider layoutProvider,
-            final OutputStream outputStream, final Parameters parameters,
+    public AbstractMetric(final OutputStream outputStream, final Parameters parameters,
             final IPropertyHolder propertyHolder) {
-        this.layoutProvider = layoutProvider;
         this.outputWriter = new OutputStreamWriter(outputStream);
         this.parameters = parameters;
         this.propertyHolder = propertyHolder;

@@ -16,6 +16,7 @@ package de.cau.cs.kieler.kiml.layouter.metrics;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import de.cau.cs.kieler.core.alg.IFactory;
 import de.cau.cs.kieler.core.alg.IKielerProgressMonitor;
 import de.cau.cs.kieler.core.alg.BasicProgressMonitor;
 import de.cau.cs.kieler.core.kgraph.KNode;
@@ -31,7 +32,10 @@ import de.cau.cs.kieler.kiml.klayoutdata.KShapeLayout;
  */
 public class ExecutionTimeMetric extends AbstractMetric {
    
-    // CHECKSTYLEOFF MagicNumber    
+    // CHECKSTYLEOFF MagicNumber
+    
+    /** This metric uses exactly one layout provider instance for measuring execution time. */
+    private AbstractLayoutProvider layoutProvider;
     
     ///////////////////////////////////////////////////////////////////////////////
     // Constructor
@@ -39,7 +43,7 @@ public class ExecutionTimeMetric extends AbstractMetric {
     /**
      * Creates an execution time metric instance.
      * 
-     * @param layoutProvider the layout provider to examine
+     * @param layoutFactory the layout algorithm factory
      * @param outputStream the output stream to which measurements are written
      * @param parameters user-supplied parameters controlling the graph generation and
      *                   measurement process.
@@ -48,10 +52,11 @@ public class ExecutionTimeMetric extends AbstractMetric {
      *                       otherwise be left to default values.
      * @throws IllegalArgumentException if the parameters are not valid.
      */
-    public ExecutionTimeMetric(final AbstractLayoutProvider layoutProvider,
+    public ExecutionTimeMetric(final IFactory<AbstractLayoutProvider> layoutFactory,
             final OutputStream outputStream, final Parameters parameters,
             final IPropertyHolder propertyHolder) {
-        super(layoutProvider, outputStream, parameters, propertyHolder);
+        super(outputStream, parameters, propertyHolder);
+        this.layoutProvider = layoutFactory.create();
     }
     
     

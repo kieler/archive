@@ -152,6 +152,11 @@ public class Parameters {
     public boolean allowCycles = false;
     
     /**
+     * Whether only proper layered graphs shall be created.
+     */
+    public boolean properLayered = false;
+    
+    /**
      * Whether a linear scale shall be used.
      */
     public boolean linearScale = false;
