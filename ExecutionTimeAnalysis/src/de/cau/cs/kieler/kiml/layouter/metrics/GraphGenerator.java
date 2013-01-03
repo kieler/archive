@@ -66,7 +66,16 @@ public final class GraphGenerator {
     /**
      * Randomizer for graph generation.
      */
-    private Random randomizer = new Random();
+    private final Random randomizer;
+    
+    /**
+     * Creates a graph generator with given random seed.
+     * 
+     * @param randomSeed seed for random number generators.
+     */
+    public GraphGenerator(final int randomSeed) {
+        randomizer = new Random(randomSeed);
+    }
     
     
     ///////////////////////////////////////////////////////////////////////////////

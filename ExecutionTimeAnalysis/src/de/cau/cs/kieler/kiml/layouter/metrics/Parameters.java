@@ -152,6 +152,11 @@ public class Parameters {
     public boolean allowCycles = false;
     
     /**
+     * Whether a linear scale shall be used.
+     */
+    public boolean linearScale = false;
+    
+    /**
      * Whether a help text should be printed.
      */
     public boolean help = false;
@@ -239,6 +244,8 @@ public class Parameters {
                 help = true;
             } else if (arg.equals("-x")) {
                 exportGraphs = true;
+            } else if (arg.equals("-ln")) {
+                linearScale = true;
             } else if (arg.equals("-sd")) {
                 try {
                     startDecade = iterator.nextInt();

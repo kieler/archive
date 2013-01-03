@@ -15,7 +15,6 @@ package de.cau.cs.kieler.kiml.layouter.metrics;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 
 import de.cau.cs.kieler.core.alg.IKielerProgressMonitor;
 import de.cau.cs.kieler.core.alg.BasicProgressMonitor;
@@ -30,39 +29,9 @@ import de.cau.cs.kieler.kiml.klayoutdata.KShapeLayout;
  * @author msp
  * @author cds
  */
-public class ExecutionTimeMetric {
+public class ExecutionTimeMetric extends AbstractMetric {
    
-    // CHECKSTYLEOFF MagicNumber
-    
-    
-    ///////////////////////////////////////////////////////////////////////////////
-    // Variables
-    
-    /**
-     * The layout provider.
-     */
-    private AbstractLayoutProvider layoutProvider;
-    
-    /**
-     * The output stream writer.
-     */
-    private OutputStreamWriter outputWriter;
-    
-    /**
-     * The parameters.
-     */
-    private Parameters parameters;
-    
-    /**
-     * An optional class that can set additional properties on generated random graphs.
-     */
-    private IPropertyHolder propertyHolder;
-    
-    /**
-     * Generator used to generate random graphs.
-     */
-    private GraphGenerator graphGenerator;
-    
+    // CHECKSTYLEOFF MagicNumber    
     
     ///////////////////////////////////////////////////////////////////////////////
     // Constructor
@@ -82,57 +51,18 @@ public class ExecutionTimeMetric {
     public ExecutionTimeMetric(final AbstractLayoutProvider layoutProvider,
             final OutputStream outputStream, final Parameters parameters,
             final IPropertyHolder propertyHolder) {
-        
-        this.layoutProvider = layoutProvider;
-        this.outputWriter = new OutputStreamWriter(outputStream);
-        this.parameters = parameters;
-        this.propertyHolder = propertyHolder;
-        this.graphGenerator = new GraphGenerator();
-        
-        validateParameters();
+        super(layoutProvider, outputStream, parameters, propertyHolder);
     }
     
     
     ///////////////////////////////////////////////////////////////////////////////
     // Measurement
-    
-    /**
-     * Performs an execution time measurement parameterized according to the parameters
-     * given when this class was instantiated.
-     * 
-     * @throws IOException if writing to the output stream fails
-     */
-    public void measure() throws IOException {
-        // Warmup. Warmup! ROAAAAAAAR!!!
-        warmup();
-        
-        try {
-            int currentDecade = parameters.startDecade;
-            double currentSize = 1;
-            for (int d = 0; d < parameters.startDecade; d++) {
-                currentSize *= 10;
-            }
-            
-            double incFactor = Math.pow(10, 1.0 / parameters.graphSizesPerDecade);
-            
-            while (currentDecade < parameters.endDecade) {
-                for (int i = 0; i < parameters.graphSizesPerDecade; i++) {
-                    doGraphSizeMeasurement((int) Math.round(currentSize));
-                    currentSize *= incFactor;
-                }
-                currentDecade++;
-            }
-            
-            doGraphSizeMeasurement((int) Math.round(currentSize));
-        } finally {
-            outputWriter.flush();
-        }
-    }
 
     /**
-     * Warms up the layout provider and system cache by performing some dummy layouts.
+     * {@inheritDoc}
      */
-    private void warmup() throws IOException {
+    @Override
+    protected void warmup() throws IOException {
         // Create a set of warmup parameters
         Parameters warmupParameters = new Parameters();
         warmupParameters.minOutEdgesPerNode = 2;
@@ -149,12 +79,10 @@ public class ExecutionTimeMetric {
     }
     
     /**
-     * Performs an execution time measurement for the given number of nodes.
-     * 
-     * @param nodeCount number of nodes for generated graphs
-     * @throws IOException if writing to the output stream fails
+     * {@inheritDoc}
      */
-    private void doGraphSizeMeasurement(final int nodeCount) throws IOException {
+    @Override
+    protected void doGraphSizeMeasurement(final int nodeCount) throws IOException {
         outputWriter.write(Integer.toString(nodeCount));
         
         System.out.print("n = " + nodeCount + ": ");
@@ -198,52 +126,4 @@ public class ExecutionTimeMetric {
         outputWriter.write("\n");
     }
     
-    
-    ///////////////////////////////////////////////////////////////////////////////
-    // Utility Methods
-    
-    /**
-     * Validates the parameters and throws an exception if something's not right.
-     * 
-     * @throws IllegalArgumentException if the parameters are not valid.
-     */
-    private void validateParameters() {
-        // Start and end decade
-        if (parameters.startDecade > parameters.endDecade || parameters.startDecade < 0) {
-            throw new IllegalArgumentException("Start decade must be non-negative"
-                    + " and less or equal than end decade.");
-        }
-        
-        // Graph sizes and runs
-        if (parameters.graphSizesPerDecade < 1) {
-            throw new IllegalArgumentException("There must be at least one graph size per decade.");
-        }
-
-        if (parameters.graphsPerSize < 1) {
-            throw new IllegalArgumentException("There must be at least one graph per size.");
-        }
-
-        if (parameters.runsPerGraph < 1) {
-            throw new IllegalArgumentException("There must be at least one run per graph.");
-        }
-        
-        // Number of edges
-        
-        if (parameters.density > 1) {
-            throw new IllegalArgumentException("The density value must be between 0 and 1.");
-        }
-        
-        if (parameters.minOutEdgesPerNode > parameters.maxOutEdgesPerNode
-                || parameters.minOutEdgesPerNode < 0) {
-            throw new IllegalArgumentException("Minimum number of outgoing edges per node must be"
-                    + " non-negative and less or equal than maximum number of outgoing edges per node.");
-        }
-        
-        // Probabilities
-        if (parameters.invertedPortProb < 0.0f || parameters.northSouthPortProb < 0.0f
-                || parameters.invertedPortProb + parameters.northSouthPortProb > 1.0f) {
-            throw new IllegalArgumentException("Port side probabilities must be greater than or equal"
-                    + " to 0.0 and must add up to at most 1.0.");
-        }
-    }
 }

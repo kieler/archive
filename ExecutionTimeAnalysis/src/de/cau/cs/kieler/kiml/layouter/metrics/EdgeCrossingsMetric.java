@@ -15,7 +15,6 @@ package de.cau.cs.kieler.kiml.layouter.metrics;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -37,39 +36,9 @@ import de.cau.cs.kieler.kiml.klayoutdata.KShapeLayout;
  * @author msp
  * @author cds
  */
-public class EdgeCrossingsMetric {
+public class EdgeCrossingsMetric extends AbstractMetric {
    
-    // CHECKSTYLEOFF MagicNumber
-    
-    
-    ///////////////////////////////////////////////////////////////////////////////
-    // Variables
-    
-    /**
-     * The layout provider.
-     */
-    private AbstractLayoutProvider layoutProvider;
-    
-    /**
-     * The output stream writer.
-     */
-    private OutputStreamWriter outputWriter;
-    
-    /**
-     * The parameters.
-     */
-    private Parameters parameters;
-    
-    /**
-     * An optional class that can set additional properties on generated random graphs.
-     */
-    private IPropertyHolder propertyHolder;
-    
-    /**
-     * Generator used to generate random graphs.
-     */
-    private GraphGenerator graphGenerator;
-    
+    // CHECKSTYLEOFF MagicNumber    
     
     ///////////////////////////////////////////////////////////////////////////////
     // Constructor
@@ -89,69 +58,36 @@ public class EdgeCrossingsMetric {
     public EdgeCrossingsMetric(final AbstractLayoutProvider layoutProvider,
             final OutputStream outputStream, final Parameters parameters,
             final IPropertyHolder propertyHolder) {
-        
-        this.layoutProvider = layoutProvider;
-        this.outputWriter = new OutputStreamWriter(outputStream);
-        this.parameters = parameters;
-        this.propertyHolder = propertyHolder;
-        this.graphGenerator = new GraphGenerator();
-        
-        validateParameters();
+        super(layoutProvider, outputStream, parameters, propertyHolder);
     }
     
     
     ///////////////////////////////////////////////////////////////////////////////
     // Measurement
     
-    /**
-     * Performs an edge crossings measurement parameterized according to the parameters
-     * given when this class was instantiated.
-     * 
-     * @throws IOException if writing to the output stream fails
-     */
-    public void measure() throws IOException {
-        
-        try {
-            int currentDecade = parameters.startDecade;
-            double currentSize = 1;
-            for (int d = 0; d < parameters.startDecade; d++) {
-                currentSize *= 10;
-            }
-            
-            double incFactor = Math.pow(10, 1.0 / parameters.graphSizesPerDecade);
-            
-            while (currentDecade < parameters.endDecade) {
-                for (int i = 0; i < parameters.graphSizesPerDecade; i++) {
-                    doGraphSizeMeasurement((int) Math.round(currentSize));
-                    currentSize *= incFactor;
-                }
-                currentDecade++;
-            }
-            
-            doGraphSizeMeasurement((int) Math.round(currentSize));
-        } finally {
-            outputWriter.flush();
-        }
-    }
+    private static final int OUTPUT_WIDTH = 150;
     
     /**
-     * Performs an edge crossings measurement for the given number of nodes.
-     * 
-     * @param nodeCount number of nodes for generated graphs
-     * @throws IOException if writing to the output stream fails
+     * {@inheritDoc}
      */
-    private void doGraphSizeMeasurement(final int nodeCount) throws IOException {
-        outputWriter.write(Integer.toString(nodeCount));
+    @Override
+    protected void doGraphSizeMeasurement(final int nodeCount) throws IOException {
         
-        System.out.print("n = " + nodeCount + ": ");
+        String startString = "n = " + nodeCount + ": ";
+        System.out.print(startString);
+        int outPos = startString.length();
+        
+        long crossSum = 0;
         
         for (int i = 0; i < parameters.graphsPerSize; i++) {
-            
+
             // Generate a graph with the given node and edge count
             KNode layoutGraph = graphGenerator.generateGraph(nodeCount, parameters);
             if (propertyHolder != null) {
                 layoutGraph.getData(KShapeLayout.class).copyProperties(propertyHolder);
             }
+            
+            outputWriter.write(Integer.toString(nodeCount));
             
             // Do a bunch of layout runs and write the number of crossings for each run
             for (int j = 0; j < parameters.runsPerGraph; j++) {
@@ -162,70 +98,31 @@ public class EdgeCrossingsMetric {
                 int c = computeNumberOfCrossings(layoutGraph);
                 
                 outputWriter.write("," + c);
-                if (j > 0) {
-                    System.out.print(", ");
+                crossSum += c;
+                
+                if (outPos >= OUTPUT_WIDTH) {
+                    // break the line if the maximal width has been reached
+                    System.out.println();
+                    outPos = 0;
                 }
-                System.out.print(c);
+                System.out.print('.');
+                outPos++;
             }
+            
+            outputWriter.write("\n");
             
             // Export the graph using the last computed layout, if requested
             if (parameters.exportGraphs) {
                 graphGenerator.exportGraph(layoutGraph, i + 1);
             }
         }
-        
-        outputWriter.write("\n");
-        System.out.println();
+        long averageCross = crossSum / (parameters.graphsPerSize * parameters.runsPerGraph);
+        System.out.println(" -> " + averageCross);
     }
     
     
     ///////////////////////////////////////////////////////////////////////////////
     // Utility Methods
-    
-    /**
-     * Validates the parameters and throws an exception if something's not right.
-     * 
-     * @throws IllegalArgumentException if the parameters are not valid.
-     */
-    private void validateParameters() {
-        // Start and end decade
-        if (parameters.startDecade > parameters.endDecade || parameters.startDecade < 0) {
-            throw new IllegalArgumentException("Start decade must be non-negative"
-                    + " and less or equal than end decade.");
-        }
-        
-        // Graph sizes and runs
-        if (parameters.graphSizesPerDecade < 1) {
-            throw new IllegalArgumentException("There must be at least one graph size per decade.");
-        }
-
-        if (parameters.graphsPerSize < 1) {
-            throw new IllegalArgumentException("There must be at least one graph per size.");
-        }
-
-        if (parameters.runsPerGraph < 1) {
-            throw new IllegalArgumentException("There must be at least one run per graph.");
-        }
-        
-        // Number of edges
-        
-        if (parameters.density > 1) {
-            throw new IllegalArgumentException("The density value must be between 0 and 1.");
-        }
-        
-        if (parameters.minOutEdgesPerNode > parameters.maxOutEdgesPerNode
-                || parameters.minOutEdgesPerNode < 0) {
-            throw new IllegalArgumentException("Minimum number of outgoing edges per node must be"
-                    + " non-negative and less or equal than maximum number of outgoing edges per node.");
-        }
-        
-        // Probabilities
-        if (parameters.invertedPortProb < 0.0f || parameters.northSouthPortProb < 0.0f
-                || parameters.invertedPortProb + parameters.northSouthPortProb > 1.0f) {
-            throw new IllegalArgumentException("Port side probabilities must be greater than or equal"
-                    + " to 0.0 and must add up to at most 1.0.");
-        }
-    }
     
     /**
      * Returns whether two line segments have an intersection.

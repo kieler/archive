@@ -23,8 +23,7 @@ import de.cau.cs.kieler.kiml.AbstractLayoutProvider;
 import de.cau.cs.kieler.kiml.options.EdgeRouting;
 import de.cau.cs.kieler.kiml.options.LayoutOptions;
 import de.cau.cs.kieler.klay.layered.LayeredLayoutProvider;
-import de.cau.cs.kieler.klay.layered.p2layers.LayeringStrategy;
-import de.cau.cs.kieler.klay.layered.properties.Properties;
+import de.cau.cs.kieler.klay.layered.p3order.LayerSweepCrossingMinimizer;
 
 /**
  * Main class of the layouter metrics program. This program measures the performance
@@ -58,8 +57,7 @@ public final class MetricsProgram {
         IPropertyHolder propertyHolder = new MapPropertyHolder();
         propertyHolder.setProperty(LayoutOptions.RANDOM_SEED, 0);
         propertyHolder.setProperty(LayoutOptions.EDGE_ROUTING, EdgeRouting.ORTHOGONAL);
-//        propertyHolder.setProperty(Properties.THOROUGHNESS, 1);
-        propertyHolder.setProperty(Properties.NODE_LAYERING, LayeringStrategy.LONGEST_PATH);
+        propertyHolder.setProperty(LayerSweepCrossingMinimizer.DISTRIBUTION, 0);
         
         OutputStream fileStream = null;
         try {
@@ -68,24 +66,20 @@ public final class MetricsProgram {
             fileStream = new FileOutputStream(fileName);
             
             // Perform measurement
+            AbstractMetric metric;
             switch (parameters.mode) {
             case TIME:
-                ExecutionTimeMetric executionTimeMetric = new ExecutionTimeMetric(
-                        layoutProvider,
-                        fileStream,
-                        parameters,
+                metric = new ExecutionTimeMetric(layoutProvider, fileStream, parameters,
                         propertyHolder);
-                executionTimeMetric.measure();
                 break;
             case CROSSINGS:
-                EdgeCrossingsMetric edgeCrossMetric = new EdgeCrossingsMetric(
-                        layoutProvider,
-                        fileStream,
-                        parameters,
+                metric = new EdgeCrossingsMetric(layoutProvider, fileStream, parameters,
                         propertyHolder);
-                edgeCrossMetric.measure();
                 break;
+            default:
+                throw new UnsupportedOperationException("The given mode is not supported.");
             }
+            metric.measure();
             
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -144,6 +138,7 @@ public final class MetricsProgram {
         System.out.println("This program accepts the following options:");
         System.out.println(" --time     measure execution time (this is the default mode).");
         System.out.println(" --cross    measure the number of edge crossings.");
+        System.out.println(" -ln        use a linear scale instead of a logarithmic one.");
         System.out.println(" -sd <int>  start decade. (default: 1)");
         System.out.println(" -ed <int>  end decade. (default: 2)");
         System.out.println(" -md <int>  the number of different graph sizes per decade. (default: 5)");
