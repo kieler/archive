@@ -6,9 +6,17 @@
    <feature url="features/org.ptolemy_8.1.0.qualifier.jar" id="org.ptolemy.feature" version="8.1.0.qualifier">
       <category name="ptolemy"/>
    </feature>
+   <feature url="features/org.ptolemy.source_8.1.0.qualifier.jar" id="org.ptolemy.feature.source" version="8.1.0.qualifier">
+      <category name="ptolemy-dev"/>
+   </feature>
    <category-def name="ptolemy" label="KIELER Ptolemy Libraries">
       <description>
         Provides the Ptolemy tool wrapped into an Eclipse plug-in to be used as a library.
+      </description>
+   </category-def>
+   <category-def name="ptolemy-dev" label="KIELER Ptolemy Libraries (Development)">
+      <description>
+        Provides the Ptolemy tool wrapped into an Eclipse plug-in to be used as a library. (Sources)
       </description>
    </category-def>
 </site>
