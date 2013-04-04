@@ -33,14 +33,26 @@ COPYRIGHTENDKEY
    </license>
 
    <url>
-      <update label="PtolemyII" url="http://rtsys.informatik.uni-kiel.de/~kieler/updatesite/ptolemy"/>
+      <update label="KIELER Ptolemy Libraries" url="http://rtsys.informatik.uni-kiel.de/~kieler/updatesite/nightly-ptolemy"/>
       <discovery label="Ptolemy  Project Home Page" url="http://ptolemy.eecs.berkeley.edu/"/>
    </url>
+
+   <requires>
+      <import feature="org.eclipse.emf" version="2.6.0" match="greaterOrEqual"/>
+   </requires>
 
    <plugin
          id="org.ptolemy"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="org.ptolemy.moml"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 
 </feature>
