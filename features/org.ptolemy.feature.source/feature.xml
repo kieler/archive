@@ -33,7 +33,7 @@ COPYRIGHTENDKEY
    </license>
 
    <url>
-      <update label="KIELER Ptolemy Libraries" url="http://rtsys.informatik.uni-kiel.de/~kieler/updatesite/nightly-ptolemy"/>
+      <update label="KIELER Ptolemy Libraries" url="http://rtsys.informatik.uni-kiel.de/~kieler/updatesite/ptolemy"/>
       <discovery label="Ptolemy Project Home Page" url="http://ptolemy.eecs.berkeley.edu/"/>
    </url>
 
