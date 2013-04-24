@@ -48,6 +48,12 @@ a:visited {
     text-decoration: line-through;
 }
 
+.ratingLink {
+    font-size: large;
+    font-weight: bold;
+    margin: 1em;
+}
+
 
 /* NAVIGATION BAR */
 
