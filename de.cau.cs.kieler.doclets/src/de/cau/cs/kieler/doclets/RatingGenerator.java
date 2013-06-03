@@ -116,7 +116,8 @@ public class RatingGenerator {
      * @return {@code true} if the package should be included in the documentation.
      */
     private boolean isPackageOfInterest(final String packageName) {
-        return packageName.startsWith(RatingDocletConstants.PROJECT_PREFIX);
+        return packageName.startsWith(RatingDocletConstants.PROJECT_PREFIX)
+                && !packageName.contains(".test");
     }
 
     /**
