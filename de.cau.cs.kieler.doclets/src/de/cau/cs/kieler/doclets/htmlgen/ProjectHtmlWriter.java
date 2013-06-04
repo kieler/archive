@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
+import de.cau.cs.kieler.doclets.UmbrellaProject;
 import de.cau.cs.kieler.doclets.model.Plugin;
 import de.cau.cs.kieler.doclets.model.Project;
 
@@ -29,6 +30,16 @@ import de.cau.cs.kieler.doclets.model.Project;
  * @author cds
  */
 public class ProjectHtmlWriter extends BasicHtmlWriter {
+
+    /**
+     * Create a new HTML writer for the given umbrella project.
+     * 
+     * @param umbrellaProject the KIELER umbrella project this rating site is being generated for.
+     */
+    public ProjectHtmlWriter(final UmbrellaProject umbrellaProject) {
+        super(umbrellaProject);
+    }
+
     
     /**
      * Generates the project pages.

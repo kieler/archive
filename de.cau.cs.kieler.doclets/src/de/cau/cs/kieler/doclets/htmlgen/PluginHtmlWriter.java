@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 import com.sun.javadoc.PackageDoc;
 
 import de.cau.cs.kieler.doclets.RatingDocletConstants;
+import de.cau.cs.kieler.doclets.UmbrellaProject;
 import de.cau.cs.kieler.doclets.model.ClassItem;
 import de.cau.cs.kieler.doclets.model.Plugin;
 import de.cau.cs.kieler.doclets.model.Project;
@@ -36,6 +37,16 @@ import de.cau.cs.kieler.doclets.model.Project;
  */
 public class PluginHtmlWriter extends BasicHtmlWriter {
     
+    /**
+     * Create a new HTML writer for the given umbrella project.
+     * 
+     * @param umbrellaProject the KIELER umbrella project this rating site is being generated for.
+     */
+    public PluginHtmlWriter(final UmbrellaProject umbrellaProject) {
+        super(umbrellaProject);
+    }
+    
+
     /**
      * Generates the plugin pages.
      * 
@@ -260,6 +271,7 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
      * @return link linking to the class, but only the opening tag.
      */
     private String linkifyClassName(final Plugin plugin, final ClassItem clazz) {
+        
         /* We assume the path to look like the following:
          * 
          *   ...../kieler_dir/{plugins | standalone}/plugin-dir/...
@@ -279,7 +291,7 @@ public class PluginHtmlWriter extends BasicHtmlWriter {
         int containingDirIndex = path.substring(0, pluginNameIndex - 1).lastIndexOf(File.separator);
         
         // Generate URL
-        return "<a href='" + RatingDocletConstants.SCM_PATH
+        return "<a href='" + RatingDocletConstants.SCM_PATHS.get(getUmbrellaProject())
                 + path.substring(containingDirIndex + 1)
                 + RatingDocletConstants.SCM_ARGS + "'>";
     }

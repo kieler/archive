@@ -32,6 +32,9 @@ public class RatingDoclet extends Doclet {
     /** command line option for destination folder. */
     private static final String DESTINATION_OPTION = "-d";
     
+    /** command line option for KIELER project to generate code ratings for. */
+    private static final String PROJECT_OPTION = "-p";
+    
     /**
      * Generates documentation for the given root.
      * 
@@ -39,20 +42,37 @@ public class RatingDoclet extends Doclet {
      * @return true on success
      */
     public static boolean start(final RootDoc rootDoc) {
+        String destination = ".";
+        UmbrellaProject umbrellaProject = null;
+        
         // read command line options
         String[][] options = rootDoc.options();
-        String destination = ".";
         for (int i = 0; i < options.length; i++) {
             String[] option = options[i];
-            if (option.length == 2 && DESTINATION_OPTION.equals(option[0]) && option[1].length() > 0) {
-                destination = option[1];
+            
+            if (DESTINATION_OPTION.equals(option[0])) {
+                // we require an option value that specifies the destination folder
+                if (option.length == 2 && !option[1].isEmpty()) {
+                    destination = option[1];
+                } else {
+                    throw new RuntimeException("no value specified for parameter '"
+                            + DESTINATION_OPTION + "'.");
+                }
+            } else if (PROJECT_OPTION.equals(option[0])) {
+                // we require an option value that specifies the project
+                if (option.length == 2 && !option[1].isEmpty()) {
+                    umbrellaProject = UmbrellaProject.valueOf(option[1]);
+                } else {
+                    throw new RuntimeException("no value specified for parameter '"
+                            + PROJECT_OPTION + "'");
+                }
             }
         }
         
         // Generate the rating documentation
         RatingGenerator generator = new RatingGenerator();
         try {
-            generator.generateRatings(rootDoc, destination);
+            generator.generateRatings(umbrellaProject, rootDoc, destination);
         } catch (Throwable exception) {
             // Build a proper exception message
             StringBuilder message = new StringBuilder("Error producing rating documentation.\n");
@@ -101,6 +121,8 @@ public class RatingDoclet extends Doclet {
      */
     public static int optionLength(final String option) {
         if (DESTINATION_OPTION.equals(option)) {
+            return 2;
+        } else if (PROJECT_OPTION.equals(option)) {
             return 2;
         } else {
             return 0;

@@ -51,13 +51,16 @@ public class RatingGenerator {
     /**
      * Generates the rating HTML pages.
      * 
+     * @param umbrellaProject the KIELER umbrella project that we want to generate code ratings for.
      * @param rootDoc the root documentation object containing everything to generate rating
      *                documentation for.
      * @param destination the folder to place the generated documentation in.
      * @throws IOException if something goes wrong. This is an internal tool, so we won't care about
      *                   robustness too much...
      */
-    public void generateRatings(final RootDoc rootDoc, final String destination) throws IOException {
+    public void generateRatings(final UmbrellaProject umbrellaProject, final RootDoc rootDoc,
+            final String destination) throws IOException {
+        
         // Create destination folder
         File destinationFolder = new File(destination);
         destinationFolder.mkdirs();
@@ -74,9 +77,9 @@ public class RatingGenerator {
         new RatingImageGenerator().generateRatingGraphs(projects, destinationFolder);
         
         // Generate HTML files
-        new OverviewHtmlWriter().generateOverviewPage(projects, destinationFolder);
-        new ProjectHtmlWriter().generateProjectPages(projects, destinationFolder);
-        new PluginHtmlWriter().generatePluginPages(projects, destinationFolder);
+        new OverviewHtmlWriter(umbrellaProject).generateOverviewPage(projects, destinationFolder);
+        new ProjectHtmlWriter(umbrellaProject).generateProjectPages(projects, destinationFolder);
+        new PluginHtmlWriter(umbrellaProject).generatePluginPages(projects, destinationFolder);
     }
 
     

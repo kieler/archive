@@ -13,6 +13,9 @@
  */
 package de.cau.cs.kieler.doclets;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 /**
  * Various constant values used by the doclet.
  * 
@@ -72,8 +75,8 @@ public final class RatingDocletConstants {
      * a slash. The SCM might need additional arguments to be appended to the path, which are defined
      * in {@link #SCM_ARGS}.
      */
-    public static final String SCM_PATH =
-            "http://rtsys.informatik.uni-kiel.de/fisheye/browse/~br=master,r=HEAD/kieler/";
+    public static final Map<UmbrellaProject, String> SCM_PATHS =
+            new EnumMap<UmbrellaProject, String>(UmbrellaProject.class);
     
     /**
      * Additional arguments to be appended to the URL of the source code management system.
@@ -92,6 +95,17 @@ public final class RatingDocletConstants {
     public static final String TXT_RATINGS = "Ratings";
     public static final String TXT_TOP_TEN = "Top 10";
     public static final String TXT_WALLBOARD = "Wallboard";
+    
+    
+    // STATIC INITIALIZATION
+    static {
+        SCM_PATHS.put(UmbrellaProject.PRAGMATICS,
+                "http://rtsys.informatik.uni-kiel.de/fisheye/browse/~br=master,r=HEAD/"
+                + "kieler-pragmatics/");
+        SCM_PATHS.put(UmbrellaProject.SEMANTICS,
+                "http://rtsys.informatik.uni-kiel.de/fisheye/browse/~br=master,r=HEAD/"
+                + "kieler-semantics/");
+    }
     
     
     /**

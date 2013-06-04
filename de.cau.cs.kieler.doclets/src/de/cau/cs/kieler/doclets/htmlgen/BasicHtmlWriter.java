@@ -21,6 +21,7 @@ import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.PackageDoc;
 
 import de.cau.cs.kieler.doclets.RatingDocletConstants;
+import de.cau.cs.kieler.doclets.UmbrellaProject;
 import de.cau.cs.kieler.doclets.model.AbstractThingWithStatistics;
 import de.cau.cs.kieler.doclets.model.ClassItem;
 import de.cau.cs.kieler.doclets.model.CodeRating;
@@ -34,6 +35,32 @@ import de.cau.cs.kieler.doclets.model.Project;
  * @author cds
  */
 public class BasicHtmlWriter {
+    
+    /**
+     * The KIELER umbrella project this rating site is being generated for.
+     */
+    private UmbrellaProject umbrellaProject = null;
+    
+    
+    /**
+     * Create a new basic HTML writer for the given umbrella project.
+     * 
+     * @param umbrellaProject the KIELER umbrella project this rating site is being generated for.
+     */
+    public BasicHtmlWriter(final UmbrellaProject umbrellaProject) {
+        this.umbrellaProject = umbrellaProject;
+    }
+    
+    
+    /**
+     * Returns the KIELER umbrella project this rating site is being generated for.
+     * 
+     * @return the umbrella project.
+     */
+    protected UmbrellaProject getUmbrellaProject() {
+        return umbrellaProject;
+    }
+    
     
     /////////////////////////////////////////////////////////////////////////////
     // HTML HEADERS AND FOOTERS
@@ -158,6 +185,7 @@ public class BasicHtmlWriter {
      * @return string representation of the breadcrumb bar.
      */
     private String generateRatingsBreadcrumbs(final Object currentPageObject) {
+        
         StringBuilder crumbs = new StringBuilder();
         Project project = null;
         Plugin plugin = null;
@@ -169,7 +197,8 @@ public class BasicHtmlWriter {
             project = plugin.getProject();
         }
         
-        crumbs.append("<a href='./index.html'>Overview</a>");
+        crumbs.append("<a href='../index.html'>Overview</a>");
+        crumbs.append(" &rarr; <a href='./index.html'>" + getUmbrellaProject().toDisplayName() + "</a>");
         
         if (project != null) {
             crumbs.append(" &rarr; ");
