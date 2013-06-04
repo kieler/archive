@@ -109,6 +109,8 @@ public class BasicHtmlWriter {
         writer.write("<script type='text/javascript' src='" + RatingDocletConstants.RES_FOLDER + "/jquery.tablesorter.js'></script>");
         writer.write("<script type='text/javascript' src='" + RatingDocletConstants.RES_FOLDER + "/tablesorterstart.js'></script>");
         writer.write("<link rel='stylesheet' type='text/css' href='" + RatingDocletConstants.RES_FOLDER + "/style.css'>");
+        writer.write("<meta-http-equiv='Pragma' content='no-cache'>");
+        writer.write("<meta http-equiv='Expires' content='-1'>");
         
         writer.write("</head><body>");
         writer.write("<h1>" + RatingDocletConstants.TXT_TITLE + "</h1>");

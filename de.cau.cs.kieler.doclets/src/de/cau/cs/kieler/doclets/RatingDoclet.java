@@ -61,12 +61,18 @@ public class RatingDoclet extends Doclet {
             } else if (PROJECT_OPTION.equals(option[0])) {
                 // we require an option value that specifies the project
                 if (option.length == 2 && !option[1].isEmpty()) {
-                    umbrellaProject = UmbrellaProject.valueOf(option[1]);
+                    umbrellaProject = UmbrellaProject.valueOf(option[1].toUpperCase());
                 } else {
                     throw new RuntimeException("no value specified for parameter '"
                             + PROJECT_OPTION + "'");
                 }
             }
+        }
+        
+        // Check if an umbrella project was specified
+        if (umbrellaProject == null) {
+            throw new RuntimeException(
+                    "The project must be specified ('-p pragmatics' or '-p semantics')");
         }
         
         // Generate the rating documentation
