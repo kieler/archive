@@ -199,7 +199,7 @@ public class BasicHtmlWriter {
             project = plugin.getProject();
         }
         
-        crumbs.append("<a href='../index.html'>Overview</a>");
+        crumbs.append("<a href='../index.html'>Home</a>");
         crumbs.append(" &rarr; <a href='./index.html'>" + getUmbrellaProject().toDisplayName() + "</a>");
         
         if (project != null) {
