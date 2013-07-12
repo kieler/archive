@@ -79,9 +79,8 @@ public class LayoutEntityFeature extends AbstractLayoutFeature {
      */
     public boolean layout(final ILayoutContext context) {
         boolean changed = false;
-        ContainerShape containerShape = (ContainerShape) context
-                .getPictogramElement();
-        GraphicsAlgorithm containerGa = containerShape.getGraphicsAlgorithm();
+        Shape pictogramElem = (Shape) context.getPictogramElement();
+        GraphicsAlgorithm containerGa = pictogramElem.getGraphicsAlgorithm();
 
         if (containerGa.getHeight() < MIN_CONTAINER_HEIGHT) {
             containerGa.setHeight(MIN_CONTAINER_HEIGHT);
@@ -97,16 +96,18 @@ public class LayoutEntityFeature extends AbstractLayoutFeature {
                 - TEXT_DIST - TEXT_HEIGHT;
         
         // adjust label of the entity
-        for (Shape shape : containerShape.getChildren()) {
-            GraphicsAlgorithm ga = shape.getGraphicsAlgorithm();
-            if (ga instanceof AbstractText) {
-                AbstractText text = (AbstractText) ga;
-                IDimension labelDim = GraphitiUi.getUiLayoutService().calculateTextSize(
-                        text.getValue(), Graphiti.getGaService().getFont(text, true));
-                if (labelDim != null) {
-                    changed |= setBounds(ga, (entityWidth - labelDim.getWidth()) / 2,
-                            AddPortFeature.PORT_SIZE + entityHeight + TEXT_DIST,
-                            labelDim.getWidth(), labelDim.getHeight());
+        if (pictogramElem instanceof ContainerShape) {
+            for (Shape shape : ((ContainerShape) pictogramElem).getChildren()) {
+                GraphicsAlgorithm ga = shape.getGraphicsAlgorithm();
+                if (ga instanceof AbstractText) {
+                    AbstractText text = (AbstractText) ga;
+                    IDimension labelDim = GraphitiUi.getUiLayoutService().calculateTextSize(
+                            text.getValue(), Graphiti.getGaService().getFont(text, true));
+                    if (labelDim != null) {
+                        changed |= setBounds(ga, (entityWidth - labelDim.getWidth()) / 2,
+                                AddPortFeature.PORT_SIZE + entityHeight + TEXT_DIST,
+                                labelDim.getWidth(), labelDim.getHeight());
+                    }
                 }
             }
         }
@@ -121,7 +122,7 @@ public class LayoutEntityFeature extends AbstractLayoutFeature {
         }
 
         // layout ports to be in a valid position
-        List<Anchor> anchors = containerShape.getAnchors();
+        List<Anchor> anchors = pictogramElem.getAnchors();
         for (Anchor anchor : anchors) {
             if (anchor instanceof BoxRelativeAnchor) {
                 super.getFeatureProvider().layoutIfPossible(

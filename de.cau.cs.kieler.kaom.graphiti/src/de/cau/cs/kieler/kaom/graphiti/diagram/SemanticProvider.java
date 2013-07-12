@@ -68,15 +68,18 @@ public class SemanticProvider {
      * @return the top level entity
      */
     private Entity linkTopEntity(final Diagram diagram) {
-        ResourceSet resourceSet = diagramTypeProvider.getDiagramEditor().getResourceSet();
-        for (Resource resource : resourceSet.getResources()) {
-            for (EObject object : resource.getContents()) {
-                if (object instanceof Entity) {
-                    Entity topEntity = (Entity) object;
-                    PictogramLink link = PictogramsFactory.eINSTANCE.createPictogramLink();
-                    link.setPictogramElement(diagram);
-                    link.getBusinessObjects().add(topEntity);
-                    return topEntity;
+        Resource diagramResource = diagram.eResource();
+        if (diagramResource != null) {
+            ResourceSet resourceSet = diagramResource.getResourceSet();
+            for (Resource resource : resourceSet.getResources()) {
+                for (EObject object : resource.getContents()) {
+                    if (object instanceof Entity) {
+                        Entity topEntity = (Entity) object;
+                        PictogramLink link = PictogramsFactory.eINSTANCE.createPictogramLink();
+                        link.setPictogramElement(diagram);
+                        link.getBusinessObjects().add(topEntity);
+                        return topEntity;
+                    }
                 }
             }
         }

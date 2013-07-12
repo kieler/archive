@@ -50,11 +50,8 @@ public class KaomDeleteFeature extends DefaultDeleteFeature {
     }
 
     /**
-     * 
      * {@inheritDoc}
      */
-    // override the user decision, so objects can be deleted without any
-    // dialog
     @Override
     protected boolean getUserDecision() {
         return true;
