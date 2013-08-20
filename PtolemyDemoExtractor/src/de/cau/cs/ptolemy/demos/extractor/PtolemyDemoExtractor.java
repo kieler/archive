@@ -17,7 +17,6 @@ package de.cau.cs.ptolemy.demos.extractor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,11 +45,6 @@ public class PtolemyDemoExtractor {
     private File srcFolder;
     
     /**
-     * The domains folder.
-     */
-    private File domainsFolder;
-    
-    /**
      * The destination folder.
      */
     private File dstFolder;
@@ -69,18 +63,6 @@ public class PtolemyDemoExtractor {
         
         if (!srcFolder.isDirectory()) {
             throw new IOException("source folder must be a directory.");
-        }
-        
-        // Construct the domains folder
-        File ptolemyFolder = new File(srcFolder, "ptolemy");
-        if (!ptolemyFolder.isDirectory()) {
-            throw new IOException("ptolemy/domains folder not found.");
-        }
-        
-        domainsFolder = new File(ptolemyFolder, "domains");
-        
-        if (!domainsFolder.isDirectory()) {
-            throw new IOException("ptolemy/domains folder not found.");
         }
         
         // Construct the destination folder
@@ -113,9 +95,6 @@ public class PtolemyDemoExtractor {
             extractor.extract();
         }
         catch (Exception e) {
-            System.out.println("An error occurred:");
-            System.out.println(e.getMessage());
-            
             e.printStackTrace();
         }
     }
@@ -127,76 +106,48 @@ public class PtolemyDemoExtractor {
      * @throws IOException if something goes wrong copying the files.
      */
     public void extract() throws IOException {
-        // Iterate through the domain folders
-        File domainFolder;
-        File demosFolder;
-        String[] items;
-        
-        items = domainsFolder.list();
+        extractDemos(srcFolder, null, null);
+    }
+    
+    
+    /**
+     * Extracts all demos in the given folder and its subfolders.
+     * 
+     * @param folder a folder
+     * @param domainName the Ptolemy domain name, or null
+     * @param prefix the file prefix, or null
+     * @throws IOException if something goes wrong copying the files.
+     */
+    private void extractDemos(File folder, String domainName, String prefix) throws IOException {
+        String[] items = folder.list();
         for (String item : items) {
-            domainFolder = new File(domainsFolder, item);
+            File file = new File(folder, item);
             
-            if (domainFolder.isDirectory()) {
-                // We have found a domain folder, try to find its demo folder
-                demosFolder = new File(domainFolder, "demo");
-                
-                if (demosFolder.isDirectory()) {
-                    extractDemos(domainFolder, demosFolder);
+            if (file.isDirectory()) {
+                if (file.getName().equals("demo")) {
+                    extractDemos(file, folder.getName().toLowerCase(), "");
+                } else if (domainName != null) {
+                    extractDemos(file, domainName, prefix + file.getName().toLowerCase() + "_");
+                } else {
+                    extractDemos(file, null, null);
                 }
-            }
-        }
-    }
-    
-    
-    /**
-     * Extracts all demos in the given demo folder.
-     * 
-     * @param domainFolder the folder containing the demos folder.
-     * @param demosFolder the folder containing other folders with demos.
-     * @throws IOException if something goes wrong copying the files.
-     */
-    private void extractDemos(File domainFolder, File demosFolder) throws IOException {
-        File demoFolder;
-        String[] items;
-        
-        items = demosFolder.list();
-        for (String item : items) {
-            demoFolder = new File(demosFolder, item);
-            
-            if (demoFolder.isDirectory()) {
-                // We have found a folder containing actual demos!
-                extractActualDemos(domainFolder, demoFolder);
+            } else if (file.getName().endsWith(".xml") && domainName != null) {
+                extractActualDemo(file, domainName, prefix);
             }
         }
     }
     
     /**
-     * Extracts all .xml files from the given folder.
+     * Extracts a demo file.
      * 
-     * @param domainFolder folder of the domain containing the demo.
-     * @param demoFolder the actual demo folder.
+     * @param file the file
+     * @param domainName the domain name, determining the destination folder
+     * @param prefix the prefix to add to the destination file
      * @throws IOException if something goes wrong copying the files.
      */
-    private void extractActualDemos(File domainFolder, File demoFolder) throws IOException {
-        File demoFile;
-        File dstDomainFolder;
-        File dstFile;
-        String dstFileName;
-        String[] items;
-        
-        // Get a list of xml files
-        items = demoFolder.list(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".xml");
-            }
-        });
-        
-        if (items.length == 0) {
-            return;
-        }
-        
+    private void extractActualDemo(File file, String domainName, String prefix) throws IOException {
         // Create a folder for the domain
-        dstDomainFolder = new File(dstFolder, domainFolder.getName());
+        File dstDomainFolder = new File(dstFolder, domainName);
         if (dstDomainFolder.isFile()) {
             throw new IOException("Cannot create folder '" + dstDomainFolder.getAbsolutePath()
                     + "' because a file of the same name already exists.");
@@ -207,18 +158,18 @@ public class PtolemyDemoExtractor {
             }
         }
         
-        for (String item : items) {
-            // We know that it's an xml file
-            demoFile = new File(demoFolder, item);
-            
-            dstFileName = domainFolder.getName() + "_" + demoFile.getName();
-            
-            System.out.println("Copying... " + dstFileName);
-            dstFile = new File(dstDomainFolder, dstFileName);
-            
-            // Try to copy the file
-            copy(demoFile, dstFile);
+        // rename it to .moml
+        int dotIndex = file.getName().lastIndexOf('.');
+        if (dotIndex < 0) {
+            throw new IllegalStateException("File has no extension.");
         }
+        String dstFileName = prefix + file.getName().substring(0, dotIndex) + ".moml";
+        
+        System.out.println("Copying... " + dstFileName);
+        File dstFile = new File(dstDomainFolder, dstFileName);
+        
+        // Try to copy the file
+        copy(file, dstFile);
     }
     
     /**
@@ -228,7 +179,7 @@ public class PtolemyDemoExtractor {
      * @param dst the destination file.
      * @throws IOException if anything goes wrong.
      */
-    void copy(File src, File dst) throws IOException {
+    private void copy(File src, File dst) throws IOException {
         InputStream in = new FileInputStream(src);
         OutputStream out = new FileOutputStream(dst);
         
