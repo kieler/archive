@@ -29,9 +29,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartSite;
 
 import de.cau.cs.kieler.core.kivi.AbstractTrigger;
 import de.cau.cs.kieler.core.kivi.AbstractTriggerState;
@@ -40,8 +38,8 @@ import de.cau.cs.kieler.core.kivi.ITriggerState;
 import de.cau.cs.kieler.core.kivi.listeners.GlobalPartAdapter;
 import de.cau.cs.kieler.core.model.GraphicalFrameworkService;
 import de.cau.cs.kieler.core.model.IGraphicalFrameworkBridge;
-import de.cau.cs.kieler.core.ui.UnsupportedPartException;
-import de.cau.cs.kieler.core.ui.util.EditorUtils;
+import de.cau.cs.kieler.core.model.UnsupportedPartException;
+import de.cau.cs.kieler.core.model.util.EditorUtils;
 
 /**
  * A view management Trigger that registered as a ResourceSetChangeListener onto any active Diagram
@@ -64,9 +62,7 @@ public class ModelChangeTrigger extends AbstractTrigger implements IPartListener
             .createNotifierTypeFilter(NotationPackage.eINSTANCE.getGuide())));
 
     private IWorkbenchPart currentEditor;
-    
-    /** Listens to all parts within the workbench. */
-    private GlobalPartAdapter partListener;
+    private GlobalPartAdapter globalPartAdapter;
 
     /**
      * {@inheritDoc}
@@ -74,7 +70,7 @@ public class ModelChangeTrigger extends AbstractTrigger implements IPartListener
     @SuppressWarnings("deprecation")
     @Override
     public void register() {
-        partListener = new GlobalPartAdapter(this);
+        globalPartAdapter = new GlobalPartAdapter(this);
         final ResourceSetListener that = this;
         // register with the active editor
         // else the initially open editor will not send events until the editor changes
@@ -91,7 +87,7 @@ public class ModelChangeTrigger extends AbstractTrigger implements IPartListener
      */
     @Override
     public void unregister() {
-        partListener.unregister();
+        globalPartAdapter.unregister();
         // cmot: Fixed null pointer exception when trying to disable KIVi
         if (currentEditor != null) {
             TransactionalEditingDomain transactionalEditingDomain = getEditingDomain(currentEditor);

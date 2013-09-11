@@ -28,8 +28,8 @@ import de.cau.cs.kieler.core.kivi.ITrigger;
 import de.cau.cs.kieler.core.kivi.listeners.GlobalPartAdapter;
 import de.cau.cs.kieler.core.model.GraphicalFrameworkService;
 import de.cau.cs.kieler.core.model.IGraphicalFrameworkBridge;
-import de.cau.cs.kieler.core.ui.UnsupportedPartException;
-import de.cau.cs.kieler.core.ui.util.EditorUtils;
+import de.cau.cs.kieler.core.model.UnsupportedPartException;
+import de.cau.cs.kieler.core.model.util.EditorUtils;
 
 /**
  * A Trigger for supported diagrams. It will fire a DiagramState to the KIELER View Management if an
@@ -43,16 +43,14 @@ import de.cau.cs.kieler.core.ui.util.EditorUtils;
 public class DiagramTrigger extends AbstractTrigger implements IPartListener {
 
     private IWorkbenchPart currentEditor;
+    private GlobalPartAdapter globalPartAdapter;
 
-    /** Listens to all parts within the workbench. */
-    private GlobalPartAdapter partListener;
-    
     /**
      * {@inheritDoc}
      */
     @Override
     public void register() {
-        partListener = new GlobalPartAdapter(this);
+        globalPartAdapter = new GlobalPartAdapter(this);
         // test the active editor
         // else the initially open editor will not send events until the editor changes
         currentEditor = EditorUtils.getLastActiveEditor();
@@ -64,7 +62,7 @@ public class DiagramTrigger extends AbstractTrigger implements IPartListener {
      */
     @Override
     public void unregister() {
-        partListener.unregister();
+        globalPartAdapter.unregister();
     }
 
     /**

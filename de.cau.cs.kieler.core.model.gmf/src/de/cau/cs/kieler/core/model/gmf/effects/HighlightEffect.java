@@ -18,7 +18,6 @@ import java.util.Map;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.Shape;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.RecordingCommand;
@@ -26,10 +25,8 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderedNodeFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.RoundedRectangleBorder;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.FillStyle;
@@ -63,9 +60,8 @@ public class HighlightEffect extends AbstractEffect {
     private int originalWidth = -1;
     /** how much to increase the line width of the target figure. */
     private int widthIncrease = 1;
-    /**
-     * the maximal value for line width. SUPPRESS CHECKSTYLE NEXT MagicNumber
-     */
+    /** the maximal value for line width. 
+     * SUPPRESS CHECKSTYLE NEXT MagicNumber */
     private int widthMax = 5;
     /** the original line style of the target figure. */
     private int originalStyle = -1;
@@ -77,8 +73,6 @@ public class HighlightEffect extends AbstractEffect {
     private Color foregroundColor;
     /** the original background colors of the affected figures. */
     private Map<IFigure, Color> originalBackgroundColor = new HashMap<IFigure, Color>();
-    /** the original opaqueness of the affected figures **/
-    private Map<IFigure, Boolean> originalOpaqueness = new HashMap<IFigure, Boolean>();
     /** the new background highlight color. */
     private Color backgroundColor;
     /** true if direct children such as labels should be highlighted in the given color as well. */
@@ -89,10 +83,6 @@ public class HighlightEffect extends AbstractEffect {
     private boolean persistent = false;
     /** the command used for persistent highlighting. */
     private HighlightCommand highlightCommand;
-    /** foreground highlight color to be used for children. **/
-    private Color childrenForegroundColor;
-    /** background highlight color to be used for children. **/
-    private Color childrenBackgroundColor;
 
     /**
      * Create a new instance for the given edit part using the given color.
@@ -265,36 +255,6 @@ public class HighlightEffect extends AbstractEffect {
     }
 
     /**
-     * Create a new instance for the given edit part using the given color.
-     * 
-     * @param eObject
-     *            the EObject to highlight
-     * @param editor
-     *            the editor to highlight in
-     * @param highlightColor
-     *            the color to use for highlighting
-     * @param background
-     *            the color to use for painting the background
-     * @param children
-     *            true if labels should be highlighted in the given color as well
-     * @param persistent
-     *            true if highlighting should be persistent
-     * @param childrenHighlightColor
-     *            the color to use for highlighting children
-     * @param childrenBackground
-     *            the color to use for painting the background of children
-     * 
-     */
-    public HighlightEffect(final EObject eObject, final IWorkbenchPart editor,
-            final Color highlightColor, final Color background, final boolean children,
-            final boolean persistent, final Color childrenHighlightColor,
-            final Color childrenBackground) {
-        this(eObject, editor, highlightColor, background, children, persistent);
-        this.childrenForegroundColor = childrenHighlightColor;
-        this.childrenBackgroundColor = childrenBackground;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public void execute() {
@@ -310,7 +270,7 @@ public class HighlightEffect extends AbstractEffect {
             ((SplineConnection) targetFigure).bringToFront();
         }
     }
-
+    
     /**
      * Apply the highlight state by directly manipulating the target figure.
      */
@@ -320,12 +280,7 @@ public class HighlightEffect extends AbstractEffect {
                 if (targetFigure == null) {
                     return;
                 }
-                
-                if (targetFigure instanceof DefaultSizeNodeFigure) {
-                    targetFigure = (IFigure) ((DefaultSizeNodeFigure) targetFigure).getChildren()
-                            .get(0);
-                }
-                
+
                 if (targetFigure instanceof Shape) {
                     Shape shape = (Shape) targetFigure;
                     // line width
@@ -349,8 +304,8 @@ public class HighlightEffect extends AbstractEffect {
 
                 // Papyrus
                 if (targetFigure instanceof DefaultSizeNodeFigure) {
-                    targetFigure = (IFigure) ((DefaultSizeNodeFigure) targetFigure).getChildren()
-                            .get(0);
+                    targetFigure = (IFigure) ((DefaultSizeNodeFigure) targetFigure)
+                            .getChildren().get(0);
                     if (targetFigure instanceof BorderedNodeFigure) {
                         BorderedNodeFigure bnf = (BorderedNodeFigure) targetFigure;
                         if (bnf.getChildren().size() > 0) {
@@ -382,71 +337,30 @@ public class HighlightEffect extends AbstractEffect {
                 // foreground color
                 if (foregroundColor != null) {
                     setColor(targetFigure, foregroundColor, true);
+                    if (highlightChildren) {
+                        for (Object o : targetEditPart.getChildren()) {
+                            if (o instanceof GraphicalEditPart) {
+                                setColor(((GraphicalEditPart) o).getFigure(), foregroundColor, true);
+                            }
+                        }
+                    }
                 } else {
                     resetColor(targetFigure, true);
                 }
-                
-                if ((foregroundColor != null || childrenForegroundColor != null) && highlightChildren) {
-                    for (Object o : targetEditPart.getChildren()) {
-                        if (o instanceof LabelEditPart) {
-                        	LabelEditPart labelPart = (LabelEditPart) o;
-                        	String text = null;
-                        	if (labelPart.getFigure() instanceof Label) {
-                        		text =  ((Label) labelPart.getFigure()).getText();
-                        	} else if (labelPart.getFigure() instanceof WrappingLabel) {
-                        		text =  ((WrappingLabel) labelPart.getFigure()).getText();
-                        	}
-                        	if (text != null && !text.equals("")) {
-		                        if (childrenForegroundColor != null) {
-		                            setColor(((GraphicalEditPart) o).getFigure(),
-		                                    childrenForegroundColor, true);
-		                        } /*else {
-		                            setColor(((GraphicalEditPart) o).getFigure(), foregroundColor,
-		                                    true);
-		                        }
-		                        */
-                        	}
-                        }
-                    }
-                }
-                
                 // background color
                 if (backgroundColor != null) {
                     setColor(targetFigure, backgroundColor, false);
-                    originalOpaqueness.put(targetFigure, targetFigure.isOpaque());
-                    targetFigure.setOpaque(true);
+                    if (highlightChildren) {
+                        for (Object o : targetEditPart.getChildren()) {
+                            if (o instanceof GraphicalEditPart) {
+                                setColor(((GraphicalEditPart) o).getFigure(), backgroundColor,
+                                        false);
+                            }
+                        }
+                    }
                 } else {
                     resetColor(targetFigure, false);
                 }
-                
-                if ((backgroundColor != null || childrenBackgroundColor != null) && highlightChildren) {
-                    for (Object o : targetEditPart.getChildren()) {
-                        if (o instanceof LabelEditPart) {
-                                LabelEditPart labelPart = (LabelEditPart) o;
-                                String text = null;
-                                if (labelPart.getFigure() instanceof Label) {
-                                        text =  ((Label) labelPart.getFigure()).getText();
-                                } else if (labelPart.getFigure() instanceof WrappingLabel) {
-                                        text =  ((WrappingLabel) labelPart.getFigure()).getText();
-                                }
-                        	if (text != null && !text.equals("")) {
-	                            if (childrenBackgroundColor != null) {
-	                                setColor(((GraphicalEditPart) o).getFigure(),
-	                                        childrenBackgroundColor, false);
-	                            } /*else {
-	                                setColor(((GraphicalEditPart) o).getFigure(), backgroundColor,
-	                                        false);
-	                                
-	                            }
-	                            */
-	                            //originalOpaqueness.put(((GraphicalEditPart) o).getFigure(), ((GraphicalEditPart) o).getFigure().isOpaque());
-	                            ((GraphicalEditPart) o).getFigure().setOpaque(true);
-	                            
-                        	}
-                        }
-                    }
-                }
-                
             }
         });
     }
@@ -462,7 +376,7 @@ public class HighlightEffect extends AbstractEffect {
             undoHighlight();
         }
     }
-
+    
     /**
      * Reset the highlight state by directly manipulating the target figure.
      */
@@ -472,7 +386,7 @@ public class HighlightEffect extends AbstractEffect {
                 if (targetFigure == null) {
                     return;
                 }
-
+                
                 // Papyrus case
                 if (targetFigure instanceof BorderedNodeFigure) {
                     BorderedNodeFigure bnf = (BorderedNodeFigure) targetFigure;
@@ -490,18 +404,11 @@ public class HighlightEffect extends AbstractEffect {
                 // reset foreground and background color
                 resetColor(targetFigure, true);
                 resetColor(targetFigure, false);
-                Boolean oopq = originalOpaqueness.get(targetFigure);
-                if (oopq != null) {
-                    targetFigure.setOpaque(oopq);
-                }
-                
-                
                 if (highlightChildren) {
                     for (Object o : targetEditPart.getChildren()) {
-                        if (o instanceof LabelEditPart) {
+                        if (o instanceof GraphicalEditPart) {
                             resetColor(((GraphicalEditPart) o).getFigure(), true);
                             resetColor(((GraphicalEditPart) o).getFigure(), false);
-                            ((GraphicalEditPart) o).getFigure().setOpaque(false);
                         }
                     }
                 }
@@ -641,8 +548,10 @@ public class HighlightEffect extends AbstractEffect {
                 this.originalWidth = otherEffect.originalWidth;
                 this.originalStyle = otherEffect.originalStyle;
                 if (this.highlightCommand != null && otherEffect.highlightCommand != null) {
-                    this.highlightCommand.oldForegroundColor = otherEffect.highlightCommand.oldForegroundColor;
-                    this.highlightCommand.oldBackgroundColor = otherEffect.highlightCommand.oldBackgroundColor;
+                    this.highlightCommand.oldForegroundColor = otherEffect.highlightCommand
+                            .oldForegroundColor;
+                    this.highlightCommand.oldBackgroundColor = otherEffect.highlightCommand
+                            .oldBackgroundColor;
                 }
                 return this;
             }
@@ -669,17 +578,17 @@ public class HighlightEffect extends AbstractEffect {
         }
         return null;
     }
-
+    
     /**
      * A command for persistently changing an object style.
      */
     private class HighlightCommand extends RecordingCommand {
-
+        
         private View view;
         private boolean undo = false;
         private Integer oldForegroundColor;
         private Integer oldBackgroundColor;
-
+        
         public HighlightCommand(final TransactionalEditingDomain domain, final View view) {
             super(domain, "Highlight Effect");
             this.view = view;
@@ -692,8 +601,8 @@ public class HighlightEffect extends AbstractEffect {
         @Override
         protected void doExecute() {
             if (undo) {
-                LineStyle nlineStyle = (LineStyle) view.getStyle(NotationPackage.eINSTANCE
-                        .getLineStyle());
+                LineStyle nlineStyle = (LineStyle) view.getStyle(
+                        NotationPackage.eINSTANCE.getLineStyle());
                 if (nlineStyle != null) {
                     if (oldForegroundColor == null) {
                         view.getStyles().remove(nlineStyle);
@@ -701,8 +610,8 @@ public class HighlightEffect extends AbstractEffect {
                         nlineStyle.setLineColor(oldForegroundColor);
                     }
                 }
-                FillStyle nfillStyle = (FillStyle) view.getStyle(NotationPackage.eINSTANCE
-                        .getFillStyle());
+                FillStyle nfillStyle = (FillStyle) view.getStyle(
+                        NotationPackage.eINSTANCE.getFillStyle());
                 if (nfillStyle != null) {
                     if (oldBackgroundColor == null) {
                         view.getStyles().remove(nfillStyle);
@@ -712,8 +621,8 @@ public class HighlightEffect extends AbstractEffect {
                 }
             } else {
                 if (foregroundColor != null) {
-                    LineStyle nlineStyle = (LineStyle) view.getStyle(NotationPackage.eINSTANCE
-                            .getLineStyle());
+                    LineStyle nlineStyle = (LineStyle) view.getStyle(
+                            NotationPackage.eINSTANCE.getLineStyle());
                     if (nlineStyle == null) {
                         nlineStyle = NotationFactory.eINSTANCE.createLineStyle();
                         view.getStyles().add(nlineStyle);
@@ -723,8 +632,8 @@ public class HighlightEffect extends AbstractEffect {
                     nlineStyle.setLineColor(translate(foregroundColor));
                 }
                 if (backgroundColor != null) {
-                    FillStyle nfillStyle = (FillStyle) view.getStyle(NotationPackage.eINSTANCE
-                            .getFillStyle());
+                    FillStyle nfillStyle = (FillStyle) view.getStyle(
+                            NotationPackage.eINSTANCE.getFillStyle());
                     if (nfillStyle == null) {
                         nfillStyle = NotationFactory.eINSTANCE.createFillStyle();
                         view.getStyles().add(nfillStyle);
@@ -735,14 +644,13 @@ public class HighlightEffect extends AbstractEffect {
                 }
             }
         }
-
+        
     }
-
+    
     /**
      * Translate an SWT color to GMF format.
      * 
-     * @param color
-     *            a color
+     * @param color a color
      * @return the color code
      */
     private static int translate(final Color color) {
@@ -754,5 +662,5 @@ public class HighlightEffect extends AbstractEffect {
     public String getName() {
         return "HighlightEffect";
     }
-
+    
 }

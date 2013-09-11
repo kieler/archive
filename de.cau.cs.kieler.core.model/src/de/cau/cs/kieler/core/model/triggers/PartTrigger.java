@@ -72,27 +72,26 @@ public class PartTrigger extends AbstractTrigger implements IPartListener {
     public static final IProperty<IPath> EDITOR_INPUT_PATH = new Property<IPath>(
             EDITOR_INPUT_PATH_ID);
 
-    private static PartTrigger instance = null;
+    private static PartTrigger instance;
 
-    private IEditorPart currentActiveEditor = null;
-    private IWorkbenchPart currentActivePart = null;
+    private IEditorPart currentActiveEditor;
+    private IWorkbenchPart currentActivePart;
+    private GlobalPartAdapter globalPartAdapter;
 
     // private IWorkbenchPart lastActive = null;
-    
-    /** Listens to all parts within the workbench. */
-    private GlobalPartAdapter partListener;
 
     @Override
     public void register() {
         if (instance == null) {
             instance = this;
-            partListener = new GlobalPartAdapter(this);
+            globalPartAdapter = new GlobalPartAdapter(instance);
+            // CombinedWorkbenchListener.addPartListener2(instance);
         }
     }
 
     @Override
     public void unregister() {
-        partListener.unregister();
+        globalPartAdapter.unregister();
     }
 
     /*****************************
