@@ -112,4 +112,12 @@
             </propertySection>
          </propertySections>
       </extension>
+      <extension
+            point="de.cau.cs.kieler.core.kivi.combinations">
+         <combination
+               active="true"
+               class="de.cau.cs.kieler.kaom.diagram.custom.LayoutAfterCollapseExpandCombination"
+               name="LayoutAfterCollapseExpandCombination">
+         </combination>
+      </extension>
 </plugin>
