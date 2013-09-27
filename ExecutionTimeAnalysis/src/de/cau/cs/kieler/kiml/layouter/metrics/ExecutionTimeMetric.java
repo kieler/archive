@@ -36,6 +36,8 @@ public class ExecutionTimeMetric extends AbstractMetric {
     
     /** This metric uses exactly one layout provider instance for measuring execution time. */
     private AbstractLayoutProvider layoutProvider;
+    /** The algorithm phases that shall be output additionally to the total execution time. */
+    private String[] phases;
     
     ///////////////////////////////////////////////////////////////////////////////
     // Constructor
@@ -50,13 +52,15 @@ public class ExecutionTimeMetric extends AbstractMetric {
      * @param propertyHolder an optional class that sets properties on generated random
      *                       graphs. Can be used to set layout properties that would
      *                       otherwise be left to default values.
+     * @param phases the phases that shall be output additionally to the total execution time
      * @throws IllegalArgumentException if the parameters are not valid.
      */
     public ExecutionTimeMetric(final IFactory<AbstractLayoutProvider> layoutFactory,
             final OutputStream outputStream, final Parameters parameters,
-            final IPropertyHolder propertyHolder) {
+            final IPropertyHolder propertyHolder, final String[] phases) {
         super(outputStream, parameters, propertyHolder);
         this.layoutProvider = layoutFactory.create();
+        this.phases = phases;
     }
     
     
@@ -68,19 +72,22 @@ public class ExecutionTimeMetric extends AbstractMetric {
      */
     @Override
     protected void warmup() throws IOException {
+        System.out.println("Warmup...");
+        
         // Create a set of warmup parameters
         Parameters warmupParameters = new Parameters();
-        warmupParameters.minOutEdgesPerNode = 2;
-        warmupParameters.maxOutEdgesPerNode = 2;
+        warmupParameters.minOutEdgesPerNode = 3;
+        warmupParameters.maxOutEdgesPerNode = 3;
         
         // Generate a graph
-        KNode layoutGraph = graphGenerator.generateGraph(1000, warmupParameters);
+        KNode layoutGraph = graphGenerator.generateGraph(10000, warmupParameters);
+        if (propertyHolder != null) {
+            layoutGraph.getData(KShapeLayout.class).copyProperties(propertyHolder);
+        }
         IKielerProgressMonitor progressMonitor = new BasicProgressMonitor();
         
-        // Do three runs over it
-        for (int i = 0; i < 3; i++) {
-            layoutProvider.doLayout(layoutGraph, progressMonitor);
-        }
+        // Do the warmup layout
+        layoutProvider.doLayout(layoutGraph, progressMonitor);
     }
     
     /**
@@ -93,6 +100,7 @@ public class ExecutionTimeMetric extends AbstractMetric {
         System.out.print("n = " + nodeCount + ": ");
         
         double totalTime = 0.0;
+        double[] phaseTimes = new double[phases.length];
         for (int i = 0; i < parameters.graphsPerSize; i++) {
             System.out.print(i);
             
@@ -104,13 +112,20 @@ public class ExecutionTimeMetric extends AbstractMetric {
             
             // Do a bunch of layout runs and take the one that took the least amount of time
             double minTime = Double.MAX_VALUE;
+            double[] minPhaseTimes = new double[phases.length];
             for (int j = 0; j < parameters.runsPerGraph; j++) {
                 System.gc();
                 
                 IKielerProgressMonitor progressMonitor = new BasicProgressMonitor();
                 layoutProvider.doLayout(layoutGraph, progressMonitor);
+                double time = progressMonitor.getExecutionTime();
                 
-                minTime = Math.min(minTime, progressMonitor.getExecutionTime());
+                if (time < minTime) {
+                    minTime = time;
+                    for (int k = 0; k < phases.length; k++) {
+                        minPhaseTimes[k] = getPhaseTime(progressMonitor, phases[k]);
+                    }
+                }
                 
                 System.out.print(".");
             }
@@ -121,14 +136,41 @@ public class ExecutionTimeMetric extends AbstractMetric {
             }
             
             totalTime += minTime;
+            for (int k = 0; k < phases.length; k++) {
+                if (minPhaseTimes[k] >= 0) {
+                    phaseTimes[k] += minPhaseTimes[k];
+                }
+            }
         }
         
         // Calculate the average time taken for the graphs
         double avgTime = totalTime / parameters.graphsPerSize;
         outputWriter.write("," + avgTime);
-        System.out.println(" -> " + avgTime);
+        System.out.print(" -> " + avgTime);
+        if (phases.length > 0) {
+            System.out.print(" (");
+            for (int k = 0; k < phases.length; k++) {
+                double avgPhaseTime = phaseTimes[k] / parameters.graphsPerSize;
+                outputWriter.write("," + avgPhaseTime);
+                if (k > 0) {
+                    System.out.print(", ");
+                }
+                System.out.println(avgPhaseTime);
+            }
+            System.out.print(")");
+        }
         
         outputWriter.write("\n");
+        System.out.println();
+    }
+    
+    private double getPhaseTime(final IKielerProgressMonitor monitor, final String phase) {
+        for (IKielerProgressMonitor task : monitor.getSubMonitors()) {
+            if (phase.equalsIgnoreCase(task.getTaskName())) {
+                return task.getExecutionTime();
+            }
+        }
+        return -1;
     }
     
 }

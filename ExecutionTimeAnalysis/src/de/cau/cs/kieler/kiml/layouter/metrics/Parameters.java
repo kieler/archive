@@ -202,7 +202,14 @@ public class Parameters {
     public int maxOutEdgesPerNode = 2;
     
     /**
-     * Optional density value (overrides the minimum and maximum number of edges).
+     * Optional relative number of edges (factor for the number of nodes, overrides the minimum and
+     * maximum number of edges).
+     */
+    public float relativeEdgeCount = -1;
+    
+    /**
+     * Optional edge density value (relative to the square number of nodes, overrides the minimum
+     * and maximum number of edges and the relative number of edges).
      */
     public float density = -1;
     
@@ -299,6 +306,13 @@ public class Parameters {
                 } catch (Exception e) {
                     throw new IllegalArgumentException(
                             "Option -ex must be followed by an integer value.");
+                }
+            } else if (arg.equals("-er")) {
+                try {
+                    relativeEdgeCount = iterator.nextFloat();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException(
+                            "Option -er must be followed by a floating point value.");
                 }
             } else if (arg.equals("-ds")) {
                 try {

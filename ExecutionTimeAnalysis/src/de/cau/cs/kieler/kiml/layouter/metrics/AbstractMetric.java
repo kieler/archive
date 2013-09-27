@@ -71,8 +71,8 @@ public abstract class AbstractMetric {
     }
     
     /**
-     * Performs an execution time measurement parameterized according to the parameters
-     * given when this class was instantiated.
+     * Performs a measurement parameterized according to the parameters given when this class was
+     * instantiated.
      * 
      * @throws IOException if writing to the output stream fails
      */

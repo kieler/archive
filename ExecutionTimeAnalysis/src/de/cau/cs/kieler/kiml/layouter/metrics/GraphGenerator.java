@@ -28,7 +28,6 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 import de.cau.cs.kieler.core.kgraph.KEdge;
-import de.cau.cs.kieler.core.kgraph.KLabel;
 import de.cau.cs.kieler.core.kgraph.KNode;
 import de.cau.cs.kieler.core.kgraph.KPort;
 import de.cau.cs.kieler.kiml.klayoutdata.KShapeLayout;
@@ -107,8 +106,6 @@ public final class GraphGenerator {
         for (int i = 0; i < nodeCount; i++) {
             // Create a node
             nodes[i] = KimlUtil.createInitializedNode();
-            KLabel label = KimlUtil.createInitializedLabel(nodes[i]);
-            label.setText("N" + i);
             nodes[i].setParent(graph);
             
             // Set node properties
@@ -120,28 +117,8 @@ public final class GraphGenerator {
             }
         }
         
-        // If the density value is not set, use the min. and max. number of outgoing edges per node
-        if (parameters.density < 0) {
-            // Precalculate the difference between minimal and maximal number of outgoing edges per node
-            int edgeCountDiff = parameters.maxOutEdgesPerNode - parameters.minOutEdgesPerNode;
-            
-            // Create edges
-            for (int i = 0; i < nodeCount; i++) {
-                // Randomize the number of edges to generate for this node
-                int edgeCount = parameters.minOutEdgesPerNode + random.nextInt(edgeCountDiff);
-                
-                for (int j = 0; j < edgeCount; j++) {
-                    int targetIndex;
-                    int attempt = 0;  // abort the edge creation process if it takes too long
-                    do {
-                        targetIndex = random.nextInt(nodeCount);
-                        attempt++;
-                    } while (!createEdge(nodes[i], nodes[targetIndex], parameters)
-                            && attempt < 2 * nodeCount);
-                }
-            }
-            
-        } else {
+        
+        if (parameters.density > 0) {
             // Determine the total number of edges from the given density
             int edgeCount = Math.round(parameters.density * 0.5f * nodeCount * (nodeCount - 1));
             
@@ -156,6 +133,48 @@ public final class GraphGenerator {
                 } while (!createEdge(nodes[sourceIndex], nodes[targetIndex], parameters)
                         && attempt < 2 * nodeCount);
             }
+            
+        } else if (parameters.relativeEdgeCount > 0) {
+            // Determine the total number of edges from the given relative edge count
+            int edgeCount = Math.round(parameters.relativeEdgeCount * nodeCount);
+            
+            // Create edges
+            for (int j = 0; j < edgeCount; j++) {
+                int sourceIndex, targetIndex;
+                int attempt = 0;  // abort the edge creation process if it takes too long
+                do {
+                    sourceIndex = random.nextInt(nodeCount);
+                    targetIndex = random.nextInt(nodeCount);
+                    attempt++;
+                } while (!createEdge(nodes[sourceIndex], nodes[targetIndex], parameters)
+                        && attempt < 2 * nodeCount);
+            }
+            
+        } else if (parameters.maxOutEdgesPerNode >= 0) {
+            // If no other option is set, use the min. and max. number of outgoing edges per node
+            if (parameters.minOutEdgesPerNode > parameters.maxOutEdgesPerNode) {
+                parameters.maxOutEdgesPerNode = parameters.minOutEdgesPerNode;
+            }
+            // Precalculate the difference between minimal and maximal number of outgoing edges per node
+            int edgeCountDiff = parameters.maxOutEdgesPerNode - parameters.minOutEdgesPerNode;
+            
+            // Create edges
+            for (int i = 0; i < nodeCount; i++) {
+                // Randomize the number of edges to generate for this node
+                int edgeCount = parameters.minOutEdgesPerNode
+                        + (edgeCountDiff == 0 ? 0 : random.nextInt(edgeCountDiff));
+                
+                for (int j = 0; j < edgeCount; j++) {
+                    int targetIndex;
+                    int attempt = 0;  // abort the edge creation process if it takes too long
+                    do {
+                        targetIndex = random.nextInt(nodeCount);
+                        attempt++;
+                    } while (!createEdge(nodes[i], nodes[targetIndex], parameters)
+                            && attempt < 2 * nodeCount);
+                }
+            }
+            
         }
         
         return graph;
@@ -199,8 +218,6 @@ public final class GraphGenerator {
             for (int i = 0; i < layers[l].length; i++) {
                 // Create a node
                 layers[l][i] = KimlUtil.createInitializedNode();
-                KLabel label = KimlUtil.createInitializedLabel(layers[l][i]);
-                label.setText("N" + i);
                 layers[l][i].setParent(graph);
                 
                 // Set node properties
@@ -319,6 +336,7 @@ public final class GraphGenerator {
         PortSide portSide = determinePortPlacement(parameters.invertedPortProb,
                 parameters.northSouthPortProb, source);
         portLayout.setProperty(LayoutOptions.PORT_SIDE, portSide);
+        portLayout.setProperty(LayoutOptions.OFFSET, 0f);
         
         switch (portSide) {
         case NORTH:

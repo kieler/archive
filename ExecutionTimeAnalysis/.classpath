@@ -2,13 +2,13 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.emf.common_2.8.0.v20120911-0500.jar"/>
-	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.emf.ecore_2.8.1.v20120911-0500.jar"/>
-	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/com.google.guava_10.0.1.jar"/>
-	<classpathentry kind="lib" path="/tmp/plugins/de.cau.cs.kieler.core_0.8.0.qualifier.jar"/>
-	<classpathentry kind="lib" path="/tmp/plugins/de.cau.cs.kieler.core.kgraph_0.4.1.qualifier.jar"/>
-	<classpathentry kind="lib" path="/tmp/plugins/de.cau.cs.kieler.kiml_0.11.0.qualifier.jar"/>
-	<classpathentry kind="lib" path="/tmp/plugins/de.cau.cs.kieler.klay.layered_0.3.0.qualifier.jar"/>
-	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.emf.ecore.xmi_2.8.0.v20120911-0500.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/com.google.guava_10.0.1.v201203051515.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.emf.common_2.9.1.v20130827-0309.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.emf.ecore_2.9.1.v20130827-0309.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.emf.ecore.xmi_2.9.1.v20130827-0309.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/de.cau.cs.kieler.klay.layered"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/de.cau.cs.kieler.core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/de.cau.cs.kieler.core.kgraph"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/de.cau.cs.kieler.kiml"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -24,7 +24,7 @@ import de.cau.cs.kieler.core.properties.MapPropertyHolder;
 import de.cau.cs.kieler.kiml.AbstractLayoutProvider;
 import de.cau.cs.kieler.kiml.options.LayoutOptions;
 import de.cau.cs.kieler.klay.layered.LayeredLayoutProvider;
-import de.cau.cs.kieler.klay.layered.p3order.LayerSweepCrossingMinimizer;
+import de.cau.cs.kieler.klay.layered.properties.Properties;
 
 /**
  * Main class of the layouter metrics program. This program measures the performance
@@ -58,6 +58,17 @@ public final class MetricsProgram {
         // Define a property setter for layout configuration
         IPropertyHolder propertyHolder = new MapPropertyHolder();
         propertyHolder.setProperty(LayoutOptions.RANDOM_SEED, 0);
+        propertyHolder.setProperty(LayoutOptions.SEPARATE_CC, false);
+        propertyHolder.setProperty(Properties.THOROUGHNESS, 1);
+        
+        // Define which phase execution times shall be considered in CSV output
+        String[] phases = new String[] {
+                "Greedy cycle removal",
+                "Network simplex layering",
+                "Layer sweep crossing minimization",
+                "Brandes & Koepf node placement",
+                "Orthogonal edge routing"
+        };
         
         OutputStream fileStream = null;
         try {
@@ -70,7 +81,7 @@ public final class MetricsProgram {
             switch (parameters.mode) {
             case TIME:
                 metric = new ExecutionTimeMetric(layoutProvider, fileStream, parameters,
-                        propertyHolder);
+                        propertyHolder, phases);
                 break;
             case CROSSINGS:
                 metric = new EdgeCrossingsMetric(layoutProvider, fileStream, parameters,
@@ -146,9 +157,12 @@ public final class MetricsProgram {
         System.out.println(" -gr <int>  the number of runs per graph. (default: 5)");
         System.out.println(" -em <int>  minimum number of edges to leave each node. (default: 1)");
         System.out.println(" -ex <int>  maximum number of edges to leave each node. (default: 2)");
+        System.out.println(" -er <float>");
+        System.out.println("            number of edges as factor relative to the number of nodes;");
+        System.out.println("            if set, this value overrides the -em and -ex settings.");
         System.out.println(" -ds <float>");
         System.out.println("            density value for the number of edges; if set, this value");
-        System.out.println("            overrides the -em and -ex settings.");
+        System.out.println("            overrides the -em, -ex, and -er settings.");
         System.out.println(" -pr <float> <float> (default: 0.05 0.1)");
         System.out.println("            the probability for ports to be placed on the different sides:");
         System.out.println("             1. inverted port side.");
