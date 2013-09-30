@@ -22,6 +22,7 @@ import de.cau.cs.kieler.core.alg.IFactory;
 import de.cau.cs.kieler.core.properties.IPropertyHolder;
 import de.cau.cs.kieler.core.properties.MapPropertyHolder;
 import de.cau.cs.kieler.kiml.AbstractLayoutProvider;
+import de.cau.cs.kieler.kiml.options.EdgeRouting;
 import de.cau.cs.kieler.kiml.options.LayoutOptions;
 import de.cau.cs.kieler.klay.layered.LayeredLayoutProvider;
 import de.cau.cs.kieler.klay.layered.properties.Properties;
@@ -42,6 +43,10 @@ public final class MetricsProgram {
      * Mask for getting a file name from a system time value.
      */
     private static final long TIME_MASK = 0xfff;
+    /**
+     * Number of bytes in a megabyte.
+     */
+    private static final long MEGA = 1048576;
     
     
     ///////////////////////////////////////////////////////////////////////////////
@@ -57,6 +62,7 @@ public final class MetricsProgram {
         
         // Define a property setter for layout configuration
         IPropertyHolder propertyHolder = new MapPropertyHolder();
+        propertyHolder.setProperty(LayoutOptions.EDGE_ROUTING, EdgeRouting.ORTHOGONAL);
         propertyHolder.setProperty(LayoutOptions.RANDOM_SEED, 0);
         propertyHolder.setProperty(LayoutOptions.SEPARATE_CC, false);
         propertyHolder.setProperty(Properties.THOROUGHNESS, 1);
@@ -94,6 +100,8 @@ public final class MetricsProgram {
             
         } catch (Exception exception) {
             exception.printStackTrace();
+            System.out.println("Memory: " + (Runtime.getRuntime().freeMemory() / MEGA) + "mb free / "
+                    + (Runtime.getRuntime().totalMemory() / MEGA) + " mb total");
         } finally {
             try {
                 if (fileStream != null) {

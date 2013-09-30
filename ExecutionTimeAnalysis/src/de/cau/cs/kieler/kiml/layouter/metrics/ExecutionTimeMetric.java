@@ -76,11 +76,11 @@ public class ExecutionTimeMetric extends AbstractMetric {
         
         // Create a set of warmup parameters
         Parameters warmupParameters = new Parameters();
-        warmupParameters.minOutEdgesPerNode = 3;
-        warmupParameters.maxOutEdgesPerNode = 3;
+        warmupParameters.allowCycles = true;
+        warmupParameters.relativeEdgeCount = 2.0f;
         
         // Generate a graph
-        KNode layoutGraph = graphGenerator.generateGraph(10000, warmupParameters);
+        KNode layoutGraph = graphGenerator.generateGraph(1000, warmupParameters);
         if (propertyHolder != null) {
             layoutGraph.getData(KShapeLayout.class).copyProperties(propertyHolder);
         }
@@ -97,7 +97,18 @@ public class ExecutionTimeMetric extends AbstractMetric {
     protected void doGraphSizeMeasurement(final int nodeCount) throws IOException {
         outputWriter.write(Integer.toString(nodeCount));
         
-        System.out.print("n = " + nodeCount + ": ");
+        System.out.print("n = " + nodeCount + ", m = ");
+        if (parameters.density > 0) {
+            int edgeCount = Math.round(parameters.density * 0.5f * nodeCount * (nodeCount - 1));
+            System.out.print(edgeCount + ": ");
+        } else if (parameters.relativeEdgeCount > 0) {
+            int edgeCount = Math.round(parameters.relativeEdgeCount * nodeCount);
+            System.out.print(edgeCount + ": ");
+        } else {
+            int edgeCount = Math.round((parameters.maxOutEdgesPerNode + parameters.minOutEdgesPerNode)
+                    * 0.5f * nodeCount);
+            System.out.print(edgeCount + ": ");
+        }
         
         double totalTime = 0.0;
         double[] phaseTimes = new double[phases.length];
@@ -155,7 +166,7 @@ public class ExecutionTimeMetric extends AbstractMetric {
                 if (k > 0) {
                     System.out.print(", ");
                 }
-                System.out.println(avgPhaseTime);
+                System.out.print(avgPhaseTime);
             }
             System.out.print(")");
         }

@@ -110,7 +110,11 @@ public abstract class AbstractMetric {
                 doGraphSizeMeasurement((int) Math.round(currentSize));
             }
         } finally {
-            outputWriter.flush();
+            try {
+                outputWriter.flush();
+            } catch (IOException e) {
+                // ignore the exception
+            }
         }
     }
     

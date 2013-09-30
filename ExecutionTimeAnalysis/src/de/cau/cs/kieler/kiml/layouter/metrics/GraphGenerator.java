@@ -230,8 +230,37 @@ public final class GraphGenerator {
             }
         }
         
-        // If the density value is not set, use the min. and max. number of outgoing edges per node
-        if (parameters.density < 0) {
+        if (parameters.density >= 0) {
+            // Determine the total number of edges from the given density
+            int edgeCount = Math.round(parameters.density * 0.5f * nodeCount * (nodeCount - 1));
+            
+            // Create edges
+            for (int j = 0; j < edgeCount; j++) {
+                int sourceLayer = random.nextInt(layerCount - 1);
+                int sourceIndex = random.nextInt(layers[sourceLayer].length);
+                int targetIndex = random.nextInt(layers[sourceLayer + 1].length);
+                createEdge(layers[sourceLayer][sourceIndex], layers[sourceLayer + 1][targetIndex],
+                        parameters);
+            }
+            
+        }  else if (parameters.relativeEdgeCount > 0) {
+            // Determine the total number of edges from the given relative edge count
+            int edgeCount = Math.round(parameters.relativeEdgeCount * nodeCount);
+            
+            // Create edges
+            for (int j = 0; j < edgeCount; j++) {
+                int sourceLayer = random.nextInt(layerCount - 1);
+                int sourceIndex = random.nextInt(layers[sourceLayer].length);
+                int targetIndex = random.nextInt(layers[sourceLayer + 1].length);
+                createEdge(layers[sourceLayer][sourceIndex], layers[sourceLayer + 1][targetIndex],
+                        parameters);
+            }
+            
+        } else if (parameters.maxOutEdgesPerNode >= 0) {
+            // If no other option is set, use the min. and max. number of outgoing edges per node
+            if (parameters.minOutEdgesPerNode > parameters.maxOutEdgesPerNode) {
+                parameters.maxOutEdgesPerNode = parameters.minOutEdgesPerNode;
+            }
             // Precalculate the difference between minimal and maximal number of outgoing edges per node
             int edgeCountDiff = parameters.maxOutEdgesPerNode - parameters.minOutEdgesPerNode;
             
@@ -248,18 +277,6 @@ public final class GraphGenerator {
                 }
             }
             
-        } else {
-            // Determine the total number of edges from the given density
-            int edgeCount = Math.round(parameters.density * 0.5f * nodeCount * (nodeCount - 1));
-            
-            // Create edges
-            for (int j = 0; j < edgeCount; j++) {
-                int sourceLayer = random.nextInt(layerCount - 1);
-                int sourceIndex = random.nextInt(layers[sourceLayer].length);
-                int targetIndex = random.nextInt(layers[sourceLayer + 1].length);
-                createEdge(layers[sourceLayer][sourceIndex], layers[sourceLayer + 1][targetIndex],
-                        parameters);
-            }
         }
         
         return graph;

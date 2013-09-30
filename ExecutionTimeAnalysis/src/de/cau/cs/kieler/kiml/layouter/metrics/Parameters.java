@@ -149,7 +149,7 @@ public class Parameters {
     /**
      * Whether cycles shall be allowed.
      */
-    public boolean allowCycles = false;
+    public boolean allowCycles = true;
     
     /**
      * Whether only proper layered graphs shall be created.
