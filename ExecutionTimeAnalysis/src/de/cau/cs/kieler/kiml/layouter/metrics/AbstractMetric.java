@@ -77,6 +77,18 @@ public abstract class AbstractMetric {
      * @throws IOException if writing to the output stream fails
      */
     public void measure() throws IOException {
+        // Add a shutdown hook that properly closes the output file so we will see its content
+        Thread shutdownHook = new Thread() {
+            public void run() {
+                try {
+                    outputWriter.close();
+                } catch (IOException e) {
+                    // ignore the exception
+                }
+            }
+        };
+        Runtime.getRuntime().addShutdownHook(shutdownHook);
+        
         // Warmup. Warmup! ROAAAAAAAR!!!
         warmup();
         
@@ -115,6 +127,8 @@ public abstract class AbstractMetric {
             } catch (IOException e) {
                 // ignore the exception
             }
+            // The output file will be closed in the main program, so we don't need the shutdown hook
+            Runtime.getRuntime().removeShutdownHook(shutdownHook);
         }
     }
     

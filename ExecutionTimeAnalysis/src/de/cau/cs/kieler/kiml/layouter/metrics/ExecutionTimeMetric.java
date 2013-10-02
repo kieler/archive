@@ -96,30 +96,35 @@ public class ExecutionTimeMetric extends AbstractMetric {
     @Override
     protected void doGraphSizeMeasurement(final int nodeCount) throws IOException {
         outputWriter.write(Integer.toString(nodeCount));
-        
-        System.out.print("n = " + nodeCount + ", m = ");
+        System.out.print("n = " + nodeCount + ": ");
         if (parameters.density > 0) {
             int edgeCount = Math.round(parameters.density * 0.5f * nodeCount * (nodeCount - 1));
-            System.out.print(edgeCount + ": ");
+            outputWriter.write(", " + Integer.toString(edgeCount));
         } else if (parameters.relativeEdgeCount > 0) {
             int edgeCount = Math.round(parameters.relativeEdgeCount * nodeCount);
-            System.out.print(edgeCount + ": ");
+            outputWriter.write(", " + Integer.toString(edgeCount));
         } else {
             int edgeCount = Math.round((parameters.maxOutEdgesPerNode + parameters.minOutEdgesPerNode)
                     * 0.5f * nodeCount);
-            System.out.print(edgeCount + ": ");
+            outputWriter.write(", " + Integer.toString(edgeCount));
         }
         
         double totalTime = 0.0;
         double[] phaseTimes = new double[phases.length];
         for (int i = 0; i < parameters.graphsPerSize; i++) {
-            System.out.print(i);
             
             // Generate a graph with the given node and edge count
             KNode layoutGraph = graphGenerator.generateGraph(nodeCount, parameters);
             if (propertyHolder != null) {
                 layoutGraph.getData(KShapeLayout.class).copyProperties(propertyHolder);
             }
+            
+            // Check the generated graph
+            if (layoutGraph.getChildren().size() != nodeCount) {
+                throw new IllegalStateException("The graph has " + layoutGraph.getChildren().size()
+                        + " nodes, but I expected " + nodeCount);
+            }
+            System.out.print("m=" + graphGenerator.countEdges(layoutGraph));
             
             // Do a bunch of layout runs and take the one that took the least amount of time
             double minTime = Double.MAX_VALUE;
@@ -156,13 +161,13 @@ public class ExecutionTimeMetric extends AbstractMetric {
         
         // Calculate the average time taken for the graphs
         double avgTime = totalTime / parameters.graphsPerSize;
-        outputWriter.write("," + avgTime);
+        outputWriter.write(", " + avgTime);
         System.out.print(" -> " + avgTime);
         if (phases.length > 0) {
             System.out.print(" (");
             for (int k = 0; k < phases.length; k++) {
                 double avgPhaseTime = phaseTimes[k] / parameters.graphsPerSize;
-                outputWriter.write("," + avgPhaseTime);
+                outputWriter.write(", " + avgPhaseTime);
                 if (k > 0) {
                     System.out.print(", ");
                 }

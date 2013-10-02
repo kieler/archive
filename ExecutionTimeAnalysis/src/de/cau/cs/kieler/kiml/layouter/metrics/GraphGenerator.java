@@ -181,6 +181,20 @@ public final class GraphGenerator {
     }
     
     /**
+     * Count the edges in the given graph.
+     * 
+     * @param graph a graph
+     * @return the number of edges
+     */
+    public int countEdges(final KNode graph) {
+        int edgeCount = 0;
+        for (KNode node : graph.getChildren()) {
+            edgeCount += node.getOutgoingEdges().size();
+        }
+        return edgeCount;
+    }
+    
+    /**
      * Generates a random proper layered graph of given size.
      * 
      * @param nodeCount number of nodes in the graph.

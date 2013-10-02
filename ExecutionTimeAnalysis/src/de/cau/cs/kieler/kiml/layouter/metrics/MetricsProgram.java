@@ -25,6 +25,7 @@ import de.cau.cs.kieler.kiml.AbstractLayoutProvider;
 import de.cau.cs.kieler.kiml.options.EdgeRouting;
 import de.cau.cs.kieler.kiml.options.LayoutOptions;
 import de.cau.cs.kieler.klay.layered.LayeredLayoutProvider;
+import de.cau.cs.kieler.klay.layered.p4nodes.NodePlacementStrategy;
 import de.cau.cs.kieler.klay.layered.properties.Properties;
 
 /**
@@ -62,9 +63,10 @@ public final class MetricsProgram {
         
         // Define a property setter for layout configuration
         IPropertyHolder propertyHolder = new MapPropertyHolder();
-        propertyHolder.setProperty(LayoutOptions.EDGE_ROUTING, EdgeRouting.ORTHOGONAL);
+        propertyHolder.setProperty(LayoutOptions.EDGE_ROUTING, EdgeRouting.POLYLINE);
         propertyHolder.setProperty(LayoutOptions.RANDOM_SEED, 0);
         propertyHolder.setProperty(LayoutOptions.SEPARATE_CC, false);
+        propertyHolder.setProperty(Properties.NODE_PLACER, NodePlacementStrategy.SIMPLE);
         propertyHolder.setProperty(Properties.THOROUGHNESS, 1);
         
         // Define which phase execution times shall be considered in CSV output
@@ -72,8 +74,8 @@ public final class MetricsProgram {
                 "Greedy cycle removal",
                 "Network simplex layering",
                 "Layer sweep crossing minimization",
-                "Brandes & Koepf node placement",
-                "Orthogonal edge routing"
+                "Simple node placement",
+                "Polyline edge routing"
         };
         
         OutputStream fileStream = null;
