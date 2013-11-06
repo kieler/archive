@@ -15,15 +15,15 @@ package de.cau.cs.kieler.doclets.extensions
 
 import com.google.common.base.Charsets
 import com.google.common.collect.HashMultimap
+import com.google.common.collect.Maps
 import com.google.common.collect.Multimap
 import com.google.common.io.Files
 import com.sun.javadoc.MethodDoc
 import com.sun.javadoc.RootDoc
 import java.io.File
-import java.util.Map.Entry
 import java.util.Collection
 import java.util.Map
-import com.google.common.collect.Maps
+import java.util.Map.Entry
 
 /**
  * Doclet to create an overview page for all available KLighD extensions.
@@ -71,8 +71,9 @@ class KRenderingExtensionsDoclet {
             
             // collect all non static methods with at least one parameter
             clazz.methods.filter[!it.static].filter[it.parameters.length > 0].forEach [ method |
-                val firstParam = method.parameters.get(0)
-                map.put(firstParam.typeName, method)
+                var firstParam = method.parameters.get(0)
+                // TODO handle a type variable as parameter type
+                map.put(firstParam.typeName, method)   
                 extensionFileMap.put(method.name, clazz.name)
             ]
         ]
@@ -146,7 +147,7 @@ class KRenderingExtensionsDoclet {
                 <!-- The actual nav bar -->
                 <nav class="collapse navbar-collapse" id="navbar-collapse">
                     <ul class="nav navbar-nav">
-                        «navigationCagegories»
+                        «navigationCategories»
                     </ul>
                 </nav>
             </div>
@@ -154,7 +155,7 @@ class KRenderingExtensionsDoclet {
         '''    
     }
     
-    static def navigationCagegories() {
+    static def navigationCategories() {
         categoryMap.entrySet.sortBy[it.key].map [ entry |
             val heading = entry.key.toFirstUpper + " Extensions"
             '''

@@ -27,10 +27,7 @@
 				<execution>
 					<goals>
 						<goal>compile</goal>
-						<!-- <goal>testCompile</goal> -->
 					</goals>
-					<!-- optionally you can configure a different target folder -->
-					<!-- <configuration> <outputDirectory>xtend-gen</outputDirectory> </configuration> -->
 				</execution>
 			</executions>
 		</plugin>
@@ -49,50 +46,6 @@
       </resource>
     </resources>
   </build>
-  
-  <reporting>
-      <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.9.1</version>
-        <reportSets>
-          <reportSet>
-            <id>kieler rating</id>
-            <configuration>
-              <doclet>de.cau.cs.kieler.doclets.RatingDoclet</doclet>
-              <docletArtifact>
-                <groupId>de.cau.cs.kieler</groupId>
-                <artifactId>de.cau.cs.kieler.doclets</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-              </docletArtifact>
-              <useStandardDocletOptions>false</useStandardDocletOptions>
-              <additionalJOption>-p pragmatics</additionalJOption>
-            </configuration>
-            <reports>
-              <report>javadoc</report>
-            </reports>
-          </reportSet>
-          <reportSet>
-            <id>kieler extensions docu</id>
-            <configuration>
-              <doclet>de.cau.cs.kieler.doclets.extensions.KRenderingExtensionsDoclet</doclet>
-              <docletArtifact>
-                <groupId>de.cau.cs.kieler</groupId>
-                <artifactId>de.cau.cs.kieler.doclets</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-              </docletArtifact>
-              <useStandardDocletOptions>false</useStandardDocletOptions>
-              <destDir>extensionsDoc</destDir>
-            </configuration>
-            <reports>
-              <report>javadoc</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
-    </plugins>
-  </reporting>
 
   <dependencies>
     <dependency>
