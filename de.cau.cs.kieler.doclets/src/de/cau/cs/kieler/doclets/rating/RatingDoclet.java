@@ -21,8 +21,6 @@ import com.sun.javadoc.Doclet;
 import com.sun.javadoc.LanguageVersion;
 import com.sun.javadoc.RootDoc;
 
-import de.cau.cs.kieler.doclets.extensions.KRenderingExtensionsDoclet;
-
 /**
  * Doclet for code ratings.
  *
@@ -44,9 +42,6 @@ public class RatingDoclet extends Doclet {
      * @return true on success
      */
     public static boolean start(final RootDoc rootDoc) {
-        
-        // FIXME hack due to maven problems
-        KRenderingExtensionsDoclet.start(rootDoc);
         
         String destination = ".";
         UmbrellaProject umbrellaProject = null;

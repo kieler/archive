@@ -34,15 +34,23 @@ class KRenderingExtensionsDoclet {
 
     public static val TAG_EXTENSION = "@containsExtensions"
     public static val TAG_EXAMPLE = "@example"
+    public static val TAG_EXTENSION_CATEGORY = "@extensionType"
 
     private static val DEFAULT_CATEGORY = "default"    
     
-    private static val FILE_NAME = "../extensions.html"
+    private static val DOC_ROOT = "./extensions/"
 
-    static Map<String, Multimap<String, MethodDoc>> categoryMap = Maps.newHashMap
+    /** Maps classes to their extensions, e.g. KRendering -> setGridPlacementData. */
+    static Multimap<String, MethodDoc> clazzMap = HashMultimap.create
     
-    /** Holds the corresponding extension file for a method (e.g. KRenderingExtensions) */
-    static Map<String, String> extensionFileMap = Maps.newHashMap
+    /** Maps global classifications to extensions, e.g. Ptolemy -> [all ptolemy extensions]. */
+    static Map<String, Multimap<String, MethodDoc>> classificationMap = Maps.newHashMap
+    
+    /** Maps certain categories to extensions, e.g. compositional extensions -> addRectangle */
+    static Multimap<String, MethodDoc> categoryMap = HashMultimap.create
+    
+    /** Holds the corresponding extension file for a (class, method) pair (e.g. KRenderingExtensions) */
+    static Map<Pair<String, String>, String> extensionFileMap = Maps.newHashMap
 
     /** 
       * Main Entry point of doclets
@@ -50,7 +58,7 @@ class KRenderingExtensionsDoclet {
     static def boolean start(RootDoc rootDoc) {
 
          // add a map for the default category
-        categoryMap.put(DEFAULT_CATEGORY, HashMultimap.create) 
+        classificationMap.put(DEFAULT_CATEGORY, HashMultimap.create) 
 
         // collect all extensions of classes annotated with @KRenderingExtensions
         rootDoc.classes.filter[it.tags(TAG_EXTENSION).length > 0].forEach [ clazz |
@@ -60,71 +68,142 @@ class KRenderingExtensionsDoclet {
             
             // get the correct map
             val map = if (categoryString.trim.nullOrEmpty) {
-                    categoryMap.get(DEFAULT_CATEGORY)
+                    classificationMap.get(DEFAULT_CATEGORY)
                 } else {
-                    if(!categoryMap.containsKey(categoryString)) {
-                        categoryMap.put(categoryString, HashMultimap.create)
+                    if(!classificationMap.containsKey(categoryString)) {
+                        classificationMap.put(categoryString, HashMultimap.create)
                     }
-                    categoryMap.get(categoryString)
+                    classificationMap.get(categoryString)
                 }
                 
             
             // collect all non static methods with at least one parameter
             clazz.methods.filter[!it.static].filter[it.parameters.length > 0].forEach [ method |
                 var firstParam = method.parameters.get(0)
-                // TODO handle a type variable as parameter type
-                map.put(firstParam.typeName, method)   
-                extensionFileMap.put(method.name, clazz.name)
+                
+                // class -> extension method (for the global classification)
+                map.put(firstParam.typeName, method)
+
+                // class -> extension method (superset)
+                clazzMap.put(firstParam.typeName, method)
+                
+                // extension -> containing class file   
+                extensionFileMap.put(Pair.of(firstParam.typeName, method.name), clazz.name)
+                
+                // extension category -> extension method
+                val category = method.tags(TAG_EXTENSION_CATEGORY).map[tag | tag.text]
+                if (!category.empty) {
+                    categoryMap.put(category.head, method)
+                }
             ]
         ]
         
-        // generate the html 
-        Files.write(genHtml(), new File(FILE_NAME) , Charsets.UTF_8)
+        // make sure the root folder exists
+        val docRoot = new File(DOC_ROOT)
+        if(!docRoot.exists) {
+            docRoot.mkdirs
+        }
+        
+        // generate the root html page 
+        Files.write(genRootPage(), new File(DOC_ROOT + "index.html") , Charsets.UTF_8)
+        
+        // generate the categories page 
+        Files.write(genCategoriesPage(), new File(DOC_ROOT + "categories.html") , Charsets.UTF_8)
+
+        // generate a page for each class for which extensions exist
+        clazzMap.asMap.entrySet.forEach [ entry | 
+            val file = new File(DOC_ROOT + entry.key + ".html")
+            Files.write(genClazzPage(entry), file, Charsets.UTF_8)
+        ]
 
         return true
     }
+    
+    static def genRootPage() {
+        contentRoot.withSkeleton
+    }
+    
+    static def genClazzPage(Entry<String, Collection<MethodDoc>> entry) {
+        contentClass(entry).withSkeleton
+    }
    
+   static def genCategoriesPage() {
+       contentCategories.withSkeleton
+   }
     
     /* ------------------------------------------------------
      *                      HTML Skeleton
      */
-    static def String genHtml() {
-        '''
-            <!DOCTYPE doctype PUBLIC '-//w3c//dtd html 4.0 transitional//en'>
+     
+     static def withSkeleton(CharSequence content) {
+          '''
+            <!DOCTYPE HTML>
             <html>
                 <head>
                     <title>KIELER KRendering Extensions</title>
+                    <meta charset="UTF-8">
                     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet">
+                    <link href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css" rel="stylesheet">
                     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
                     <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js"></script>
-                    <style>
-                        body {
-                            margin-top: 20px;
+                    <script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
+                    <style type="text/css">
+                        .content {
+                            margin-top: 50px;
+                        }
+                        .panel-group {
+                            margin-bottom: 10px;
+                        }
+                        .k-panel {
+                            padding: 10px;
+                        }
+                        .k-table {
+                            margin-bottom: 0px;
+                        }
+                        .no-padding {
+                            padding: 0px;
+                        }
+                        .k-title > a {
+                            color: inherit; 
+                        }
+                        /* Line numbers on every line. */
+                        li.L0, li.L1, li.L2, li.L3,
+                        li.L5, li.L6, li.L7, li.L8 {
+                            list-style-type: decimal !important
                         }
                     </style>
+                    <script type="text/javascript">
+                        (function(jQuery) {
+                            jQuery( document ).ready( function() {
+                                prettyPrint();
+                            });
+                        }(jQuery))
+                    </script>
                 </head>
                 <body>
                     <!-- navigation -->
                     «navigation»
                     <!-- content -->
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="jumbotron">
-                                    <h1>KIELER KRendering Extensions</h1>
-                                    <p>
-                                        Here you find all the wonderful extension methods for KLighD's diagram syntheses.
-                                        They are so much fun!
-                                    </p>
+                    <div class="content">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="jumbotron">
+                                        <h1>KIELER KRendering Extensions</h1>
+                                        <p>
+                                            Here you find all the wonderful extension methods for KLighD's diagram syntheses.
+                                            They are so much fun!
+                                        </p>
+                                    </div>
+                                    «content»
                                 </div>
-                                «content»
                             </div>
                         </div>
                     </div>
                 </body>
             </html>
         '''
-    }
+     }
     
     /* ------------------------------------------------------
      *                      Navigation
@@ -141,12 +220,13 @@ class KRenderingExtensionsDoclet {
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">KIELER</a>
+                    <a class="navbar-brand" href="index.html">KIELER</a>
                 </div>
                 
                 <!-- The actual nav bar -->
                 <nav class="collapse navbar-collapse" id="navbar-collapse">
                     <ul class="nav navbar-nav">
+                        «navigationClassifications»
                         «navigationCategories»
                     </ul>
                 </nav>
@@ -155,116 +235,279 @@ class KRenderingExtensionsDoclet {
         '''    
     }
     
-    static def navigationCategories() {
-        categoryMap.entrySet.sortBy[it.key].map [ entry |
+    static def navigationClassifications() {
+        classificationMap.entrySet.sortBy[it.key].map [ entry |
             val heading = entry.key.toFirstUpper + " Extensions"
             '''
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">«heading»<b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    «entry.value.navigationItems»
-                </ul>
-            </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">«heading»<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        «navigationItems(entry.key, entry.value)»
+                    </ul>
+                </li>
             '''
         ].join("\n")
     }
     
-    static def navigationItems(Multimap<String, MethodDoc> mmap) {
+    static def navigationItems(String classification, Multimap<String, MethodDoc> mmap) {
         mmap.asMap.entrySet.sortBy[it.key].map [ entry |
+            //<a href="«entry.key».html">«entry.key»</a>
             '''
-            <li>
-                <a href="#«entry.key»">«entry.key»</a>
-            </li>
+                <li>
+                  <a href="index.html#«classification»«entry.key»">«entry.key»</a>
+                </li>
             '''
         ].join("\n")
     }
     
-    static def navigationChilds(Collection<MethodDoc> methods) {
+    static def navigationCategories() {
         '''
-        <ul class="nav">
-        '''
-        +
-        methods.map['''
-            <li>
-                <a href="#«it.name»">«it.name»</a>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Categories<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    «navigationCategoriesItems»
+                </ul>    
             </li>
-        '''].join
-        +
-        '''
-        </ul>
         '''
     }
     
+    static def navigationCategoriesItems() {
+        categoryMap.asMap.entrySet.sortBy[it.key].map [ entry |
+            '''
+                <li>
+                    <a href="categories.html#«entry.key»">«entry.key»</a>
+                </li>
+            '''
+        ].join("\n")
+    }
     
+//    static def navigationChilds(Collection<MethodDoc> methods) {
+//        '''
+//        <ul class="nav">
+//        '''
+//        +
+//        methods.map['''
+//            <li>
+//                <a href="#«it.name»">«it.name»</a>
+//            </li>
+//        '''].join
+//        +
+//        '''
+//        </ul>
+//        '''
+//    }
+
+
     /* ------------------------------------------------------
-     *                      Content
+     *                      Root Content
      */
-    static def content() {
-        
-        categoryMap.entrySet.sortBy[it.key].map[ entry |
+    static def contentRoot() {
+        classificationMap.entrySet.sortBy[it.key].map[ entry |
             '''
             <h1>«entry.key.toFirstUpper»</h1>
             '''
             + 
             entry.value.asMap.entrySet.sortBy[it.key].map [ centry |
-                //contentTable(centry)
-                contentPanels(centry)
+                contentRootTable(entry.key, centry)
             ].join("\n")
         ].join("\n")
-        
-    }
-
-    
-    static def contentTable(Entry<String, Collection<MethodDoc>> entry) {
-        val clazz = entry.key
-        '''
-        <h2 id="«clazz»">«clazz»</h2>
-        <div class="table-responsive">
-            <table class="table table-hover table-bordered table-striped">
-                <thead>
-                    <th>Name</th>
-                    <th>Description</th>
-                </thead>
-                «contentItems(entry)»
-            </table>
-        </div>
-        '''
     }
     
-    static def contentPanels(Entry<String, Collection<MethodDoc>> entry) {
+    
+    static def contentRootTable(String idPrefix, Entry<String, Collection<MethodDoc>> entry) {
         val clazz = entry.key
         '''
-        <h2 id="«clazz»">«clazz»</h2>
-        «contentItemsPanel(entry)»
+            <div id="«idPrefix»«clazz»" class="panel-group">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#collapse«idPrefix»«clazz»">
+                      «clazz»
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse«idPrefix»«clazz»" class="panel-collapse collapse">
+                  <div class="panel-body k-panel">
+                     <div class="table-responsive">
+                        <table class="table table-hover table-striped table-condensed k-table">
+                            «contentRootItems(idPrefix, entry)»
+                        </table>
+                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
         '''
     }
-
-    static def contentItems(Entry<String, Collection<MethodDoc>> entry) {
-        entry.value.sortBy[it.name].map [
+    
+    static def contentRootItems(String idPrefix, Entry<String, Collection<MethodDoc>> entry) {
+        entry.value.sortBy[it.name].map [ extsn |
+            
+            val id = extsn.name + extsn.parameters.head.typeName 
+                + extsn.parameters.tail.map [ p | 
+                    p.typeName
+                ].join("")
+            
             '''
-                <tr id="«it.name»">
-                    <td>«it.methodSig»</td>
+                <tr>
                     <td>
-                        «it.description»
-                        «it.code»
+                        <div class="panel-heading k-title no-padding">
+                            <a data-toggle="collapse" href="#collapse«idPrefix»«id»">
+                                 «extsn.methodSig»
+                            </a>
+                        </div>
+                        <div id="collapse«idPrefix»«id»" class="panel-collapse collapse">
+                            <div class="panel-body">
+                               «extsn.description»
+                               «extsn.code»
+                             </div>
+                         </div>
                     </td>
                 </tr>
             '''
         ].join("\n")
     }
     
+    /* ------------------------------------------------------
+     *                      Categories Content
+     */
+     static def contentCategories() {
+         '''
+            <h1>Categories</h1>
+         '''
+         +
+         categoryMap.asMap.entrySet.sortBy[it.key].map [ entry |
+            '''
+                «contentCategoriesTable(entry.key, entry)»
+            '''
+         ].join("\n")
+     }
+     
+     static def contentCategoriesTable(String idPrefix, Entry<String, Collection<MethodDoc>> entry) {
+        val clazz = entry.key
+        '''
+            <div id="«idPrefix»«clazz»" class="panel-group">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#collapse«idPrefix»«clazz»">
+                      «clazz»
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapse«idPrefix»«clazz»" class="panel-collapse collapse">
+                  <div class="panel-body k-panel">
+                     <div class="table-responsive">
+                        <table class="table table-hover table-striped table-condensed k-table">
+                            «contentCategoriesItems(idPrefix, entry)»
+                        </table>
+                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        '''
+    }
+    
+    static def contentCategoriesItems(String idPrefix, Entry<String, Collection<MethodDoc>> entry) {
+        entry.value.sortBy[it.name].map [ extsn |
+            
+            val id = extsn.name + extsn.parameters.tail.map [ p | 
+                p.typeName
+            ].join("")
+            
+            val firstParam = extsn.parameters.head.typeName
+            
+            '''
+                <tr>
+                    <td>
+                        <div class="panel-heading k-title no-padding">
+                            <a data-toggle="collapse" href="#collapse«idPrefix»«id»">
+                                 <em>«firstParam»</em> «extsn.methodSig»
+                            </a>
+                        </div>
+                        <div id="collapse«idPrefix»«id»" class="panel-collapse collapse">
+                            <div class="panel-body">
+                               «extsn.description»
+                               «extsn.code»
+                             </div>
+                         </div>
+                        <!--a href="«entry.key».html#«extsn.name»">
+                            «extsn.methodSig»
+                        </a-->
+                    </td>
+                </tr>
+            '''
+        ].join("\n")
+    }
+    
+    /* ------------------------------------------------------
+     *                  Class Content
+     */
+     static def contentClass(Entry<String, Collection<MethodDoc>> entry) {
+         
+         '''
+            <h1>«entry.key»</h1>
+         '''
+         +
+         // first a condensed table
+         contentClassTable(entry)
+         +
+         '''
+            <h1>Detailed List</h1>
+         '''
+         + 
+         // second a detailed list with all extensions
+         contentClassDetailedList(entry)
+     }
+     
+     static def contentClassTable(Entry<String, Collection<MethodDoc>> entry) {
+         '''
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered table-striped table-condensed">
+                    <thead>
+                        <th>Name</th>
+                    </thead>
+                    «contentClassItems(entry)»
+                </table>
+            </div>
+        '''
+     }
+     
+     static def contentClassItems(Entry<String, Collection<MethodDoc>> entry) {
+        entry.value.sortBy[it.name].map [
+            '''
+                <tr>
+                    <td>
+                        <a href="#«it.name»">
+                            «it.methodSig»
+                        </a>
+                    </td>
+                </tr>
+            '''
+        ].join("\n")
+    }
+    
+     
+    static def contentClassDetailedList(Entry<String, Collection<MethodDoc>> entry) {
+        '''
+            «contentItemsPanel(entry)»
+        '''
+    }
+
+
     static def contentItemsPanel(Entry<String, Collection<MethodDoc>> entry) {
         entry.value.sortBy[it.name].map [
             '''
-            <div id="«it.name»" class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title">«it.methodSig»</h3>
-              </div>
-              <div class="panel-body">
-                «it.description»
-                «it.code»
-              </div>
-            </div>
+                <div id="«it.name»" class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">«it.methodSig»</h3>
+                  </div>
+                  <div class="panel-body">
+                    «it.description»
+                    «it.code»
+                  </div>
+                </div>
             '''
         ].join("\n")
     }
@@ -274,9 +517,10 @@ class KRenderingExtensionsDoclet {
             p.typeName
         ].join(", ")
 
-        
+        val firstParam = doc.parameters.head.typeName // head always exists
+        val fileName = extensionFileMap.get(Pair.of(firstParam, doc.name))
         '''
-            <span style="font-size: 0.7em" class="text-muted pull-right">«extensionFileMap.get(doc.name)»</span>
+            <span style="font-size: 0.7em" class="text-muted pull-right">«fileName»</span>
             «doc.name»(<em>«params»</em>)
         '''
     }
@@ -285,9 +529,9 @@ class KRenderingExtensionsDoclet {
         val comment = doc.commentText.trim
         
         '''
-        <p>
-            «comment»
-        </p>
+            <p>
+                «comment»
+            </p>
         '''
     }
     
@@ -295,19 +539,14 @@ class KRenderingExtensionsDoclet {
         val code = doc.tags(TAG_EXAMPLE)
 
         if (code.length > 0) {
-            val text = code.get(0).text.trim
-            if (text.contains("<pre>")) {
-                return text
-            } else {
-                '''
-                    <pre>
-                    «text»
-                    </pre>
-                    
-                '''
-            }
+            val text = code.get(0).text.replaceAll("<pre>", "").replaceAll("</pre>", "").trim
+            '''
+                <h6>Example Usage</h6>
+                <pre class="prettyprint linenums lang-java">«text»</pre>
+            '''
         } else {
             ''''''
         }
     }
+     
 }
