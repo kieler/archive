@@ -11,7 +11,7 @@
  * This code is provided under the terms of the Eclipse Public License (EPL).
  * See the file epl-v10.html for the license text.
  */
-package de.cau.cs.kieler.doclets;
+package de.cau.cs.kieler.doclets.rating;
 
 /**
  * An enumeration of the different umbrella projects in KIELER that we want to generate code ratings for.

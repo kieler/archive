@@ -11,7 +11,7 @@
  * This code is provided under the terms of the Eclipse Public License (EPL).
  * See the file epl-v10.html for the license text.
  */
-package de.cau.cs.kieler.doclets;
+package de.cau.cs.kieler.doclets.rating;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
@@ -21,11 +21,11 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import de.cau.cs.kieler.doclets.htmlgen.BasicHtmlWriter;
-import de.cau.cs.kieler.doclets.model.CodeRating;
-import de.cau.cs.kieler.doclets.model.DesignRating;
-import de.cau.cs.kieler.doclets.model.Plugin;
-import de.cau.cs.kieler.doclets.model.Project;
+import de.cau.cs.kieler.doclets.rating.htmlgen.BasicHtmlWriter;
+import de.cau.cs.kieler.doclets.rating.model.CodeRating;
+import de.cau.cs.kieler.doclets.rating.model.DesignRating;
+import de.cau.cs.kieler.doclets.rating.model.Plugin;
+import de.cau.cs.kieler.doclets.rating.model.Project;
 
 
 /**

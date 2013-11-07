@@ -11,28 +11,20 @@
  * This code is provided under the terms of the Eclipse Public License (EPL).
  * See the file epl-v10.html for the license text.
  */
-package de.cau.cs.kieler.doclets.model;
+package de.cau.cs.kieler.doclets.rating.model;
 
 /**
- * Enumeration of code ratings.
+ * Enumeration of design review ratings.
  * 
- * @author msp
+ * @author cds
  */
-public enum CodeRating {
-    /** rating red. */
-    RED,
-    /** rating proposed yellow. */
-    PROP_YELLOW,
-    /** rating yellow. */
-    YELLOW,
-    /** rating proposed green. */
-    PROP_GREEN,
-    /** rating green. */
-    GREEN,
-    /** rating proposed blue. */
-    PROP_BLUE,
-    /** rating blue. */
-    BLUE;
+public enum DesignRating {
+    /** no design review. */
+    NONE,
+    /** design review planned. */
+    PROPOSED,
+    /** design reviewed. */
+    REVIEWED;
     
     /**
      * Returns whether this rating is a proposed rating.
@@ -40,7 +32,7 @@ public enum CodeRating {
      * @return true if this rating is proposed
      */
     public boolean isProposed() {
-        return ordinal() % 2 == 1;
+        return ordinal() == 1;
     }
     
     /**
@@ -48,7 +40,7 @@ public enum CodeRating {
      * 
      * @return a lower rating
      */
-    public CodeRating getDegraded() {
+    public DesignRating getDegraded() {
         int ordinal = ordinal();
         if (ordinal > 0) {
             return values()[ordinal - 1];

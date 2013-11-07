@@ -11,7 +11,7 @@
  * This code is provided under the terms of the Eclipse Public License (EPL).
  * See the file epl-v10.html for the license text.
  */
-package de.cau.cs.kieler.doclets.htmlgen;
+package de.cau.cs.kieler.doclets.rating.htmlgen;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -24,11 +24,11 @@ import java.util.regex.Pattern;
 
 import com.sun.javadoc.PackageDoc;
 
-import de.cau.cs.kieler.doclets.RatingDocletConstants;
-import de.cau.cs.kieler.doclets.UmbrellaProject;
-import de.cau.cs.kieler.doclets.model.ClassItem;
-import de.cau.cs.kieler.doclets.model.Plugin;
-import de.cau.cs.kieler.doclets.model.Project;
+import de.cau.cs.kieler.doclets.rating.RatingDocletConstants;
+import de.cau.cs.kieler.doclets.rating.UmbrellaProject;
+import de.cau.cs.kieler.doclets.rating.model.ClassItem;
+import de.cau.cs.kieler.doclets.rating.model.Plugin;
+import de.cau.cs.kieler.doclets.rating.model.Project;
 
 /**
  * Generates the various plugin pages.

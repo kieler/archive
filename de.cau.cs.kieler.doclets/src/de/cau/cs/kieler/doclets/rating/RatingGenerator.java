@@ -11,7 +11,7 @@
  * This code is provided under the terms of the Eclipse Public License (EPL).
  * See the file epl-v10.html for the license text.
  */
-package de.cau.cs.kieler.doclets;
+package de.cau.cs.kieler.doclets.rating;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -28,12 +28,12 @@ import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.PackageDoc;
 import com.sun.javadoc.RootDoc;
 
-import de.cau.cs.kieler.doclets.htmlgen.OverviewHtmlWriter;
-import de.cau.cs.kieler.doclets.htmlgen.PluginHtmlWriter;
-import de.cau.cs.kieler.doclets.htmlgen.ProjectHtmlWriter;
-import de.cau.cs.kieler.doclets.model.ClassItem;
-import de.cau.cs.kieler.doclets.model.Plugin;
-import de.cau.cs.kieler.doclets.model.Project;
+import de.cau.cs.kieler.doclets.rating.htmlgen.OverviewHtmlWriter;
+import de.cau.cs.kieler.doclets.rating.htmlgen.PluginHtmlWriter;
+import de.cau.cs.kieler.doclets.rating.htmlgen.ProjectHtmlWriter;
+import de.cau.cs.kieler.doclets.rating.model.ClassItem;
+import de.cau.cs.kieler.doclets.rating.model.Plugin;
+import de.cau.cs.kieler.doclets.rating.model.Project;
 
 /**
  * Does the actual work of loading classes, partitioning them into projects and plug-ins and finally

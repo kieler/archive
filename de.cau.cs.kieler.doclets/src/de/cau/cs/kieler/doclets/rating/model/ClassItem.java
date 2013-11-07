@@ -11,7 +11,7 @@
  * This code is provided under the terms of the Eclipse Public License (EPL).
  * See the file epl-v10.html for the license text.
  */
-package de.cau.cs.kieler.doclets.model;
+package de.cau.cs.kieler.doclets.rating.model;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,7 +22,7 @@ import java.util.StringTokenizer;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.Tag;
 
-import de.cau.cs.kieler.doclets.RatingDocletConstants;
+import de.cau.cs.kieler.doclets.rating.RatingDocletConstants;
 
 /**
  * Represents a class with its review status. Note that this class has an attribute marking it as
