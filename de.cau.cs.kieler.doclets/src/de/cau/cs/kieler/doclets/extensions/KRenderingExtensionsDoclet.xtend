@@ -24,6 +24,7 @@ import java.io.File
 import java.util.Collection
 import java.util.Map
 import java.util.Map.Entry
+import de.cau.cs.kieler.doclets.Util
 
 /**
  * Doclet to create an overview page for all available KLighD extensions.
@@ -104,6 +105,21 @@ class KRenderingExtensionsDoclet {
             docRoot.mkdirs
         }
         
+        // copy resourcces
+        val util = new Util
+        
+        val css = new File(DOC_ROOT, "css")
+        css.mkdirs
+        util.copyResource("bootstrap-3.0.2.min.css", css)
+        util.copyResource("prettify.css", css)
+        
+        val js = new File(DOC_ROOT, "js")
+        js.mkdirs
+        util.copyResource("bootstrap-3.0.2.min.js", js)
+        util.copyResource("jquery-1.10.2.min.js", js)
+        util.copyResource("prettify.js", js)
+        util.copyResource("xtend-lang.js", js)
+        
         // generate the root html page 
         Files.write(genRootPage(), new File(DOC_ROOT + "index.html") , Charsets.UTF_8)
         
@@ -111,10 +127,10 @@ class KRenderingExtensionsDoclet {
         Files.write(genCategoriesPage(), new File(DOC_ROOT + "categories.html") , Charsets.UTF_8)
 
         // generate a page for each class for which extensions exist
-        clazzMap.asMap.entrySet.forEach [ entry | 
-            val file = new File(DOC_ROOT + entry.key + ".html")
-            Files.write(genClazzPage(entry), file, Charsets.UTF_8)
-        ]
+        //clazzMap.asMap.entrySet.forEach [ entry | 
+        //    val file = new File(DOC_ROOT + entry.key + ".html")
+        //    Files.write(genClazzPage(entry), file, Charsets.UTF_8)
+        //]
 
         return true
     }
@@ -142,11 +158,12 @@ class KRenderingExtensionsDoclet {
                 <head>
                     <title>KIELER KRendering Extensions</title>
                     <meta charset="UTF-8">
-                    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet">
-                    <link href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css" rel="stylesheet">
-                    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-                    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js"></script>
-                    <script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
+                    <link href="css/bootstrap-3.0.2.min.css" rel="stylesheet" type="text/css">
+                    <link href="css/prettify.css" rel="stylesheet" type="text/css">
+                    <script src="js/jquery-1.10.2.min.js" type="text/javascript"></script>
+                    <script src="js/bootstrap-3.0.2.min.js" type="text/javascript"></script>
+                    <script src="js/prettify.js" type="text/javascript"></script>
+                    <script src="js/xtend-lang.js" type="text/javascript"></script>
                     <style type="text/css">
                         .content {
                             margin-top: 50px;
@@ -340,23 +357,26 @@ class KRenderingExtensionsDoclet {
         '''
     }
     
+    static def genId(String prefix, MethodDoc extsn) {
+        prefix + extsn.name + extsn.parameters.head.typeName + extsn.parameters.tail.map [ p |
+            p.typeName
+        ].join("").replaceAll("\\.", "")
+    }
+    
     static def contentRootItems(String idPrefix, Entry<String, Collection<MethodDoc>> entry) {
         entry.value.sortBy[it.name].map [ extsn |
             
-            val id = extsn.name + extsn.parameters.head.typeName 
-                + extsn.parameters.tail.map [ p | 
-                    p.typeName
-                ].join("")
+            val id = idPrefix.genId(extsn)
             
             '''
                 <tr>
                     <td>
                         <div class="panel-heading k-title no-padding">
-                            <a data-toggle="collapse" href="#collapse«idPrefix»«id»">
+                            <a data-toggle="collapse" href="#collapse«id»">
                                  «extsn.methodSig»
                             </a>
                         </div>
-                        <div id="collapse«idPrefix»«id»" class="panel-collapse collapse">
+                        <div id="collapse«id»" class="panel-collapse collapse">
                             <div class="panel-body">
                                «extsn.description»
                                «extsn.code»
@@ -409,12 +429,12 @@ class KRenderingExtensionsDoclet {
         '''
     }
     
+    
+    
     static def contentCategoriesItems(String idPrefix, Entry<String, Collection<MethodDoc>> entry) {
         entry.value.sortBy[it.name].map [ extsn |
             
-            val id = extsn.name + extsn.parameters.tail.map [ p | 
-                p.typeName
-            ].join("")
+            val id = idPrefix.genId(extsn)
             
             val firstParam = extsn.parameters.head.typeName
             
@@ -422,11 +442,11 @@ class KRenderingExtensionsDoclet {
                 <tr>
                     <td>
                         <div class="panel-heading k-title no-padding">
-                            <a data-toggle="collapse" href="#collapse«idPrefix»«id»">
+                            <a data-toggle="collapse" href="#collapse«id»">
                                  <em>«firstParam»</em> «extsn.methodSig»
                             </a>
                         </div>
-                        <div id="collapse«idPrefix»«id»" class="panel-collapse collapse">
+                        <div id="collapse«id»" class="panel-collapse collapse">
                             <div class="panel-body">
                                «extsn.description»
                                «extsn.code»
@@ -542,8 +562,14 @@ class KRenderingExtensionsDoclet {
             val text = code.get(0).text.replaceAll("<pre>", "").replaceAll("</pre>", "").trim
             '''
                 <h6>Example Usage</h6>
-                <pre class="prettyprint linenums lang-java">«text»</pre>
-            '''
+                <pre class="prettyprint linenums lang-java">
+                '''
+                +
+                text
+                +            
+                '''
+                </pre>
+                '''
         } else {
             ''''''
         }
