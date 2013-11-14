@@ -230,28 +230,28 @@ class KRenderingExtensionsDoclet {
      */
     static def navigation() {
         '''
-        <header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
-            <div class="container">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="index.html">KIELER</a>
+            <header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
+                <div class="container">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="index.html">KIELER</a>
+                    </div>
+                    
+                    <!-- The actual nav bar -->
+                    <nav class="collapse navbar-collapse" id="navbar-collapse">
+                        <ul class="nav navbar-nav">
+                            «navigationClassifications»
+                            «navigationCategories»
+                        </ul>
+                    </nav>
                 </div>
-                
-                <!-- The actual nav bar -->
-                <nav class="collapse navbar-collapse" id="navbar-collapse">
-                    <ul class="nav navbar-nav">
-                        «navigationClassifications»
-                        «navigationCategories»
-                    </ul>
-                </nav>
-            </div>
-        </header>
+            </header>
         '''    
     }
     
@@ -271,7 +271,6 @@ class KRenderingExtensionsDoclet {
     
     static def navigationItems(String classification, Multimap<String, MethodDoc> mmap) {
         mmap.asMap.entrySet.sortBy[it.key].map [ entry |
-            //<a href="«entry.key».html">«entry.key»</a>
             '''
                 <li>
                   <a href="index.html#«classification»«entry.key»">«entry.key»</a>
@@ -300,22 +299,6 @@ class KRenderingExtensionsDoclet {
             '''
         ].join("\n")
     }
-    
-//    static def navigationChilds(Collection<MethodDoc> methods) {
-//        '''
-//        <ul class="nav">
-//        '''
-//        +
-//        methods.map['''
-//            <li>
-//                <a href="#«it.name»">«it.name»</a>
-//            </li>
-//        '''].join
-//        +
-//        '''
-//        </ul>
-//        '''
-//    }
 
 
     /* ------------------------------------------------------
@@ -324,7 +307,7 @@ class KRenderingExtensionsDoclet {
     static def contentRoot() {
         classificationMap.entrySet.sortBy[it.key].map[ entry |
             '''
-            <h1>«entry.key.toFirstUpper»</h1>
+                <h1>«entry.key.toFirstUpper»</h1>
             '''
             + 
             entry.value.asMap.entrySet.sortBy[it.key].map [ centry |
@@ -438,7 +421,6 @@ class KRenderingExtensionsDoclet {
         entry.value.sortBy[it.name].map [ extsn |
             
             val id = idPrefix.genId(extsn)
-            
             val firstParam = extsn.parameters.head.typeName
             
             '''
@@ -562,17 +544,17 @@ class KRenderingExtensionsDoclet {
         val code = doc.tags(TAG_EXAMPLE)
 
         if (code.length > 0) {
-            val text = code.get(0).text.replaceAll("<pre>", "").replaceAll("</pre>", "").trim
+            val text = code.get(0).text.replaceAll("<pre>", "").replaceAll("</pre>", "")
             '''
                 <h6>Example Usage</h6>
                 <pre class="highlight linenums lang-xtend">
-                '''
-                +
-                text
-                +            
-                '''
+            '''
+            +
+            text
+            +            
+            '''
                 </pre>
-                '''
+            '''
         } else {
             ''''''
         }
