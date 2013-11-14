@@ -82,7 +82,8 @@ public class RatingDoclet extends Doclet {
             generator.generateRatings(umbrellaProject, rootDoc, destination);
         } catch (Throwable exception) {
             // Build a proper exception message
-            StringBuilder message = new StringBuilder("Error producing rating documentation.\n");
+            StringBuilder message = new StringBuilder("Error producing rating documentation: ");
+            message.append(exception.getMessage()).append("\n");
             ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
             exception.printStackTrace(new PrintWriter(byteStream));
             message.append(byteStream.toString());
