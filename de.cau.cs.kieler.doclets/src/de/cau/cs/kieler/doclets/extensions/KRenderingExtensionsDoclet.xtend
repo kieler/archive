@@ -119,6 +119,7 @@ class KRenderingExtensionsDoclet {
         util.copyResource("jquery-1.10.2.min.js", js)
         util.copyResource("prettify.js", js)
         util.copyResource("xtend-lang.js", js)
+        util.copyResource("jquery.syntaxhighlighter.min.js", js)
         
         // generate the root html page 
         Files.write(genRootPage(), new File(DOC_ROOT + "index.html") , Charsets.UTF_8)
@@ -163,6 +164,7 @@ class KRenderingExtensionsDoclet {
                     <script src="js/jquery-1.10.2.min.js" type="text/javascript"></script>
                     <script src="js/bootstrap-3.0.2.min.js" type="text/javascript"></script>
                     <script src="js/prettify.js" type="text/javascript"></script>
+                    <script src="js/jquery.syntaxhighlighter.min.js" type="text/javascript"></script>
                     <script src="js/xtend-lang.js" type="text/javascript"></script>
                     <style type="text/css">
                         .content {
@@ -192,7 +194,8 @@ class KRenderingExtensionsDoclet {
                     <script type="text/javascript">
                         (function(jQuery) {
                             jQuery( document ).ready( function() {
-                                prettyPrint();
+                                //prettyPrint();
+                                $.SyntaxHighlighter.init();
                             });
                         }(jQuery))
                     </script>
@@ -562,7 +565,7 @@ class KRenderingExtensionsDoclet {
             val text = code.get(0).text.replaceAll("<pre>", "").replaceAll("</pre>", "").trim
             '''
                 <h6>Example Usage</h6>
-                <pre class="prettyprint linenums lang-java">
+                <pre class="highlight linenums lang-xtend">
                 '''
                 +
                 text

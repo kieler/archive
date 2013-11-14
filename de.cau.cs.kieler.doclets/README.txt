@@ -17,6 +17,7 @@ funktionieren. Und das macht man folgendermaßen:
 
      ssh attosec
      sudo su - www-data
+     (oder 'sudo -u www-data -s' und mit 4. weitermachen) 
 
 3. Der www-data User hat standardmäßig noch keine Shell offen, daher erstmal noch bash
    starten bevor es weiter geht:
@@ -25,7 +26,8 @@ funktionieren. Und das macht man folgendermaßen:
 
 4. Doclet vom eigenen Maven-Reposiroty ins Maven-Repository von www-data kopieren:
 
-     cp /home/<user>/.m2/repository/de/cau/cs/kieler/de.cau.cs.kieler.doclets/0.0.1-SNAPSHOT/de.cau.cs.kieler.doclets-0.0.1-SNAPSHOT.jar /var/www/.m2/repository/de/cau/cs/kieler/de.cau.cs.kieler.doclets/0.0.1-SNAPSHOT/
+     cp -r /home/<user>/.m2/repository/de/cau/cs/kieler/de.cau.cs.kieler.doclets/0.0.1-SNAPSHOT/ /var/www/.m2/repository/de/cau/cs/kieler/de.cau.cs.kieler.doclets/
+    
 
 5. Wieder ausloggen:
 
