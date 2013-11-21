@@ -35,9 +35,9 @@ class KRenderingExtensionsDoclet {
 
     public static val TAG_EXTENSION = "@containsExtensions"
     public static val TAG_EXAMPLE = "@example"
-    public static val TAG_EXTENSION_CATEGORY = "@extensionType"
+    public static val TAG_EXTENSION_CATEGORY = "@extensionCategory"
 
-    private static val DEFAULT_CATEGORY = "default"    
+    private static val DEFAULT_CATEGORY = "default" 
     
     private static val DOC_ROOT = "./extensions/"
 
@@ -126,6 +126,12 @@ class KRenderingExtensionsDoclet {
         
         // generate the categories page 
         Files.write(genCategoriesPage(), new File(DOC_ROOT + "categories.html") , Charsets.UTF_8)
+
+
+        // generate a help page
+        Files.write(new ExtensionsHelpPage().extensionAnnotations.withSkeleton, 
+            new File(DOC_ROOT + "help.html") , Charsets.UTF_8
+        )
 
         // generate a page for each class for which extensions exist
         //clazzMap.asMap.entrySet.forEach [ entry | 
@@ -248,6 +254,7 @@ class KRenderingExtensionsDoclet {
                         <ul class="nav navbar-nav">
                             «navigationClassifications»
                             «navigationCategories»
+                            <li><a href="help.html">Help</a></li>
                         </ul>
                     </nav>
                 </div>
