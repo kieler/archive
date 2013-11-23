@@ -1,3 +1,7 @@
+.twitter-typeahead {
+  width: 100%;
+}
+
 .twitter-typeahead .tt-query,
 .twitter-typeahead .tt-hint {
   margin-bottom: 0;
@@ -5,6 +9,7 @@
 
 .tt-dropdown-menu {
   min-width: 160px;
+  width: 100%;
   margin-top: 2px;
   padding: 5px 0;
   background-color: #fff;
@@ -24,6 +29,7 @@
 }
 
 .tt-suggestion {
+  width: 100%;
   display: block;
   padding: 3px 20px;
 }

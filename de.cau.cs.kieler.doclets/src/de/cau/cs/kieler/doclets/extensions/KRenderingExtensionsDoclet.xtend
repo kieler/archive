@@ -109,6 +109,7 @@ class KRenderingExtensionsDoclet {
         util.copyResource("prettify.js", js)
         util.copyResource("xtend-lang.js", js)
         util.copyResource("jquery.syntaxhighlighter.min.js", js)
+        util.copyResource("hogan-2.0.0.js", js)
         
         // generate the root html page 
         Files.write(indexPage(), new File(DOC_ROOT + "index.html") , Charsets.UTF_8)
@@ -163,6 +164,7 @@ class KRenderingExtensionsDoclet {
                     <script src="js/prettify.js" type="text/javascript"></script>
                     <script src="js/jquery.syntaxhighlighter.min.js" type="text/javascript"></script>
                     <script src="js/xtend-lang.js" type="text/javascript"></script>
+                    <script src="js/hogan-2.0.0.js" type="text/javascript"></script>
                     <style type="text/css">
                         .content {
                             margin-top: 50px;
@@ -195,12 +197,30 @@ class KRenderingExtensionsDoclet {
                                 $.SyntaxHighlighter.init();
                                 $('input.typeahead').typeahead({
                                     name: 'find',
-                                    prefetch: «typeAheadJson»,
-                                    limit: 10,
+                                    local: «typeAheadJson»,
+                                    template:  ['<p>{{value}}</p>',
+                                                '<p class="text-muted" style="float: right; position: relative;">{{file}}</p>'
+                                                //'<p class="text-small repo-description">{{params}}</p>'
+                                               ].join(''),
+                                    engine: Hogan,
+                                    limit: 10
                                 });
+                                
                                 $('.typeahead').bind('typeahead:selected', function(obj, datum, name) { 
                                     console.log("Selected: " + datum.value);
+                                    location.href = "classes.html#collapse" + datum.hrefid;
                                 });
+                                
+                                // fix
+                                $('.tt-query').css('background-color','#fff');
+                                
+                                // make sure we open what is in the url
+                                var col = location.hash.substr(1);
+                                if (col) {
+                                    console.log(col);
+                                    $('#' + col).collapse();
+                                    $('#' + col).parents('.panel-collapse.collapse').collapse();
+                                }
                             });
                         }(jQuery))
                     </script>
@@ -237,8 +257,8 @@ class KRenderingExtensionsDoclet {
         '''
             <div class="container">
                 <div class="row">
-                    <div class="col-md-6">  
-                        <input class="typeahead" type="text" placeholder="Find Extension ...">
+                    <div class="col-md-6 col-md-offset-3">  
+                        <input class="form-control typeahead" type="text" placeholder="Find Extension ...">
                     </div>
                 </div>
             </div>
@@ -339,7 +359,9 @@ class KRenderingExtensionsDoclet {
             value: '«ext.name»',
             tokens: ['«ext.name»'],
             firstParam: '«ext.firstParamType»',
-            params: [ «ext.paramTypes.map[''' '«it»' '''].join(",")» ]
+            params: [ «ext.paramTypes.map[''' '«it»' '''].join(",")» ],
+            file: '«ext.containingFile»',
+            hrefid: '«ext.genId(ext.classification)»'
         }
         '''
         ].join(",\n")
@@ -392,29 +414,23 @@ class KRenderingExtensionsDoclet {
         '''
     }
     
-    static def genId(String prefix, MethodDoc extsn) {
-        prefix + extsn.name + extsn.parameters.head.typeName + extsn.parameters.tail.map [ p |
-            p.typeName
-        ].join("").replaceAll("\\.", "")
-    }
-    
     static def contentRootItems(String idPrefix, Entry<String, Collection<ExtensionDescr>> entry) {
         entry.value.sortBy[it.name].map [ extsn |
             
-            val id = idPrefix.genId(extsn.methodDoc)
+            val id = extsn.genId(idPrefix)
             
             '''
                 <tr>
                     <td>
                         <div class="panel-heading k-title no-padding">
                             <a data-toggle="collapse" href="#collapse«id»">
-                                 «extsn.methodDoc.methodSig»
+                                 «extsn.methodSig»
                             </a>
                         </div>
                         <div id="collapse«id»" class="panel-collapse collapse">
                             <div class="panel-body">
-                               «extsn.methodDoc.description»
-                               «extsn.methodDoc.code»
+                               «extsn.description»
+                               «extsn.code»
                              </div>
                          </div>
                     </td>
@@ -469,148 +485,31 @@ class KRenderingExtensionsDoclet {
     static def contentCategoriesItems(String idPrefix, Entry<String, Collection<ExtensionDescr>> entry) {
         entry.value.sortBy[it.name].map [ extsn |
             
-            val id = idPrefix.genId(extsn.methodDoc)
+            val id = extsn.genId(idPrefix)
             
             '''
                 <tr>
                     <td>
                         <div class="panel-heading k-title no-padding">
                             <a data-toggle="collapse" href="#collapse«id»">
-                                 <em>«extsn.firstParamType»</em> «extsn.methodDoc.methodSig»
+                                 <em>«extsn.firstParamType»</em> «extsn.methodSig»
                             </a>
                         </div>
                         <div id="collapse«id»" class="panel-collapse collapse">
                             <div class="panel-body">
-                               «extsn.methodDoc.description»
-                               «extsn.methodDoc.code»
+                               «extsn.description»
+                               «extsn.code»
                              </div>
                          </div>
                         <!--a href="«entry.key».html#«extsn.name»">
-                            «extsn.methodDoc.methodSig»
+                            «extsn.methodSig»
                         </a-->
                     </td>
                 </tr>
             '''
         ].join("\n")
     }
-    
-    /* ------------------------------------------------------
-     *                  Class Content
-     */
-     static def contentClass(Entry<String, Collection<MethodDoc>> entry) {
-         
-         '''
-            <h1>«entry.key»</h1>
-         '''
-         +
-         // first a condensed table
-         contentClassTable(entry)
-         +
-         '''
-            <h1>Detailed List</h1>
-         '''
-         + 
-         // second a detailed list with all extensions
-         contentClassDetailedList(entry)
-     }
-     
-     static def contentClassTable(Entry<String, Collection<MethodDoc>> entry) {
-         '''
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered table-striped table-condensed">
-                    <thead>
-                        <th>Name</th>
-                    </thead>
-                    «contentClassItems(entry)»
-                </table>
-            </div>
-        '''
-     }
-     
-     static def contentClassItems(Entry<String, Collection<MethodDoc>> entry) {
-        entry.value.sortBy[it.name].map [
-            '''
-                <tr>
-                    <td>
-                        <a href="#«it.name»">
-                            «it.methodSig»
-                        </a>
-                    </td>
-                </tr>
-            '''
-        ].join("\n")
-    }
-    
-     
-    static def contentClassDetailedList(Entry<String, Collection<MethodDoc>> entry) {
-        '''
-            «contentItemsPanel(entry)»
-        '''
-    }
 
-
-    static def contentItemsPanel(Entry<String, Collection<MethodDoc>> entry) {
-        entry.value.sortBy[it.name].map [
-            '''
-                <div id="«it.name»" class="panel panel-default">
-                  <div class="panel-heading">
-                    <h3 class="panel-title">«it.methodSig»</h3>
-                  </div>
-                  <div class="panel-body">
-                    «it.description»
-                    «it.code»
-                  </div>
-                </div>
-            '''
-        ].join("\n")
-    }
-    
-    static def methodSig(MethodDoc doc) {
-        val params = doc.parameters.tail.map [ p | 
-            p.typeName
-        ].join(", ")
-
-        val firstParam = doc.parameters.head.typeName // head always exists
-
-        // TODO MEGA INEFFICIENT
-        val files = extensions.groupBy [ it.firstParamType ].get(firstParam).groupBy [ it.name ].get(doc.name)
-        val fileName = files.head.containingFile + if (files.size > 1) "*" else ""
-        
-//        val fileName = extensionFileMap.get(Pair.of(firstParam, doc.name))
-        '''
-            <span style="font-size: 0.7em" class="text-muted pull-right">«fileName»</span>
-            «doc.name»(<em>«params»</em>)
-        '''
-    }
-    
-    static def description(MethodDoc doc) {
-        val comment = doc.commentText.trim
-        
-        '''
-            <p>
-                «comment»
-            </p>
-        '''
-    }
-    
-    static def code(MethodDoc doc) {
-        val code = doc.tags(TAG_EXAMPLE)
-
-        if (code.length > 0) {
-            val text = code.get(0).text.replaceAll("<pre>", "").replaceAll("</pre>", "")
-            '''
-                <h6>Example Usage</h6>
-                <pre class="highlight lang-xtend">
-            '''
-            +
-            text
-            +            
-            '''
-                </pre>
-            '''
-        } else {
-            ''''''
-        }
-    }
+   
      
 }
