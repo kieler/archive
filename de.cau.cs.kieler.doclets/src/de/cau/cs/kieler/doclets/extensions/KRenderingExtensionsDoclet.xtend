@@ -15,16 +15,17 @@ package de.cau.cs.kieler.doclets.extensions
 
 import com.google.common.base.Charsets
 import com.google.common.collect.HashMultimap
-import com.google.common.collect.Maps
+import com.google.common.collect.Lists
 import com.google.common.collect.Multimap
 import com.google.common.io.Files
 import com.sun.javadoc.MethodDoc
 import com.sun.javadoc.RootDoc
+import de.cau.cs.kieler.doclets.Util
 import java.io.File
 import java.util.Collection
-import java.util.Map
+import java.util.List
 import java.util.Map.Entry
-import de.cau.cs.kieler.doclets.Util
+import org.eclipse.xtext.xbase.lib.Functions.Function1
 
 /**
  * Doclet to create an overview page for all available KLighD extensions.
@@ -41,61 +42,47 @@ class KRenderingExtensionsDoclet {
     
     private static val DOC_ROOT = "./extensions/"
 
-    /** Maps classes to their extensions, e.g. KRendering -> setGridPlacementData. */
-    static Multimap<String, MethodDoc> clazzMap = HashMultimap.create
-    
-    /** Maps global classifications to extensions, e.g. Ptolemy -> [all ptolemy extensions]. */
-    static Map<String, Multimap<String, MethodDoc>> classificationMap = Maps.newHashMap
-    
-    /** Maps certain categories to extensions, e.g. compositional extensions -> addRectangle */
-    static Multimap<String, MethodDoc> categoryMap = HashMultimap.create
-    
-    /** Holds the corresponding extension file for a (class, method) pair (e.g. KRenderingExtensions) */
-    static Map<Pair<String, String>, String> extensionFileMap = Maps.newHashMap
+    /** Holds all extension methods. */
+    private static List<ExtensionDescr> extensions = Lists.newLinkedList
+
+
+   static def <T,S> Multimap<S, T> groupBy(Iterable<T> iterable, Function1<T, S> fun) {
+        
+        val Multimap<S, T> map = HashMultimap.create
+        
+        iterable.forEach [ e |
+            val key = fun.apply(e)
+            map.put(key, e)
+        ]
+        
+        return map
+    }
+
 
     /** 
       * Main Entry point of doclets
       */
     static def boolean start(RootDoc rootDoc) {
 
-         // add a map for the default category
-        classificationMap.put(DEFAULT_CATEGORY, HashMultimap.create) 
-
         // collect all extensions of classes annotated with @KRenderingExtensions
         rootDoc.classes.filter[it.tags(TAG_EXTENSION).length > 0].forEach [ clazz |
             
-            // check for a category
-            val categoryString = clazz.tags(TAG_EXTENSION).get(0).text
-            
-            // get the correct map
-            val map = if (categoryString.trim.nullOrEmpty) {
-                    classificationMap.get(DEFAULT_CATEGORY)
-                } else {
-                    if(!classificationMap.containsKey(categoryString)) {
-                        classificationMap.put(categoryString, HashMultimap.create)
-                    }
-                    classificationMap.get(categoryString)
-                }
-                
-            
+            // check for a classification
+            val classifiString = if(clazz.tags(TAG_EXTENSION).get(0).text.trim.nullOrEmpty){
+                DEFAULT_CATEGORY
+            } else {
+                clazz.tags(TAG_EXTENSION).get(0).text
+            } 
+             
             // collect all non static methods with at least one parameter
             clazz.methods.filter[!it.static].filter[it.parameters.length > 0].forEach [ method |
-                var firstParam = method.parameters.get(0)
-                
-                // class -> extension method (for the global classification)
-                map.put(firstParam.typeName, method)
 
-                // class -> extension method (superset)
-                clazzMap.put(firstParam.typeName, method)
-                
-                // extension -> containing class file   
-                extensionFileMap.put(Pair.of(firstParam.typeName, method.name), clazz.name)
-                
                 // extension category -> extension method
-                val category = method.tags(TAG_EXTENSION_CATEGORY).map[tag | tag.text]
-                if (!category.empty) {
-                    categoryMap.put(category.head, method)
-                }
+                val categories = method.tags(TAG_EXTENSION_CATEGORY).map[tag | tag.text]
+                
+                // assemble a descriptor object
+                val descr = new ExtensionDescr(method, classifiString, categories, clazz.name)
+                extensions += descr             
             ]
         ]
         
@@ -112,46 +99,48 @@ class KRenderingExtensionsDoclet {
         css.mkdirs
         util.copyResource("bootstrap-3.0.2.min.css", css)
         util.copyResource("prettify.css", css)
+        util.copyResource("typeahead-bootstrap.css", css)
         
         val js = new File(DOC_ROOT, "js")
         js.mkdirs
         util.copyResource("bootstrap-3.0.2.min.js", js)
         util.copyResource("jquery-1.10.2.min.js", js)
+        util.copyResource("typeahead.min.js", js)
         util.copyResource("prettify.js", js)
         util.copyResource("xtend-lang.js", js)
         util.copyResource("jquery.syntaxhighlighter.min.js", js)
         
         // generate the root html page 
-        Files.write(genRootPage(), new File(DOC_ROOT + "index.html") , Charsets.UTF_8)
+        Files.write(indexPage(), new File(DOC_ROOT + "index.html") , Charsets.UTF_8)
+        
+        Files.write(genRootPage(), new File(DOC_ROOT + "classes.html") , Charsets.UTF_8)
         
         // generate the categories page 
         Files.write(genCategoriesPage(), new File(DOC_ROOT + "categories.html") , Charsets.UTF_8)
 
+        // json data
+        Files.write(typeAheadJson(), new File(DOC_ROOT + "extensions.json") , Charsets.UTF_8)
 
         // generate a help page
         Files.write(new ExtensionsHelpPage().extensionAnnotations.withSkeleton, 
             new File(DOC_ROOT + "help.html") , Charsets.UTF_8
         )
 
-        // generate a page for each class for which extensions exist
-        //clazzMap.asMap.entrySet.forEach [ entry | 
-        //    val file = new File(DOC_ROOT + entry.key + ".html")
-        //    Files.write(genClazzPage(entry), file, Charsets.UTF_8)
-        //]
-
         return true
     }
     
     static def genRootPage() {
-        contentRoot.withSkeleton
+        // group extensions by classification
+        val classifiMap = extensions.groupBy [ it.classification ]
+        
+        contentRoot(classifiMap).withSkeleton
     }
     
-    static def genClazzPage(Entry<String, Collection<MethodDoc>> entry) {
-        contentClass(entry).withSkeleton
-    }
-   
    static def genCategoriesPage() {
-       contentCategories.withSkeleton
+       
+       val categoriesMap = extensions.groupBy [ it.category.head?: "none" ]
+
+       contentCategories(categoriesMap).withSkeleton
    }
     
     /* ------------------------------------------------------
@@ -166,9 +155,11 @@ class KRenderingExtensionsDoclet {
                     <title>KIELER KRendering Extensions</title>
                     <meta charset="UTF-8">
                     <link href="css/bootstrap-3.0.2.min.css" rel="stylesheet" type="text/css">
+                    <link href="css/typeahead-bootstrap.css" rel="stylesheet" type="text/css">
                     <link href="css/prettify.css" rel="stylesheet" type="text/css">
                     <script src="js/jquery-1.10.2.min.js" type="text/javascript"></script>
                     <script src="js/bootstrap-3.0.2.min.js" type="text/javascript"></script>
+                    <script src="js/typeahead.min.js" type="text/javascript"></script>
                     <script src="js/prettify.js" type="text/javascript"></script>
                     <script src="js/jquery.syntaxhighlighter.min.js" type="text/javascript"></script>
                     <script src="js/xtend-lang.js" type="text/javascript"></script>
@@ -200,8 +191,16 @@ class KRenderingExtensionsDoclet {
                     <script type="text/javascript">
                         (function(jQuery) {
                             jQuery( document ).ready( function() {
-                                //prettyPrint();
+                                // pretty printing
                                 $.SyntaxHighlighter.init();
+                                $('input.typeahead').typeahead({
+                                    name: 'find',
+                                    prefetch: «typeAheadJson»,
+                                    limit: 10,
+                                });
+                                $('.typeahead').bind('typeahead:selected', function(obj, datum, name) { 
+                                    console.log("Selected: " + datum.value);
+                                });
                             });
                         }(jQuery))
                     </script>
@@ -232,9 +231,27 @@ class KRenderingExtensionsDoclet {
      }
     
     /* ------------------------------------------------------
+     *                      Index
+     */
+    static def indexPage() {
+        '''
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">  
+                        <input class="typeahead" type="text" placeholder="Find Extension ...">
+                    </div>
+                </div>
+            </div>
+        '''.withSkeleton
+    }
+    
+    /* ------------------------------------------------------
      *                      Navigation
      */
     static def navigation() {
+        val classifiMap = extensions.groupBy [ it.classification ]
+        val categoriesMap = extensions.groupBy [ it.category.head?: "none" ]
+        categoriesMap.removeAll("none")
         '''
             <header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
                 <div class="container">
@@ -252,8 +269,8 @@ class KRenderingExtensionsDoclet {
                     <!-- The actual nav bar -->
                     <nav class="collapse navbar-collapse" id="navbar-collapse">
                         <ul class="nav navbar-nav">
-                            «navigationClassifications»
-                            «navigationCategories»
+                            «navigationClassifications(classifiMap)»
+                            «navigationCategories(categoriesMap)»
                             <li><a href="help.html">Help</a></li>
                         </ul>
                     </nav>
@@ -262,8 +279,8 @@ class KRenderingExtensionsDoclet {
         '''    
     }
     
-    static def navigationClassifications() {
-        classificationMap.entrySet.sortBy[it.key].map [ entry |
+    static def navigationClassifications(Multimap<String, ExtensionDescr> classificationMap) {
+        classificationMap.asMap.entrySet.sortBy[it.key].map [ entry |
             val heading = entry.key.toFirstUpper + " Extensions"
             '''
                 <li class="dropdown">
@@ -276,28 +293,30 @@ class KRenderingExtensionsDoclet {
         ].join("\n")
     }
     
-    static def navigationItems(String classification, Multimap<String, MethodDoc> mmap) {
-        mmap.asMap.entrySet.sortBy[it.key].map [ entry |
+    //static def navigationItems(String classification, Multimap<String, MethodDoc> mmap) {
+    static def navigationItems(String classification, Collection<ExtensionDescr> extsns) {
+        val byFirstParam = extsns.groupBy [ it.firstParamType ]
+        byFirstParam.keySet.toList.sortBy[it].map [ entry |
             '''
                 <li>
-                  <a href="index.html#«classification»«entry.key»">«entry.key»</a>
+                  <a href="classes.html#«classification»«entry»">«entry»</a>
                 </li>
             '''
         ].join("\n")
     }
     
-    static def navigationCategories() {
+    static def navigationCategories(Multimap<String, ExtensionDescr> categoryMap) {
         '''
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Categories<b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    «navigationCategoriesItems»
+                    «navigationCategoriesItems(categoryMap)»
                 </ul>    
             </li>
         '''
     }
     
-    static def navigationCategoriesItems() {
+    static def navigationCategoriesItems(Multimap<String, ExtensionDescr> categoryMap) {
         categoryMap.asMap.entrySet.sortBy[it.key].map [ entry |
             '''
                 <li>
@@ -309,22 +328,45 @@ class KRenderingExtensionsDoclet {
 
 
     /* ------------------------------------------------------
+     *                      Typeahead Content
+     */
+    static def typeAheadJson() {
+        '''['''
+        +
+        extensions.map [ ext |
+            '''
+        {
+            value: '«ext.name»',
+            tokens: ['«ext.name»'],
+            firstParam: '«ext.firstParamType»',
+            params: [ «ext.paramTypes.map[''' '«it»' '''].join(",")» ]
+        }
+        '''
+        ].join(",\n")
+        +
+        ''']'''
+    }
+    
+
+    /* ------------------------------------------------------
      *                      Root Content
      */
-    static def contentRoot() {
-        classificationMap.entrySet.sortBy[it.key].map[ entry |
+    static def contentRoot(Multimap<String, ExtensionDescr> classificationMap) {
+        classificationMap.asMap.entrySet.sortBy[it.key].map[ entry |
             '''
                 <h1>«entry.key.toFirstUpper»</h1>
             '''
             + 
-            entry.value.asMap.entrySet.sortBy[it.key].map [ centry |
+            // extensions are grouped by their classification
+            // now group them by their first parameter
+            entry.value.groupBy[it.firstParamType].asMap.entrySet.sortBy[it.key].map [ centry |
                 contentRootTable(entry.key, centry)
             ].join("\n")
         ].join("\n")
     }
     
     
-    static def contentRootTable(String idPrefix, Entry<String, Collection<MethodDoc>> entry) {
+    static def contentRootTable(String idPrefix, Entry<String, Collection<ExtensionDescr>> entry) {
         val clazz = entry.key
         '''
             <div id="«idPrefix»«clazz»" class="panel-group">
@@ -356,23 +398,23 @@ class KRenderingExtensionsDoclet {
         ].join("").replaceAll("\\.", "")
     }
     
-    static def contentRootItems(String idPrefix, Entry<String, Collection<MethodDoc>> entry) {
+    static def contentRootItems(String idPrefix, Entry<String, Collection<ExtensionDescr>> entry) {
         entry.value.sortBy[it.name].map [ extsn |
             
-            val id = idPrefix.genId(extsn)
+            val id = idPrefix.genId(extsn.methodDoc)
             
             '''
                 <tr>
                     <td>
                         <div class="panel-heading k-title no-padding">
                             <a data-toggle="collapse" href="#collapse«id»">
-                                 «extsn.methodSig»
+                                 «extsn.methodDoc.methodSig»
                             </a>
                         </div>
                         <div id="collapse«id»" class="panel-collapse collapse">
                             <div class="panel-body">
-                               «extsn.description»
-                               «extsn.code»
+                               «extsn.methodDoc.description»
+                               «extsn.methodDoc.code»
                              </div>
                          </div>
                     </td>
@@ -384,7 +426,7 @@ class KRenderingExtensionsDoclet {
     /* ------------------------------------------------------
      *                      Categories Content
      */
-     static def contentCategories() {
+     static def contentCategories(Multimap<String, ExtensionDescr> categoryMap) {
          '''
             <h1>Categories</h1>
          '''
@@ -396,7 +438,7 @@ class KRenderingExtensionsDoclet {
          ].join("\n")
      }
      
-     static def contentCategoriesTable(String idPrefix, Entry<String, Collection<MethodDoc>> entry) {
+     static def contentCategoriesTable(String idPrefix, Entry<String, Collection<ExtensionDescr>> entry) {
         val clazz = entry.key
         '''
             <div id="«idPrefix»«clazz»" class="panel-group">
@@ -424,28 +466,27 @@ class KRenderingExtensionsDoclet {
     
     
     
-    static def contentCategoriesItems(String idPrefix, Entry<String, Collection<MethodDoc>> entry) {
+    static def contentCategoriesItems(String idPrefix, Entry<String, Collection<ExtensionDescr>> entry) {
         entry.value.sortBy[it.name].map [ extsn |
             
-            val id = idPrefix.genId(extsn)
-            val firstParam = extsn.parameters.head.typeName
+            val id = idPrefix.genId(extsn.methodDoc)
             
             '''
                 <tr>
                     <td>
                         <div class="panel-heading k-title no-padding">
                             <a data-toggle="collapse" href="#collapse«id»">
-                                 <em>«firstParam»</em> «extsn.methodSig»
+                                 <em>«extsn.firstParamType»</em> «extsn.methodDoc.methodSig»
                             </a>
                         </div>
                         <div id="collapse«id»" class="panel-collapse collapse">
                             <div class="panel-body">
-                               «extsn.description»
-                               «extsn.code»
+                               «extsn.methodDoc.description»
+                               «extsn.methodDoc.code»
                              </div>
                          </div>
                         <!--a href="«entry.key».html#«extsn.name»">
-                            «extsn.methodSig»
+                            «extsn.methodDoc.methodSig»
                         </a-->
                     </td>
                 </tr>
@@ -530,7 +571,12 @@ class KRenderingExtensionsDoclet {
         ].join(", ")
 
         val firstParam = doc.parameters.head.typeName // head always exists
-        val fileName = extensionFileMap.get(Pair.of(firstParam, doc.name))
+
+        // TODO MEGA INEFFICIENT
+        val files = extensions.groupBy [ it.firstParamType ].get(firstParam).groupBy [ it.name ].get(doc.name)
+        val fileName = files.head.containingFile + if (files.size > 1) "*" else ""
+        
+//        val fileName = extensionFileMap.get(Pair.of(firstParam, doc.name))
         '''
             <span style="font-size: 0.7em" class="text-muted pull-right">«fileName»</span>
             «doc.name»(<em>«params»</em>)
@@ -554,7 +600,7 @@ class KRenderingExtensionsDoclet {
             val text = code.get(0).text.replaceAll("<pre>", "").replaceAll("</pre>", "")
             '''
                 <h6>Example Usage</h6>
-                <pre class="highlight linenums lang-xtend">
+                <pre class="highlight lang-xtend">
             '''
             +
             text
