@@ -50,7 +50,7 @@
     $('.typeahead, .typeahead-bar').bind('typeahead:selected', function(obj, datum, name) { 
       
       // already on the page?
-      if (location.pathname == "/classes.html") {
+      if (location.pathname.indexOf("/classes.html") > -1) {
         location.hash = "#collapse" + datum.hrefid;
         openExtension();
       } else {
