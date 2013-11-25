@@ -145,11 +145,10 @@ public class ClassItem implements Comparable<ClassItem> {
                 // Break the tag's text into tokens
                 StringTokenizer tokenizer = new StringTokenizer(tagText, " \t\n\r");
                 boolean proposed = false;
-                String token = "";
                 StringBuilder finalComment = new StringBuilder();
                 
                 while (tokenizer.hasMoreTokens()) {
-                    token = tokenizer.nextToken();
+                    String token = tokenizer.nextToken();
     
                     if (token.equalsIgnoreCase(RatingDocletConstants.TAG_PROPOSED) && !proposed) {
                         // Proposed
@@ -169,7 +168,11 @@ public class ClassItem implements Comparable<ClassItem> {
                 
                 // If the rating is only proposed, we must degrade the rating candidate
                 if (proposed) {
-                    codeRatingCandidate = codeRatingCandidate.getDegraded();
+                    if (codeRatingCandidate == null) {
+                        codeRatingCandidate = CodeRating.PROP_YELLOW;
+                    } else {
+                        codeRatingCandidate = codeRatingCandidate.getDegraded();
+                    }
                 }
                 
                 codeRatingDetails = finalComment.toString();

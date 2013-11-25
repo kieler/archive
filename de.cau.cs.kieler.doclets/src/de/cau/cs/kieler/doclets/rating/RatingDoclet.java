@@ -13,8 +13,7 @@
  */
 package de.cau.cs.kieler.doclets.rating;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintWriter;
+import java.io.IOException;
 
 import com.sun.javadoc.DocErrorReporter;
 import com.sun.javadoc.Doclet;
@@ -80,16 +79,8 @@ public class RatingDoclet extends Doclet {
         RatingGenerator generator = new RatingGenerator();
         try {
             generator.generateRatings(umbrellaProject, rootDoc, destination);
-        } catch (Throwable exception) {
-            // Build a proper exception message
-            StringBuilder message = new StringBuilder("Error producing rating documentation: ");
-            message.append(exception.getMessage()).append("\n");
-            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-            exception.printStackTrace(new PrintWriter(byteStream));
-            message.append(byteStream.toString());
-            
-            rootDoc.printError(message.toString());
-            return false;
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
         }
         
         return true;
