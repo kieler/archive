@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -7,33 +6,33 @@
   <groupId>de.cau.cs.kieler</groupId>
   <artifactId>de.cau.cs.kieler.doclets</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  
+
   <properties>
-     <!-- guarantee that we use utf8 for compilation, this is especially required
-         due to xtend's template symbols («) when running maven on windows. -->
+    <!-- guarantee that we use utf8 for compilation, this is especially required 
+      due to xtend's template symbols («) when running maven on windows. -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
     <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
   </properties>
-  
+
   <build>
     <sourceDirectory>src</sourceDirectory>
-      <plugins>
-		<plugin>
-			<groupId>org.eclipse.xtend</groupId>
-			<artifactId>xtend-maven-plugin</artifactId>
-			<version>2.4.3</version>
-			<executions>
-				<execution>
-					<goals>
-						<goal>compile</goal>
-					</goals>
-				</execution>
-			</executions>
-		</plugin>
-    
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.xtend</groupId>
+        <artifactId>xtend-maven-plugin</artifactId>
+        <version>2.4.3</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
-    
+
     <resources>
       <resource>
         <directory>icons</directory>
@@ -43,6 +42,19 @@
       </resource>
       <resource>
         <directory>js</directory>
+      </resource>
+
+      <!-- For convenience we want all files at the root level withing the 
+        resulting jar file. However, maven does not seem to offer a 'flatten' functionality. 
+        Also take care, that all file names are distinct. -->
+      <resource>
+        <directory>js/extensions</directory>
+      </resource>
+      <resource>
+        <directory>css/extensions</directory>
+      </resource>
+      <resource>
+        <directory>css/extensions/styles</directory>
       </resource>
     </resources>
   </build>
@@ -54,10 +66,10 @@
       <version>2.9.1</version>
     </dependency>
     <dependency>
-	<groupId>org.eclipse.xtend</groupId>
-	<artifactId>org.eclipse.xtend.lib</artifactId>
-	<version>2.4.3</version>
-	</dependency>
+      <groupId>org.eclipse.xtend</groupId>
+      <artifactId>org.eclipse.xtend.lib</artifactId>
+      <version>2.4.3</version>
+    </dependency>
     <dependency>
       <groupId>sun.jdk</groupId>
       <artifactId>tools</artifactId>

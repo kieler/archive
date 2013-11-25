@@ -1,0 +1,67 @@
+/* Heading on the front page */
+.h1-index {
+    color: #ccc;
+    font-size: 4.5em;
+    text-align: center;
+    text-shadow: 0 1px 2px #eee;
+    margin-top: 60px;
+    margin-bottom: 40px;
+}
+
+/* small border between typeahead suggestions */
+.tt-suggestion + .tt-suggestion {
+    border-top: 1px solid #CCCCCC;
+}
+
+/* adapt the typeahead in the top bar to the inverted nav style */
+.typeahead-bar {
+    background-color: #000 !important;
+    color: #999 !important;
+}
+
+.typeaheadExtension {
+    font-size: 0.85em;
+    padding-top: 2px;
+    padding-bottom: 3px;
+}
+
+.typeaheadFile {
+    font-size: 0.7em; 
+    float: right; 
+    position: relative;
+}
+
+/* Prevent hogan from setting white-space: normal */
+.white-space-pre {
+    white-space: pre !important;
+}
+
+.content {
+    margin-top: 50px;
+}
+
+.panel-group {
+    margin-bottom: 10px;
+}
+
+.k-panel {
+    padding: 10px;
+}
+
+.k-table {
+    margin-bottom: 0px;
+}
+
+.no-padding {
+    padding: 0px;
+}
+
+.k-title > a {
+    color: inherit; 
+}
+
+/* Line numbers on every line. */
+li.L0, li.L1, li.L2, li.L3,
+li.L5, li.L6, li.L7, li.L8 {
+    list-style-type: decimal !important
+}
