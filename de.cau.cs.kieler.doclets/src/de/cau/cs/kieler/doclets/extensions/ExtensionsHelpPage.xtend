@@ -87,9 +87,9 @@ class ExtensionsHelpPage {
         
         <h3>Example</h3>
         <p>
-            It is possible to attach a small example to an extension's documentation that illustrates how 
+            It is possible to attach small examples to an extension's documentation that illustrate how 
             the extension is supposed to be used. For this, add a <code>@example</code> tag to the
-            javadoc, followed by the preformatted example.
+            javadoc, followed by the preformatted example. You can add multiple example tags.
         </p>
         
         <div class="alert alert-info">
@@ -118,7 +118,8 @@ class ExtensionsHelpPage {
             By default the extensions are grouped by the type of the class they are applied to. However,
             sometimes it is useful to group them by their purpose, for instance <em>styling</em> or 
             <em>composing</em> extensions. For this add a <code>@extensionCategory</code> tag to the 
-            javadoc followed by a category identifier. At the moment only one category is possible.
+            javadoc followed by a category identifier. A method can be categorized under multiple 
+            categories, just add multiple tags.
         </p>
         
         «example(
@@ -149,7 +150,7 @@ class ExtensionsHelpPage {
         '''
         <div>
             <div class="text-muted">Example</div>
-            <pre class="highlight linenums lang-xtend">
+            <pre class="highlight lang-xtend">
                 «code»
             </pre>
         </div>
