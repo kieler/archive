@@ -150,7 +150,7 @@ class ExtensionsHelpPage {
         '''
         <div>
             <div class="text-muted">Example</div>
-            <pre class="highlight lang-xtend">
+            <pre class="prettyprint lang-xtend">
                 «code»
             </pre>
         </div>

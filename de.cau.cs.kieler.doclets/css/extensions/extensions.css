@@ -36,6 +36,10 @@
     white-space: pre !important;
 }
 
+pre.prettyprint {
+    padding: 9px;
+}
+
 .content {
     margin-top: 50px;
 }

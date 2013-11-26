@@ -142,8 +142,8 @@ class ExtensionDescr {
             } + code.map [ example |
                 val text = example.text.replaceAll("<pre>", "").replaceAll("</pre>", "")
                 '''
-                    <pre class="highlight lang-xtend">
-                ''' + text.split("\n").map[it].join("\n") + '''
+                    <pre class="prettyprint lang-xtend">
+                ''' + " " + text.split("\n").map[it].join("\n") + '''
                     </pre>
                 '''
             ].join("\n")

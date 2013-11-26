@@ -53,9 +53,6 @@
       <resource>
         <directory>css/extensions</directory>
       </resource>
-      <resource>
-        <directory>css/extensions/styles</directory>
-      </resource>
     </resources>
   </build>
 

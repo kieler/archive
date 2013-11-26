@@ -107,12 +107,6 @@ class KRenderingExtensionsDoclet {
         util.copyResource("extensions.css", css)
         util.copyResource("prettify.min.css", css)
         
-        // additional requirements for the syntaxhighlighting
-        val styles = new File(DOC_ROOT, "css/styles")
-        styles.mkdirs
-        util.copyResource("style.min.css", styles)
-        util.copyResource("theme-balupton.min.css", styles)
-        
         // js
         val js = new File(DOC_ROOT, "js")
         js.mkdirs
@@ -121,7 +115,6 @@ class KRenderingExtensionsDoclet {
         util.copyResource("typeahead.min.js", js)
         util.copyResource("prettify.min.js", js)
         util.copyResource("xtend-lang.js", js)
-        util.copyResource("jquery.syntaxhighlighter.min.js", js)
         util.copyResource("hogan-2.0.0.js", js)
         util.copyResource("extensions.js", js)
         
@@ -169,11 +162,11 @@ class KRenderingExtensionsDoclet {
                     <link href="css/typeahead-bootstrap.css" rel="stylesheet" type="text/css">
                     <link href="css/prettify.min.css" rel="stylesheet" type="text/css">
                     <link href="css/extensions.css" rel="stylesheet" type="text/css">
+                    
                     <script src="js/jquery-1.10.2.min.js" type="text/javascript"></script>
                     <script src="js/bootstrap-3.0.2.min.js" type="text/javascript"></script>
                     <script src="js/typeahead.min.js" type="text/javascript"></script>
                     <script src="js/prettify.min.js" type="text/javascript"></script>
-                    <script src="js/jquery.syntaxhighlighter.min.js" type="text/javascript"></script>
                     <script src="js/xtend-lang.js" type="text/javascript"></script>
                     <script src="js/hogan-2.0.0.js" type="text/javascript"></script>
                     <script src="js/extensions.js" type="text/javascript"></script>
