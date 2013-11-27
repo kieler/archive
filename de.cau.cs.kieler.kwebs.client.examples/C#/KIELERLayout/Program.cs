@@ -33,9 +33,9 @@ namespace KielerCSharp {
             // local server
             String server = "http://localhost:9444";
             // sample graph
-            String graph = "{id:\"root\",children:[{id:\"n1\",labels:[\"n1\"],width:100,height:100},"
-                        + "{id:\"n2\",labels:[\"n2\"],width:100,height:50,children:[{id:\"n3\","
-                        + "labels:[\"n3\"],width:20,height:20},{id:\"n4\",labels:[\"n4\"],width:20,"
+            String graph = "{id:\"root\",children:[{id:\"n1\",labels:[{text:\"n1\"}],width:100,height:100},"
+                        + "{id:\"n2\",labels:[{text:\"n2\"}],width:100,height:50,children:[{id:\"n3\","
+                        + "labels:[{text:\"n3\"}],width:20,height:20},{id:\"n4\",labels:[{text:\"n4\"}],width:20,"
                         + "height:20}],edges:[{id:\"e4\",source:\"n3\",target:\"n4\"}]}],"
                         + "edges:[{id:\"e1\",source:\"n1\",target:\"n2\"}]}";
 
