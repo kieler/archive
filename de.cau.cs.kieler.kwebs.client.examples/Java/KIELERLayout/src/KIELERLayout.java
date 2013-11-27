@@ -69,13 +69,19 @@ public class KIELERLayout {
                             URLEncoder.encode(jsonOptions, charset),
                             URLEncoder.encode(inFormat, charset),
                             URLEncoder.encode(outFormat, charset));
-
+            
             // connect to the server and issue the request
-            final URL url = new URL(usedServer + LAYOUT_HANDLER + "?" + query);
+            final URL url = new URL(usedServer + LAYOUT_HANDLER);
             final URLConnection urlConnection = url.openConnection();
             urlConnection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-            urlConnection.setRequestProperty("type", "GET");
-            urlConnection.setRequestProperty("dataType", "text");
+            urlConnection.setRequestProperty("type", "POST");
+            urlConnection.setRequestProperty("Content-Length", "" + query.getBytes().length);
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(true);
+            // write the data to the post
+            urlConnection.getOutputStream().write(query.getBytes());
+            urlConnection.getOutputStream().close();
+            // open the connection
             urlConnection.connect();
 
             // wait for a result

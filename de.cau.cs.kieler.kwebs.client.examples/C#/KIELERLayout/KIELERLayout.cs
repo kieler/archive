@@ -62,10 +62,14 @@ namespace KIELER {
                             Uri.EscapeUriString(outFormat));
 
             // connect to the server and issue the request
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(usedServer + LAYOUT_HANDLER + "?" + query);
-            request.Method = "GET";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(usedServer + LAYOUT_HANDLER);
+            request.Method = "POST";
             request.ContentType = "application/json; charset=utf-8";
-
+            // write the query to the request stream
+            byte[] bytes = Encoding.UTF8.GetBytes(query);
+            request.ContentLength = bytes.Length;
+            request.GetRequestStream().Write(bytes, 0, bytes.Length);
+            request.GetRequestStream().Close();
 
             String result = "";
             // retrieve a response

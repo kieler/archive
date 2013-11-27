@@ -47,14 +47,13 @@
     var error = opts.error || function() {};
     
     // check whether the graph is a string or json
-    if (typeof graph === object) {
+    if (typeof graph === 'object') {
       graph = JSON.stringify(graph)
     }
     
     $.ajax({
-      type : 'GET',
+      type : 'POST',
       contentType : 'application/json',
-      dataType : 'text',
       url : server + '/live',
       data : {
         graph : graph,
