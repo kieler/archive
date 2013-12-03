@@ -44,40 +44,64 @@
   jQuery( document ).ready( function() {
       
     // how to style the index page typeahead
-    $('input.typeahead').typeahead({
-        name: 'find',
+    $('input.typeahead').typeahead([{
+        name: 'extsns',
         prefetch: './extensions.json',
+        header: '<h6 class="typeaheadTitle">Extensions</h6>',
         template:  ['<p class="text-muted typeaheadFile">{{file}}</p>',
                     '<p class="typeaheadExtension">{{firstParam}}.<b>{{value}}</b>({{params}}): {{returnType}}</p>',
                     '{{#example}}<pre class="prettyprint lang-xtend white-space-pre">{{text}}</pre>{{/example}}'
                    ].join(''),
         engine: Hogan,
         limit: 10
-    });
+    },{
+        name: 'layopts',
+        prefetch: './layoutopts.json',
+        header: '<h6 class="typeaheadTitle">Layout Options</h6>',
+        template: ['<p><small><b>{{value}}</b></small></p>',
+                   '<p class="typeaheadMarginLeft"><code>{{id}}</code> <code>{{type}}</code></p>'
+                   ].join(''),
+        engine: Hogan,
+        limit: 10
+    }]);
     
     // how to style the top bar typeahead
-    $('input.typeahead-bar').typeahead({
-        name: 'find-bar',
+    $('input.typeahead-bar').typeahead([{
+        name: 'extsns-bar',
         prefetch: './extensions.json',
         template:  ['<p class="text-muted" style="font-size: 0.7em; float: right; position: relative;">{{file}}</p>',
                     '<p class="typeaheadExtension">{{firstParam}}.<b>{{value}}</b>({{params}})</p>'
                    ].join(''),
         engine: Hogan,
         limit: 10
-    });
+    },{
+      name: 'layopts-bar',
+      prefetch: './layoutopts.json',
+      template: ['<p><small><b>{{value}}</b></small></p>'
+                 ].join(''),
+      engine: Hogan,
+      limit: 10
+  }]);
      
     // fix
     $('.tt-query').css('background-color','#fff');
      
     // open extensions that are selected within the typeahead
-    $('.typeahead, .typeahead-bar').bind('typeahead:selected', function(obj, datum, name) { 
+    $('.typeahead, .typeahead-bar').bind('typeahead:selected', function(obj, datum, dataset) { 
+      
+      var page = "";
+      if (dataset.indexOf("extsns") > -1) {
+        page = "classes.html";
+      } else {
+        page = "layoutopts.html";
+      }
       
       // already on the page?
-      if (location.pathname.indexOf("/classes.html") > -1) {
+      if (location.pathname.indexOf(page) > -1) {
         location.hash = "#collapse" + datum.hrefid;
         openExtension();
       } else {
-        location.href = "classes.html#collapse" + datum.hrefid;
+        location.href = page + "#collapse" + datum.hrefid;
       }
       
     });

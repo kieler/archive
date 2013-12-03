@@ -24,6 +24,7 @@ import java.io.File
 import java.util.Collection
 import java.util.List
 import org.eclipse.xtext.xbase.lib.Functions.Function1
+import com.sun.javadoc.LanguageVersion
 
 /**
  * Doclet to create an overview page for all available KLighD extensions.
@@ -36,6 +37,8 @@ class KRenderingExtensionsDoclet {
     public static val TAG_EXTENSION = "@containsExtensions"
     public static val TAG_EXAMPLE = "@example"
     public static val TAG_EXTENSION_CATEGORY = "@extensionCategory"
+    
+    public static val TAG_LAYOUT_OPTIONS = "@containsLayoutOptions"
 
     // default category
     private static val DEFAULT_CATEGORY = "default" 
@@ -45,6 +48,9 @@ class KRenderingExtensionsDoclet {
 
     /** Holds all extension methods. */
     private static List<ExtensionDescr> extensions = Lists.newLinkedList
+    
+    /** Holds all layout options */
+    private static List<LayoutOptionDescr> layoutOptions = Lists.newLinkedList
 
     // some extensions for convenience
     extension ExtensionsContent = new ExtensionsContent
@@ -68,6 +74,10 @@ class KRenderingExtensionsDoclet {
     static def boolean start(RootDoc rootDoc) {
         new KRenderingExtensionsDoclet().startInt(rootDoc)
     }
+    
+    static def LanguageVersion languageVersion() {
+        return LanguageVersion.JAVA_1_5
+    }
 
     
     def boolean startInt(RootDoc rootDoc) {
@@ -89,6 +99,19 @@ class KRenderingExtensionsDoclet {
                 extensions += descr             
             ]
         ]
+        
+        // collect the layout options
+        rootDoc.classes.filter[it.tags(TAG_LAYOUT_OPTIONS).length > 0].forEach [ clazz |
+            
+            val category = clazz.tags(TAG_LAYOUT_OPTIONS).head.text?:"general"
+            
+            clazz.fields.filter[ it.static && it.final ].forEach [ fieldDoc |
+                val opt = new LayoutOptionDescr(clazz, category, fieldDoc)
+                layoutOptions += opt
+            ]
+        ]
+        
+        println("No Layout options : " + layoutOptions.size)
         
         // make sure the root folder exists
         val docRoot = new File(DOC_ROOT)
@@ -123,8 +146,13 @@ class KRenderingExtensionsDoclet {
         Files.write(genRootPage(), new File(DOC_ROOT + "classes.html") , Charsets.UTF_8)
         // generate the categories page 
         Files.write(genCategoriesPage(), new File(DOC_ROOT + "categories.html") , Charsets.UTF_8)
+        // write layout options page
+        Files.write(genLayoutOptionsPage(), new File(DOC_ROOT + "layoutopts.html") , Charsets.UTF_8)
+        
         // json data
         Files.write(typeAheadJson(extensions), new File(DOC_ROOT + "extensions.json") , Charsets.UTF_8)
+        Files.write(typeAheadJsonLayoutOpts(layoutOptions), new File(DOC_ROOT + "layoutopts.json") , Charsets.UTF_8)
+        
         // generate a help page
         Files.write(new ExtensionsHelpPage().extensionAnnotations.withSkeleton, 
             new File(DOC_ROOT + "help.html") , Charsets.UTF_8
@@ -145,6 +173,12 @@ class KRenderingExtensionsDoclet {
        val categoriesMap = extensions.groupBy [ it.categories.head?: "none" ]
 
        contentCategories(categoriesMap).withSkeleton
+    }
+    
+    def genLayoutOptionsPage() {
+        val layoutOptsMap = layoutOptions.groupBy [ it.category ]
+        
+        contentLayoutOptions(layoutOptsMap).withSkeleton
     }
     
     /* ------------------------------------------------------
@@ -232,6 +266,7 @@ class KRenderingExtensionsDoclet {
                         <ul class="nav navbar-nav">
                             «navigationClassifications(classifiMap)»
                             «navigationCategories(categoriesMap)»
+                            <li><a href="layoutopts.html">Layout Options</a></li>
                             <li><a href="help.html">Help</a></li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right navbar-form">

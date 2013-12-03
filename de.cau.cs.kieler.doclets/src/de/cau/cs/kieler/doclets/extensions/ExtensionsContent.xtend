@@ -173,4 +173,39 @@ class ExtensionsContent {
         ].join("\n")
     }
     
+    /* ------------------------------------------------------
+     *                      Layout Options
+     */
+     def String contentLayoutOptions(Multimap<String, LayoutOptionDescr> layoutOptions) {
+         layoutOptions.asMap.entrySet.map [ entry |
+             '''
+                <h1>«entry.key»</h1>
+                «entry.value.sortBy[it.name].map[it.layoutOptionsItem].join("\n")»
+             '''
+         ].join("\n")
+     }
+    
+    
+    def layoutOptionsItem(LayoutOptionDescr doc) {
+        val id = doc.getHrefId
+        '''
+             <div id="«doc.name»" class="panel-group">
+               <a id="«id»"></a>
+               <div class="panel panel-default">
+                 <div class="panel-heading">
+                   <h4 class="panel-title">
+                     <a data-toggle="collapse" href="#collapse«id»">
+                       «doc.title»
+                     </a>
+                   </h4>
+                 </div>
+                 <div id="collapse«id»" class="panel-collapse collapse">
+                    <div class="panel-body k-panel">
+                        «doc.description»
+                    </div>
+                 </div>
+               </div>
+             </div>
+        '''
+    }
 }

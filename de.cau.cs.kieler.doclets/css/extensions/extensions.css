@@ -19,6 +19,12 @@
     color: #999 !important;
 }
 
+.typeaheadTitle {
+    border-bottom: 1px solid #CCCCCC;
+    margin: 0px 10px 0px;
+    padding: 3px 0px;
+}
+
 .typeaheadExtension {
     font-size: 0.85em;
     padding-top: 2px;
@@ -29,6 +35,10 @@
     font-size: 0.7em; 
     float: right; 
     position: relative;
+}
+
+.typeaheadMarginLeft {
+    margin-left: 5px;
 }
 
 /* Prevent hogan from setting white-space: normal */
