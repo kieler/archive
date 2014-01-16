@@ -9,8 +9,11 @@ MongoClient.connect('mongodb://127.0.0.1:27017/kieler/', function(err, db) {
 
   http.createServer(function(req, res) {
 
-    // check for valid requests
     if (req.method == 'OPTIONS') {
+      /*
+       * OPTIONS for CORS
+       */
+
       // cors preflight
       res.writeHead(200, {
         'Access-Control-Allow-Origin' : '*',
@@ -19,44 +22,49 @@ MongoClient.connect('mongodb://127.0.0.1:27017/kieler/', function(err, db) {
       });
       res.end();
 
-    } else if (req.method != 'GET') {
-      res.writeHead(501, {}); // Not Implemented
-      res.end();
-      return;
-    }
+    } else if (req.method == 'GET') {
+      /*
+       * GET
+       */
+      var params = url.parse(req.url);
+      if (params.pathname == '/stats') {
 
-    var params = url.parse(req.url);
-    if (params.pathname == '/stats') {
+        // use 'qs' for the querystring as it supports hierarchical nesting of
+        // the json
+        var query = qs.parse(params.query);
 
-      // use 'qs' for the querystring as it supports hierarchical nesting of the json
-      var query = qs.parse(params.query);
+        // get data
+        var col = db.collection(query.coll);
 
-      // get data
-      var col = db.collection(query.coll);
-      
-      // execute the specified query
-      col.find(query.obj,
-       query.fields,
-       query.opts 
-      ).toArray(function(err, doc) {
+        // execute the specified query
+        col.find(query.obj, query.fields, query.opts).toArray(function(err, doc) {
 
-        if (err) {
-          res.writeHead(400, {});
-        }
+          if (err) {
+            res.writeHead(400, {});
+          }
 
-        // header
-        res.writeHead(200, {
-          'Access-Control-Allow-Origin' : '*', // cors
-          'Content-Type' : 'json'
+          // header
+          res.writeHead(200, {
+            'Access-Control-Allow-Origin' : '*', // cors
+            'Content-Type' : 'json'
+          });
+          // json result
+          res.end(JSON.stringify(doc, 0, 2));
+
         });
-        // json result
-        res.end(JSON.stringify(doc, 0, 2));
 
-      });
+      } else {
+        // unknown address
+        res.writeHead(404, {}); // Not Found
+        res.end();
+        return;
+      }
 
     } else {
-      // unknown address
-      res.writeHead(404, {}); // Not Found
+      /*
+       * UNSUPPORTED
+       */
+      res.writeHead(501, {}); // Not Implemented
       res.end();
       return;
     }
