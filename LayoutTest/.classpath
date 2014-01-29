@@ -2,12 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.emf.common_2.7.0.v20110912-0920.jar"/>
-	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.emf.ecore_2.7.0.v20110912-0920.jar"/>
-	<classpathentry kind="lib" path="/de.cau.cs.kieler.updatesite/plugins/de.cau.cs.kieler.core.jar"/>
-	<classpathentry kind="lib" path="/de.cau.cs.kieler.updatesite/plugins/de.cau.cs.kieler.core.kgraph.jar"/>
-	<classpathentry kind="lib" path="/de.cau.cs.kieler.updatesite/plugins/de.cau.cs.kieler.kiml.jar"/>
-	<classpathentry kind="lib" path="/de.cau.cs.kieler.updatesite/plugins/de.cau.cs.kieler.klay.layered.jar"/>
-	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/com.google.collect_1.0.0.v201105210816.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.emf.common_2.9.1.v20130827-0309.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.emf.ecore_2.9.1.v20130827-0309.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/com.google.guava_11.0.2.v201303041551.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/de.cau.cs.kieler.core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/de.cau.cs.kieler.core.kgraph"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/de.cau.cs.kieler.kiml"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/de.cau.cs.kieler.klay.layered"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
