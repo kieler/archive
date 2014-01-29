@@ -17,6 +17,7 @@ import java.lang.reflect.Method;
 
 import com.google.common.collect.ImmutableList;
 import com.sun.javadoc.DocErrorReporter;
+import com.sun.javadoc.LanguageVersion;
 import com.sun.javadoc.RootDoc;
 
 import de.cau.cs.kieler.doclets.extensions.KRenderingExtensionsDoclet;
@@ -140,4 +141,13 @@ public final class CompoundDoclet {
         return 0;
     }
 
+    /**
+     * Return the version of the Java Programming Language supported by
+     * this doclet. 
+     * 
+     * @return the language version supported by this doclet
+     */
+    public static LanguageVersion languageVersion() {
+        return LanguageVersion.JAVA_1_5;
+    }
 }
