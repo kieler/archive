@@ -1,6 +1,9 @@
 DOCLET INSTALLIEREN
 ===================
 
+UPDATE: Der build des doclets wird zu Beginn eines jeden 'Nightly Rating' Plans durchgeführt.
+Alternativ kann das doclet-JAR wie folgt für den nightly build bereitgestellt werden: 
+
 Das Doclet muss gebaut und installiert werden um mit dem nächtlichen Rating Build Job zu
 funktionieren. Und das macht man folgendermaßen:
 
