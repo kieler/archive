@@ -14,7 +14,7 @@
 package de.cau.cs.kieler.kiml.layouter.metrics;
 
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -24,9 +24,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import de.cau.cs.kieler.core.WrappedException;
+import de.cau.cs.kieler.core.alg.BasicProgressMonitor;
 import de.cau.cs.kieler.core.alg.IFactory;
 import de.cau.cs.kieler.core.alg.IKielerProgressMonitor;
-import de.cau.cs.kieler.core.alg.BasicProgressMonitor;
 import de.cau.cs.kieler.core.alg.InstancePool;
 import de.cau.cs.kieler.core.kgraph.KEdge;
 import de.cau.cs.kieler.core.kgraph.KNode;
@@ -44,64 +44,70 @@ import de.cau.cs.kieler.kiml.klayoutdata.KShapeLayout;
  * @author cds
  */
 public class EdgeCrossingsMetric extends AbstractMetric {
-   
+
     // CHECKSTYLEOFF MagicNumber
-    
+
     /**
      * The layout algorithm instance pool.
      */
-    private InstancePool<AbstractLayoutProvider> algorithmPool;
-    
-    ///////////////////////////////////////////////////////////////////////////////
+    private final InstancePool<AbstractLayoutProvider> algorithmPool;
+
+    // /////////////////////////////////////////////////////////////////////////////
     // Constructor
-    
+
     /**
      * Creates an execution time metric instance.
      * 
-     * @param layoutFactory the layout algorithm factory
-     * @param outputStream the output stream to which measurements are written
-     * @param parameters user-supplied parameters controlling the graph generation and
-     *                   measurement process.
-     * @param propertyHolder an optional class that sets properties on generated random
-     *                       graphs. Can be used to set layout properties that would
-     *                       otherwise be left to default values.
-     * @throws IllegalArgumentException if the parameters are not valid.
+     * @param layoutFactory
+     *            the layout algorithm factory
+     * @param parameters
+     *            user-supplied parameters controlling the graph generation and measurement process.
+     * @param propertyHolder
+     *            an optional class that sets properties on generated random graphs. Can be used to
+     *            set layout properties that would otherwise be left to default values.
+     * @param outputStreamWriter
+     *            the output stream writer to which measurements are written
+     * @throws IllegalArgumentException
+     *             if the parameters are not valid.
      */
     public EdgeCrossingsMetric(final IFactory<AbstractLayoutProvider> layoutFactory,
-            final OutputStream outputStream, final Parameters parameters,
-            final IPropertyHolder propertyHolder) {
-        super(outputStream, parameters, propertyHolder);
-        this.algorithmPool = new InstancePool<AbstractLayoutProvider>(layoutFactory);
+            final Parameters parameters, final IPropertyHolder propertyHolder,
+            final OutputStreamWriter outputStreamWriter) {
+        super(outputStreamWriter, parameters, propertyHolder);
+        algorithmPool = new InstancePool<AbstractLayoutProvider>(layoutFactory);
     }
-    
-    
-    ///////////////////////////////////////////////////////////////////////////////
+
+    // /////////////////////////////////////////////////////////////////////////////
     // Measurement
-    
+
     private static final int OUTPUT_WIDTH = 150;
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
     protected void doGraphSizeMeasurement(final int nodeCount) throws IOException {
-        
+
         String startString = "n = " + nodeCount + ": ";
         System.out.print(startString);
-        
+
         // multi-threaded execution: submit tasks to the executor service
         ExecutorService executorService = Executors.newCachedThreadPool();
         LinkedList<Future<int[]>> futures = new LinkedList<Future<int[]>>();
-        
+
         int[][] allResults = new int[parameters.graphsPerSize][];
         for (int i = 0; i < parameters.graphsPerSize; i++) {
 
             // Generate a graph with the given node and edge count
             final KNode layoutGraph = graphGenerator.generateGraph(nodeCount, parameters);
+            // Export the graph using the last computed layout, if requested TODO-alan
+            if (parameters.exportGraphs) {
+                graphGenerator.exportGraph(layoutGraph, i + 1);
+            }
             if (propertyHolder != null) {
                 layoutGraph.getData(KShapeLayout.class).copyProperties(propertyHolder);
             }
-            
+
             final int[] result = new int[parameters.runsPerGraph];
             allResults[i] = result;
             Future<int[]> future = executorService.submit(new Runnable() {
@@ -109,10 +115,10 @@ public class EdgeCrossingsMetric extends AbstractMetric {
                     AbstractLayoutProvider layoutProvider = algorithmPool.fetch();
                     // Do a bunch of layout runs and write the number of crossings for each run
                     for (int j = 0; j < parameters.runsPerGraph; j++) {
-                        
+
                         IKielerProgressMonitor progressMonitor = new BasicProgressMonitor();
                         layoutProvider.doLayout(layoutGraph, progressMonitor);
-                        
+
                         int c = computeNumberOfCrossings(layoutGraph);
                         result[j] = c;
                     }
@@ -120,20 +126,16 @@ public class EdgeCrossingsMetric extends AbstractMetric {
                 }
             }, result);
             futures.addLast(future);
-            
-            // Export the graph using the last computed layout, if requested
-            if (parameters.exportGraphs) {
-                graphGenerator.exportGraph(layoutGraph, i + 1);
-            }
+
         }
-        
+
         // Wait for all tasks to finish execution
         int outPos = startString.length();
         while (!futures.isEmpty()) {
             try {
                 // This call waits if necessary for the computation to complete
                 futures.removeFirst().get();
-                
+
                 if (outPos >= OUTPUT_WIDTH) {
                     // break the line if the maximal width has been reached
                     System.out.println();
@@ -145,7 +147,7 @@ public class EdgeCrossingsMetric extends AbstractMetric {
                 throw new WrappedException(exception);
             }
         }
-        
+
         // Output the gathered results
         long crossSum = 0;
         for (int i = 0; i < parameters.graphsPerSize; i++) {
@@ -157,15 +159,14 @@ public class EdgeCrossingsMetric extends AbstractMetric {
             }
             outputWriter.write("\n");
         }
-        
+
         long averageCross = crossSum / (parameters.graphsPerSize * parameters.runsPerGraph);
         System.out.println(" -> " + averageCross);
     }
-    
-    
-    ///////////////////////////////////////////////////////////////////////////////
+
+    // /////////////////////////////////////////////////////////////////////////////
     // Utility Methods
-    
+
     /**
      * Returns whether two line segments have an intersection.
      * 
@@ -179,8 +180,8 @@ public class EdgeCrossingsMetric extends AbstractMetric {
      *            end point of the second line segment
      * @return true if the lines have an intersection
      */
-    private static boolean hasIntersection(final KVector p1, final KVector p2,
-            final KVector q1, final KVector q2) {
+    private static boolean hasIntersection(final KVector p1, final KVector p2, final KVector q1,
+            final KVector q2) {
         double s = (q2.y - q1.y) * (p2.x - p1.x) - (q2.x - q1.x) * (p2.y - p1.y);
         // are the line segments parallel?
         if (s == 0) {
@@ -197,8 +198,10 @@ public class EdgeCrossingsMetric extends AbstractMetric {
     /**
      * Computes the number of crossings between two vector chains.
      * 
-     * @param chain1 the first vector chain
-     * @param chain2 the second vector chain
+     * @param chain1
+     *            the first vector chain
+     * @param chain2
+     *            the second vector chain
      * @return the number of crossings
      */
     private static int computeNumberOfCrossings(final KVectorChain chain1, final KVectorChain chain2) {
@@ -212,13 +215,16 @@ public class EdgeCrossingsMetric extends AbstractMetric {
         }
         return numberOfCrossings;
     }
-    
+
     /**
      * Computes the number of crossings of a line and a vector chain.
      * 
-     * @param p1 start point of the line
-     * @param p2 end point of the line
-     * @param chain2 a vector chain
+     * @param p1
+     *            start point of the line
+     * @param p2
+     *            end point of the line
+     * @param chain2
+     *            a vector chain
      * @return the number of crossings
      */
     private static int computeNumberOfCrossings(final KVector p1, final KVector p2,
@@ -237,7 +243,8 @@ public class EdgeCrossingsMetric extends AbstractMetric {
     /**
      * Computes the number of edge crossings in the given graph.
      * 
-     * @param parentNode parent node of the graph
+     * @param parentNode
+     *            parent node of the graph
      * @return the total number of crossings
      */
     private int computeNumberOfCrossings(final KNode parentNode) {
@@ -249,7 +256,7 @@ public class EdgeCrossingsMetric extends AbstractMetric {
                 chains.add(chain);
             }
         }
-        
+
         // count the number of crossings between all edges of the graph
         int edgeCount = chains.size();
         int sum = 0;
@@ -264,5 +271,5 @@ public class EdgeCrossingsMetric extends AbstractMetric {
 
         return sum;
     }
-    
+
 }

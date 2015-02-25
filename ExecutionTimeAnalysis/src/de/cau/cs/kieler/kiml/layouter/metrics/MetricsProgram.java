@@ -16,6 +16,7 @@ package de.cau.cs.kieler.kiml.layouter.metrics;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 import de.cau.cs.kieler.core.alg.DefaultFactory;
 import de.cau.cs.kieler.core.alg.IFactory;
@@ -29,15 +30,15 @@ import de.cau.cs.kieler.klay.layered.p4nodes.NodePlacementStrategy;
 import de.cau.cs.kieler.klay.layered.properties.Properties;
 
 /**
- * Main class of the layouter metrics program. This program measures the performance
- * of KLoDD and KLay Layered on randomly created graphs.
+ * Main class of the layouter metrics program. This program measures the performance of KLoDD and
+ * KLay Layered on randomly created graphs.
  * 
  * @author msp
  * @author cds
  */
 public final class MetricsProgram {
-    
-    ///////////////////////////////////////////////////////////////////////////////
+
+    // /////////////////////////////////////////////////////////////////////////////
     // Constants
 
     /**
@@ -48,19 +49,18 @@ public final class MetricsProgram {
      * Number of bytes in a megabyte.
      */
     private static final long MEGA = 1048576;
-    
-    
-    ///////////////////////////////////////////////////////////////////////////////
+
+    // /////////////////////////////////////////////////////////////////////////////
     // Constructors and main(...) method
-    
+
     /**
      * Hidden default constructor.
      */
     private MetricsProgram(final Parameters parameters) {
         // Create a layout provider factory
-        IFactory<AbstractLayoutProvider> layoutProvider = new DefaultFactory<AbstractLayoutProvider>(
-                LayeredLayoutProvider.class);
-        
+        IFactory<AbstractLayoutProvider> layoutProvider =
+                new DefaultFactory<AbstractLayoutProvider>(LayeredLayoutProvider.class);
+
         // Define a property setter for layout configuration
         IPropertyHolder propertyHolder = new MapPropertyHolder();
         propertyHolder.setProperty(LayoutOptions.EDGE_ROUTING, EdgeRouting.POLYLINE);
@@ -68,42 +68,36 @@ public final class MetricsProgram {
         propertyHolder.setProperty(LayoutOptions.SEPARATE_CC, false);
         propertyHolder.setProperty(Properties.NODE_PLACER, NodePlacementStrategy.SIMPLE);
         propertyHolder.setProperty(Properties.THOROUGHNESS, 1);
-        
+
         // Define which phase execution times shall be considered in CSV output
-        String[] phases = new String[] {
-                "Greedy cycle removal",
-                "Network simplex layering",
-                "Layer sweep crossing minimization",
-                "Simple node placement",
-                "Polyline edge routing"
-        };
-        
+        String[] phases = new String[] { "Greedy switch crossing reduction", };
+
         OutputStream fileStream = null;
         try {
             // Generate a file name
             String fileName = "measurement" + (System.currentTimeMillis() & TIME_MASK) + ".csv";
             fileStream = new FileOutputStream(fileName);
-            
+            OutputStreamWriter osw = new OutputStreamWriter(fileStream);
             // Perform measurement
             AbstractMetric metric;
             switch (parameters.mode) {
             case TIME:
-                metric = new ExecutionTimeMetric(layoutProvider, fileStream, parameters,
-                        propertyHolder, phases);
+                metric =
+                        new ExecutionTimeMetric(layoutProvider, parameters, propertyHolder, phases,
+                                osw);
                 break;
             case CROSSINGS:
-                metric = new EdgeCrossingsMetric(layoutProvider, fileStream, parameters,
-                        propertyHolder);
+                metric = new EdgeCrossingsMetric(layoutProvider, parameters, propertyHolder, osw);
                 break;
             default:
                 throw new UnsupportedOperationException("The given mode is not supported.");
             }
             metric.measure();
-            
+
         } catch (Exception exception) {
             exception.printStackTrace();
-            System.out.println("Memory: " + (Runtime.getRuntime().freeMemory() / MEGA) + "mb free / "
-                    + (Runtime.getRuntime().totalMemory() / MEGA) + " mb total");
+            System.out.println("Memory: " + Runtime.getRuntime().freeMemory() / MEGA + "mb free / "
+                    + Runtime.getRuntime().totalMemory() / MEGA + " mb total");
         } finally {
             try {
                 if (fileStream != null) {
@@ -114,11 +108,12 @@ public final class MetricsProgram {
             }
         }
     }
-    
+
     /**
      * Main method of the metrics program.
      * 
-     * @param args command line arguments.
+     * @param args
+     *            command line arguments.
      */
     public static void main(final String[] args) {
         // Read command-line arguments
@@ -129,7 +124,7 @@ public final class MetricsProgram {
             printHelp(e.getMessage());
             System.exit(1);
         }
-        
+
         // Check if only the help text is to be printed
         if (parameters.help) {
             printHelp(null);
@@ -137,22 +132,22 @@ public final class MetricsProgram {
             new MetricsProgram(parameters);
         }
     }
-    
-    
-    ///////////////////////////////////////////////////////////////////////////////
+
+    // /////////////////////////////////////////////////////////////////////////////
     // Help
-    
+
     /**
      * Prints a help text listing the available command line options.
      * 
-     * @param msg message to be printed before the help text. May be {@code null}.
+     * @param msg
+     *            message to be printed before the help text. May be {@code null}.
      */
     private static void printHelp(final String msg) {
         if (msg != null && msg.length() > 0) {
             System.out.println(msg);
             System.out.println();
         }
-        
+
         System.out.println("Metrics Command Line Help");
         System.out.println("-------------------------");
         System.out.println();
@@ -162,19 +157,23 @@ public final class MetricsProgram {
         System.out.println(" -ln        use a linear scale instead of a logarithmic one.");
         System.out.println(" -sd <int>  start decade. (default: 1)");
         System.out.println(" -ed <int>  end decade. (default: 2)");
-        System.out.println(" -md <int>  the number of different graph sizes per decade. (default: 5)");
-        System.out.println(" -sg <int>  the number of graphs generated for each size. (default: 5)");
+        System.out
+                .println(" -md <int>  the number of different graph sizes per decade. (default: 5)");
+        System.out
+                .println(" -sg <int>  the number of graphs generated for each size. (default: 5)");
         System.out.println(" -gr <int>  the number of runs per graph. (default: 5)");
         System.out.println(" -em <int>  minimum number of edges to leave each node. (default: 1)");
         System.out.println(" -ex <int>  maximum number of edges to leave each node. (default: 2)");
         System.out.println(" -er <float>");
-        System.out.println("            number of edges as factor relative to the number of nodes;");
+        System.out
+                .println("            number of edges as factor relative to the number of nodes;");
         System.out.println("            if set, this value overrides the -em and -ex settings.");
         System.out.println(" -ds <float>");
         System.out.println("            density value for the number of edges; if set, this value");
         System.out.println("            overrides the -em, -ex, and -er settings.");
         System.out.println(" -pr <float> <float> (default: 0.05 0.1)");
-        System.out.println("            the probability for ports to be placed on the different sides:");
+        System.out
+                .println("            the probability for ports to be placed on the different sides:");
         System.out.println("             1. inverted port side.");
         System.out.println("             2. northern or southern port side.");
         System.out.println("            The summed probability must not exceed 1.0.");
