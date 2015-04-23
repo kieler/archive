@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+        id="de.cau.cs.kieler.magicdraw.connector"
+        name="KIELER Layout Connector"
+        version="0.1"
+        provider-name="Kiel University"
+        class="de.cau.cs.kieler.magicdraw.plugin.KIELERLayoutPlugin">
+
+    <requires>
+        <api version="1.2"/>
+    </requires>
+
+    <runtime>
+        <library name="de.cau.cs.kieler.magicdraw.connector.jar"/>
+    </runtime>
+</plugin>
