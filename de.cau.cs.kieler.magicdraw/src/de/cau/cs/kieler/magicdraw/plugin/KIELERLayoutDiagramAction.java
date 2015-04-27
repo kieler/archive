@@ -21,13 +21,13 @@ import javax.swing.KeyStroke;
 import com.nomagic.magicdraw.core.Application;
 import com.nomagic.magicdraw.ui.actions.DefaultDiagramAction;
 import com.nomagic.magicdraw.uml.symbols.DiagramPresentationElement;
+import com.nomagic.magicdraw.uml.symbols.layout.DiagramLayouter;
 
 import de.cau.cs.kieler.magicdraw.adapter.KielerDiagramLayouter;
 
 /**
- * Action to trigger layout process on current diagram.
- * Activated by menu entry
- *  
+ * Action to trigger layout process on current diagram. Activated by menu entry
+ * 
  * @author nbw
  */
 public class KIELERLayoutDiagramAction extends DefaultDiagramAction {
@@ -36,11 +36,15 @@ public class KIELERLayoutDiagramAction extends DefaultDiagramAction {
 
     /**
      * Creates a new KielerConnectorDiagramAction.
-     *  
-     * @param actionID Internal ActionID to identify the action
-     * @param actionName Action Name in menu 
-     * @param stroke Keystroke to activate action
-     * @param group Activation group of action
+     * 
+     * @param actionID
+     *            Internal ActionID to identify the action
+     * @param actionName
+     *            Action Name in menu
+     * @param stroke
+     *            Keystroke to activate action
+     * @param group
+     *            Activation group of action
      */
     public KIELERLayoutDiagramAction(String actionID, String actionName, KeyStroke stroke,
             String group) {
@@ -50,14 +54,21 @@ public class KIELERLayoutDiagramAction extends DefaultDiagramAction {
     /**
      * Executes the layout on the active diagram.
      * 
-     * @param e {@link ActionEvent} that caused the action
+     * @param e
+     *            {@link ActionEvent} that caused the action
      */
     public void actionPerformed(ActionEvent e) {
         // Grab the currently active diagram and open it to make it available to the layouter
         DiagramPresentationElement dia = Application.getInstance().getProject().getActiveDiagram();
-        dia.open();
-        // Try to apply layout on the current diagram 
-        dia.layout(true, new KielerDiagramLayouter());
+        DiagramLayouter layouter = new KielerDiagramLayouter();
+        if (layouter.canLayout(dia)) {
+            dia.open();
+            // Try to apply layout on the current diagram
+            dia.layout(true, new KielerDiagramLayouter());
+        } else {
+            Application.getInstance().getGUILog()
+                    .log("Currently only Class Diagrams can be layouted using KIELER");
+        }
     }
 
 }

@@ -53,20 +53,21 @@ public class KIELERLayoutPlugin extends Plugin {
     @Override
     public void init() {
 
-        // Generate Menu Item
-        final MDAction action =
-                new KIELERLayoutDiagramAction("KIELERLAYOUT", "Automatic Layout with KIELER",
-                        null, ActionsGroups.DIAGRAM_OPENED_RELATED);
+        // Generate Menu Items
+        final MDAction layoutAction =
+                new KIELERLayoutDiagramAction("KIELERLAYOUT", "Automatic Layout with KIELER", null,
+                        ActionsGroups.DIAGRAM_OPENED_RELATED);
+        final MDAction dumpAction =
+                new KIELERDumpAction("KIELERDUMP", "Dump layout information for KIELER", null,
+                        ActionsGroups.DIAGRAM_OPENED_RELATED);
 
         // Create configurator to insert menu item
         AMConfigurator conf = new AMConfigurator() {
 
-            @Override
             public int getPriority() {
                 return AMConfigurator.MEDIUM_PRIORITY;
             }
 
-            @Override
             public void configure(ActionsManager mngr) {
 
                 // Search existing menu item to append new action
@@ -78,7 +79,8 @@ public class KIELERLayoutPlugin extends Plugin {
                     // Get list of actions from category
                     // Insert new action after quick layout
                     List<NMAction> actionsInCat = cat.getActions();
-                    actionsInCat.add(actionsInCat.indexOf(quickLayout) + 1, action);
+                    actionsInCat.add(actionsInCat.indexOf(quickLayout) + 1, layoutAction);
+                    actionsInCat.add(actionsInCat.indexOf(quickLayout) + 2, dumpAction);
                     cat.setActions(actionsInCat);
                 } else {
                     System.out.println("[KielerConnector] Menu Hook not found!");

@@ -48,7 +48,6 @@ import static de.cau.cs.kieler.kiml.options.LayoutOptions.SIZE_CONSTRAINT;
 import static de.cau.cs.kieler.kiml.options.LayoutOptions.SIZE_OPTIONS;
 import static de.cau.cs.kieler.kiml.options.LayoutOptions.SPACING;
 import static de.cau.cs.kieler.kiml.options.LayoutOptions.THICKNESS;
-import static de.cau.cs.kieler.magicdraw.adapter.KGraphMagicDrawAdapter.MAGICDRAWID;
 
 import java.util.EnumSet;
 import java.util.Map;
@@ -79,6 +78,10 @@ import de.cau.cs.kieler.kiml.options.SizeConstraint;
 import de.cau.cs.kieler.kiml.options.SizeOptions;
 import de.cau.cs.kieler.kiml.util.nodespacing.Spacing.Margins;
 
+import de.cau.cs.kieler.magicdraw.adapter.KGraphMagicDrawProperties.MagicDrawElementType;
+import static de.cau.cs.kieler.magicdraw.adapter.KGraphMagicDrawProperties.MAGICDRAW_ID;
+import static de.cau.cs.kieler.magicdraw.adapter.KGraphMagicDrawProperties.MAGICDRAW_TYPE;
+
 /**
  * GWT does not support any of Java's reflection mechanisms. Hence we have to 
  * most of the job to map layout options to their respective types by hand.
@@ -98,7 +101,7 @@ public final class LayoutOptionResolver {
     private static final Pair<Set<String>, Map<String, IProperty<?>>> INT_TYPES = createTypesSet(
             PORT_INDEX,
             FONT_SIZE,
-            MAGICDRAWID
+            MAGICDRAW_ID
             );
     
     private static final Pair<Set<String>, Map<String, IProperty<?>>> BOOLEAN_TYPES = createTypesSet(
@@ -129,7 +132,8 @@ public final class LayoutOptionResolver {
             EDGE_LABEL_PLACEMENT,
             EDGE_TYPE,
             PORT_CONSTRAINTS,
-            PORT_LABEL_PLACEMENT
+            PORT_LABEL_PLACEMENT,
+            MAGICDRAW_TYPE
             );
     
     private static final Pair<Set<String>, Map<String, IProperty<?>>> ENUMSET_TYPES = createTypesSet(
@@ -287,6 +291,8 @@ public final class LayoutOptionResolver {
                     enumeration = EdgeType.valueOf(value);
                 } else if (equalsIdOrSuffix(EDGE_LABEL_PLACEMENT, id)) {
                     enumeration = EdgeLabelPlacement.valueOf(value);
+                } else if (equalsIdOrSuffix(MAGICDRAW_TYPE, id)) {
+                    enumeration = MagicDrawElementType.valueOf(value);
                 }
                 
             } catch (Exception e) {

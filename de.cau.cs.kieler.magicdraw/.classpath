@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/de.cau.cs.kieler.core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/de.cau.cs.kieler.core.kgraph"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/de.cau.cs.kieler.kiml"/>
 	<classpathentry kind="lib" path="/home/java/eclipse-modeling-4.3/plugins/com.google.guava_10.0.1.v201203051515.jar"/>
-<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/patch.jar"/>
+	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/patch.jar"/>
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/activation.jar"/>
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/annotation.jar"/>
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/batik.jar"/>
