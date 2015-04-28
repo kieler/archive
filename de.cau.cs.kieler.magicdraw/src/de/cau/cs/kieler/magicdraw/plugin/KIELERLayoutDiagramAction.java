@@ -23,7 +23,7 @@ import com.nomagic.magicdraw.ui.actions.DefaultDiagramAction;
 import com.nomagic.magicdraw.uml.symbols.DiagramPresentationElement;
 import com.nomagic.magicdraw.uml.symbols.layout.DiagramLayouter;
 
-import de.cau.cs.kieler.magicdraw.adapter.KielerDiagramLayouter;
+import de.cau.cs.kieler.magicdraw.adapter.KIELERDiagramLayouter;
 
 /**
  * Action to trigger layout process on current diagram. Activated by menu entry
@@ -60,11 +60,11 @@ public class KIELERLayoutDiagramAction extends DefaultDiagramAction {
     public void actionPerformed(ActionEvent e) {
         // Grab the currently active diagram and open it to make it available to the layouter
         DiagramPresentationElement dia = Application.getInstance().getProject().getActiveDiagram();
-        DiagramLayouter layouter = new KielerDiagramLayouter();
+        DiagramLayouter layouter = new KIELERDiagramLayouter();
         if (layouter.canLayout(dia)) {
             dia.open();
             // Try to apply layout on the current diagram
-            dia.layout(true, new KielerDiagramLayouter());
+            dia.layout(true, new KIELERDiagramLayouter());
         } else {
             Application.getInstance().getGUILog()
                     .log("Currently only Class Diagrams can be layouted using KIELER");

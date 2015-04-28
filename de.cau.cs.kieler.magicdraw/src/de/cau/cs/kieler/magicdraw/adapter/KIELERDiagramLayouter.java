@@ -33,7 +33,7 @@ import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element;
 
 import de.cau.cs.kieler.core.kgraph.KNode;
 
-public class KielerDiagramLayouter implements DiagramLayouter {
+public class KIELERDiagramLayouter implements DiagramLayouter {
 
     public boolean canLayout(DiagramPresentationElement dpe) {
         // Currently only Class Diagrams can be layouted
