@@ -1,4 +1,4 @@
-package de.cau.cs.kieler.magicdraw.layout;
+package de.cau.cs.kieler.magicdraw.generator;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -24,6 +24,8 @@ import de.cau.cs.kieler.kiml.options.EdgeLabelPlacement;
 import de.cau.cs.kieler.kiml.options.EdgeType;
 import de.cau.cs.kieler.kiml.options.LayoutOptions;
 import de.cau.cs.kieler.kiml.util.KimlUtil;
+import de.cau.cs.kieler.magicdraw.layout.KGraphMagicDrawProperties;
+import de.cau.cs.kieler.magicdraw.layout.KIELERLayoutException;
 
 /*
  * KIELER - Kiel Integrated Environment for Layout Eclipse RichClient
@@ -44,7 +46,7 @@ import de.cau.cs.kieler.kiml.util.KimlUtil;
  * 
  * @author nbw
  */
-public class KGraphMagicDrawAdapter {
+public class KIELERMagicDrawReader {
 
     /**
      * Mapping of MagicDraw presentation elements to generated KGraphElements. E.g. used to identify
@@ -65,7 +67,7 @@ public class KGraphMagicDrawAdapter {
     /**
      * Initializes an adapter to generate a new KGraph from a MagicDraw diagram
      */
-    public KGraphMagicDrawAdapter() {
+    public KIELERMagicDrawReader() {
         elementsMapping = new HashMap<PresentationElement, KGraphElement>();
         elementsByID = new ArrayList<PresentationElement>();
     }
@@ -76,11 +78,11 @@ public class KGraphMagicDrawAdapter {
      * 
      * @param magicDrawNode
      *            the MagicDraw element which should be used as root node.
-     * @throws {@link MagicDrawAdapterException} when a root node has already been set
+     * @throws {@link KIELERLayoutException} when a root node has already been set
      */
     public void addRootNode(PresentationElement magicDrawNode) {
         if (kGraphRoot != null) {
-            throw new MagicDrawAdapterException("Trying to add duplicate root node");
+            throw new KIELERLayoutException("Trying to add duplicate root node");
         }
 
         // Prepare root node
@@ -105,11 +107,11 @@ public class KGraphMagicDrawAdapter {
      * 
      * @param magicDrawNode
      *            The ShapeElement to be added to the KGraph
-     * @throws {@link MagicDrawAdapterException} if no root node has been set in the KGraph
+     * @throws {@link KIELERLayoutException} if no root node has been set in the KGraph
      */
     public void addNodeToKGraph(ShapeElement magicDrawNode) {
         if (kGraphRoot == null) {
-            throw new MagicDrawAdapterException(
+            throw new KIELERLayoutException(
                     "Trying to add new node to KGraph without root node");
         }
 
@@ -139,12 +141,12 @@ public class KGraphMagicDrawAdapter {
      * 
      * @param magicDrawPath
      *            The {@link PathElement} to be added to the KGraph
-     * @throws {@link MagicDrawAdapterException} if no root node has been set or the source or
+     * @throws {@link KIELERLayoutException} if no root node has been set or the source or
      *         target are missing from the KGraph
      */
     public void addEdgeToKGraph(PathElement magicDrawPath) {
         if (kGraphRoot == null) {
-            throw new MagicDrawAdapterException(
+            throw new KIELERLayoutException(
                     "Trying to add new node to KGraph without root node");
         }
 
@@ -153,7 +155,7 @@ public class KGraphMagicDrawAdapter {
         PresentationElement client = magicDrawPath.getClient();
         // Check if these elements already exist in KGraph
         if (!(elementsMapping.containsKey(supplier) && elementsMapping.containsKey(client))) {
-            throw new MagicDrawAdapterException(
+            throw new KIELERLayoutException(
                     "Trying to add edge before adding source and target node");
         }
         // Invert source and target due to mismatching direction of edges

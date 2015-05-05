@@ -17,7 +17,7 @@ package de.cau.cs.kieler.magicdraw.layout;
  * @author nbw
  *
  */
-public class MagicDrawAdapterException extends RuntimeException {
+public class KIELERLayoutException extends RuntimeException {
 
     /** the serial version UID. */
     private static final long serialVersionUID = -4225901742169095576L;
@@ -26,7 +26,7 @@ public class MagicDrawAdapterException extends RuntimeException {
     /**
      * Create an MagicDraw adapter exception with no parameters.
      */
-    public MagicDrawAdapterException() {
+    public KIELERLayoutException() {
         super();
     }
     
@@ -35,7 +35,7 @@ public class MagicDrawAdapterException extends RuntimeException {
      * 
      * @param message a message
      */
-    public MagicDrawAdapterException(final String message) {
+    public KIELERLayoutException(final String message) {
         super(message);
     }
     
@@ -45,7 +45,7 @@ public class MagicDrawAdapterException extends RuntimeException {
      * @param message a message
      * @param cause a cause
      */
-    public MagicDrawAdapterException(final String message, final Throwable cause) {
+    public KIELERLayoutException(final String message, final Throwable cause) {
         super(message, cause);
     }
     

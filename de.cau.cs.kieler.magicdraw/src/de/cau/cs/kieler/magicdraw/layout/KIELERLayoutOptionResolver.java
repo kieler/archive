@@ -87,7 +87,7 @@ import static de.cau.cs.kieler.magicdraw.layout.KGraphMagicDrawProperties.MAGICD
  * 
  * @author uru
  */
-public final class LayoutOptionResolver {
+public final class KIELERLayoutOptionResolver {
 
     /** A set to assure that non-unique suffixes are only used once. */
     private static final Set<String> SUFFIX_SET = Sets.newHashSet();
@@ -150,7 +150,7 @@ public final class LayoutOptionResolver {
             POSITION
             );
     
-    private LayoutOptionResolver() {
+    private KIELERLayoutOptionResolver() {
     }
     
     /**

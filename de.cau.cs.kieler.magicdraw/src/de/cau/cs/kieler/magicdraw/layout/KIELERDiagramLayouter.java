@@ -20,7 +20,6 @@ import java.util.List;
 import com.nomagic.magicdraw.core.options.AbstractDiagramLayouterOptionsGroup;
 import com.nomagic.magicdraw.openapi.uml.PresentationElementsManager;
 import com.nomagic.magicdraw.openapi.uml.ReadOnlyElementException;
-import com.nomagic.magicdraw.uml.DiagramTypeConstants;
 import com.nomagic.magicdraw.uml.symbols.DiagramPresentationElement;
 import com.nomagic.magicdraw.uml.symbols.PresentationElement;
 import com.nomagic.magicdraw.uml.symbols.layout.DiagramLayouter;
@@ -32,15 +31,16 @@ import com.nomagic.magicdraw.uml.symbols.shapes.TreeView;
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element;
 
 import de.cau.cs.kieler.core.kgraph.KNode;
-import de.cau.cs.kieler.magicdraw.config.KIELERClassDiagrammConfiguration;
+import de.cau.cs.kieler.magicdraw.config.KIELERLayoutConfiguration;
+import de.cau.cs.kieler.magicdraw.config.KIELERLayoutConfigurator;
+import de.cau.cs.kieler.magicdraw.generator.KIELERMagicDrawReader;
+import de.cau.cs.kieler.magicdraw.generator.KIELERMagicDrawUpdater;
 
 public class KIELERDiagramLayouter implements DiagramLayouter {
 
     public boolean canLayout(DiagramPresentationElement dpe) {
-        // Currently only Class Diagrams can be layouted
-        // String type = dpe.getDiagramType().getType();
-        // return type.equals(DiagramTypeConstants.UML_CLASS_DIAGRAM);
-        return true;
+        KIELERLayoutConfiguration config = KIELERLayoutConfigurator.getLayoutConfig(dpe);
+        return (config != null);
     }
 
     public void drawLayoutResults(UMLGraph graph) {
@@ -90,7 +90,7 @@ public class KIELERDiagramLayouter implements DiagramLayouter {
         }
 
         // Create KGraph
-        KGraphMagicDrawAdapter kGraphAdapter = new KGraphMagicDrawAdapter();
+        KIELERMagicDrawReader kGraphAdapter = new KIELERMagicDrawReader();
         kGraphAdapter.addRootNode(rootFrame);
         for (ShapeElement shapeElement : boxes) {
             kGraphAdapter.addNodeToKGraph(shapeElement);
@@ -100,17 +100,18 @@ public class KIELERDiagramLayouter implements DiagramLayouter {
         }
 
         // Serialize KGraph for layout through WebService
-        String kGraphPre = KGraphMagicDrawAdapter.serialize(kGraphAdapter.getkGraphRoot());
+        String kGraphPre = KIELERMagicDrawReader.serialize(kGraphAdapter.getkGraphRoot());
 
         // Layout KGraph through WebService
         String layouted =
-                KIELERLayoutKWebSHandler.layout(kGraphPre, new KIELERClassDiagrammConfiguration());
+                KIELERLayoutKWebSHandler.layout(kGraphPre,
+                        KIELERLayoutConfigurator.getLayoutConfig(arg1));
 
         System.out.println(layouted);
         // Generate new KGraph from layouted String representation
-        KNode kGraph = KGraphMagicDrawAdapter.deserialize(layouted);
+        KNode kGraph = KIELERMagicDrawReader.deserialize(layouted);
 
-        KGraphMagicDrawUpdater.applyLayout(kGraphAdapter.getElementsByID(), kGraph);
+        KIELERMagicDrawUpdater.applyLayout(kGraphAdapter.getElementsByID(), kGraph);
 
         return true;
     }
