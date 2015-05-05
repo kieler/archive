@@ -11,7 +11,7 @@
  * This code is provided under the terms of the Eclipse Public License (EPL).
  * See the file epl-v10.html for the license text.
  */
-package de.cau.cs.kieler.magicdraw.adapter;
+package de.cau.cs.kieler.magicdraw.layout;
 
 import static de.cau.cs.kieler.kiml.options.LayoutOptions.ADDITIONAL_PORT_SPACE;
 import static de.cau.cs.kieler.kiml.options.LayoutOptions.ALGORITHM;
@@ -77,10 +77,9 @@ import de.cau.cs.kieler.kiml.options.PortSide;
 import de.cau.cs.kieler.kiml.options.SizeConstraint;
 import de.cau.cs.kieler.kiml.options.SizeOptions;
 import de.cau.cs.kieler.kiml.util.nodespacing.Spacing.Margins;
-
-import de.cau.cs.kieler.magicdraw.adapter.KGraphMagicDrawProperties.MagicDrawElementType;
-import static de.cau.cs.kieler.magicdraw.adapter.KGraphMagicDrawProperties.MAGICDRAW_ID;
-import static de.cau.cs.kieler.magicdraw.adapter.KGraphMagicDrawProperties.MAGICDRAW_TYPE;
+import de.cau.cs.kieler.magicdraw.layout.KGraphMagicDrawProperties.MagicDrawElementType;
+import static de.cau.cs.kieler.magicdraw.layout.KGraphMagicDrawProperties.MAGICDRAW_ID;
+import static de.cau.cs.kieler.magicdraw.layout.KGraphMagicDrawProperties.MAGICDRAW_TYPE;
 
 /**
  * GWT does not support any of Java's reflection mechanisms. Hence we have to 

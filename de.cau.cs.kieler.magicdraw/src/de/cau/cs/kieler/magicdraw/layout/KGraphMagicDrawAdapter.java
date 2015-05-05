@@ -1,4 +1,4 @@
-package de.cau.cs.kieler.magicdraw.adapter;
+package de.cau.cs.kieler.magicdraw.layout;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -10,14 +10,17 @@ import com.nomagic.magicdraw.uml.symbols.PresentationElement;
 import com.nomagic.magicdraw.uml.symbols.paths.GeneralizationView;
 import com.nomagic.magicdraw.uml.symbols.paths.PathElement;
 import com.nomagic.magicdraw.uml.symbols.shapes.ShapeElement;
+import com.nomagic.magicdraw.uml.symbols.shapes.TextBoxView;
 
 import de.cau.cs.kieler.core.kgraph.KEdge;
 import de.cau.cs.kieler.core.kgraph.KGraphElement;
+import de.cau.cs.kieler.core.kgraph.KLabel;
 import de.cau.cs.kieler.core.kgraph.KNode;
 import de.cau.cs.kieler.kiml.formats.KGraphHandler;
 import de.cau.cs.kieler.kiml.formats.TransformationData;
 import de.cau.cs.kieler.kiml.klayoutdata.KEdgeLayout;
 import de.cau.cs.kieler.kiml.klayoutdata.KShapeLayout;
+import de.cau.cs.kieler.kiml.options.EdgeLabelPlacement;
 import de.cau.cs.kieler.kiml.options.EdgeType;
 import de.cau.cs.kieler.kiml.options.LayoutOptions;
 import de.cau.cs.kieler.kiml.util.KimlUtil;
@@ -43,11 +46,20 @@ import de.cau.cs.kieler.kiml.util.KimlUtil;
  */
 public class KGraphMagicDrawAdapter {
 
+    /**
+     * Mapping of MagicDraw presentation elements to generated KGraphElements. E.g. used to identify
+     * source and target when adding edges
+     */
     private Map<PresentationElement, KGraphElement> elementsMapping;
 
-    private int idCounter;
+    /**
+     * List to store the managed PresentationElements. Used to identify KGraphElements after layout
+     */
     private List<PresentationElement> elementsByID;
 
+    /**
+     * Root node of the generated KGraph
+     */
     private KNode kGraphRoot;
 
     /**
@@ -55,7 +67,6 @@ public class KGraphMagicDrawAdapter {
      */
     public KGraphMagicDrawAdapter() {
         elementsMapping = new HashMap<PresentationElement, KGraphElement>();
-        idCounter = 0;
         elementsByID = new ArrayList<PresentationElement>();
     }
 
@@ -84,9 +95,8 @@ public class KGraphMagicDrawAdapter {
         rootShapeLayout.setYpos(magicDrawNodeBounds.y);
 
         // Store data in housekeeping data structures
-        elementsByID.add(idCounter, magicDrawNode);
+        elementsByID.add(magicDrawNode);
         elementsMapping.put(magicDrawNode, kGraphRoot);
-        idCounter += 1;
     }
 
     /**
@@ -116,12 +126,11 @@ public class KGraphMagicDrawAdapter {
         nodeLayout.setYpos(magicDrawNodeBounds.y);
 
         // Store MagicDraw data in properties
-        nodeLayout.setProperty(KGraphMagicDrawProperties.MAGICDRAW_ID, idCounter);
+        nodeLayout.setProperty(KGraphMagicDrawProperties.MAGICDRAW_ID, elementsByID.size());
 
         // Store data in housekeeping data structures
-        elementsByID.add(idCounter, magicDrawNode);
+        elementsByID.add(magicDrawNode);
         elementsMapping.put(magicDrawNode, node);
-        idCounter += 1;
     }
 
     /**
@@ -161,27 +170,113 @@ public class KGraphMagicDrawAdapter {
         if (magicDrawPath instanceof GeneralizationView) {
             edgeLayout.setProperty(LayoutOptions.EDGE_TYPE, EdgeType.GENERALIZATION);
         }
-
-        edgeLayout.setProperty(KGraphMagicDrawProperties.MAGICDRAW_ID, idCounter);
+        edgeLayout.setProperty(KGraphMagicDrawProperties.MAGICDRAW_ID, elementsByID.size());
 
         // Store data in housekeeping data structures
-        elementsByID.add(idCounter, magicDrawPath);
+        elementsByID.add(magicDrawPath);
         elementsMapping.put(magicDrawPath, edge);
-        idCounter += 1;
+
+        // Attach labels to edge
+        attachLabels(edge, magicDrawPath);
     }
 
+    /**
+     * <p>
+     * Searches for edge labels in the MagicDraw diagram and generates corresponding edge labels in
+     * the KGraph.
+     * </p>
+     * <p>
+     * The position of the label is determined by the index in the List of child elements.
+     * </p>
+     * 
+     * @param edge
+     *            The {@link KEdge} to attach the label to
+     * @param pathElement
+     *            The MagicDraw {@link PathElement} to parse for labels
+     */
+    @SuppressWarnings("deprecation")
+    private void attachLabels(KEdge edge, PathElement pathElement) {
+        // The actual text elements are embedded two layers below the PathElement.
+        // The index in this list determines the position (Head, Tail, Center) of the label
+        List<PresentationElement> pes = pathElement.getPresentationElements();
+        for (int i = 0; i < pes.size(); i++) {
+            // Grab all children and search for text elements
+            PresentationElement property = pes.get(i);
+            for (PresentationElement pe : property.getPresentationElements()) {
+                // Labels at hear or tail are TextBoxViews
+                // Labels in the center are TextAreaViews
+                if (pe instanceof TextBoxView
+                        || pe instanceof com.nomagic.magicdraw.uml.symbols.shapes.TextObject) {
+                    KLabel label = KimlUtil.createInitializedLabel(edge);
+                    KShapeLayout labelLayout = label.getData(KShapeLayout.class);
+
+                    // Insert text for visualization
+                    if (pe instanceof TextBoxView) {
+                        label.setText(((TextBoxView) pe).getUserText());
+                    } else {
+                        label.setText(((com.nomagic.magicdraw.uml.symbols.shapes.TextObject) pe)
+                                .getText());
+                    }
+
+                    // Append position property to the edge, depending on list index
+                    switch (i) {
+                    case 0:
+                        labelLayout.setProperty(LayoutOptions.EDGE_LABEL_PLACEMENT,
+                                EdgeLabelPlacement.HEAD);
+                        break;
+                    case 1:
+                        labelLayout.setProperty(LayoutOptions.EDGE_LABEL_PLACEMENT,
+                                EdgeLabelPlacement.TAIL);
+                        break;
+                    case 2:
+                        labelLayout.setProperty(LayoutOptions.EDGE_LABEL_PLACEMENT,
+                                EdgeLabelPlacement.CENTER);
+                        break;
+                    default:
+                        System.out.println("Unknown label place! " + label.getText());
+                        break;
+                    }
+
+                    // Set label size
+                    labelLayout.setHeight((int) pe.getBounds().getHeight());
+                    labelLayout.setWidth((int) pe.getBounds().getWidth());
+                    labelLayout.setProperty(KGraphMagicDrawProperties.MAGICDRAW_ID,
+                            elementsByID.size());
+
+                    // Store the label data for housekeeping
+                    elementsByID.add(pe);
+                    elementsMapping.put(pe, label);
+                }
+            }
+        }
+    }
+
+    /**
+     * Serializes a KGraph by passing it to a {@link KGraphHandler}.
+     * 
+     * @param kGraph
+     *            The KGraph to be serialized
+     * @return The serialized KGraph in XMI String representation
+     */
     public static String serialize(KNode kGraph) {
         // Grab KGraphHandler to manage serialization
         KGraphHandler handler = new KGraphHandler();
         TransformationData<KNode, KNode> transData = new TransformationData<KNode, KNode>();
         transData.getTargetGraphs().add(kGraph);
 
-        // Generate String represantation
+        // Generate String representation
         String result = handler.serialize(transData);
 
         return result;
     }
 
+    /**
+     * Generates a new KGraph from serialized XMI String
+     * 
+     * @param kGraphString
+     *            The XMI String to deserialize
+     * @return KGraph matching the XMI String
+     */
     public static KNode deserialize(String kGraphString) {
         // Prepare KGraphHandler and TransformationData
         KGraphHandler handler = new KGraphHandler();
@@ -192,14 +287,19 @@ public class KGraphMagicDrawAdapter {
         return kGraph;
     }
 
-    public Map<PresentationElement, KGraphElement> getElementsMapping() {
-        return elementsMapping;
-    }
-
+    /**
+     * Returns the original PresentationElements by the assigned ID
+     * 
+     * @return List of {@link PresentationElement} ordered by assigned ID in KGraph
+     */
     public List<PresentationElement> getElementsByID() {
         return elementsByID;
     }
 
+    /**
+     * The complete KGraph
+     * @return The root {@link KNode} of the generated KGraph.
+     */
     public KNode getkGraphRoot() {
         return kGraphRoot;
     }

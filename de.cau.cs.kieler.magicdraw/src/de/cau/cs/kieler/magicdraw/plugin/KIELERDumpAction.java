@@ -63,7 +63,7 @@ public class KIELERDumpAction extends DefaultDiagramAction {
         DiagramPresentationElement dia = Application.getInstance().getProject().getActiveDiagram();
         dia.open();
         System.out.println("<<<---+++ KIELER Diagram Information - Begin +++--->>>");
-        writeData(dia, 1);
+        takeDump(dia, 3, "\\- ");
         System.out.println("<<<---+++ KIELER Diagram Information - End +++--->>>");
 
     }
@@ -76,8 +76,9 @@ public class KIELERDumpAction extends DefaultDiagramAction {
      *            The current main element to print and check for child elements
      * @param depth
      */
-    private void writeData(PresentationElement root, int depth) {
+    private void takeDump(PresentationElement root, int depth, String prefix) {
         StringBuilder result = new StringBuilder();
+        result.append(prefix);
         result.append(root.getHumanName());
         if (root instanceof ShapeElement) {
             result.append(" @ ");
@@ -101,7 +102,7 @@ public class KIELERDumpAction extends DefaultDiagramAction {
 
         if (root.getPresentationElements().size() > 0 && depth > 0) {
             for (PresentationElement element : root.getPresentationElements()) {
-                writeData(element, depth - 1);
+                takeDump(element, depth - 1, "   " + prefix);
             }
         }
     }

@@ -23,7 +23,7 @@ import com.nomagic.magicdraw.ui.actions.DefaultDiagramAction;
 import com.nomagic.magicdraw.uml.symbols.DiagramPresentationElement;
 import com.nomagic.magicdraw.uml.symbols.layout.DiagramLayouter;
 
-import de.cau.cs.kieler.magicdraw.adapter.KIELERDiagramLayouter;
+import de.cau.cs.kieler.magicdraw.layout.KIELERDiagramLayouter;
 
 /**
  * Action to trigger layout process on current diagram. Activated by menu entry

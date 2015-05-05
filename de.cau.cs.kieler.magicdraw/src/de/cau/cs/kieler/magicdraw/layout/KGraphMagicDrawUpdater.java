@@ -11,7 +11,7 @@
  * This code is provided under the terms of the Eclipse Public License (EPL).
  * See the file epl-v10.html for the license text.
  */
-package de.cau.cs.kieler.magicdraw.adapter;
+package de.cau.cs.kieler.magicdraw.layout;
 
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -28,6 +28,7 @@ import com.nomagic.magicdraw.uml.symbols.paths.PathElement;
 import com.nomagic.magicdraw.uml.symbols.shapes.DiagramFrameView;
 
 import de.cau.cs.kieler.core.kgraph.KEdge;
+import de.cau.cs.kieler.core.kgraph.KLabel;
 import de.cau.cs.kieler.core.kgraph.KNode;
 import de.cau.cs.kieler.kiml.klayoutdata.KEdgeLayout;
 import de.cau.cs.kieler.kiml.klayoutdata.KPoint;
@@ -37,19 +38,16 @@ import de.cau.cs.kieler.kiml.klayoutdata.KShapeLayout;
  * Applies the layout from a KGraph to the MagicDraw Presentation.
  * 
  * @author nbw
- * 
  */
 public class KGraphMagicDrawUpdater {
 
-    private List<PresentationElement> elementsByID;
-    private KNode kGraphRoot;
-
-    public KGraphMagicDrawUpdater(KNode kGraph, List<PresentationElement> elements) {
-        this.elementsByID = elements;
-        this.kGraphRoot = kGraph;
-    }
-
-    public void applyLayout() {
+    /**
+     * Update the MagicDraw diagram with the positions from the KGraph
+     * 
+     * @param elementsByID The stored {@link PresentationElement}s of the MagicDraw diagram
+     * @param kGraphRoot The KGraph with layout data
+     */
+    public static void applyLayout(List<PresentationElement> elementsByID, KNode kGraphRoot) {
         PresentationElementsManager manager = PresentationElementsManager.getInstance();
 
         // Try to set drawing area prior to layout to ensure enough space is available
@@ -69,8 +67,6 @@ public class KGraphMagicDrawUpdater {
         } catch (ReadOnlyElementException e) {
             e.printStackTrace();
         }
-
-        // Remove all TreeViews from diagram (?)
 
         // Move all nodes according to new layout
         Iterator<EObject> iterator = kGraphRoot.eAllContents();
@@ -114,6 +110,22 @@ public class KGraphMagicDrawUpdater {
                 try {
                     manager.changePathPoints((PathElement) elementsByID.get(elementID),
                             supplierPoint, clientPoint, newBreakPoints);
+                } catch (ReadOnlyElementException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // Move all labels according to new layout
+        iterator = kGraphRoot.eAllContents();
+        while (iterator.hasNext()) {
+            EObject eObject = iterator.next();
+            if (eObject instanceof KLabel) {
+                KShapeLayout ksl = ((KLabel) eObject).getData(KShapeLayout.class);
+                int elementID = ksl.getProperty(KGraphMagicDrawProperties.MAGICDRAW_ID);
+                Point pos = new Point((int) ksl.getXpos(), (int) ksl.getYpos());
+                try {
+                    manager.movePresentationElement(elementsByID.get(elementID), pos);
                 } catch (ReadOnlyElementException e) {
                     e.printStackTrace();
                 }

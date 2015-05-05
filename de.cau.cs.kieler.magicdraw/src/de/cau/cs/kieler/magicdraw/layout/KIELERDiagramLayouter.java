@@ -1,4 +1,4 @@
-package de.cau.cs.kieler.magicdraw.adapter;
+package de.cau.cs.kieler.magicdraw.layout;
 
 /*
  * KIELER - Kiel Integrated Environment for Layout Eclipse RichClient
@@ -32,13 +32,15 @@ import com.nomagic.magicdraw.uml.symbols.shapes.TreeView;
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element;
 
 import de.cau.cs.kieler.core.kgraph.KNode;
+import de.cau.cs.kieler.magicdraw.config.KIELERClassDiagrammConfiguration;
 
 public class KIELERDiagramLayouter implements DiagramLayouter {
 
     public boolean canLayout(DiagramPresentationElement dpe) {
         // Currently only Class Diagrams can be layouted
-        String type = dpe.getDiagramType().getType();
-        return type.equals(DiagramTypeConstants.UML_CLASS_DIAGRAM);
+        // String type = dpe.getDiagramType().getType();
+        // return type.equals(DiagramTypeConstants.UML_CLASS_DIAGRAM);
+        return true;
     }
 
     public void drawLayoutResults(UMLGraph graph) {
@@ -101,14 +103,14 @@ public class KIELERDiagramLayouter implements DiagramLayouter {
         String kGraphPre = KGraphMagicDrawAdapter.serialize(kGraphAdapter.getkGraphRoot());
 
         // Layout KGraph through WebService
-        String layouted = KIELERLayoutKWebSHandler.layout(kGraphPre);
+        String layouted =
+                KIELERLayoutKWebSHandler.layout(kGraphPre, new KIELERClassDiagrammConfiguration());
 
+        System.out.println(layouted);
         // Generate new KGraph from layouted String representation
         KNode kGraph = KGraphMagicDrawAdapter.deserialize(layouted);
 
-        KGraphMagicDrawUpdater updater =
-                new KGraphMagicDrawUpdater(kGraph, kGraphAdapter.getElementsByID());
-        updater.applyLayout();
+        KGraphMagicDrawUpdater.applyLayout(kGraphAdapter.getElementsByID(), kGraph);
 
         return true;
     }

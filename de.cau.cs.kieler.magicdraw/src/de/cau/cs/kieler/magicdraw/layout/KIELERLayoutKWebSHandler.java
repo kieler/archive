@@ -11,18 +11,15 @@
  * This code is provided under the terms of the Eclipse Public License (EPL).
  * See the file epl-v10.html for the license text.
  */
-package de.cau.cs.kieler.magicdraw.adapter;
+package de.cau.cs.kieler.magicdraw.layout;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.google.common.io.Files;
 
-import de.cau.cs.kieler.kiml.options.EdgeRouting;
-import de.cau.cs.kieler.kiml.options.LayoutOptions;
 import de.cau.cs.kieler.kwebs.client.KIELERLayout;
+import de.cau.cs.kieler.magicdraw.config.KIELERLayoutConfiguration;
 
 /**
  * @author nbw
@@ -30,34 +27,27 @@ import de.cau.cs.kieler.kwebs.client.KIELERLayout;
  */
 public class KIELERLayoutKWebSHandler {
 
-    public static String layout(String kGraph) {
+    public static String layout(String kGraph, KIELERLayoutConfiguration config) {
 
         // Use local server
         final String server = "http://layout.rtsys.informatik.uni-kiel.de:9444";
 
-        // Prepare options for class diagram layouting
-        Map<String, Object> options = new HashMap<String, Object>();
-        options.put(LayoutOptions.SPACING.getId(), 30.0f);
-        options.put(LayoutOptions.ALGORITHM.getId(), "de.cau.cs.kieler.kiml.ogdf.planarization");
-        options.put(LayoutOptions.EDGE_ROUTING.getId(), EdgeRouting.ORTHOGONAL.toString());
-        options.put(LayoutOptions.BORDER_SPACING.getId(), 40.0f);
-
         // Perform the actual layout
         String layouted =
                 KIELERLayout.layout(server, "de.cau.cs.kieler.kgraph", "de.cau.cs.kieler.kgraph",
-                        options, kGraph);
+                        config.getLayoutOptions(), kGraph);
 
         // Store layout data as SVG to validate results
         String layoutedDebug =
-                KIELERLayout
-                        .layout(server, "de.cau.cs.kieler.kgraph", "org.w3.svg", options, kGraph);
+                KIELERLayout.layout(server, "de.cau.cs.kieler.kgraph", "org.w3.svg",
+                        config.getLayoutOptions(), kGraph);
         layoutedDebug = layoutedDebug.replaceFirst("w=\"\\d*\"", "");
         try {
             Files.write(layoutedDebug.getBytes(), new File("/tmp/debugLayout.svg"));
         } catch (IOException e2) {
             e2.printStackTrace();
         }
-        
+
         return layouted;
     }
 }
