@@ -162,7 +162,7 @@ public final class GraphGenerator {
             for (int i = 0; i < nodeCount; i++) {
                 // Randomize the number of edges to generate for this node
                 int edgeCount = parameters.minOutEdgesPerNode
-                        + (edgeCountDiff == 0 ? 0 : random.nextInt(edgeCountDiff));
+                        + (edgeCountDiff == 0 ? 0 : random.nextInt(edgeCountDiff + 1));
                 
                 for (int j = 0; j < edgeCount; j++) {
                     int targetIndex;
