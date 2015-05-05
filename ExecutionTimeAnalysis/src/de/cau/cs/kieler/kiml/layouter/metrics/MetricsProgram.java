@@ -81,7 +81,9 @@ public final class MetricsProgram {
         OutputStream fileStream = null;
         try {
             // Generate a file name
-            String fileName = "measurement" + (System.currentTimeMillis() & TIME_MASK) + ".csv";
+            final long id = System.currentTimeMillis() & TIME_MASK;
+            System.out.println("measurement id: " + id);
+            String fileName = "measurement" + id + ".csv";
             fileStream = new FileOutputStream(fileName);
             
             // Perform measurement

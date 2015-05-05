@@ -93,6 +93,8 @@ public abstract class AbstractMetric {
         warmup();
         
         try {
+            outputWriter.write(parameters.toString() + "\n");
+            outputWriter.write(getTableHeaders() + "\n");
             if (parameters.linearScale) {
                 int start = tenPower(parameters.startDecade);
                 int end = tenPower(parameters.endDecade);
@@ -144,6 +146,15 @@ public abstract class AbstractMetric {
             p *= 10;
         }
         return p;
+    }
+    
+    /**
+     * Returns used table headers for csv export.
+     * 
+     * @return table headers as comma separated values.
+     */
+    protected String getTableHeaders() {
+        return "";
     }
     
     /**

@@ -74,6 +74,18 @@ public class EdgeCrossingsMetric extends AbstractMetric {
         this.algorithmPool = new InstancePool<AbstractLayoutProvider>(layoutFactory);
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getTableHeaders() {
+        String result = "node count";
+        for (int i = 1; i <= parameters.runsPerGraph; i++) {
+            result += ",cross count in run " + i;
+        }
+        return result;
+    }
+    
     
     ///////////////////////////////////////////////////////////////////////////////
     // Measurement

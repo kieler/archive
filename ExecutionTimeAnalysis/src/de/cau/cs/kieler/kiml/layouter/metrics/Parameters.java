@@ -332,4 +332,21 @@ public class Parameters {
             }
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "Parameters,mode=" + mode + ",exportGraphs=" + exportGraphs + ",withPorts="
+                + withPorts + ",allowSelfLoops=" + allowSelfLoops + ",allowCycles=" + allowCycles
+                + ",properLayered=" + properLayered + ",linearScale=" + linearScale + ",help="
+                + help + ",startDecade=" + startDecade + ",endDecade=" + endDecade
+                + ",graphSizesPerDecade=" + graphSizesPerDecade + ",graphsPerSize="
+                + graphsPerSize + ",runsPerGraph=" + runsPerGraph + ",minOutEdgesPerNode="
+                + minOutEdgesPerNode + ",maxOutEdgesPerNode=" + maxOutEdgesPerNode
+                + ",relativeEdgeCount=" + relativeEdgeCount + ",density=" + density
+                + ",invertedPortProb=" + invertedPortProb + ",northSouthPortProb="
+                + northSouthPortProb;
+    }
 }
