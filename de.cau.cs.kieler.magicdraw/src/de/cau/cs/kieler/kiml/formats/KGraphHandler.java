@@ -31,7 +31,7 @@ import de.cau.cs.kieler.core.kgraph.PersistentEntry;
 import de.cau.cs.kieler.kiml.UnsupportedGraphException;
 import de.cau.cs.kieler.kiml.klayoutdata.KLayoutDataPackage;
 import de.cau.cs.kieler.kiml.util.KimlUtil;
-import de.cau.cs.kieler.magicdraw.layout.LayoutOptionResolver;
+import de.cau.cs.kieler.magicdraw.layout.KIELERLayoutOptionResolver;
 
 /**
  * Transformer for the KGraph model and XMI serialization.
@@ -75,7 +75,7 @@ public class KGraphHandler extends AbstractEmfHandler<KNode> {
                     final EMapPropertyHolder holder = (EMapPropertyHolder) eObject;
                     for (PersistentEntry persistentEntry : holder.getPersistentEntries()) {
                     	try {
-                    		LayoutOptionResolver.setOption(holder,
+                    		KIELERLayoutOptionResolver.setOption(holder,
                     				persistentEntry.getKey(), 
                     				persistentEntry.getValue(), false);
 						} catch (UnsupportedGraphException uge) {

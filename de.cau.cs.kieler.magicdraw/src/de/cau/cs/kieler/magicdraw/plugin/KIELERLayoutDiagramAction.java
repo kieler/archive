@@ -67,7 +67,7 @@ public class KIELERLayoutDiagramAction extends DefaultDiagramAction {
             dia.layout(true, new KIELERDiagramLayouter());
         } else {
             Application.getInstance().getGUILog()
-                    .log("Currently only Class Diagrams can be layouted using KIELER");
+                    .log("This diagram can currently not be layouted by the KIELER layouter");
         }
     }
 

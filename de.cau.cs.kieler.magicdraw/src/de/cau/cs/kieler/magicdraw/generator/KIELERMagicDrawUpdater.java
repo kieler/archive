@@ -11,7 +11,7 @@
  * This code is provided under the terms of the Eclipse Public License (EPL).
  * See the file epl-v10.html for the license text.
  */
-package de.cau.cs.kieler.magicdraw.layout;
+package de.cau.cs.kieler.magicdraw.generator;
 
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -33,13 +33,14 @@ import de.cau.cs.kieler.core.kgraph.KNode;
 import de.cau.cs.kieler.kiml.klayoutdata.KEdgeLayout;
 import de.cau.cs.kieler.kiml.klayoutdata.KPoint;
 import de.cau.cs.kieler.kiml.klayoutdata.KShapeLayout;
+import de.cau.cs.kieler.magicdraw.layout.KGraphMagicDrawProperties;
 
 /**
  * Applies the layout from a KGraph to the MagicDraw Presentation.
  * 
  * @author nbw
  */
-public class KGraphMagicDrawUpdater {
+public class KIELERMagicDrawUpdater {
 
     /**
      * Update the MagicDraw diagram with the positions from the KGraph
