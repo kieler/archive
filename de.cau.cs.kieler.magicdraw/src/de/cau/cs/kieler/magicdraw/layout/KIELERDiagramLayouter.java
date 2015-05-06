@@ -14,33 +14,22 @@ package de.cau.cs.kieler.magicdraw.layout;
  * See the file epl-v10.html for the license text.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.nomagic.magicdraw.core.options.AbstractDiagramLayouterOptionsGroup;
-import com.nomagic.magicdraw.openapi.uml.PresentationElementsManager;
-import com.nomagic.magicdraw.openapi.uml.ReadOnlyElementException;
 import com.nomagic.magicdraw.uml.symbols.DiagramPresentationElement;
-import com.nomagic.magicdraw.uml.symbols.PresentationElement;
 import com.nomagic.magicdraw.uml.symbols.layout.DiagramLayouter;
 import com.nomagic.magicdraw.uml.symbols.layout.UMLGraph;
-import com.nomagic.magicdraw.uml.symbols.paths.PathElement;
-import com.nomagic.magicdraw.uml.symbols.shapes.DiagramFrameView;
-import com.nomagic.magicdraw.uml.symbols.shapes.ShapeElement;
-import com.nomagic.magicdraw.uml.symbols.shapes.TreeView;
-import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element;
 
-import de.cau.cs.kieler.core.kgraph.KNode;
 import de.cau.cs.kieler.magicdraw.config.KIELERLayoutConfiguration;
 import de.cau.cs.kieler.magicdraw.config.KIELERLayoutConfigurator;
 import de.cau.cs.kieler.magicdraw.generator.KIELERMagicDrawReader;
-import de.cau.cs.kieler.magicdraw.generator.KIELERMagicDrawUpdater;
 
 public class KIELERDiagramLayouter implements DiagramLayouter {
 
     public boolean canLayout(DiagramPresentationElement dpe) {
         KIELERLayoutConfiguration config = KIELERLayoutConfigurator.getLayoutConfig(dpe);
-        return (config != null);
+//        return (config != null);
+        return ((config != null) || (config == null));
+
     }
 
     public void drawLayoutResults(UMLGraph graph) {
@@ -52,97 +41,33 @@ public class KIELERDiagramLayouter implements DiagramLayouter {
         return null;
     }
 
-    public boolean layout(AbstractDiagramLayouterOptionsGroup arg0,
-            DiagramPresentationElement arg1,
-            @SuppressWarnings("deprecation") com.nomagic.magicdraw.commands.MacroCommand arg2) {
-        if (arg1 == null) {
+    public boolean layout(AbstractDiagramLayouterOptionsGroup layoutOptionGroup,
+            DiagramPresentationElement dpe,
+            @SuppressWarnings("deprecation") com.nomagic.magicdraw.commands.MacroCommand macro) {
+        if (dpe == null) {
             throw new RuntimeException("No DiagramPresentationElement found for layouting!");
         }
 
-        // Collect Data
-        List<ShapeElement> boxes = new ArrayList<ShapeElement>();
-        List<PathElement> paths = new ArrayList<PathElement>();
-        List<TreeView> trees = new ArrayList<TreeView>();
-        List<PresentationElement> stuff = new ArrayList<PresentationElement>();
-        DiagramFrameView rootFrame = collect(arg1, boxes, paths, trees, stuff, 1);
-
-        // Remove TreeViews from diagram
-        PresentationElementsManager manager = PresentationElementsManager.getInstance();
-        for (TreeView treeView : trees) {
-            List<PathElement> pathElements = treeView.getConnectedPathElements();
-            for (PathElement pathElement : pathElements) {
-                Element el = pathElement.getElement();
-                try {
-                    PathElement pe =
-                            manager.createPathElement(el, pathElement.getClient(),
-                                    pathElement.getSupplier());
-                    paths.add(pe);
-                    paths.remove(pathElement);
-                } catch (ReadOnlyElementException e) {
-                    e.printStackTrace();
-                }
-            }
-            try {
-                manager.deletePresentationElement(treeView);
-            } catch (ReadOnlyElementException e) {
-                e.printStackTrace();
-            }
-        }
-
-        // Create KGraph
-        KIELERMagicDrawReader kGraphAdapter = new KIELERMagicDrawReader();
-        kGraphAdapter.addRootNode(rootFrame);
-        for (ShapeElement shapeElement : boxes) {
-            kGraphAdapter.addNodeToKGraph(shapeElement);
-        }
-        for (PathElement pathElement : paths) {
-            kGraphAdapter.addEdgeToKGraph(pathElement);
-        }
-
-        // Serialize KGraph for layout through WebService
-        String kGraphPre = KIELERMagicDrawReader.serialize(kGraphAdapter.getkGraphRoot());
-
-        // Layout KGraph through WebService
-        String layouted =
-                KIELERLayoutKWebSHandler.layout(kGraphPre,
-                        KIELERLayoutConfigurator.getLayoutConfig(arg1));
-
-        System.out.println(layouted);
-        // Generate new KGraph from layouted String representation
-        KNode kGraph = KIELERMagicDrawReader.deserialize(layouted);
-
-        KIELERMagicDrawUpdater.applyLayout(kGraphAdapter.getElementsByID(), kGraph);
+        // Generate KGraph using MagicDrawReader
+        KIELERMagicDrawReader reader = new KIELERMagicDrawReader();
+        reader.generateKGraph(dpe);
+//        
+//        // Serialize KGraph for layout through WebService
+//        String kGraphPre = KIELERMagicDrawReader.serialize(reader.getkGraphRoot());
+//
+//        // Layout KGraph through WebService
+//        String layouted =
+//                KIELERLayoutKWebSHandler.layout(kGraphPre,
+//                        KIELERLayoutConfigurator.getLayoutConfig(dpe));
+//
+//        System.out.println(layouted);
+//        // Generate new KGraph from layouted String representation
+//        KNode kGraph = KIELERMagicDrawReader.deserialize(layouted);
+//
+//        KIELERMagicDrawUpdater.applyLayout(reader.getElementsByID(), kGraph);
 
         return true;
     }
 
-    private DiagramFrameView collect(PresentationElement element, List<ShapeElement> boxes,
-            List<PathElement> paths, List<TreeView> trees, List<PresentationElement> stuff,
-            int depth) {
-        DiagramFrameView rootFrame = null;
-        if (element instanceof DiagramFrameView) {
-            rootFrame = (DiagramFrameView) element;
-        } else if (element instanceof TreeView) {
-            trees.add((TreeView) element);
-        } else if (element instanceof ShapeElement) {
-            boxes.add((ShapeElement) element);
-        } else if (element instanceof PathElement) {
-            paths.add((PathElement) element);
-        } else {
-            stuff.add(element);
-        }
 
-        List<PresentationElement> children = element.getPresentationElements();
-        if (depth > 0) {
-            for (PresentationElement presentationElement : children) {
-                DiagramFrameView newRoot =
-                        collect(presentationElement, boxes, paths, trees, stuff, depth - 1);
-                if (newRoot != null) {
-                    rootFrame = newRoot;
-                }
-            }
-        }
-
-        return rootFrame;
-    }
 }

@@ -13,10 +13,15 @@
  */
 package de.cau.cs.kieler.magicdraw.plugin;
 
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.util.Collection;
+import java.util.List;
 
 import javax.swing.KeyStroke;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import com.nomagic.magicdraw.core.Application;
 import com.nomagic.magicdraw.ui.actions.DefaultDiagramAction;
 import com.nomagic.magicdraw.uml.symbols.DiagramPresentationElement;
@@ -63,7 +68,7 @@ public class KIELERDumpAction extends DefaultDiagramAction {
         DiagramPresentationElement dia = Application.getInstance().getProject().getActiveDiagram();
         dia.open();
         System.out.println("<<<---+++ KIELER Diagram Information - Begin +++--->>>");
-        takeDump(dia, 3, "\\- ");
+        takeDump(dia, 10, "\\- ");
         System.out.println("<<<---+++ KIELER Diagram Information - End +++--->>>");
 
     }
@@ -100,8 +105,18 @@ public class KIELERDumpAction extends DefaultDiagramAction {
 
         System.out.println(result.toString());
 
-        if (root.getPresentationElements().size() > 0 && depth > 0) {
-            for (PresentationElement element : root.getPresentationElements()) {
+        List<PresentationElement> children = root.getPresentationElements();
+        Collection<PresentationElement> children2 =
+                Collections2.filter(children, new Predicate<PresentationElement>() {
+
+                    public boolean apply(PresentationElement arg0) {
+                        Rectangle b = arg0.getBounds();
+                        return ((b.getWidth() > 0) && (b.getHeight() > 0));
+                    }
+                });
+
+        if (children2.size() > 0 && depth > 0) {
+            for (PresentationElement element : children2) {
                 takeDump(element, depth - 1, "   " + prefix);
             }
         }

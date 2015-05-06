@@ -77,9 +77,9 @@ import de.cau.cs.kieler.kiml.options.PortSide;
 import de.cau.cs.kieler.kiml.options.SizeConstraint;
 import de.cau.cs.kieler.kiml.options.SizeOptions;
 import de.cau.cs.kieler.kiml.util.nodespacing.Spacing.Margins;
-import de.cau.cs.kieler.magicdraw.layout.KGraphMagicDrawProperties.MagicDrawElementType;
-import static de.cau.cs.kieler.magicdraw.layout.KGraphMagicDrawProperties.MAGICDRAW_ID;
-import static de.cau.cs.kieler.magicdraw.layout.KGraphMagicDrawProperties.MAGICDRAW_TYPE;
+import de.cau.cs.kieler.magicdraw.layout.KIELERMagicDrawProperties.MagicDrawElementType;
+import static de.cau.cs.kieler.magicdraw.layout.KIELERMagicDrawProperties.MAGICDRAW_ID;
+import static de.cau.cs.kieler.magicdraw.layout.KIELERMagicDrawProperties.MAGICDRAW_TYPE;
 
 /**
  * GWT does not support any of Java's reflection mechanisms. Hence we have to 

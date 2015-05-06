@@ -14,40 +14,42 @@
 package de.cau.cs.kieler.magicdraw.layout;
 
 /**
+ * Generic exception when something goes wrong with the MagicDraw connection to KIELER layout.
+ * 
  * @author nbw
- *
  */
 public class KIELERLayoutException extends RuntimeException {
 
     /** the serial version UID. */
     private static final long serialVersionUID = -4225901742169095576L;
 
-    
     /**
      * Create an MagicDraw adapter exception with no parameters.
      */
     public KIELERLayoutException() {
         super();
     }
-    
+
     /**
      * Create an MagicDraw adapter exception with a message.
      * 
-     * @param message a message
+     * @param message
+     *            a message
      */
     public KIELERLayoutException(final String message) {
         super(message);
     }
-    
+
     /**
      * Create an MagicDraw adapter exception with a message and a cause.
      * 
-     * @param message a message
-     * @param cause a cause
+     * @param message
+     *            a message
+     * @param cause
+     *            a cause
      */
     public KIELERLayoutException(final String message, final Throwable cause) {
         super(message, cause);
     }
-    
-    
+
 }

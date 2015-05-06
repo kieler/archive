@@ -5,7 +5,11 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/de.cau.cs.kieler.core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/de.cau.cs.kieler.core.kgraph"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/de.cau.cs.kieler.kiml"/>
-	<classpathentry kind="lib" path="/home/java/eclipse-modeling-4.3/plugins/com.google.guava_10.0.1.v201203051515.jar"/>
+	<classpathentry kind="lib" path="/home/java/eclipse-modeling-4.3/plugins/com.google.guava_10.0.1.v201203051515.jar" sourcepath="/home/nbw/guava-10.0.1-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/home/nbw/guava-10.0.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/patch.jar"/>
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/activation.jar"/>
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/annotation.jar"/>
@@ -77,12 +81,12 @@
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/lpg.runtime.java_2.0.17.v201004271640.jar"/>
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/md_api.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/MagicDraw/MAGIC_DRAW_INSTALL_DIRECTORY/openapi/docs/javadoc.zip!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/de.cau.cs.kieler.magicdraw/MAGIC_DRAW_INSTALL_DIRECTORY/openapi/docs/javadoc.zip!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/md_common_api.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/MagicDraw/MAGIC_DRAW_INSTALL_DIRECTORY/openapi/docs/javadoc.zip!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/de.cau.cs.kieler.magicdraw/MAGIC_DRAW_INSTALL_DIRECTORY/openapi/docs/javadoc.zip!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/md_common.jar"/>
@@ -119,7 +123,7 @@
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/truezip-kernel-7.4.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/tw_common_api.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/MagicDraw/MAGIC_DRAW_INSTALL_DIRECTORY/openapi/docs/javadoc.zip!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/de.cau.cs.kieler.magicdraw/MAGIC_DRAW_INSTALL_DIRECTORY/openapi/docs/javadoc.zip!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/tw_common.jar"/>

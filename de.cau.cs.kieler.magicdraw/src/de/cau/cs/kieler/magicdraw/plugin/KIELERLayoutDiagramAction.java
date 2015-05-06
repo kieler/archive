@@ -64,7 +64,7 @@ public class KIELERLayoutDiagramAction extends DefaultDiagramAction {
         if (layouter.canLayout(dia)) {
             dia.open();
             // Try to apply layout on the current diagram
-            dia.layout(true, new KIELERDiagramLayouter());
+            dia.layout(false, new KIELERDiagramLayouter());
         } else {
             Application.getInstance().getGUILog()
                     .log("This diagram can currently not be layouted by the KIELER layouter");

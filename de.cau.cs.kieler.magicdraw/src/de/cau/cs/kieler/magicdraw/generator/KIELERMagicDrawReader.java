@@ -2,15 +2,28 @@ package de.cau.cs.kieler.magicdraw.generator;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.nomagic.magicdraw.openapi.uml.PresentationElementsManager;
+import com.nomagic.magicdraw.openapi.uml.ReadOnlyElementException;
+import com.nomagic.magicdraw.openapi.uml.SessionManager;
+import com.nomagic.magicdraw.uml.DiagramTypeConstants;
+import com.nomagic.magicdraw.uml.symbols.DiagramPresentationElement;
 import com.nomagic.magicdraw.uml.symbols.PresentationElement;
 import com.nomagic.magicdraw.uml.symbols.paths.GeneralizationView;
 import com.nomagic.magicdraw.uml.symbols.paths.PathElement;
+import com.nomagic.magicdraw.uml.symbols.shapes.DiagramFrameView;
 import com.nomagic.magicdraw.uml.symbols.shapes.ShapeElement;
 import com.nomagic.magicdraw.uml.symbols.shapes.TextBoxView;
+import com.nomagic.magicdraw.uml.symbols.shapes.TreeView;
+import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element;
 
 import de.cau.cs.kieler.core.kgraph.KEdge;
 import de.cau.cs.kieler.core.kgraph.KGraphElement;
@@ -24,8 +37,8 @@ import de.cau.cs.kieler.kiml.options.EdgeLabelPlacement;
 import de.cau.cs.kieler.kiml.options.EdgeType;
 import de.cau.cs.kieler.kiml.options.LayoutOptions;
 import de.cau.cs.kieler.kiml.util.KimlUtil;
-import de.cau.cs.kieler.magicdraw.layout.KGraphMagicDrawProperties;
 import de.cau.cs.kieler.magicdraw.layout.KIELERLayoutException;
+import de.cau.cs.kieler.magicdraw.layout.KIELERMagicDrawProperties;
 
 /*
  * KIELER - Kiel Integrated Environment for Layout Eclipse RichClient
@@ -72,6 +85,175 @@ public class KIELERMagicDrawReader {
         elementsByID = new ArrayList<PresentationElement>();
     }
 
+    public void generateKGraph(DiagramPresentationElement dpe) {
+        // Remove TreeViews from diagram
+        if (dpe.getDiagramType().getType().equals(DiagramTypeConstants.UML_CLASS_DIAGRAM)) {
+            purgeTreeViews(dpe);
+        }
+
+        // Search for DiagramFrame in DiagramPresentationElement to set this as root
+        Collection<PresentationElement> childElements = dpe.getPresentationElements();
+        Collection<PresentationElement> diagramFrames =
+                Collections2.filter(childElements, new Predicate<PresentationElement>() {
+                    public boolean apply(PresentationElement pe) {
+                        return (pe instanceof DiagramFrameView);
+                    }
+                });
+        if (diagramFrames.size() != 1) {
+            throw new KIELERLayoutException("Found no single Diagram Frame");
+        } else {
+            // Set root node
+            addRootNode(diagramFrames.iterator().next());
+        }
+
+        // Collect data in flat structures
+        Collection<ShapeElement> nodes = new LinkedList<ShapeElement>();
+        Collection<PathElement> edges = new LinkedList<PathElement>();
+        recursiveCollect(dpe, nodes, edges);
+
+        System.out.println(nodes);
+
+    }
+
+    /**
+     * @param dpe
+     * @param nodes
+     * @param edges
+     */
+    private void recursiveCollect(PresentationElement parent, Collection<ShapeElement> nodes,
+            Collection<PathElement> edges) {
+        if (parent instanceof ShapeElement) {
+            if (!(nodes.contains(parent))) {
+                nodes.add((ShapeElement) parent);
+            }
+        }
+
+        Collection<PresentationElement> children = parent.getPresentationElements();
+        Collection<ShapeElement> shapes =
+                Collections2.transform(
+                        Collections2.filter(children, new Predicate<PresentationElement>() {
+                            // Filter all TreeViews
+                            @SuppressWarnings("deprecation")
+                            public boolean apply(PresentationElement pe) {
+                                // Only look for ShapeElements
+                                if (!(pe instanceof ShapeElement)) {
+                                    return false;
+                                }
+                                // Remove Diagram Frame to use it as root node
+                                if (pe instanceof DiagramFrameView) {
+                                    return false;
+                                }
+                                // Remove Elements without a size
+                                if (pe.getBounds().getWidth() == 0
+                                        || pe.getBounds().getHeight() == 0) {
+                                    return false;
+                                }
+                                // Remove HeaderViews
+                                if (pe instanceof com.nomagic.magicdraw.uml.symbols.shapes.HeaderView) {
+                                    return false;
+                                }
+                                // Remove TextBoxes
+                                if (pe instanceof TextBoxView) {
+                                    return false;
+                                }
+                                // Remove TextAreas
+                                if (pe instanceof com.nomagic.magicdraw.uml.symbols.shapes.TextAreaView) {
+                                    return false;
+                                }
+                                // Remove TemplateSignatureViews
+                                if (pe instanceof com.nomagic.magicdraw.uml.symbols.shapes.TemplateSignatureView) {
+                                    return false;
+                                }
+                                // Remove Things without a Name (Sign at the top right)
+                                if (pe.getName() == null) {
+                                    return false;
+                                }
+
+                                return true;
+                            }
+                        }), new Function<PresentationElement, ShapeElement>() {
+                            // Cast all TreeViews to TreeView
+                            public ShapeElement apply(PresentationElement pe) {
+                                return ((ShapeElement) pe);
+                            }
+                        });
+        Collection<PathElement> paths =
+                Collections2.transform(
+                        Collections2.filter(children, new Predicate<PresentationElement>() {
+                            // Filter all TreeViews
+                            public boolean apply(PresentationElement pe) {
+                                return (pe instanceof PathElement);
+                            }
+                        }), new Function<PresentationElement, PathElement>() {
+                            // Cast all TreeViews to TreeView
+                            public PathElement apply(PresentationElement pe) {
+                                return ((PathElement) pe);
+                            }
+                        });
+
+        nodes.addAll(shapes);
+        edges.addAll(paths);
+
+        for (ShapeElement shapeElement : shapes) {
+            recursiveCollect(shapeElement, nodes, edges);
+        }
+    }
+
+    /**
+     * <p>
+     * Removes TreeViews from diagrams and replaces them with dedicated simple connections.
+     * </p>
+     * <p>
+     * Currently only the root layer is inspected and modified. This should be sufficient because
+     * class diagrams should not have hierarchy.
+     * </p>
+     * 
+     * @param dpe
+     *            The root {@link DiagramPresentationElement} to clean
+     */
+    private void purgeTreeViews(DiagramPresentationElement dpe) {
+        // Filter all TreeViews from root layer
+        Collection<PresentationElement> children = dpe.getPresentationElements();
+        Collection<TreeView> trees =
+                Collections2.transform(
+                        Collections2.filter(children, new Predicate<PresentationElement>() {
+                            // Filter all TreeViews
+                            public boolean apply(PresentationElement pe) {
+                                return (pe instanceof TreeView);
+                            }
+                        }), new Function<PresentationElement, TreeView>() {
+                            // Cast all TreeViews to TreeView
+                            public TreeView apply(PresentationElement pe) {
+                                return ((TreeView) pe);
+                            }
+                        });
+
+        if (!trees.isEmpty()) {
+            // Prepare Session
+            SessionManager sm = SessionManager.getInstance();
+            sm.createSession("Removing TreeViews from Diagram");
+            // Grab manager to change elements
+            PresentationElementsManager manager = PresentationElementsManager.getInstance();
+            for (TreeView treeView : trees) {
+                List<PathElement> pathElements = treeView.getConnectedPathElements();
+                try {
+                    // Create new paths for each bundled path
+                    for (PathElement pathElement : pathElements) {
+                        Element el = pathElement.getElement();
+                        manager.createPathElement(el, pathElement.getClient(),
+                                pathElement.getSupplier());
+                    }
+                    // Remove TreeView and attached edges
+                    manager.deletePresentationElement(treeView);
+                } catch (ReadOnlyElementException e) {
+                    e.printStackTrace();
+                }
+            }
+            // Close session and "commit" changes to model
+            sm.closeSession();
+        }
+    }
+
     /**
      * Sets the root node for the KGraph. This method must be called before any other nodes are
      * added.
@@ -80,7 +262,7 @@ public class KIELERMagicDrawReader {
      *            the MagicDraw element which should be used as root node.
      * @throws {@link KIELERLayoutException} when a root node has already been set
      */
-    public void addRootNode(PresentationElement magicDrawNode) {
+    private void addRootNode(PresentationElement magicDrawNode) {
         if (kGraphRoot != null) {
             throw new KIELERLayoutException("Trying to add duplicate root node");
         }
@@ -109,10 +291,9 @@ public class KIELERMagicDrawReader {
      *            The ShapeElement to be added to the KGraph
      * @throws {@link KIELERLayoutException} if no root node has been set in the KGraph
      */
-    public void addNodeToKGraph(ShapeElement magicDrawNode) {
+    private void addNodeToKGraph(ShapeElement magicDrawNode) {
         if (kGraphRoot == null) {
-            throw new KIELERLayoutException(
-                    "Trying to add new node to KGraph without root node");
+            throw new KIELERLayoutException("Trying to add new node to KGraph without root node");
         }
 
         // Prepare new node
@@ -128,7 +309,7 @@ public class KIELERMagicDrawReader {
         nodeLayout.setYpos(magicDrawNodeBounds.y);
 
         // Store MagicDraw data in properties
-        nodeLayout.setProperty(KGraphMagicDrawProperties.MAGICDRAW_ID, elementsByID.size());
+        nodeLayout.setProperty(KIELERMagicDrawProperties.MAGICDRAW_ID, elementsByID.size());
 
         // Store data in housekeeping data structures
         elementsByID.add(magicDrawNode);
@@ -141,13 +322,12 @@ public class KIELERMagicDrawReader {
      * 
      * @param magicDrawPath
      *            The {@link PathElement} to be added to the KGraph
-     * @throws {@link KIELERLayoutException} if no root node has been set or the source or
-     *         target are missing from the KGraph
+     * @throws {@link KIELERLayoutException} if no root node has been set or the source or target
+     *         are missing from the KGraph
      */
-    public void addEdgeToKGraph(PathElement magicDrawPath) {
+    private void addEdgeToKGraph(PathElement magicDrawPath) {
         if (kGraphRoot == null) {
-            throw new KIELERLayoutException(
-                    "Trying to add new node to KGraph without root node");
+            throw new KIELERLayoutException("Trying to add new node to KGraph without root node");
         }
 
         // Grab supplier and client from MagicDraw component
@@ -172,7 +352,7 @@ public class KIELERMagicDrawReader {
         if (magicDrawPath instanceof GeneralizationView) {
             edgeLayout.setProperty(LayoutOptions.EDGE_TYPE, EdgeType.GENERALIZATION);
         }
-        edgeLayout.setProperty(KGraphMagicDrawProperties.MAGICDRAW_ID, elementsByID.size());
+        edgeLayout.setProperty(KIELERMagicDrawProperties.MAGICDRAW_ID, elementsByID.size());
 
         // Store data in housekeeping data structures
         elementsByID.add(magicDrawPath);
@@ -242,7 +422,7 @@ public class KIELERMagicDrawReader {
                     // Set label size
                     labelLayout.setHeight((int) pe.getBounds().getHeight());
                     labelLayout.setWidth((int) pe.getBounds().getWidth());
-                    labelLayout.setProperty(KGraphMagicDrawProperties.MAGICDRAW_ID,
+                    labelLayout.setProperty(KIELERMagicDrawProperties.MAGICDRAW_ID,
                             elementsByID.size());
 
                     // Store the label data for housekeeping
@@ -300,6 +480,7 @@ public class KIELERMagicDrawReader {
 
     /**
      * The complete KGraph
+     * 
      * @return The root {@link KNode} of the generated KGraph.
      */
     public KNode getkGraphRoot() {

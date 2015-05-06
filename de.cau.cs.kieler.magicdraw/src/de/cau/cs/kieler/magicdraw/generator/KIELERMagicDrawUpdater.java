@@ -33,7 +33,7 @@ import de.cau.cs.kieler.core.kgraph.KNode;
 import de.cau.cs.kieler.kiml.klayoutdata.KEdgeLayout;
 import de.cau.cs.kieler.kiml.klayoutdata.KPoint;
 import de.cau.cs.kieler.kiml.klayoutdata.KShapeLayout;
-import de.cau.cs.kieler.magicdraw.layout.KGraphMagicDrawProperties;
+import de.cau.cs.kieler.magicdraw.layout.KIELERMagicDrawProperties;
 
 /**
  * Applies the layout from a KGraph to the MagicDraw Presentation.
@@ -75,7 +75,7 @@ public class KIELERMagicDrawUpdater {
             EObject eObject = iterator.next();
             if (eObject instanceof KNode) {
                 KShapeLayout ksl = ((KNode) eObject).getData(KShapeLayout.class);
-                int elementID = ksl.getProperty(KGraphMagicDrawProperties.MAGICDRAW_ID);
+                int elementID = ksl.getProperty(KIELERMagicDrawProperties.MAGICDRAW_ID);
                 Point pos = new Point((int) ksl.getXpos(), (int) ksl.getYpos());
                 try {
                     manager.movePresentationElement(elementsByID.get(elementID), pos);
@@ -91,7 +91,7 @@ public class KIELERMagicDrawUpdater {
             EObject eObject = iterator.next();
             if (eObject instanceof KEdge) {
                 KEdgeLayout kel = ((KEdge) eObject).getData(KEdgeLayout.class);
-                int elementID = kel.getProperty(KGraphMagicDrawProperties.MAGICDRAW_ID);
+                int elementID = kel.getProperty(KIELERMagicDrawProperties.MAGICDRAW_ID);
 
                 List<Point> newBreakPoints = new ArrayList<Point>(kel.getBendPoints().size() + 2);
 
@@ -123,7 +123,7 @@ public class KIELERMagicDrawUpdater {
             EObject eObject = iterator.next();
             if (eObject instanceof KLabel) {
                 KShapeLayout ksl = ((KLabel) eObject).getData(KShapeLayout.class);
-                int elementID = ksl.getProperty(KGraphMagicDrawProperties.MAGICDRAW_ID);
+                int elementID = ksl.getProperty(KIELERMagicDrawProperties.MAGICDRAW_ID);
                 Point pos = new Point((int) ksl.getXpos(), (int) ksl.getYpos());
                 try {
                     manager.movePresentationElement(elementsByID.get(elementID), pos);

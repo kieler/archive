@@ -24,7 +24,7 @@ import de.cau.cs.kieler.core.properties.Property;
  * 
  * @author nbw
  */
-public class KGraphMagicDrawProperties {
+public class KIELERMagicDrawProperties {
 
     /**
      * The identification of generated {@link KGraphElement} to identify elements after the layout
@@ -35,7 +35,7 @@ public class KGraphMagicDrawProperties {
 
     /**
      * Definition of various MagicDraw UML diagram elements. To be accessed using
-     * {@link KGraphMagicDrawProperties#MAGICDRAW_TYPE}.
+     * {@link KIELERMagicDrawProperties#MAGICDRAW_TYPE}.
      * 
      * @author nbw
      */

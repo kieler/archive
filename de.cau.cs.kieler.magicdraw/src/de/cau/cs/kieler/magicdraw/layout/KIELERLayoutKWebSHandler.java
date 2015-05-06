@@ -22,13 +22,13 @@ import de.cau.cs.kieler.kwebs.client.KIELERLayout;
 import de.cau.cs.kieler.magicdraw.config.KIELERLayoutConfiguration;
 
 /**
- * @author nbw
+ * Encapsulates the layouting web service to allow for easy switching to other communication paths
  * 
+ * @author nbw
  */
 public class KIELERLayoutKWebSHandler {
 
     public static String layout(String kGraph, KIELERLayoutConfiguration config) {
-
         // Use local server
         final String server = "http://layout.rtsys.informatik.uni-kiel.de:9444";
 
@@ -44,8 +44,8 @@ public class KIELERLayoutKWebSHandler {
         layoutedDebug = layoutedDebug.replaceFirst("w=\"\\d*\"", "");
         try {
             Files.write(layoutedDebug.getBytes(), new File("/tmp/debugLayout.svg"));
-        } catch (IOException e2) {
-            e2.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         return layouted;
