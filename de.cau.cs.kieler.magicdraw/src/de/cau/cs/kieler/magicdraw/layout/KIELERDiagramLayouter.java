@@ -19,16 +19,16 @@ import com.nomagic.magicdraw.uml.symbols.DiagramPresentationElement;
 import com.nomagic.magicdraw.uml.symbols.layout.DiagramLayouter;
 import com.nomagic.magicdraw.uml.symbols.layout.UMLGraph;
 
-import de.cau.cs.kieler.magicdraw.config.KIELERLayoutConfiguration;
+import de.cau.cs.kieler.magicdraw.config.IKIELERLayoutConfiguration;
 import de.cau.cs.kieler.magicdraw.config.KIELERLayoutConfigurator;
 import de.cau.cs.kieler.magicdraw.generator.KIELERMagicDrawReader;
 
 public class KIELERDiagramLayouter implements DiagramLayouter {
 
     public boolean canLayout(DiagramPresentationElement dpe) {
-        KIELERLayoutConfiguration config = KIELERLayoutConfigurator.getLayoutConfig(dpe);
-//        return (config != null);
-        return ((config != null) || (config == null));
+        IKIELERLayoutConfiguration config = KIELERLayoutConfigurator.getLayoutConfig(dpe);
+        return (config != null);
+//        return ((config != null) || (config == null));
 
     }
 
@@ -51,9 +51,11 @@ public class KIELERDiagramLayouter implements DiagramLayouter {
         // Generate KGraph using MagicDrawReader
         KIELERMagicDrawReader reader = new KIELERMagicDrawReader();
         reader.generateKGraph(dpe);
-//        
-//        // Serialize KGraph for layout through WebService
-//        String kGraphPre = KIELERMagicDrawReader.serialize(reader.getkGraphRoot());
+        
+        // Serialize KGraph for layout through WebService
+        String kGraphPre = KIELERMagicDrawReader.serialize(reader.getkGraphRoot());
+        
+        System.out.println(kGraphPre);
 //
 //        // Layout KGraph through WebService
 //        String layouted =

@@ -20,7 +20,7 @@ import java.util.Map;
  * 
  * @author nbw
  */
-public interface KIELERLayoutConfiguration {
+public interface IKIELERLayoutConfiguration {
 
     /**
      * Returns the map of layout options for the online layouter

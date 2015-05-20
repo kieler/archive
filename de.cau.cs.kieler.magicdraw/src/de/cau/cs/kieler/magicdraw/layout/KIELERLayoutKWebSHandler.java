@@ -19,7 +19,7 @@ import java.io.IOException;
 import com.google.common.io.Files;
 
 import de.cau.cs.kieler.kwebs.client.KIELERLayout;
-import de.cau.cs.kieler.magicdraw.config.KIELERLayoutConfiguration;
+import de.cau.cs.kieler.magicdraw.config.IKIELERLayoutConfiguration;
 
 /**
  * Encapsulates the layouting web service to allow for easy switching to other communication paths
@@ -28,7 +28,7 @@ import de.cau.cs.kieler.magicdraw.config.KIELERLayoutConfiguration;
  */
 public class KIELERLayoutKWebSHandler {
 
-    public static String layout(String kGraph, KIELERLayoutConfiguration config) {
+    public static String layout(String kGraph, IKIELERLayoutConfiguration config) {
         // Use local server
         final String server = "http://layout.rtsys.informatik.uni-kiel.de:9444";
 

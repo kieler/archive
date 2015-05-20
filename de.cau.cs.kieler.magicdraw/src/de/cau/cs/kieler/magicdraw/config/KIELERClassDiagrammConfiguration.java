@@ -24,7 +24,7 @@ import de.cau.cs.kieler.kiml.options.LayoutOptions;
  * 
  * @author nbw
  */
-public class KIELERClassDiagrammConfiguration implements KIELERLayoutConfiguration {
+public class KIELERClassDiagrammConfiguration implements IKIELERLayoutConfiguration {
 
     private Map<String, Object> options;
 

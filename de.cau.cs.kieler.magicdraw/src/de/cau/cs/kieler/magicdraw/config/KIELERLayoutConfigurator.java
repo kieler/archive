@@ -21,11 +21,13 @@ import com.nomagic.magicdraw.uml.symbols.DiagramPresentationElement;
  *
  */
 public class KIELERLayoutConfigurator {
-    public static KIELERLayoutConfiguration getLayoutConfig(DiagramPresentationElement dpe) {
+    public static IKIELERLayoutConfiguration getLayoutConfig(DiagramPresentationElement dpe) {
         String dt = dpe.getDiagramType().getType();
         
         if (dt.equals(DiagramTypeConstants.UML_CLASS_DIAGRAM)) {
             return new KIELERClassDiagrammConfiguration();
+        } else if (dt.equals(DiagramTypeConstants.UML_USECASE_DIAGRAM)) {
+            return new KIELERUseCaseDiagramConfiguration();
         } else {
             return null;
         }

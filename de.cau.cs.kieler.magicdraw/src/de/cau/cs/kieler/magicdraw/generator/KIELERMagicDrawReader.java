@@ -20,7 +20,10 @@ import com.nomagic.magicdraw.uml.symbols.PresentationElement;
 import com.nomagic.magicdraw.uml.symbols.paths.GeneralizationView;
 import com.nomagic.magicdraw.uml.symbols.paths.PathElement;
 import com.nomagic.magicdraw.uml.symbols.shapes.DiagramFrameView;
+import com.nomagic.magicdraw.uml.symbols.shapes.HeaderView;
 import com.nomagic.magicdraw.uml.symbols.shapes.ShapeElement;
+import com.nomagic.magicdraw.uml.symbols.shapes.TemplateSignatureView;
+import com.nomagic.magicdraw.uml.symbols.shapes.TextAreaView;
 import com.nomagic.magicdraw.uml.symbols.shapes.TextBoxView;
 import com.nomagic.magicdraw.uml.symbols.shapes.TreeView;
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element;
@@ -59,6 +62,7 @@ import de.cau.cs.kieler.magicdraw.layout.KIELERMagicDrawProperties;
  * 
  * @author nbw
  */
+@SuppressWarnings("deprecation")
 public class KIELERMagicDrawReader {
 
     /**
@@ -111,7 +115,16 @@ public class KIELERMagicDrawReader {
         Collection<PathElement> edges = new LinkedList<PathElement>();
         recursiveCollect(dpe, nodes, edges);
 
-        System.out.println(nodes);
+        // System.out.println(nodes);
+
+        KIELERShapeElementHandler handler = new KIELERShapeElementHandler();
+        for (ShapeElement shapeElement : nodes) {
+            handler.addElementToKGraph(shapeElement, kGraphRoot, elementsMapping, elementsByID);
+        }
+
+        for (PathElement pathElement : edges) {
+            addEdgeToKGraph(pathElement);
+        }
 
     }
 
@@ -133,35 +146,30 @@ public class KIELERMagicDrawReader {
                 Collections2.transform(
                         Collections2.filter(children, new Predicate<PresentationElement>() {
                             // Filter all TreeViews
-                            @SuppressWarnings("deprecation")
                             public boolean apply(PresentationElement pe) {
-                                // Only look for ShapeElements
+
                                 if (!(pe instanceof ShapeElement)) {
                                     return false;
                                 }
-                                // Remove Diagram Frame to use it as root node
                                 if (pe instanceof DiagramFrameView) {
                                     return false;
                                 }
-                                // Remove Elements without a size
-                                if (pe.getBounds().getWidth() == 0
-                                        || pe.getBounds().getHeight() == 0) {
+                                if (pe instanceof HeaderView) {
                                     return false;
                                 }
-                                // Remove HeaderViews
-                                if (pe instanceof com.nomagic.magicdraw.uml.symbols.shapes.HeaderView) {
-                                    return false;
-                                }
-                                // Remove TextBoxes
                                 if (pe instanceof TextBoxView) {
                                     return false;
                                 }
-                                // Remove TextAreas
-                                if (pe instanceof com.nomagic.magicdraw.uml.symbols.shapes.TextAreaView) {
+                                if (pe instanceof TextAreaView) {
                                     return false;
                                 }
-                                // Remove TemplateSignatureViews
-                                if (pe instanceof com.nomagic.magicdraw.uml.symbols.shapes.TemplateSignatureView) {
+                                if (pe instanceof TemplateSignatureView) {
+                                    return false;
+                                }
+
+                                // Remove Elements without a size
+                                if (pe.getBounds().getWidth() == 0
+                                        || pe.getBounds().getHeight() == 0) {
                                     return false;
                                 }
                                 // Remove Things without a Name (Sign at the top right)
@@ -284,39 +292,6 @@ public class KIELERMagicDrawReader {
     }
 
     /**
-     * Adds a MagicDraw {@link ShapeElement} to the KGraph. Generates a new KNode and initializes
-     * this KNode with the current size and position of the ShapeElement
-     * 
-     * @param magicDrawNode
-     *            The ShapeElement to be added to the KGraph
-     * @throws {@link KIELERLayoutException} if no root node has been set in the KGraph
-     */
-    private void addNodeToKGraph(ShapeElement magicDrawNode) {
-        if (kGraphRoot == null) {
-            throw new KIELERLayoutException("Trying to add new node to KGraph without root node");
-        }
-
-        // Prepare new node
-        KNode node = KimlUtil.createInitializedNode();
-        KShapeLayout nodeLayout = node.getData(KShapeLayout.class);
-        node.setParent(kGraphRoot);
-
-        // Grab data from MagicDraw and apply to node
-        Rectangle magicDrawNodeBounds = magicDrawNode.getBounds();
-        nodeLayout.setHeight(magicDrawNodeBounds.height);
-        nodeLayout.setWidth(magicDrawNodeBounds.width);
-        nodeLayout.setXpos(magicDrawNodeBounds.x);
-        nodeLayout.setYpos(magicDrawNodeBounds.y);
-
-        // Store MagicDraw data in properties
-        nodeLayout.setProperty(KIELERMagicDrawProperties.MAGICDRAW_ID, elementsByID.size());
-
-        // Store data in housekeeping data structures
-        elementsByID.add(magicDrawNode);
-        elementsMapping.put(magicDrawNode, node);
-    }
-
-    /**
      * Adds an edge to the KGraph. The source and target of the new edge need to be present in the
      * KGraph.
      * 
@@ -359,7 +334,7 @@ public class KIELERMagicDrawReader {
         elementsMapping.put(magicDrawPath, edge);
 
         // Attach labels to edge
-        attachLabels(edge, magicDrawPath);
+        // attachLabels(edge, magicDrawPath);
     }
 
     /**
@@ -376,7 +351,6 @@ public class KIELERMagicDrawReader {
      * @param pathElement
      *            The MagicDraw {@link PathElement} to parse for labels
      */
-    @SuppressWarnings("deprecation")
     private void attachLabels(KEdge edge, PathElement pathElement) {
         // The actual text elements are embedded two layers below the PathElement.
         // The index in this list determines the position (Head, Tail, Center) of the label
