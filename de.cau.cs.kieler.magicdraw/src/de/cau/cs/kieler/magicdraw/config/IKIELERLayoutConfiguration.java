@@ -16,7 +16,7 @@ package de.cau.cs.kieler.magicdraw.config;
 import java.util.Map;
 
 /**
- * Interface to encapsulate the different diagram layout options
+ * Interface to encapsulate the different diagram layout configurations.
  * 
  * @author nbw
  */

@@ -37,8 +37,10 @@ import de.cau.cs.kieler.magicdraw.layout.KIELERLayoutException;
 import de.cau.cs.kieler.magicdraw.layout.KIELERMagicDrawProperties;
 
 /**
- * @author nbw
+ * Specialized handler for ComponentViews. These can contain hierarchy and need to take care of
+ * insets.
  * 
+ * @author nbw
  */
 @SuppressWarnings("deprecation")
 public class ComponentViewHandler implements IKIELERShapeElementHandler<ComponentView> {
@@ -46,17 +48,15 @@ public class ComponentViewHandler implements IKIELERShapeElementHandler<Componen
     /**
      * {@inheritDoc}
      */
-    public <U extends ShapeElement> void addElementToKGraph(ComponentView pe, KNode kGraphRoot,
-            Map<PresentationElement, KGraphElement> elementsMapping,
-            List<PresentationElement> elementsByID) {
+    public <U extends ShapeElement> void addElementToKGraph(ComponentView pe, KGraphBuilder builder) {
 
         // Prepare new node
         KNode node = KimlUtil.createInitializedNode();
         KShapeLayout nodeLayout = node.getData(KShapeLayout.class);
 
-        KGraphElement parent = elementsMapping.get(pe.getParent());
+        KGraphElement parent = builder.getElementsMapping().get(pe.getParent());
         if (parent == null) {
-            node.setParent(kGraphRoot);
+            node.setParent(builder.getkGraphRoot());
         } else {
             node.setParent((KNode) parent);
         }
@@ -68,7 +68,7 @@ public class ComponentViewHandler implements IKIELERShapeElementHandler<Componen
         nodeLayout.setXpos(magicDrawNodeBounds.x);
         nodeLayout.setYpos(magicDrawNodeBounds.y);
 
-        // Grab insets
+        // Grab insets for the header text lines
         Collection<ComponentHeaderView> headers =
                 Collections2.transform(Collections2.filter(pe.getPresentationElements(),
                         new Predicate<PresentationElement>() {
@@ -80,12 +80,12 @@ public class ComponentViewHandler implements IKIELERShapeElementHandler<Componen
                         return (ComponentHeaderView) input;
                     }
                 });
-
+        // There should be only one header element, throw exception otherwise
         if (headers.size() != 1) {
             throw new KIELERLayoutException("No single Header View found");
         }
 
-        // Grab insets
+        // Grab all relevant elements with a set size in the header
         Collection<PresentationElement> elements =
                 Collections2.filter(headers.iterator().next().getPresentationElements(),
                         new Predicate<PresentationElement>() {
@@ -95,16 +95,14 @@ public class ComponentViewHandler implements IKIELERShapeElementHandler<Componen
                                         || input.getBounds().getHeight() == 0) {
                                     return false;
                                 }
-                                
                                 // Throw away the small icon in the top right
                                 if (input instanceof StereotypeIconView) {
                                     return false;
                                 }
-
                                 return true;
                             }
                         });
-
+        // Add all the heights and set as inset on the KNode
         for (PresentationElement pes : elements) {
             Rectangle headerSize = pes.getBounds();
             nodeLayout.getInsets().setTop(
@@ -112,14 +110,13 @@ public class ComponentViewHandler implements IKIELERShapeElementHandler<Componen
         }
 
         // Store identification in properties
-        nodeLayout.setProperty(KIELERMagicDrawProperties.MAGICDRAW_ID, elementsByID.size());
-        
-        // Allow resizing of node
+        nodeLayout.setProperty(KIELERMagicDrawProperties.MAGICDRAW_ID, builder.getElementsByID().size());
+
+        // Allow resizing of node to make child elements more compact
         nodeLayout.setProperty(LayoutOptions.SIZE_CONSTRAINT, SizeConstraint.minimumSize());
 
         // Store data in housekeeping data structures
-        elementsByID.add(pe);
-        elementsMapping.put(pe, node);
-
+        builder.getElementsByID().add(pe);
+        builder.getElementsMapping().put(pe, node);
     }
 }

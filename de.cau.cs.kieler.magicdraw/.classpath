@@ -5,9 +5,9 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/de.cau.cs.kieler.core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/de.cau.cs.kieler.core.kgraph"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/de.cau.cs.kieler.kiml"/>
-	<classpathentry kind="lib" path="/home/java/eclipse-modeling-4.3/plugins/com.google.guava_10.0.1.v201203051515.jar" sourcepath="/home/nbw/guava-10.0.1-sources.jar">
+	<classpathentry exported="true" kind="lib" path="/Users/nbw/Downloads/Libraries/guava-10.0.1.jar" sourcepath="/Users/nbw/Downloads/Libraries/guava-10.0.1-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/home/nbw/guava-10.0.1-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:file:/Users/nbw/Downloads/Libraries/guava-10.0.1-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/patch.jar"/>
@@ -106,13 +106,13 @@
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/org.eclipse.emf.transaction_1.4.0.v20100331-1738.jar"/>
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/org.eclipse.equinox.common_3.6.0.v20110506.jar"/>
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/org.eclipse.equinox.registry_3.5.100.v20110502.jar"/>
-	<classpathentry kind="lib" path="/home/nbw/Downloads/MagicDraw/lib/org.eclipse.ocl_3.1.0.v20110606-1427.jar"/>
+	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/org.eclipse.ocl_3.0.1.R30x_v201008251030.jar"/>
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/org.eclipse.ocl.doc_3.0.1.R30x_v201008311245.jar"/>
-	<classpathentry kind="lib" path="/home/nbw/Downloads/MagicDraw/lib/org.eclipse.ocl.ecore_3.1.0.v20110510-2118.jar"/>
+	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/org.eclipse.ocl.ecore_3.0.1.R30x_v201008251030.jar"/>
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/org.eclipse.ocl.ecore.edit_3.0.0.R30x_v201008251030.jar"/>
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/org.eclipse.ocl.ecore.edit.source_3.0.0.R30x_v201008251030.jar"/>
-	<classpathentry kind="lib" path="/home/nbw/Downloads/MagicDraw/lib/org.eclipse.ocl.ecore.source_3.1.0.v20110510-2118.jar"/>
-	<classpathentry kind="lib" path="/home/nbw/Downloads/MagicDraw/lib/org.eclipse.ocl.source_3.1.0.v20110606-1427.jar"/>
+	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/org.eclipse.ocl.ecore.source_3.0.1.R30x_v201008251030.jar"/>
+	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/org.eclipse.ocl.source_3.0.1.R30x_v201008251030.jar"/>
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/org.eclipse.osgi_3.7.0.v20110513.jar"/>
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/org.eclipse.uml2.common_1.5.0.v200905041045.jar"/>
 	<classpathentry exported="true" kind="lib" path="MAGIC_DRAW_INSTALL_DIRECTORY/lib/relaxngDatatype.jar"/>

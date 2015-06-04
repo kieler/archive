@@ -27,8 +27,10 @@ import de.cau.cs.kieler.kiml.util.KimlUtil;
 import de.cau.cs.kieler.magicdraw.layout.KIELERMagicDrawProperties;
 
 /**
- * @author nbw
+ * Generic handler that takes simple size informations from MagicDraw Shape Elements and copies
+ * these to a new KNode.
  * 
+ * @author nbw
  */
 public class GenericShapeElementHandler implements IKIELERShapeElementHandler<ShapeElement> {
 
@@ -43,15 +45,14 @@ public class GenericShapeElementHandler implements IKIELERShapeElementHandler<Sh
      * @param elementsByID
      */
     public <U extends ShapeElement> void addElementToKGraph(ShapeElement magicDrawNode,
-            KNode kGraphRoot, Map<PresentationElement, KGraphElement> elementsMapping,
-            List<PresentationElement> elementsByID) {
+            KGraphBuilder builder) {
         // Prepare new node
         KNode node = KimlUtil.createInitializedNode();
         KShapeLayout nodeLayout = node.getData(KShapeLayout.class);
 
-        KGraphElement parent = elementsMapping.get(magicDrawNode.getParent());
+        KGraphElement parent = builder.getElementsMapping().get(magicDrawNode.getParent());
         if (parent == null) {
-            node.setParent(kGraphRoot);
+            node.setParent(builder.getkGraphRoot());
         } else {
             node.setParent((KNode) parent);
         }
@@ -64,11 +65,11 @@ public class GenericShapeElementHandler implements IKIELERShapeElementHandler<Sh
         nodeLayout.setYpos(magicDrawNodeBounds.y);
 
         // Store MagicDraw data in properties
-        nodeLayout.setProperty(KIELERMagicDrawProperties.MAGICDRAW_ID, elementsByID.size());
+        nodeLayout.setProperty(KIELERMagicDrawProperties.MAGICDRAW_ID, builder.getElementsByID().size());
 
         // Store data in housekeeping data structures
-        elementsByID.add(magicDrawNode);
-        elementsMapping.put(magicDrawNode, node);
+        builder.getElementsByID().add(magicDrawNode);
+        builder.getElementsMapping().put(magicDrawNode, node);
     }
 
 }

@@ -20,8 +20,9 @@ import de.cau.cs.kieler.kiml.options.EdgeRouting;
 import de.cau.cs.kieler.kiml.options.LayoutOptions;
 
 /**
+ * Configuration for layouting Use Case diagrams with KIELER
+ * 
  * @author nbw
- *
  */
 public class KIELERUseCaseDiagramConfiguration implements IKIELERLayoutConfiguration {
 
@@ -33,8 +34,10 @@ public class KIELERUseCaseDiagramConfiguration implements IKIELERLayoutConfigura
     public KIELERUseCaseDiagramConfiguration() {
         options = new HashMap<String, Object>();
 
-        options.put(LayoutOptions.SPACING.getId(), 60.0f);
+        // Use Case diagrams have hierarchical edges, so need klay layered and hierarchy
         options.put(LayoutOptions.ALGORITHM.getId(), "de.cau.cs.kieler.klay.layered");
+        options.put(LayoutOptions.LAYOUT_HIERARCHY.getId(), true);
+        options.put(LayoutOptions.SPACING.getId(), 60.0f);
         options.put(LayoutOptions.EDGE_ROUTING.getId(), EdgeRouting.POLYLINE.toString());
         options.put(LayoutOptions.BORDER_SPACING.getId(), 40.0f);
 //        options.put("de.cau.cs.kieler.kiml.ogdf.option.labelMarginDistance", 15.0f);

@@ -20,28 +20,28 @@ import de.cau.cs.kieler.kiml.options.EdgeRouting;
 import de.cau.cs.kieler.kiml.options.LayoutOptions;
 
 /**
- * Configuration for layouting Class Diagramms with KIELER Layout
+ * Configuration for layouting state charts with the KIELER layout infrastructure.
  * 
  * @author nbw
  */
-public class KIELERClassDiagrammConfiguration implements IKIELERLayoutConfiguration {
+public class KIELERStateChartDiagramConfiguration implements IKIELERLayoutConfiguration {
 
     private Map<String, Object> options;
 
     /**
-     * Constructs a new Configurator with default configuration for Class Diagram Layout
+     * Constructs a new Configurator with default configuration for State Chart Diagram Layout
      */
-    public KIELERClassDiagrammConfiguration() {
+    public KIELERStateChartDiagramConfiguration() {
         options = new HashMap<String, Object>();
 
-        // Use OGDF planarization to layout class diagrams
-        options.put(LayoutOptions.ALGORITHM.getId(), "de.cau.cs.kieler.kiml.ogdf.planarization");
-        // Orthogonal edge routing for class diagrams, algorithm routes generalization upwards
-        options.put(LayoutOptions.EDGE_ROUTING.getId(), EdgeRouting.ORTHOGONAL.toString());
+        // Use Case diagrams have hierarchical edges, so need klay layered and hierarchy
+        options.put(LayoutOptions.ALGORITHM.getId(), "de.cau.cs.kieler.klay.layered");
+        options.put(LayoutOptions.LAYOUT_HIERARCHY.getId(), false);
         options.put(LayoutOptions.SPACING.getId(), 60.0f);
+        options.put(LayoutOptions.EDGE_ROUTING.getId(), EdgeRouting.ORTHOGONAL.toString());
         options.put(LayoutOptions.BORDER_SPACING.getId(), 40.0f);
-        options.put("de.cau.cs.kieler.kiml.ogdf.option.labelMarginDistance", 15.0f);
-        options.put("de.cau.cs.kieler.kiml.ogdf.option.labelEdgeDistance", 15.0f);
+        // options.put("de.cau.cs.kieler.kiml.ogdf.option.labelMarginDistance", 15.0f);
+        // options.put("de.cau.cs.kieler.kiml.ogdf.option.labelEdgeDistance", 15.0f);
     }
 
     /**

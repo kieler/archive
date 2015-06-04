@@ -30,7 +30,7 @@ public class KIELERLayoutKWebSHandler {
 
     public static String layout(String kGraph, IKIELERLayoutConfiguration config) {
         // Use local server
-        final String server = "http://layout.rtsys.informatik.uni-kiel.de:9444";
+        final String server = "http://localhost:9444";
 
         // Perform the actual layout
         String layouted =
@@ -43,7 +43,7 @@ public class KIELERLayoutKWebSHandler {
                         config.getLayoutOptions(), kGraph);
         layoutedDebug = layoutedDebug.replaceFirst("w=\"\\d*\"", "");
         try {
-            Files.write(layoutedDebug.getBytes(), new File("/tmp/debugLayout.svg"));
+            Files.write(layoutedDebug.getBytes(), new File("/Users/nbw/debugLayout.svg"));
         } catch (IOException e) {
             e.printStackTrace();
         }

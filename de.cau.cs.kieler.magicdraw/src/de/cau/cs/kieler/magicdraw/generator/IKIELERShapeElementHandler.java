@@ -13,22 +13,23 @@
  */
 package de.cau.cs.kieler.magicdraw.generator;
 
-import java.util.List;
-import java.util.Map;
-
-import com.nomagic.magicdraw.uml.symbols.PresentationElement;
 import com.nomagic.magicdraw.uml.symbols.shapes.ShapeElement;
 
-import de.cau.cs.kieler.core.kgraph.KGraphElement;
-import de.cau.cs.kieler.core.kgraph.KNode;
-
 /**
- * @author nbw
+ * Interface for all Shape Element handlers. These are then encapsulated using the
+ * {@link KIELERShapeElementHandler} facade.
  * 
+ * @author nbw
  */
 public interface IKIELERShapeElementHandler<T extends ShapeElement> {
 
-    public <U extends ShapeElement> void addElementToKGraph(T pe, KNode kGraphRoot,
-            Map<PresentationElement, KGraphElement> elementsMapping,
-            List<PresentationElement> elementsByID);
+    /**
+     * Adds a {@link ShapeElement} to the KGraph.
+     * 
+     * @param pe The ShapeElement to add
+     * @param kGraphRoot The root node of the KGraph to add the new element to
+     * @param elementsMapping The mapping of existing PresentationElements and KGraph elements
+     * @param elementsByID The ids of PresentationElements for future reference
+     */
+    public <U extends ShapeElement> void addElementToKGraph(T pe, KGraphBuilder builder);
 }

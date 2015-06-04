@@ -27,7 +27,7 @@ import java.util.Scanner;
  */
 public class KIELERLayout {
 
-    public static final String DEFAULT_SERVER = "http://layout.rtsys.informatik.uni-kiel.de:9444";
+    public static final String DEFAULT_SERVER = "http://localhost:9444";
     private static final String LAYOUT_HANDLER = "/live";
 
     /**

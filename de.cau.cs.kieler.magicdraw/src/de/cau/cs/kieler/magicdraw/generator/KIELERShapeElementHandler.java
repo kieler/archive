@@ -28,36 +28,59 @@ import de.cau.cs.kieler.core.kgraph.KGraphElement;
 import de.cau.cs.kieler.core.kgraph.KNode;
 
 /**
- * @author nbw
+ * Facade to encapsulate all {@link IKIELERShapeElementHandler} implementations behind.
  * 
+ * @author nbw
  */
 public class KIELERShapeElementHandler implements IKIELERShapeElementHandler<ShapeElement> {
 
+    /**
+     * Map to determine which handler implementation to use when encountering a specific
+     * ShapeElement.
+     */
     private Map<Class<?>, IKIELERShapeElementHandler<?>> handlerMap;
 
+    /**
+     * Generic handler to use when encountering something that doesn't need specific handling.
+     */
+    private GenericShapeElementHandler generic;
+
+    /**
+     * Generate the facade and populate the map with all known elements.
+     */
     public KIELERShapeElementHandler() {
-        GenericShapeElementHandler generic = new GenericShapeElementHandler();
+        // A simple generic handler can be used for unknown types
+        generic = new GenericShapeElementHandler();
+        // Store the special handlers in a HashMap to look the specific handler up later
         handlerMap = Maps.newHashMap();
         handlerMap.put(ComponentView.class, new ComponentViewHandler());
-        handlerMap.put(ActorView.class, generic);
-        handlerMap.put(NoteView.class, generic);
-        handlerMap.put(UseCaseView.class, generic);
     }
 
     /**
-     * {@inheritDoc}
+     * <p>
+     * Check the type of ShapeElement and delegate the work to the appropriate handler.
+     * </p>
+     * <p>
+     * This unfortunately needs an "unsafe" cast which is not really unsafe, but handled like one by
+     * the compiler. Each element is specifically cast to its own type.
+     * </p>
      */
-    @SuppressWarnings("unchecked")
-    public <T extends ShapeElement> void addElementToKGraph(ShapeElement pe, KNode kGraphRoot,
-            Map<PresentationElement, KGraphElement> elementsMapping,
-            List<PresentationElement> elementsByID) {
-        
+    public <T extends ShapeElement> void addElementToKGraph(ShapeElement pe, KGraphBuilder builder) {
+
+        // Get the concrete class of the ShapeElement
+        @SuppressWarnings("unchecked")
         Class<T> clazz = (Class<T>) pe.getClass();
         if (handlerMap.containsKey(clazz)) {
+            // If the mapping contains the class, there should be a corresponding handler prepared
+            // in the map. This handler should especially be able to handle the concrete type.
+            @SuppressWarnings("unchecked")
             IKIELERShapeElementHandler<T> handler =
                     (IKIELERShapeElementHandler<T>) handlerMap.get(clazz);
-            handler.addElementToKGraph(clazz.cast(pe), kGraphRoot, elementsMapping, elementsByID);
+            // Delegate to the handler
+            handler.addElementToKGraph(clazz.cast(pe), builder);
+        } else {
+            // If the class has no dedicated handler use the generic instead
+            generic.addElementToKGraph(pe, builder);
         }
-
     }
 }
