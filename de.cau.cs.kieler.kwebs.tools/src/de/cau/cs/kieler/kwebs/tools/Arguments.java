@@ -4,7 +4,7 @@
  * http://www.informatik.uni-kiel.de/rtsys/kieler/
  * 
  * Copyright 2011 by
- * + Christian-Albrechts-University of Kiel
+ * + Kiel University
  *   + Department of Computer Science
  *     + Real-Time and Embedded Systems Group
  * 
@@ -159,7 +159,7 @@ public class Arguments {
     private static final String[] HELP_INTRO = new String[] {
             "Console Client for the KIELER Layout Web Service (KWebS)",
             "   Copyright 2011 by Real-Time and Embedded Systems Group,",
-            "   Department of Computer Science, Christian-Albrechts-Universitaet zu Kiel",
+            "   Department of Computer Science, Kiel University",
             "",
             "Performs a request to a KWebS layout web service by sending a graph",
             "and receiving the layout result. If called with no arguments, the input",

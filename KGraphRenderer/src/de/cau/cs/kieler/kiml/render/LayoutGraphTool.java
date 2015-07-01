@@ -4,7 +4,7 @@
  * http://www.informatik.uni-kiel.de/rtsys/kieler/
  * 
  * Copyright 2011 by
- * + Christian-Albrechts-University of Kiel
+ * + Kiel University
  *   + Department of Computer Science
  *     + Real-Time and Embedded Systems Group
  * 
@@ -44,7 +44,7 @@ public final class LayoutGraphTool {
     /** copyright and usage information for the rendering tool. */
     private static final String USAGE = "KGraph Rendering Tool\n"
             + "  Copyright 2011 by\n"
-            + "  + Christian-Albrechts-University of Kiel\n"
+            + "  + Kiel University\n"
             + "    + Department of Computer Science\n"
             + "      + Real-Time and Embedded Systems Group\n\n"
             + "Usage:  kgraph <inputFile>\n"
